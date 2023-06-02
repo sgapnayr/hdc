@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import GroupDoctors from '@/assets/images/group-doctors.svg'
 import BaseWrapper from '~/components/BaseWrapper.vue'
 import BellIcon from '@/assets/icons/bell-icon.svg'
@@ -8,10 +8,39 @@ import SearchIcon from '@/assets/icons/search-icon.svg'
 import DeleteIcon from '@/assets/icons/delete-icon.svg'
 import ArchiveIcon from '@/assets/icons/archive-icon.svg'
 import EyeIcon from '@/assets/icons/eye-icon.svg'
+import { useAuthenticator } from '@aws-amplify/ui-vue'
 
 // LAYOUT **********************************************************************
 definePageMeta({
   layout: 'captured',
+  middleware: ['auth'],
+})
+
+// ROUTER **********************************************************************
+const router = useRouter()
+const user = useAuthenticator()
+const loadingPageExists = ref(true)
+
+function showPageForFiveSeconds() {
+  loadingPageExists.value = true
+  setTimeout(() => {
+    // Change to response for API
+    loadingPageExists.value = false
+  }, 2000)
+}
+
+onMounted(() => {
+  const unmountWatcher = watchEffect(() => {
+    if (user.authStatus !== 'authenticated') {
+      navigateTo('/')
+    }
+  })
+
+  showPageForFiveSeconds()
+
+  onBeforeUnmount(() => {
+    unmountWatcher()
+  })
 })
 
 // TYPES **********************************************************************
@@ -121,7 +150,8 @@ function handleSelectedPatient(patient: Patient) {
 </script>
 
 <template>
-  <div class="w-full py-8">
+  <Loading v-if="loadingPageExists" />
+  <div v-else class="w-full py-8">
     <BaseWrapper>
       <!-- Summary Top -->
       <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative">

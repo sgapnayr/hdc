@@ -16,10 +16,24 @@ import MoisturizerProduct from '@/assets/products/moisturizer-product.svg'
 import BenzoylProduct from '@/assets/products/benzoyl-product.svg'
 import PlusIcon from '@/assets/icons/plus-icon-cart.svg'
 import MinusIcon from '@/assets/icons/minus-icon.svg'
+import { useAuthenticator } from '@aws-amplify/ui-vue'
 
 // LAYOUT **********************************************************************
 definePageMeta({
   layout: 'captured',
+  middleware: ['auth'],
+})
+
+// ROUTER **********************************************************************
+const router = useRouter()
+const user = useAuthenticator()
+
+onMounted(() => {
+  watchEffect(() => {
+    if (user.authStatus !== 'authenticated') {
+      navigateTo('/')
+    }
+  })
 })
 
 // TYPES **********************************************************************
@@ -29,9 +43,6 @@ interface Treatment {
   treatmentInstructions: string
   morningNightOrBoth: 'morning' | 'night' | 'both'
 }
-
-// ROUTER **********************************************************************
-const router = useRouter()
 
 // STORES **********************************************************************
 const cartStore = useCartStore()

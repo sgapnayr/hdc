@@ -1,6 +1,13 @@
+import { useAuthenticator } from '@aws-amplify/ui-vue'
+
 export default defineNuxtRouteMiddleware((to, from) => {
   // isAuthenticated() is an example method verifying if a user is authenticated
-  if (true) {
-    return navigateTo('/')
+  const user = useAuthenticator()
+  if (user.authStatus !== 'authenticated' && to.path !== '/') {
+    console.log(from.path)
+    navigateTo('/')
+  } else if (user.authStatus === 'authenticated' && to.path === '/') {
+    console.log(from.path)
+    navigateTo('/')
   }
 })

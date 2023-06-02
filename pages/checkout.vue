@@ -6,10 +6,23 @@ import { formatPennies } from '~/utils/helpers'
 import { useRouter } from 'vue-router'
 import ChevronIcon from '@/assets/icons/chevron-icon.svg'
 import EditIcon from '@/assets/icons/edit-icon.svg'
+import { useAuthenticator } from '@aws-amplify/ui-vue'
 
 // LAYOUT **********************************************************************
 definePageMeta({
   layout: 'captured',
+  middleware: ['auth'],
+})
+
+// ROUTER **********************************************************************
+const user = useAuthenticator()
+
+onMounted(() => {
+  watchEffect(() => {
+    if (user.authStatus !== 'authenticated') {
+      navigateTo('/')
+    }
+  })
 })
 
 // STORES *********************************************************************

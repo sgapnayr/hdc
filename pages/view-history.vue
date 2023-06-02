@@ -3,10 +3,24 @@
 import { ref } from 'vue'
 import { useProfileStore } from '~/stores/profile'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
+import { useAuthenticator } from '@aws-amplify/ui-vue'
 
 // LAYOUT **********************************************************************
 definePageMeta({
   layout: 'captured',
+  middleware: ['auth'],
+})
+
+// ROUTER **********************************************************************
+const router = useRouter()
+const user = useAuthenticator()
+
+onMounted(() => {
+  watchEffect(() => {
+    if (user.authStatus !== 'authenticated') {
+      navigateTo('/')
+    }
+  })
 })
 
 // STORE **********************************************************************

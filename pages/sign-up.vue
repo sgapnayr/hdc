@@ -4,10 +4,25 @@ import { ref } from 'vue'
 import { vMaska } from 'maska'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { useAuthenticator } from '@aws-amplify/ui-vue'
 
 // LAYOUT **********************************************************************
 definePageMeta({
-  layout: 'logo',
+  layout: 'captured',
+  middleware: ['auth'],
+  loading: '@/components/Loading.vue', // Specify the path to your loading component
+})
+
+// ROUTER **********************************************************************
+const router = useRouter()
+const user = useAuthenticator()
+
+onMounted(() => {
+  watchEffect(() => {
+    if (user.authStatus !== 'authenticated') {
+      navigateTo('/')
+    }
+  })
 })
 
 // STATE **********************************************************************

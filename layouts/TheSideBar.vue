@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import HoneyDewIcon from '@/assets/icons/honeydew-icon.svg'
 import { useRouter } from 'vue-router'
 import { useRoute } from 'vue-router'
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-vue'
 
 // ROUTER **********************************************************************
 const route = useRoute()
@@ -22,6 +23,14 @@ function handleModal() {
 
 <template>
   <div class="w-[80px] bg-white flex flex-col items-center h-screen justify-start">
+    <div class="absolute bottom-0">
+      <authenticator>
+        <template v-slot="{ user, signOut }">
+          <h1>Hello {{ user.username }}!</h1>
+          <button @click="signOut">Sign Out</button>
+        </template>
+      </authenticator>
+    </div>
     <div>
       <img :src="HoneyDewIcon" alt="Honey Dew Icon" class="mb-[36px] mt-[28px]" />
     </div>

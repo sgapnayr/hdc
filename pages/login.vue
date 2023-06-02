@@ -4,9 +4,19 @@ import { ref } from 'vue'
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-vue'
 
 // LAYOUT **********************************************************************
-const auth = useAuthenticator()
+const user = useAuthenticator()
 definePageMeta({
   layout: 'logo',
+  middleware: ['auth'],
+})
+
+// ROUTER **********************************************************************
+onMounted(() => {
+  watchEffect(() => {
+    if (user.authStatus === 'authenticated') {
+      navigateTo('/profile')
+    }
+  })
 })
 
 // STATE **********************************************************************
@@ -27,7 +37,6 @@ function handleLogin() {
         <button @click="signOut">Sign Out</button>
       </template>
     </authenticator>
-    {{ auth.route }}
   </div>
 
   <div>

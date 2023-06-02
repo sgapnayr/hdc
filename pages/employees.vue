@@ -11,10 +11,23 @@ import ClockIcon from '@/assets/icons/clock-icon.svg'
 import ReportIcon from '@/assets/icons/report-icon.svg'
 import OptionsIcon from '@/assets/icons/options-icon.svg'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
+import { useAuthenticator } from '@aws-amplify/ui-vue'
 
 // LAYOUT **********************************************************************
 definePageMeta({
   layout: 'captured',
+  middleware: ['auth'],
+})
+
+// ROUTER **********************************************************************
+const user = useAuthenticator()
+
+onMounted(() => {
+  watchEffect(() => {
+    if (user.authStatus !== 'authenticated') {
+      navigateTo('/')
+    }
+  })
 })
 
 // TYPES **********************************************************************
