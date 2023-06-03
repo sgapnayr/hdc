@@ -9,6 +9,8 @@ import DeleteIcon from '@/assets/icons/delete-icon.svg'
 import ArchiveIcon from '@/assets/icons/archive-icon.svg'
 import EyeIcon from '@/assets/icons/eye-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
+import { getPatients } from '@/lib/endpoints'
+import { Patient, Patients } from '@/types/patient-types'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -59,20 +61,11 @@ interface TableHeaderCategory {
   categories: { text: string }[]
 }
 
-interface Patient {
-  fullName: string
-  dateOfBirth: string
-  acneCategory: string
-  dateOfService: string
-  nextFollowUp: string
-  provider: string
-  careCoordinator: string
-}
-
 // STATE **********************************************************************
 const tabSelected = ref<'Active Patients' | 'Inactive Patients'>('Active Patients')
 const selectedChip = ref<Chip>({ text: 'All', amount: 10 })
 const selectedPatient = ref<Patient>()
+const patientList = ref<Patients>()
 
 // MEMBER DATA ****************************************************************
 const categoryChips: CategoryChips[] = [
@@ -147,6 +140,17 @@ function handleSelectingChip(chip: Chip) {
 function handleSelectedPatient(patient: Patient) {
   selectedPatient.value = patient
 }
+
+async function getEmployeesInit() {
+  try {
+    const response = await getPatients()
+    patientList.value = response
+  } catch (error) {
+    console.error('Error retrieving patient:', error)
+  }
+}
+
+getEmployeesInit()
 </script>
 
 <template>
@@ -233,6 +237,7 @@ function handleSelectedPatient(patient: Patient) {
             </div>
           </div>
           <!-- Table Patients -->
+          {{ patientList?.patients }}
           <div
             v-for="(patient, idx) in testPatients"
             :key="idx"

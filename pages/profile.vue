@@ -17,6 +17,7 @@ import BenzoylProduct from '@/assets/products/benzoyl-product.svg'
 import PlusIcon from '@/assets/icons/plus-icon-cart.svg'
 import MinusIcon from '@/assets/icons/minus-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
+import { getEmployee } from '@/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -78,6 +79,7 @@ const treatments: Treatment[] = [
 
 <template>
   <div class="flex flex-col py-8">
+    <button class="active:scale-90" @click="getEmployee">TEST</button>
     <BaseWrapper>
       <!-- Upper cards -->
       <div class="flex gap-x-6">

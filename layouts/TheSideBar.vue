@@ -5,6 +5,7 @@ import HoneyDewIcon from '@/assets/icons/honeydew-icon.svg'
 import { useRouter } from 'vue-router'
 import { useRoute } from 'vue-router'
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-vue'
+import WavingLady from '@/assets/images/waving-lady.svg'
 
 // ROUTER **********************************************************************
 const route = useRoute()
@@ -105,8 +106,14 @@ function handleModal() {
             </svg>
           </div>
         </template>
+        <template #header>
+          <img :src="WavingLady" alt="Waving Lady" />
+        </template>
         <template #content>
-          <div>Here</div>
+          <div class="bg-white mt-[24px] px-5">
+            <div class="text-[20px] font-[500] leading-[24px] text-gray-3">Have questions?</div>
+            <div class="text-[16px] mt-[8px] font-[400] leading-[24px]">Have questions?</div>
+          </div>
         </template>
       </BaseModal>
 

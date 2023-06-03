@@ -12,6 +12,8 @@ import ReportIcon from '@/assets/icons/report-icon.svg'
 import OptionsIcon from '@/assets/icons/options-icon.svg'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
+import { getEmployee, getEmployees } from '@/lib/endpoints'
+import { Employees, Employee } from '@/types/employee-types'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -59,7 +61,8 @@ interface Patient {
 // STATE **********************************************************************
 const tabSelected = ref<'Providers' | 'Care Coordinators' | 'Enrollment Coordinators'>('Providers')
 const selectedChip = ref<Chip>({ text: 'Active', amount: 10 })
-const selectedPatient = ref<Patient>()
+const selectedEmployeeInput = ref<Employee>()
+const employeesList = ref<Employees>()
 
 // MEMBER DATA ****************************************************************
 const categoryChips: CategoryChips[] = [
@@ -145,9 +148,20 @@ function handleSelectingChip(chip: Chip) {
   selectedChip.value = chip
 }
 
-function handleSelectedPatient(patient: Patient) {
-  selectedPatient.value = patient
+function handleSelectedPatient(employee: Employee) {
+  selectedEmployeeInput.value = employee
 }
+
+async function getEmployeesInit() {
+  try {
+    const response = await getEmployees()
+    employeesList.value = response
+  } catch (error) {
+    console.error('Error retrieving employees:', error)
+  }
+}
+
+getEmployeesInit()
 </script>
 
 <template>
@@ -307,34 +321,23 @@ function handleSelectedPatient(patient: Patient) {
               </div>
             </div>
           </div>
-          <!-- Table Patients -->
+          <!-- Table Employees -->
           <div
-            v-for="(patient, idx) in testPatients"
+            v-for="(employee, idx) in employeesList?.employees"
             :key="idx"
             :class="[tabSelected === 'Providers' ? 'grid-cols-9' : 'grid-cols-4', idx === testPatients.length - 1 ? 'rounded-b-[16px]' : '']"
             class="grid text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
           >
-            <div class="col-span-1">
-              {{ patient.fullName ? patient.fullName : '-' }}
+            <div>
+              {{ employee.firstName }}
             </div>
             <div>
-              {{ patient.dateOfBirth ? patient.dateOfBirth : '-' }}
+              {{ employee.email }}
             </div>
             <div>
-              {{ patient.acneCategory ? patient.acneCategory : '-' }}
+              {{ employee.firstName }}
             </div>
-            <div>
-              {{ patient.dateOfService ? patient.dateOfService : '-' }}
-            </div>
-            <div>
-              {{ patient.nextFollowUp ? patient.nextFollowUp : '-' }}
-            </div>
-            <div>
-              {{ patient.provider ? patient.provider : '-' }}
-            </div>
-            <div>
-              {{ patient.careCoordinator ? patient.careCoordinator : '-' }}
-            </div>
+
             <div class="w-full flex justify-end gap-x-3">
               <img :src="ClockIcon" alt="Clock Icon" class="cursor-pointer" />
               <img :src="ReportIcon" alt="Reports Icon" class="cursor-pointer" />
