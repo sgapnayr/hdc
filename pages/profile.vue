@@ -17,7 +17,7 @@ import BenzoylProduct from '@/assets/products/benzoyl-product.svg'
 import PlusIcon from '@/assets/icons/plus-icon-cart.svg'
 import MinusIcon from '@/assets/icons/minus-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { getEmployee } from '@/lib/endpoints'
+import { useProfileStore } from '@/stores/profile'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -47,6 +47,7 @@ interface Treatment {
 
 // STORES **********************************************************************
 const cartStore = useCartStore()
+const profileStore = useProfileStore()
 
 // DUMMY DATA **********************************************************************
 const treatments: Treatment[] = [
@@ -75,11 +76,14 @@ const treatments: Treatment[] = [
     morningNightOrBoth: 'both',
   },
 ]
+
+// METHODS **********************************************************************
+
+profileStore.getMyProfileInit()
 </script>
 
 <template>
   <div class="flex flex-col py-8">
-    <button class="active:scale-90" @click="getEmployee">TEST</button>
     <BaseWrapper>
       <!-- Upper cards -->
       <div class="flex gap-x-6">
@@ -87,7 +91,7 @@ const treatments: Treatment[] = [
         <div class="bg-white w-full rounded-[8px] p-8 flex justify-between">
           <div class="flex flex-col justify-between w-1/2">
             <div class="flex flex-col">
-              <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Hi, { name }!</h1>
+              <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Hi, {{ profileStore.profileData }}!</h1>
               <p class="text-gray-5 mt-[16px] w-3/4">Welcome to your patient portal</p>
             </div>
             <div>{toDoListItems}</div>

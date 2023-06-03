@@ -1,13 +1,18 @@
 import { defineStore } from 'pinia'
+import { getMyProfile } from '@/lib/endpoints'
 
 export const useProfileStore = defineStore('profile', () => {
-  // Call to server on load, make getter that populates these
+  const profileData = ref()
 
-  // async function patientData() {
-  //   await getMyProfile()
-  // }
-
-  // const patientData = await getMyProfile()
+  // GETTERS ****************************************************************
+  async function getMyProfileInit() {
+    try {
+      const response = await getMyProfile()
+      profileData.value = response
+    } catch (error) {
+      console.error('Error retrieving employees:', error)
+    }
+  }
 
   const patientData = [
     {
@@ -79,5 +84,5 @@ export const useProfileStore = defineStore('profile', () => {
     },
   ]
 
-  return { patientData }
+  return { patientData, profileData, getMyProfileInit }
 })

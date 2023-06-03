@@ -2,18 +2,15 @@
 // IMPORTS ********************************************************************
 import { ref, computed } from 'vue'
 import BaseWrapper from '~/components/BaseWrapper.vue'
-import BellIcon from '@/assets/icons/bell-icon.svg'
 import SearchIcon from '@/assets/icons/search-icon.svg'
-import DeleteIcon from '@/assets/icons/delete-icon.svg'
-import ArchiveIcon from '@/assets/icons/archive-icon.svg'
-import EyeIcon from '@/assets/icons/eye-icon.svg'
 import ClockIcon from '@/assets/icons/clock-icon.svg'
 import ReportIcon from '@/assets/icons/report-icon.svg'
 import OptionsIcon from '@/assets/icons/options-icon.svg'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { getEmployee, getEmployees } from '@/lib/endpoints'
+import { getEmployees, createEmployee, getPatients } from '@/lib/endpoints'
 import { Employees, Employee } from '@/types/employee-types'
+import { Patient, Patients } from '@/types/patient-types'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -33,6 +30,23 @@ onMounted(() => {
 })
 
 // TYPES **********************************************************************
+interface EmployeeInput {
+  employeeId: string
+  firstName?: String
+  lastName?: String
+  email?: String
+  role?: String
+  phone?: String
+  address?: String
+  timezone?: String
+  licenseType?: String
+  licenseNumber?: String
+  licenseExpirationDate?: String
+  licenseState?: String
+  npi?: String
+  isActive?: Boolean
+}
+
 interface Chip {
   text: string
   amount: number
@@ -48,21 +62,13 @@ interface TableHeaderCategory {
   categories: { text: string }[]
 }
 
-interface Patient {
-  fullName: string
-  dateOfBirth: string
-  acneCategory: string
-  dateOfService: string
-  nextFollowUp: string
-  provider: string
-  careCoordinator: string
-}
-
 // STATE **********************************************************************
 const tabSelected = ref<'Providers' | 'Care Coordinators' | 'Enrollment Coordinators'>('Providers')
 const selectedChip = ref<Chip>({ text: 'Active', amount: 10 })
 const selectedEmployeeInput = ref<Employee>()
 const employeesList = ref<Employees>()
+const patientList = ref<Patients | any>()
+const patientTestId = ref<Patient | undefined>()
 
 // MEMBER DATA ****************************************************************
 const categoryChips: CategoryChips[] = [
@@ -152,6 +158,18 @@ function handleSelectedPatient(employee: Employee) {
   selectedEmployeeInput.value = employee
 }
 
+async function getPatientsInit() {
+  try {
+    const response = await getPatients()
+    patientList.value = response
+    patientTestId.value = patientList?.patients[0]?.patientId
+  } catch (error) {
+    console.error('Error retrieving patient:', error)
+  }
+}
+
+getPatientsInit()
+
 async function getEmployeesInit() {
   try {
     const response = await getEmployees()
@@ -165,6 +183,7 @@ getEmployeesInit()
 </script>
 
 <template>
+  <div @click="createEmployee">createEmployee</div>
   <div class="w-full py-8">
     <BaseWrapper>
       <!-- Manage Team Top -->

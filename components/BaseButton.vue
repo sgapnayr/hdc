@@ -20,7 +20,7 @@ withDefaults(
 
 <template>
   <button
-    class="h-[56px] rounded-[60px] text-[16px]flex justify-center items-center transition active:scale-95 uppercase leading-[24px] whitespace-nowrap"
+    class="h-[56px] rounded-[60px] text-[16px] flex justify-center items-center transition active:scale-95 uppercase leading-[24px] whitespace-nowrap"
     :class="[
       state === 'idle'
         ? ' text-white bg-honeydew-purple'

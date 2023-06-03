@@ -141,7 +141,7 @@ function handleSelectedPatient(patient: Patient) {
   selectedPatient.value = patient
 }
 
-async function getEmployeesInit() {
+async function getPatientsInit() {
   try {
     const response = await getPatients()
     patientList.value = response
@@ -150,7 +150,7 @@ async function getEmployeesInit() {
   }
 }
 
-getEmployeesInit()
+getPatientsInit()
 </script>
 
 <template>

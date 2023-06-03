@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'CeraProRegular';
+  src: url('@/assets/fonts/Cera Pro Regular.otf');
+}
+
+@font-face {
+  font-family: 'CeraProMedium';
+  src: url('@/assets/fonts/Cera Pro Medium.otf');
+}
+
+h1,
+h2,
+h3,
+span {
+  font-family: CeraProMedium;
+}
+
+* {
+  font-family: CeraProRegular;
+}

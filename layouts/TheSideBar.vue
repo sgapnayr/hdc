@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import HoneyDewIcon from '@/assets/icons/honeydew-icon.svg'
 import { useRouter } from 'vue-router'
 import { useRoute } from 'vue-router'
+import { Auth } from 'aws-amplify'
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-vue'
 import WavingLady from '@/assets/images/waving-lady.svg'
 
@@ -20,18 +21,23 @@ function handleModal() {
     isModalOpen.value = true
   }, 1)
 }
+
+async function signOut() {
+  console.log('SIGN OUT')
+  try {
+    await Auth.signOut()
+    navigateTo('/')
+    // Sign-out successful
+    // You can redirect the user or perform other actions here
+  } catch (error) {
+    console.log('Error signing out:', error)
+    // Handle sign-out error
+  }
+}
 </script>
 
 <template>
   <div class="w-[80px] bg-white flex flex-col items-center h-screen justify-start">
-    <div class="absolute bottom-0">
-      <authenticator>
-        <template v-slot="{ user, signOut }">
-          <h1>Hello {{ user.username }}!</h1>
-          <button @click="signOut">Sign Out</button>
-        </template>
-      </authenticator>
-    </div>
     <div>
       <img :src="HoneyDewIcon" alt="Honey Dew Icon" class="mb-[36px] mt-[28px]" />
     </div>
@@ -139,7 +145,7 @@ function handleModal() {
 
       <!-- Logout Icon -->
       <div class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer" :class="[route.path === '/login' ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']">
-        <svg @click="router.push('/login')" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg @click="signOut" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             class="cursor-pointer"
             :class="[route.path === '/login' ? 'showIcon' : 'icon']"

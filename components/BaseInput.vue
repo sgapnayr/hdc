@@ -63,7 +63,7 @@ Enjoy!
 <script setup lang="ts">
 // IMPORTS ********************************************************************
 import { ref } from 'vue'
-import EyeIcon from '@/assets/icons/eye.svg'
+import EyeIcon from '@/assets/icons/eye-icon.svg'
 import { vMaska } from 'maska'
 
 // EMITS ****************************************************************
@@ -134,7 +134,7 @@ function toggleInputField() {
       <img
         @click="toggleInputField"
         v-if="pInputType === 'password'"
-        :class="isPasswordShowing ? '' : 'opacity-20'"
+        :class="isPasswordShowing ? 'opacity-20' : ''"
         class="w-[30px] mr-6 cursor-pointer"
         :src="EyeIcon"
         alt="Eye Icon"
