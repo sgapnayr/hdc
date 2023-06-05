@@ -9,7 +9,7 @@ import DeleteIcon from '@/assets/icons/delete-icon.svg'
 import ArchiveIcon from '@/assets/icons/archive-icon.svg'
 import EyeIcon from '@/assets/icons/eye-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { getPatients } from '@/lib/endpoints'
+import { getPatients, getPatient } from '@/lib/endpoints'
 import { Patient, Patients } from '@/types/patient-types'
 
 // LAYOUT **********************************************************************
@@ -26,7 +26,6 @@ const loadingPageExists = ref(true)
 function showPageForFiveSeconds() {
   loadingPageExists.value = true
   setTimeout(() => {
-    // Change to response for API
     loadingPageExists.value = false
   }, 2000)
 }
@@ -237,7 +236,8 @@ getPatientsInit()
             </div>
           </div>
           <!-- Table Patients -->
-          {{ patientList?.patients }}
+          {{ patientList?.patients[0]?.patientId }}
+          <button @click="getPatient(patientList?.patients[0]?.patientId as string)">getPatient</button>
           <div
             v-for="(patient, idx) in testPatients"
             :key="idx"

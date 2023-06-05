@@ -8,6 +8,8 @@ import ArchiveIcon from '@/assets/icons/archive-icon.svg'
 import EyeIcon from '@/assets/icons/eye-icon.svg'
 import Clipboard from '@/assets/images/clipboard.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
+import { getAllTasks } from '@/lib/endpoints'
+import { useTasksStore } from '@/stores/task'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -27,6 +29,9 @@ onMounted(() => {
     }
   })
 })
+
+// STOREs **********************************************************************
+const tasksStore = useTasksStore()
 
 // STATE **********************************************************************
 const tabSelected = ref<'Active Patients' | 'Inactive Patients'>('Active Patients')
@@ -94,6 +99,8 @@ function handleSelectingChip(chip: any) {
 function handleSelectedPatient(patient: any) {
   selectedPatient.value = patient
 }
+
+tasksStore.setAllTasks()
 </script>
 
 <template>
@@ -107,11 +114,11 @@ function handleSelectedPatient(patient: any) {
             <h1 class="text-[32px] font-[500]">General tasks pool</h1>
             <div class="flex gap-x-6 mt-[32px]">
               <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE]">
-                <div class="text-[32px] font-[500] leading-[40px]">3</div>
+                <div class="text-[32px] font-[500] leading-[40px]">{taskInProgress}</div>
                 In progress
               </div>
               <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34]">
-                <div class="text-[32px] font-[500] leading-[40px]">3</div>
+                <div class="text-[32px] font-[500] leading-[40px]">{tasksClaimed}</div>
                 Issued
               </div>
             </div>
@@ -182,36 +189,37 @@ function handleSelectedPatient(patient: any) {
             </div>
           </div>
           <!-- Table Patients -->
+          {{ tasksStore.allTasks }}
           <div
-            v-for="(patient, idx) in testPatients"
+            v-for="(task, idx) in tasksStore.allTasks"
             :key="idx"
             :class="[idx === testPatients.length - 1 ? 'rounded-b-[16px]' : '']"
             class="grid grid-cols-5 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 items-center"
           >
             <div>
-              {{ patient.fullName || '-' }}
+              {{ task.patientId }}
             </div>
             <div>
-              {{ patient.careCoordinator || '-' }}
+              {{ task.careCoordinator || '-' }}
             </div>
             <div class="flex">
               <div
                 class="px-4 py-2 rounded-[24px]"
                 :class="[
-                  patient.taskType === 'Submit Prescription'
+                  task.taskType === 'Submit Prescription'
                     ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                    : patient.taskType === 'New messages'
+                    : task.taskType === 'New messages'
                     ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                    : patient.taskType === 'Send blood slip'
+                    : task.taskType === 'Send blood slip'
                     ? 'bg-[#FFF7E5] text-[#996600]'
                     : '',
                 ]"
               >
-                {{ patient.taskType || '-' }}
+                {{ task.taskType || '-' }}
               </div>
             </div>
             <div>
-              {{ patient.comments || '-' }}
+              {{ task.comments || '-' }}
             </div>
 
             <div class="w-full flex justify-end gap-x-3">
@@ -224,7 +232,7 @@ function handleSelectedPatient(patient: any) {
 
               <BaseModal v-if="tabSelected === 'Inactive Patients'">
                 <template #button>
-                  <img @click="handleSelectedPatient(patient)" class="cursor-pointer" :src="DeleteIcon" alt="Delete Icon" />
+                  <img @click="handleSelectedPatient(task)" class="cursor-pointer" :src="DeleteIcon" alt="Delete Icon" />
                 </template>
                 <template #content>
                   <div class="flex flex-col p-8">

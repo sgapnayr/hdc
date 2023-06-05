@@ -49,6 +49,9 @@ interface Treatment {
 const cartStore = useCartStore()
 const profileStore = useProfileStore()
 
+// STATE **********************************************************************
+const profileData = ref<string>('')
+
 // DUMMY DATA **********************************************************************
 const treatments: Treatment[] = [
   {
@@ -78,8 +81,7 @@ const treatments: Treatment[] = [
 ]
 
 // METHODS **********************************************************************
-
-profileStore.getMyProfileInit()
+profileStore.setMyProfile()
 </script>
 
 <template>
@@ -91,7 +93,7 @@ profileStore.getMyProfileInit()
         <div class="bg-white w-full rounded-[8px] p-8 flex justify-between">
           <div class="flex flex-col justify-between w-1/2">
             <div class="flex flex-col">
-              <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Hi, {{ profileStore.profileData }}!</h1>
+              <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Hi, {{ profileStore.profileData ? profileStore.profileData.name : '...' }}!</h1>
               <p class="text-gray-5 mt-[16px] w-3/4">Welcome to your patient portal</p>
             </div>
             <div>{toDoListItems}</div>
@@ -280,9 +282,7 @@ profileStore.getMyProfileInit()
                     </div>
                   </div>
                   <div class="mt-[32px] w-full justify-start text-gray-4">Total (plus tax & shipping): {{ formatPennies(cartStore.getCartTotal()) }}</div>
-                  <div class="mt-[32px]">
-                    <BaseCheckBox> Shipping address same as home address {address}. </BaseCheckBox>
-                  </div>
+                  <div class="mt-[32px]"><BaseCheckBox> Shipping address same as home address {address}. </BaseCheckBox></div>
                 </div>
               </template>
               <template #button-text>

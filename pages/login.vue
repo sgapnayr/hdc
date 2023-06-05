@@ -16,7 +16,7 @@ definePageMeta({
 onMounted(() => {
   watchEffect(() => {
     if (user.authStatus === 'authenticated') {
-      navigateTo('/profile')
+      navigateTo('/admin')
     }
   })
 })
@@ -148,7 +148,6 @@ async function forgotPassword(username: string) {
       <BaseInput p-input-type="password" v-model="password" class="mt-[16px]" placeholder="Enter your password"></BaseInput>
       <div class="mt-[16px] text-honeydew-green text-[16px] font-[400] leading-[24px] w-full justify-end flex">Forgot password?</div>
       <BaseButton :state="loginButtonState" @click="signIn(username, password)" class="w-full mt-[32px]">Log In</BaseButton>
-      <NuxtLink to="/admin">Admin</NuxtLink>
       <div class="mt-[32px] text-gray-5 text-[16px] font-[400] leading-[24px] flex justify-center items-center">
         Don't have an account?<span class="text-honeydew-green font-[400] ml-1">Sign Up</span>
       </div>
