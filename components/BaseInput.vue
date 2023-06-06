@@ -88,17 +88,17 @@ const props = withDefaults(
 )
 
 // STATE ****************************************************************
-const isPasswordShowing = ref<boolean>(false)
+const isPasswordHidden = ref<boolean>(true)
 const inputType = ref<'password' | 'text' | 'phone-number'>(props.pInputType)
 
 // METHODS ****************************************************************
 function toggleInputField() {
   if (inputType.value === 'password') {
     inputType.value = 'text'
-    isPasswordShowing.value = false
+    isPasswordHidden.value = false
     return
   }
-  isPasswordShowing.value = true
+  isPasswordHidden.value = true
   inputType.value = 'password'
 }
 </script>
@@ -113,7 +113,7 @@ function toggleInputField() {
         v-if="pInputType === 'text' || 'password'"
         :value="modelValue"
         @blur="emit('blur')"
-        class="ml-4 outline-none bg-none"
+        class="ml-4 outline-none bg-none w-11/12 h-9"
         :type="inputType"
         :placeholder="placeholder"
         @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
@@ -134,7 +134,7 @@ function toggleInputField() {
       <img
         @click="toggleInputField"
         v-if="pInputType === 'password'"
-        :class="isPasswordShowing ? 'opacity-20' : ''"
+        :class="isPasswordHidden ? 'opacity-20' : ''"
         class="w-[30px] mr-6 cursor-pointer"
         :src="EyeIcon"
         alt="Eye Icon"
@@ -153,5 +153,12 @@ input {
   font-size: 16px;
   text-align: start;
   display: flex;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 </style>

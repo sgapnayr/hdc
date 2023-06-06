@@ -1,10 +1,7 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
-import { ref } from 'vue'
 import HoneydewLogo from '@/assets/images/honeydew-logo.svg'
 import HoneydewIcon from '@/assets/icons/honeydew-icon.svg'
-
-// EMITS **********************************************************************
 </script>
 
 <template>

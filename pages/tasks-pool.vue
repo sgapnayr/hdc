@@ -100,6 +100,17 @@ function handleSelectedPatient(patient: any) {
   selectedPatient.value = patient
 }
 
+function helloChester() {
+  let arr = ['1', '2']
+
+  for (let i = 0; i < arr.length; i++) {
+    const newNum = arr[i]
+    console.log(newNum)
+  }
+  console.log('This is my array of functon')
+}
+helloChester()
+
 tasksStore.setAllTasks()
 </script>
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
-import { ref, computed, reactive } from 'vue'
+import { ref, computed } from 'vue'
 import GroupDoctors from '@/assets/images/group-doctors.svg'
 import BaseWrapper from '~/components/BaseWrapper.vue'
 import BellIcon from '@/assets/icons/bell-icon.svg'
@@ -104,6 +104,12 @@ const tableHeaderCategories: TableHeaderCategory[] = [
     ],
   },
 ]
+
+function helloChris(number1: number, number2: number) {
+  return number1 + number2
+}
+
+helloChris(1, 3)
 
 const testPatients: Patient[] = [
   {
@@ -234,10 +240,10 @@ getPatientsInit()
                 </div>
               </div>
             </div>
+            {{ patientList?.patients[0]?.patientId }}
           </div>
           <!-- Table Patients -->
-          {{ patientList?.patients[0]?.patientId }}
-          <button @click="getPatient(patientList?.patients[0]?.patientId as string)">getPatient</button>
+          <button @click="getPatient()">getPatient</button>
           <div
             v-for="(patient, idx) in testPatients"
             :key="idx"
