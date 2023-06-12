@@ -35,10 +35,10 @@ function handleCheckBox() {
 </script>
 
 <template>
-  <div class="flex items-center text-gray-4">
+  <div class="flex items-start text-gray-4 w-full">
     <div
       @click.stop="handleCheckBox"
-      class="border border-gray-2 w-[20px] h-[20px] rounded-[4px] mr-[16px] cursor-pointer text-white flex justify-center items-ce"
+      class="border border-gray-2 w-[26px] h-[20px] rounded-[4px] mr-[16px] cursor-pointer text-white flex justify-center items-center"
       :class="[isSelected ? 'bg-honeydew-green' : '']"
     >
       <img v-if="isSelected" :src="CheckIcon" alt="Checkmark Icon" class="scale-75" />

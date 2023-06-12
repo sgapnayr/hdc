@@ -4,18 +4,18 @@ import { ref, computed } from 'vue'
 import GroupDoctors from '@/assets/images/group-doctors.svg'
 import BaseWrapper from '~/components/BaseWrapper.vue'
 import DeleteIcon from '@/assets/icons/delete-icon.svg'
-import ArchiveIcon from '@/assets/icons/archive-icon.svg'
-import EyeIcon from '@/assets/icons/eye-icon.svg'
-import Clipboard from '@/assets/images/clipboard.svg'
+import CaretIcon from '@/assets/icons/caret-icon.svg'
+import ClaimIcon from '@/assets/icons/claim-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { getAllTasks } from '@/lib/endpoints'
+import { createTask, assignTask, getPatient } from '@/lib/endpoints'
 import { useTasksStore } from '@/stores/task'
+import { usePatientStore } from '~/stores/patient'
 
 // LAYOUT **********************************************************************
 definePageMeta({
   layout: 'captured',
   middleware: ['auth'],
-  loading: '@/components/Loading.vue', // Specify the path to your loading component
+  loading: '@/components/Loading.vue',
 })
 
 // ROUTER **********************************************************************
@@ -30,13 +30,21 @@ onMounted(() => {
   })
 })
 
-// STOREs **********************************************************************
+// STORES **********************************************************************
 const tasksStore = useTasksStore()
+const patientStore = usePatientStore()
 
 // STATE **********************************************************************
 const tabSelected = ref<'Active Patients' | 'Inactive Patients'>('Active Patients')
 const selectedChip = ref({ text: 'All', amount: 10 })
-const selectedPatient = ref()
+const selectedPatient = ref<{ patientName: string; patientID: string }>()
+const selectedPatientID = ref<string>()
+const patientMenuOpen = ref<boolean>(false)
+const taskType = ref<'Submit Prescription' | 'New messages' | 'Send blood slip' | 'New patient' | 'Accutane' | 'Documents needed'>('New patient')
+const taskTypeMenuOpen = ref<boolean>(false)
+const taskPriority = ref<'Low' | 'Medium' | 'High'>('Medium')
+const taskPriorityMenuOpen = ref<boolean>(false)
+const taskComments = ref<string>()
 
 // MEMBER DATA ****************************************************************
 const categoryChips = [
@@ -61,30 +69,20 @@ const categoryChips = [
 const tableHeaderCategories = [
   {
     role: 'admin', // Change for admin, care coord. etc
-    categories: [{ text: "Patient's Full name" }, { text: 'Care coordinator' }, { text: 'Task Type' }, { text: 'Comments' }, { text: 'Actions' }],
+    categories: [{ text: "Patient's Full name" }, { text: 'Priority' }, { text: 'Task Type' }, { text: 'Comments' }, { text: 'Actions' }],
   },
 ]
 
-const testPatients = [
-  {
-    fullName: 'Ryan Pagelion',
-    careCoordinator: 'Dr. Yahor',
-    taskType: 'Submit Prescription',
-    comments: 'New treatment plan should be submitted',
-  },
-  {
-    fullName: 'Ryan Pagelion',
-    careCoordinator: 'Dr. Yahor',
-    taskType: 'New messages',
-    comments: 'New treatment plan should be submitted',
-  },
-  {
-    fullName: 'Ryan Pagelion',
-    careCoordinator: 'Dr. Yahor',
-    taskType: 'Send blood slip',
-    comments: 'New treatment plan should be submitted',
-  },
+const taskTypes = [
+  { text: 'Submit Prescription' },
+  { text: 'New messages' },
+  { text: 'Send blood slip' },
+  { text: 'New patient' },
+  { text: 'Accutane' },
+  { text: 'Documents needed' },
 ]
+
+const taskPriorities = [{ text: 'Low' as 'Low' }, { text: 'Medium' as 'Medium' }, { text: 'High' as 'High' }]
 
 // COMPUTED METHODS ****************************************************************
 const handleChipData = computed(() => {
@@ -96,22 +94,33 @@ function handleSelectingChip(chip: any) {
   selectedChip.value = chip
 }
 
-function handleSelectedPatient(patient: any) {
-  selectedPatient.value = patient
+function handleSelectedPatient(patientName: string, patientID: string) {
+  selectedPatient.value = { patientName, patientID }
+  selectedPatientID.value = patientID
 }
 
-function helloChester() {
-  let arr = ['1', '2']
-
-  for (let i = 0; i < arr.length; i++) {
-    const newNum = arr[i]
-    console.log(newNum)
+function handleSubmitNewTask() {
+  const query = {
+    patientId: selectedPatientID,
+    assigneeId: 'YOUR_ASSIGNEE_ID',
+    dueDate: '2023-06-10T00:00:00Z',
+    description: taskComments,
+    status: 'YOUR_STATUS',
+    priority: taskPriority,
+    type: taskType,
   }
-  console.log('This is my array of functon')
-}
-helloChester()
+  createTask(query)
 
+  selectedPatient.value = { patientName: '', patientID: '' }
+  taskType.value = 'New patient'
+  taskPriority.value = 'Low'
+  taskComments.value = ''
+}
+
+// INIT ****************************************************************
+patientStore.getAllPatients()
 tasksStore.setAllTasks()
+tasksStore.setAssigneeTasks()
 </script>
 
 <template>
@@ -120,35 +129,206 @@ tasksStore.setAllTasks()
       <!-- Summary Top -->
       <div class="flex gap-x-6">
         <!-- General tasks pool -->
-        <div class="bg-white p-8 rounded-[16px] flex justify-between w-3/4 relative">
+        <div class="bg-white p-8 rounded-[16px] flex justify-between relative w-full">
           <div class="w-full">
             <h1 class="text-[32px] font-[500]">General tasks pool</h1>
             <div class="flex gap-x-6 mt-[32px]">
               <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE]">
-                <div class="text-[32px] font-[500] leading-[40px]">{taskInProgress}</div>
+                <div class="text-[32px] font-[500] leading-[40px]">{{ tasksStore.assigneeTasks?.length }}</div>
                 In progress
               </div>
               <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34]">
-                <div class="text-[32px] font-[500] leading-[40px]">{tasksClaimed}</div>
+                <div class="text-[32px] font-[500] leading-[40px]">{{ tasksStore.allTasks?.length }}</div>
                 Issued
               </div>
             </div>
           </div>
           <img class="absolute bottom-0 right-8" :src="GroupDoctors" alt="Group of Doctors" />
         </div>
-
-        <!-- Helped patients this week -->
-        <div class="bg-white flex justify-center items-center w-1/4 rounded-[12px] p-4">
-          <div class="flex flex-col bg-[#FBFBFE] justify-center items-center h-full w-full rounded-[12px]">
-            <img :src="Clipboard" alt="Clipboard" />
-            <div class="text-[32px] font-[500] text-gray-5 my-1">{patientsHelped}</div>
-            <div class="text-[16px] font-[500] text-gray-5">Helped patients this week</div>
-          </div>
-        </div>
       </div>
 
-      <!-- Table -->
-      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full mt-[32px] flex-col">
+      <!-- Add New Task Button & Modal -->
+      <div class="w-full flex justify-start mt-4">
+        <BaseModal @action-click="handleSubmitNewTask">
+          <template #button>
+            <div
+              class="text-[12px] h-[40px] w-[188px] flex justify-center items-center rounded-[60px] mr-[16px] uppercase cursor-pointer bg-honeydew-purple text-white"
+            >
+              <div class="mr-[6px]">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 3.5V12.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M12.5 8H3.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              Add new task
+            </div>
+          </template>
+          <template #header> Add new task </template>
+          <template #content>
+            <!-- Patient Name Drop Down -->
+            <div>
+              <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Patient's Name</h2>
+              <div
+                class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4 relative cursor-pointer"
+                :class="[patientMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
+                placeholder="Search by patient's name"
+                type="text"
+                @click="patientMenuOpen = !patientMenuOpen"
+              >
+                <div>{{ selectedPatient?.patientName || selectedPatient?.patientID || 'Select Patient' }}</div>
+                <img :class="[patientMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
+                <div v-if="patientMenuOpen">
+                  <div class="absolute left-0 top-12 w-full">
+                    <div
+                      class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4 cursor-pointer shadow-md"
+                      v-for="(patient, idx) in patientStore.allPatients.patients"
+                      :key="idx"
+                      :class="[patientStore.allPatients.patients.length - 1 === idx ? 'rounded-b-[28px]' : '']"
+                      @click="handleSelectedPatient(patient.patientProfile.name || patient.patientProfile.patientLastName, patient.patientId)"
+                    >
+                      {{ patient.patientProfile.name || patient.patientProfile.patientLastName || patient.patientId }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Task Type Drop Down -->
+            <div :class="[taskTypeMenuOpen ? 'z-40' : 'z-0']">
+              <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Type</h2>
+              <div
+                class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+                :class="[taskTypeMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
+                placeholder="Search by patient's name"
+                type="text"
+                @click="taskTypeMenuOpen = !taskTypeMenuOpen"
+              >
+                <div
+                  class="px-4 py-1 rounded-[24px]"
+                  :class="[
+                    taskType === 'Submit Prescription'
+                      ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                      : taskType === 'New messages'
+                      ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                      : taskType === 'Send blood slip'
+                      ? 'bg-[#FFF7E5] text-[#996600]'
+                      : taskType === 'New patient'
+                      ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                      : taskType === 'Accutane'
+                      ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                      : taskType === 'Documents needed'
+                      ? 'bg-[#FFF7E5] text-[#996600]'
+                      : '',
+                  ]"
+                >
+                  {{ taskType || 'Select Task' }}
+                </div>
+                <img :class="[taskTypeMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
+                <div v-if="taskTypeMenuOpen">
+                  <div class="absolute left-0 top-12 w-full">
+                    <div
+                      class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
+                      v-for="(task, idx) in taskTypes"
+                      :key="idx"
+                      :class="[taskTypes.length - 1 === idx ? 'rounded-b-[28px]' : '']"
+                      @click="
+                        taskType = task.text as 'Submit Prescription' | 'New messages' | 'Send blood slip' | 'New patient' | 'Accutane' | 'Documents needed'
+                      "
+                    >
+                      <div
+                        class="px-4 py-1 rounded-[24px]"
+                        :class="[
+                          task.text === 'Submit Prescription'
+                            ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                            : task.text === 'New messages'
+                            ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                            : task.text === 'Send blood slip'
+                            ? 'bg-[#FFF7E5] text-[#996600]'
+                            : task.text === 'New patient'
+                            ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                            : task.text === 'Accutane'
+                            ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                            : task.text === 'Documents needed'
+                            ? 'bg-[#FFF7E5] text-[#996600]'
+                            : '',
+                        ]"
+                      >
+                        {{ task.text }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Priority Drop Down -->
+            <div :class="[taskPriorityMenuOpen ? 'z-40' : 'z-0']">
+              <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Type</h2>
+              <div
+                class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+                :class="[taskPriorityMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
+                placeholder="Search by patient's name"
+                type="text"
+                @click="taskPriorityMenuOpen = !taskPriorityMenuOpen"
+              >
+                <div
+                  class="px-4 py-1 rounded-[24px]"
+                  :class="[
+                    taskPriority === 'Low'
+                      ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                      : taskPriority === 'Medium'
+                      ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                      : taskPriority === 'High'
+                      ? 'bg-[#FFF7E5] text-[#996600]'
+                      : '',
+                  ]"
+                >
+                  {{ taskPriority || 'Select Priority' }}
+                </div>
+                <img :class="[taskPriorityMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
+                <div v-if="taskPriorityMenuOpen">
+                  <div class="absolute left-0 top-12 w-full">
+                    <div
+                      class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
+                      v-for="(priority, idx) in taskPriorities"
+                      :key="idx"
+                      :class="[taskPriorities.length - 1 === idx ? 'rounded-b-[28px]' : '']"
+                      @click="taskPriority = priority.text"
+                    >
+                      <div
+                        class="px-4 py-1 rounded-[24px]"
+                        :class="[
+                          priority.text === 'Low'
+                            ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                            : priority.text === 'Medium'
+                            ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                            : priority.text === 'High'
+                            ? 'bg-[#FFF7E5] text-[#996600]'
+                            : '',
+                        ]"
+                      >
+                        {{ priority.text || 'Low' }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Comments</h2>
+              <input
+                class="bg-white w-[518px] h-[48px] mb-[10px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                placeholder="Briefly describe the task"
+                type="text"
+                v-model="taskComments"
+              />
+            </div>
+            <div class="w-full border-b mt-[24px] border-[#F2F4F7]"></div>
+          </template>
+          <template #button-text @click="handleSubmitNewTask"> Submit New Task </template>
+        </BaseModal>
+      </div>
+      <!-- Assigned To Me Table -->
+      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full mt-[16px] flex-col">
         <!-- Tabs -->
         <div class="flex text-[16px] font-[400] gap-x-8">
           <div
@@ -156,14 +336,7 @@ tasksStore.setAllTasks()
             class="h-full py-4 cursor-pointer"
             @click="tabSelected = 'Active Patients'"
           >
-            Active Patients
-          </div>
-          <div
-            :class="[tabSelected === 'Inactive Patients' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
-            class="h-full py-4 cursor-pointer"
-            @click="tabSelected = 'Inactive Patients'"
-          >
-            Inactive Patients
+            Assigned to me
           </div>
         </div>
 
@@ -199,20 +372,103 @@ tasksStore.setAllTasks()
               </div>
             </div>
           </div>
+
           <!-- Table Patients -->
-          {{ tasksStore.allTasks }}
+          <div
+            v-for="(task, idx) in tasksStore.assigneeTasks"
+            :key="idx"
+            :class="[idx === task.length - 1 ? 'rounded-b-[16px]' : '']"
+            class="grid grid-cols-5 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 items-center"
+          >
+            <div>{{ task.patientId?.patientProfile?.patientFirstName }} {{ task.patientId?.patientProfile?.patientLastName }}</div>
+            <div>
+              {{ task.taskAssignedAt }}
+            </div>
+            <div>
+              {{ task.description }}
+            </div>
+            <div class="flex">
+              <div
+                class="px-4 py-2 rounded-[24px]"
+                :class="[
+                  task.type === 'Submit Prescription'
+                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                    : task.type === 'New messages'
+                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                    : task.type === 'Send blood slip'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : task.type === 'New patient'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : task.type === 'Accutane'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : task.type === 'Documents needed'
+                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                    : '',
+                ]"
+              >
+                {{ task.description }}
+              </div>
+            </div>
+            <div class="w-full flex justify-end">asdf</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- General Table -->
+      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full mt-[32px] flex-col">
+        <!-- Tabs -->
+        <div class="flex text-[16px] font-[400] gap-x-8">
+          <div
+            :class="[tabSelected === 'Active Patients' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
+            class="h-full py-4 cursor-pointer"
+            @click="tabSelected = 'Active Patients'"
+          >
+            General
+          </div>
+        </div>
+
+        <!-- Chips -->
+        <div class="mt-[24px]">
+          <div v-for="(categoryChip, idx) in handleChipData" :key="idx" class="flex">
+            <div @click="() => handleSelectingChip(chip)" v-for="(chip, jdx) in categoryChip.chips" :key="jdx">
+              <div
+                :class="[selectedChip?.text === chip.text ? 'bg-[#EEEBFC] text-honeydew-purple' : 'bg-honeydew-bg2']"
+                class="rounded-[20px] p-2 px-4 flex items-center justify-between mr-2 cursor-pointer"
+                v-if="chip.text"
+              >
+                {{ chip.text }}
+                <div class="h-1 w-1 bg-black mx-2 rounded-full"></div>
+                {{ chip.amount }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Patients Table -->
+        <div class="bg-white">
+          <!-- Table Header -->
+          <div class="mt-[24px]">
+            <div
+              v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
+              :key="idx"
+              class="grid grid-cols-5 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
+            >
+              <div v-for="(category, jdx) in tableHeaderCategory.categories" :key="jdx" :class="[category.text === 'Full name' ? 'col-span-2' : 'col-span-1']">
+                <div :class="category.text === 'Actions' ? 'w-full flex justify-end' : ''">
+                  {{ category.text }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- General  -->
           <div
             v-for="(task, idx) in tasksStore.allTasks"
             :key="idx"
-            :class="[idx === testPatients.length - 1 ? 'rounded-b-[16px]' : '']"
+            :class="[idx === task.length - 1 ? 'rounded-b-[16px]' : '']"
             class="grid grid-cols-5 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 items-center"
           >
-            <div>
-              {{ task.patientId }}
-            </div>
-            <div>
-              {{ task.careCoordinator || '-' }}
-            </div>
+            <div>{{ task.patientId?.patientProfile?.patientFirstName }} {{ task.patientId?.patientProfile?.patientLastName }}</div>
+            <div></div>
             <div class="flex">
               <div
                 class="px-4 py-2 rounded-[24px]"
@@ -223,10 +479,16 @@ tasksStore.setAllTasks()
                     ? 'bg-[#EEF7EE] text-[#3A6A34]'
                     : task.taskType === 'Send blood slip'
                     ? 'bg-[#FFF7E5] text-[#996600]'
+                    : task.taskType === 'New patient'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : task.taskType === 'Accutane'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : task.taskType === 'Documents needed'
+                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
                     : '',
                 ]"
               >
-                {{ task.taskType || '-' }}
+                {{ task.description }}
               </div>
             </div>
             <div>
@@ -234,11 +496,8 @@ tasksStore.setAllTasks()
             </div>
 
             <div class="w-full flex justify-end gap-x-3">
-              <div>
-                <img v-if="tabSelected === 'Active Patients'" class="cursor-pointer" :src="EyeIcon" alt="Eye Icon" />
-              </div>
-              <div>
-                <img v-if="tabSelected === 'Active Patients'" class="cursor-pointer" :src="ArchiveIcon" alt="Archive Icon" />
+              <div class="transition active:scale-90" @click="assignTask(task.taskId)">
+                <img v-if="tabSelected === 'Active Patients'" class="cursor-pointer" :src="ClaimIcon" alt="Claim Icon" />
               </div>
 
               <BaseModal v-if="tabSelected === 'Inactive Patients'">

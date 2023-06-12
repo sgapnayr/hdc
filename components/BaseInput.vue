@@ -76,7 +76,7 @@ const emit = defineEmits<{
 const props = withDefaults(
   defineProps<{
     modelValue?: string
-    pInputType: 'text' | 'password' | 'phone-number'
+    pInputType: 'text' | 'password' | 'phone-number' | 'date'
     placeholder?: string
     validationMessage?: string
   }>(),
@@ -89,7 +89,7 @@ const props = withDefaults(
 
 // STATE ****************************************************************
 const isPasswordHidden = ref<boolean>(true)
-const inputType = ref<'password' | 'text' | 'phone-number'>(props.pInputType)
+const inputType = ref<'password' | 'text' | 'phone-number' | 'date'>(props.pInputType)
 
 // METHODS ****************************************************************
 function toggleInputField() {
@@ -109,15 +109,17 @@ function toggleInputField() {
       <slot> </slot>
     </div>
     <div class="w-[370px] h-[60px] rounded-[60px] outline-none bg-white flex justify-between items-center border border-gray-2">
-      <input
-        v-if="pInputType === 'text' || 'password'"
-        :value="modelValue"
-        @blur="emit('blur')"
-        class="ml-4 outline-none bg-none w-11/12 h-9"
-        :type="inputType"
-        :placeholder="placeholder"
-        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-      />
+      <div class="w-full" v-if="pInputType !== 'phone-number'">
+        <input
+          v-if="pInputType === 'text' || 'password' || 'date'"
+          :value="modelValue"
+          @blur="emit('blur')"
+          class="ml-4 outline-none bg-none w-11/12 h-9"
+          :type="inputType"
+          :placeholder="placeholder"
+          @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+        />
+      </div>
 
       <input
         v-if="pInputType === 'phone-number'"

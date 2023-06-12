@@ -3,6 +3,19 @@ import { getMyProfile } from '@/lib/endpoints'
 
 export const useProfileStore = defineStore('profile', () => {
   const profileData = ref()
+  const isPatientMember = ref(false)
+
+  // Sign Up Flow State
+  const signUpDescribeYouAnswer = ref<string>()
+  const signUpZipCode = ref<string>()
+  const signUpName = ref<string>()
+  const signUpDOB = ref<string>()
+  const signUpMinorFullName = ref<string>()
+  const signUpMinorEmailAddress = ref<string>()
+  const signUpMinorPhoneNumber = ref<string>()
+  const signUpEmail = ref<string>()
+  const signUpPassword = ref<string>()
+  const signUpAgreement = ref<boolean>()
 
   // SETTERS ****************************************************************
   async function setMyProfile() {
@@ -84,5 +97,19 @@ export const useProfileStore = defineStore('profile', () => {
   //   },
   // ]
 
-  return { profileData, setMyProfile }
+  return {
+    profileData,
+    setMyProfile,
+    isPatientMember,
+    signUpDescribeYouAnswer,
+    signUpZipCode,
+    signUpName,
+    signUpDOB,
+    signUpMinorFullName,
+    signUpMinorEmailAddress,
+    signUpMinorPhoneNumber,
+    signUpEmail,
+    signUpPassword,
+    signUpAgreement,
+  }
 })

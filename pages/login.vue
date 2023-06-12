@@ -151,7 +151,7 @@ async function forgotPassword(username: string) {
       >
       <BaseButton :state="loginButtonState" @click="signIn(username, password)" class="w-full mt-[32px]">Log In</BaseButton>
       <div class="mt-[32px] text-gray-5 text-[16px] font-[400] leading-[24px] flex justify-center items-center">
-        Don't have an account?<span class="text-honeydew-green font-[400] ml-1">Sign Up</span>
+        Don't have an account?<NuxtLink to="/sign-up" class="text-honeydew-green font-[400] ml-1">Sign Up</NuxtLink>
       </div>
     </BaseWrapper>
   </div>

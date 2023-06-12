@@ -56,6 +56,11 @@ const emit = defineEmits<{
 
 // MEMBER DATA ****************************************************************
 const modalIsOpen = ref<boolean>(false)
+
+function test() {
+  emit('action-click')
+  modalIsOpen.value = false
+}
 </script>
 
 <template>
@@ -82,7 +87,7 @@ const modalIsOpen = ref<boolean>(false)
                   Close
                 </div>
                 <div
-                  @click="emit('action-click')"
+                  @click="test"
                   class="text-[12px] h-[40px] px-6 flex justify-center items-center rounded-[60px] bg-honeydew-purple text-white uppercase cursor-pointer mt-[32px] whitespace-nowrap"
                 >
                   <slot name="button-text"> Content </slot>

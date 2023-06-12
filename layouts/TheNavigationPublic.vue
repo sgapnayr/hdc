@@ -30,12 +30,12 @@ definePageMeta({
         </div>
         <div class="flex w-full justify-end items-center">
           <NuxtLink to="/login" class="hidden md:flex cursor-pointer">LOGIN</NuxtLink>
-          <button
+          <NuxtLink
+            to="/sign-up"
             class="bg-honeydew-purple h-[48px] justify-center text-white items-center flex w-[153px] rounded-[60px] ml-[40px] font-[500] text-[14px] leading-[24px] cursor-pointer"
-            @click="router.push('/sign-up')"
           >
             GET STARTED
-          </button>
+          </NuxtLink>
         </div>
         <div class="md:hidden relative flex justify-center items-center border w-[48px] h-[48px] rounded-[12px] cursor-pointer border-gray-2 text-gray-3">
           <img class="absolute w-[18px]" :src="HamburgerIcon" alt="Hamburger Menu" />

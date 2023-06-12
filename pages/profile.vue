@@ -193,7 +193,8 @@ profileStore.setMyProfile()
             </h1>
             <p class="text-gray-5 mt-[8px] text-[14px]">See the stacked photos from my visit submissions.</p>
             <button
-              class="bg-honeydew-purple h-[40px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap mt-[16px]"
+              :class="[profileStore.isPatientMember ? 'bg-honeydew-purple cursor-pointer' : 'bg-gray-1 cursor-not-allowed']"
+              class="h-[40px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] uppercase whitespace-nowrap mt-[16px]"
             >
               View
             </button>
@@ -302,7 +303,8 @@ profileStore.setMyProfile()
             </h1>
             <p class="text-gray-5 mt-[8px] text-[14px]">Ongoing support within 24 hours. Refills, skin questions, etc.</p>
             <button
-              class="bg-honeydew-purple h-[40px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap mt-[16px]"
+              :class="[profileStore.isPatientMember ? 'bg-honeydew-purple cursor-pointer' : 'bg-gray-1 cursor-not-allowed']"
+              class="h-[40px] px-6 justify-center items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] text-white uppercase whitespace-nowrap mt-[16px]"
             >
               Open Chat
             </button>

@@ -1,8 +1,15 @@
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getAllTasks } from '@/lib/endpoints'
+import { getAllTasks, getTaskByAssignee } from '@/lib/endpoints'
+import { useProfileStore } from './profile'
 
 export const useTasksStore = defineStore('tasks', () => {
+  // STORE ****************************************************************
+  const profileStore = useProfileStore()
+
+  // STATE ****************************************************************
   const allTasks = ref()
+  const assigneeTasks = ref()
 
   // SETTERS ****************************************************************
   async function setAllTasks() {
@@ -14,5 +21,14 @@ export const useTasksStore = defineStore('tasks', () => {
     }
   }
 
-  return { allTasks, setAllTasks }
+  async function setAssigneeTasks() {
+    try {
+      const response = await getTaskByAssignee()
+      assigneeTasks.value = response.tasks
+    } catch (error) {
+      console.error('Error retrieving employees:', error)
+    }
+  }
+
+  return { allTasks, setAllTasks, setAssigneeTasks, assigneeTasks }
 })

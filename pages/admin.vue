@@ -85,6 +85,7 @@ const categoryChips: CategoryChips[] = [
       { text: 'Follow-No shows', amount: 10 },
       { text: 'Canceled', amount: 10 },
       { text: 'Archived', amount: 10 },
+      { text: 'New Messages', amount: 10 },
     ],
   },
 ]
@@ -240,7 +241,7 @@ getPatientsInit()
                 </div>
               </div>
             </div>
-            {{ patientList?.patients[0]?.patientId }}
+            {{ patientList?.patients }}
           </div>
           <!-- Table Patients -->
           <button @click="getPatient()">getPatient</button>

@@ -18,7 +18,7 @@ Ryan -->
 <script setup lang="ts">
 // IMPORTS ********************************************************************
 import { ref } from 'vue'
-import XIcon from '@/assets/icons/x-icon.svg'
+import XIcon from '@/assets/icons/x-icon-white.svg'
 
 // PROPS ****************************************************************
 withDefaults(
