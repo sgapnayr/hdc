@@ -8,6 +8,10 @@ import PaperIcon from '@/assets/icons/paper-icon.svg'
 import PhoneIcon from '@/assets/icons/phone-icon.svg'
 import EmailIcon from '@/assets/icons/email-icon.svg'
 import AlertIcon from '@/assets/icons/alert-icon.svg'
+import { useProfileStore } from '@/stores/profile'
+
+// STORES *********************************************************************
+const profileStore = useProfileStore()
 
 // STATE *********************************************************************
 const toDoListOrDetailsSelected = ref<'To do' | 'Details'>('To do')
@@ -37,35 +41,35 @@ const toDoListOrDetailsSelected = ref<'To do' | 'Details'>('To do')
       </div>
 
       <!-- Patient Info -->
-      <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">{patientName}</h1>
+      <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">{{ profileStore.signUpName || 'Name' }}</h1>
       <div class="mt-[8px] w-3/4 flex flex-wrap items-center">
-        <p class="text-[16px] text-gray-5 font-[400]">{patientGender}</p>
+        <p class="text-[16px] text-gray-5 font-[400]">{{ profileStore.sexAssignedAtBirth || '-' }}</p>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-        <p class="text-[16px] text-gray-5 font-[400]">{patientGender}</p>
+        <p class="text-[16px] text-gray-5 font-[400]">{{ profileStore.signUpAge || '-' }}</p>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-        <p class="text-[16px] text-gray-5 font-[400]">{patientDOB}</p>
+        <p class="text-[16px] text-gray-5 font-[400]">{{ profileStore.signUpDOB || '-' }}</p>
       </div>
       <div class="text-[16px] font-[400] mt-[8px] text-gray-5 flex items-center">
-        <div class="text-">H: {patientHeight}</div>
+        <div class="text-">H: {{ profileStore.signUpHeight || '-' }}</div>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-        <div class="text-">W: {patientWeight}</div>
+        <div class="text-">W: {{ profileStore.signUpWeight || '-' }}</div>
       </div>
       <div class="text-[16px] font-[400] mt-[32px] text-gray-3 flex flex-col items-start gap-y-6">
         <div class="flex items-center gap-x-[14px]">
           <img :src="PhoneIcon" alt="Phone Icon" />
-          <div>{patientPhoneNumber}</div>
+          <div>{{ profileStore.signUpPhoneNumber || '-' }}</div>
         </div>
         <div class="flex items-center gap-x-[14px]">
           <img :src="EmailIcon" alt="Email Icon" />
-          <div>{patientEmail}</div>
+          <div>{{ profileStore.signUpEmail || '-' }}</div>
         </div>
       </div>
     </div>
 
     <!-- Patient Allergies -->
-    <div class="bg-honeydew-orange w-full py-6 px-8 flex gap-x-2 text-gray-3 font-[400]">
+    <div v-if="profileStore.doYouHaveAnyAllergies" class="bg-honeydew-orange w-full py-6 px-8 flex gap-x-2 text-gray-3 font-[400]">
       <img :src="AlertIcon" alt="Alert Icon" />
-      <div>{patientAllergies}.length allergies: {patientAllergies}</div>
+      <div>Patient has allergies: {{ profileStore.doYouHaveAnyAllergies || '-' }}</div>
     </div>
 
     <!-- Padding Wrapper -->

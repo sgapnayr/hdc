@@ -9,7 +9,6 @@ import ViewMyProgress from '@/assets/images/view-my-progress.svg'
 import BuyProducts from '@/assets/images/buy-products.svg'
 import ChatWithCareTeam from '@/assets/images/chat-with-care-team.svg'
 import LockIcon from '@/assets/icons/lock-icon.svg'
-
 import { formatPennies } from '@/utils/helpers'
 import { useCartStore } from '@/stores/cart'
 import MoisturizerProduct from '@/assets/products/moisturizer-product.svg'
@@ -86,7 +85,6 @@ profileStore.setMyProfile()
 
 <template>
   <div class="flex flex-col py-8">
-    {{ profileStore }}
     <BaseWrapper>
       <!-- Upper cards -->
       <div class="flex gap-x-6">
@@ -94,7 +92,7 @@ profileStore.setMyProfile()
         <div class="bg-white w-full rounded-[8px] p-8 flex justify-between">
           <div class="flex flex-col justify-between w-1/2">
             <div class="flex flex-col">
-              <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Hi, {{ profileStore.profileData ? profileStore.profileData.name : '...' }}!</h1>
+              <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Hi, {{ profileStore.signUpName ? profileStore.signUpName : '...' }}!</h1>
               <p class="text-gray-5 mt-[16px] w-3/4">Welcome to your patient portal</p>
             </div>
             <div>{toDoListItems}</div>

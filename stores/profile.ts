@@ -4,12 +4,16 @@ import { getMyProfile } from '@/lib/endpoints'
 export const useProfileStore = defineStore('profile', () => {
   const profileData = ref()
   const isPatientMember = ref(false)
+  const scheduleVisitDataArr = ref<any>([])
 
   // Sign Up Flow State
   const signUpDescribeYouAnswer = ref<string>()
   const signUpZipCode = ref<string>()
   const signUpName = ref<string>()
   const signUpDOB = ref<string>()
+  const signUpAge = ref<string>()
+  const signUpHeight = ref<string>()
+  const signUpWeight = ref<string>()
   const overEighteen = ref<boolean>()
   const signUpEmail = ref<string>()
   const signUpPhoneNumber = ref<string>()
@@ -21,6 +25,7 @@ export const useProfileStore = defineStore('profile', () => {
   const creditCardExpiration = ref<string>()
   const creditCardCVV = ref<string>()
 
+  // Schedule Visit Flow
   const howLongHaveYouHadAcne = ref<"I'm new to acne" | "I've had acne for months" | "I've had acne for years">()
   const doYouHaveDrySkin = ref<'Very dry' | 'Often dry' | 'Combination' | 'Often oily' | 'Very oily'>()
   const doYouHaveSensitiveSkin = ref<'Very sensitive' | 'Somewhat sensitive' | 'Not really'>()
@@ -55,14 +60,68 @@ export const useProfileStore = defineStore('profile', () => {
       console.error('Error retrieving employees:', error)
     }
   }
+
+  // Schedule Visit Flow
+  const saveScheduleVisitData = () => {
+    const scheduleVisitData = [
+      {
+        medicalTitle: 'Skin Type',
+        content: [
+          { name: 'Dryness', value: doYouHaveDrySkin.value },
+          { name: 'Sensitivity', value: doYouHaveSensitiveSkin.value },
+        ],
+      },
+      {
+        medicalTitle: 'Acne History',
+        content: [
+          { name: 'Had acne for', value: howLongHaveYouHadAcne.value },
+          { name: 'Products Tried', value: whatKindOfProductsHaveYouTried.value },
+          { name: 'Non-prescriptions used', value: whichNonPrescriptionsDoYouUse.value },
+        ],
+      },
+      {
+        medicalTitle: 'Cycle & Menstruation',
+        content: [
+          { name: 'Sex assigned at birth', value: sexAssignedAtBirth.value },
+          { name: 'Pregnant', value: areYouPregnant.value },
+          { name: 'Breakouts', value: doYouBreakOut.value },
+          { name: 'Menstrual Acne Behavior', value: isYourMenstrualCycleRegular.value },
+          { name: 'Birth Control', value: doYouTakeBirthControl.value },
+          { name: 'History of PCOS', value: doYouHaveHistoryOfPCOS.value },
+        ],
+      },
+      {
+        medicalTitle: 'Other Medical History',
+        content: [
+          { name: 'Other Medications', value: areYouTakingOtherMedications.value },
+          { name: 'Allergies', value: doYouHaveAnyAllergies.value },
+        ],
+      },
+      {
+        medicalTitle: 'Lifestyle',
+        content: [
+          { name: 'Stress Level', value: describeYourStressLevel.value },
+          { name: 'Sleep', value: describeYourSleep.value },
+          { name: 'Dairy Consumption', value: howOftenDoYouConsumeDairy.value },
+        ],
+      },
+    ]
+
+    scheduleVisitDataArr.value.push(...scheduleVisitData)
+  }
+
+  // EXPORTS ****************************************************************
   return {
     profileData,
+    scheduleVisitDataArr,
+    saveScheduleVisitData,
     setMyProfile,
     isPatientMember,
     signUpDescribeYouAnswer,
     signUpZipCode,
     signUpName,
     signUpDOB,
+    signUpAge,
     overEighteen,
     signUpEmail,
     signUpPassword,
@@ -90,5 +149,7 @@ export const useProfileStore = defineStore('profile', () => {
     describeYourSleep,
     howOftenDoYouConsumeDairy,
     lastStepLetsSeeYourSkin,
+    signUpHeight,
+    signUpWeight,
   }
 })

@@ -16,6 +16,20 @@
 <script setup lang="ts">
 import TheFooterApp from './TheFooterApp.vue'
 import TheSideBar from './TheSideBar.vue'
+import { Auth } from 'aws-amplify'
+
+const user = ref()
+async function getUser() {
+  try {
+    const userVal = await Auth.currentAuthenticatedUser()
+    console.log(userVal.authenticationFlowType) // Need to set admin, care coord, auth roles, etc.
+    return (user.value = userVal)
+  } catch (error) {
+    console.log('Error:', error)
+  }
+}
+
+getUser()
 </script>
 
 <style scoped>

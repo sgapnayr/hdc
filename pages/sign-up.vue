@@ -19,7 +19,7 @@ const router = useRouter()
 const profileStore = useProfileStore()
 
 // STATE **********************************************************************
-const currentQuestionIdx = ref<number>(6)
+const currentQuestionIdx = ref<number>(0)
 const currentSelectedAnswer = ref<string>()
 const secondCurrentSelectedAnswer = ref<string>()
 const thirdCurrentSelectedAnswer = ref<string | boolean>()
@@ -304,8 +304,12 @@ watch(
       <!-- Verify Email -->
       <div v-if="currentQuestionIdx === 5">
         <div class="flex w-full justify-center items-center">
-          <img v-if="buttonLoadingState !== 'success'" :src="VerifyEmail" alt="Verify Email" />
-          <img v-if="buttonLoadingState === 'success'" :src="VerifyEmailSuccess" alt="Verify Email" />
+          <TheTransitionWrapper>
+            <img v-if="buttonLoadingState !== 'success'" :src="VerifyEmail" alt="Verify Email" />
+          </TheTransitionWrapper>
+          <TheTransitionWrapper>
+            <img v-if="buttonLoadingState === 'success'" :src="VerifyEmailSuccess" alt="Verify Email" />
+          </TheTransitionWrapper>
         </div>
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Verify your email</h1>
         <p class="mb-[32px] font-[400] text-gray-5">

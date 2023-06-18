@@ -74,30 +74,28 @@ function handleSelected(selectedVal: string) {
         <!-- Treatment History -->
         <div v-if="treatmentHistoryOrDocumentsSelected === 'Treatment History'" class="p-8">
           <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Medical background</h1>
-          <div v-for="(data, idx) in patientprofileData" :key="idx" class="w-full rounded-lg mt-[32px]">
-            <div class="mb-[32px]" v-for="(medicalItem, jdx) in data.medicalBackground" :key="jdx">
-              <div @click="handleOpen(medicalItem.title)" class="flex justify-start cursor-pointer text-[18px] font-[500] mb-[16px]">
-                <div class="transition flex justify-center items-center mr-[12px]" :class="[isOpen.includes(medicalItem.title) ? '' : '-rotate-90']">
+          <div v-for="(medicalItem, jdx) in profileStore.scheduleVisitDataArr">
+            <div :class="[profileStore.sexAssignedAtBirth === 'Female' ? '' : 'hidden']" class="my-[32px] w-full" :key="jdx">
+              <div @click="handleOpen(medicalItem.medicalTitle)" class="flex justify-start cursor-pointer text-[18px] font-[500] mb-[16px]">
+                <div class="transition flex justify-center items-center mr-[12px]" :class="[isOpen.includes(medicalItem.medicalTitle) ? '' : '-rotate-90']">
                   <img :src="CaretIcon" alt="Caret Icon" />
                 </div>
-                {{ medicalItem.title }}
+                {{ medicalItem.medicalTitle }}
               </div>
               <div
                 v-for="(itemDesc, kdx) in medicalItem.content"
                 :key="kdx"
-                :class="[isOpen.includes(medicalItem.title) ? '' : 'hidden']"
-                class="flex w-full justify-between mb-[16px]"
+                :class="[isOpen.includes(medicalItem.medicalTitle) ? '' : 'hidden']"
+                class="flex w-full justify-between mb-[16px] pl-8"
               >
                 <div class="w-1/2 text-gray-5 font-[400]">
                   {{ itemDesc.name }}
                 </div>
-                <div class="w-1/2 flex justify-start text-gray-5 font-[400]">
+                <div class="w-1/2 flex justify-end text-gray-5 font-[400]">
                   {{ itemDesc.value }}
                 </div>
               </div>
             </div>
-
-            <!-- End Of Treatment History -->
           </div>
         </div>
 

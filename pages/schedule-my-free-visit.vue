@@ -241,6 +241,7 @@ async function handleAnswerSubmitValidation() {
   if (currentQuestionIdx.value === 17) {
     profileStore.lastStepLetsSeeYourSkin = currentSelectedAnswer.value
     currentQuestionIdx.value = 17
+    profileStore.saveScheduleVisitData()
     currentSelectedAnswer.value = ''
     router.push('/profile')
     return

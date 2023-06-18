@@ -76,7 +76,7 @@ const emit = defineEmits<{
 const props = withDefaults(
   defineProps<{
     modelValue?: string
-    pInputType: 'text' | 'password' | 'phone-number' | 'date' | 'card-date' | 'card-cvv' | 'zip-code' | 'verify' | 'card-number'
+    pInputType?: 'text' | 'password' | 'phone-number' | 'date' | 'card-date' | 'card-cvv' | 'zip-code' | 'verify' | 'card-number'
     placeholder?: string
     validationMessage?: string
   }>(),
