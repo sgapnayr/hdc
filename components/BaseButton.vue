@@ -20,16 +20,16 @@ withDefaults(
 
 <template>
   <button
-    class="h-[56px] rounded-[60px] text-[16px] flex justify-center items-center transition active:scale-95 uppercase leading-[24px] whitespace-nowrap"
+    class="h-[56px] rounded-[60px] text-[16px] flex justify-center items-center transition active:scale-95 uppercase leading-[24px] whitespace-nowrap relative"
     :class="[
       state === 'idle'
-        ? ' text-white bg-honeydew-purple'
+        ? ' text-white bg-honeydew-purple cursor-pointer'
         : state === 'disabled'
         ? 'bg-honeydew-gray cursor-not-allowed text-gray-1'
         : state === 'failed'
-        ? 'bg-red'
+        ? 'bg-red cursor-pointer'
         : state === 'success'
-        ? 'bg-honeydew-green'
+        ? 'bg-honeydew-green cursor-pointer'
         : '',
     ]"
   >
@@ -51,12 +51,12 @@ withDefaults(
 
     <!-- Success State -->
     <TheTransitionWrapper>
-      <div v-if="state === 'success'">Success</div>
+      <div v-if="state === 'success'" class="absolute w-full text-white">SUCCESS</div>
     </TheTransitionWrapper>
 
     <!-- Failure State -->
     <TheTransitionWrapper>
-      <div v-if="state === 'failed'">X</div>
+      <div v-if="state === 'failed'" class="absolute w-full text-white">FAILED</div>
     </TheTransitionWrapper>
   </button>
 </template>

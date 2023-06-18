@@ -76,7 +76,7 @@ const emit = defineEmits<{
 const props = withDefaults(
   defineProps<{
     modelValue?: string
-    pInputType: 'text' | 'password' | 'phone-number' | 'date'
+    pInputType: 'text' | 'password' | 'phone-number' | 'date' | 'card-date' | 'card-cvv' | 'zip-code' | 'verify' | 'card-number'
     placeholder?: string
     validationMessage?: string
   }>(),
@@ -89,7 +89,7 @@ const props = withDefaults(
 
 // STATE ****************************************************************
 const isPasswordHidden = ref<boolean>(true)
-const inputType = ref<'password' | 'text' | 'phone-number' | 'date'>(props.pInputType)
+const inputType = ref<'password' | 'text' | 'phone-number' | 'date' | 'card-date' | 'card-cvv' | 'zip-code' | 'verify' | 'card-number'>(props.pInputType)
 
 // METHODS ****************************************************************
 function toggleInputField() {
@@ -109,17 +109,35 @@ function toggleInputField() {
       <slot> </slot>
     </div>
     <div class="w-[370px] h-[60px] rounded-[60px] outline-none bg-white flex justify-between items-center border border-gray-2">
-      <div class="w-full" v-if="pInputType !== 'phone-number'">
-        <input
-          v-if="pInputType === 'text' || 'password' || 'date'"
-          :value="modelValue"
-          @blur="emit('blur')"
-          class="ml-4 outline-none bg-none w-11/12 h-9"
-          :type="inputType"
-          :placeholder="placeholder"
-          @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-        />
-      </div>
+      <input
+        v-if="pInputType === 'text'"
+        :value="modelValue"
+        @blur="emit('blur')"
+        class="ml-4 outline-none bg-none w-11/12 h-9"
+        :type="inputType"
+        :placeholder="placeholder"
+        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      />
+
+      <input
+        v-if="pInputType === 'password'"
+        :value="modelValue"
+        @blur="emit('blur')"
+        class="ml-4 outline-none bg-none w-11/12 h-9"
+        :type="inputType"
+        :placeholder="placeholder"
+        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      />
+
+      <input
+        v-if="pInputType === 'date'"
+        :value="modelValue"
+        @blur="emit('blur')"
+        class="ml-4 outline-none bg-none w-11/12 h-9"
+        :type="inputType"
+        :placeholder="placeholder"
+        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      />
 
       <input
         v-if="pInputType === 'phone-number'"
@@ -127,7 +145,67 @@ function toggleInputField() {
         :data-maska="['+' + '1' + ' (###) ###-####']"
         :value="modelValue"
         @blur="emit('blur')"
-        class="ml-4 outline-none"
+        class="ml-4 outline-none bg-none w-11/12 h-9"
+        :type="inputType"
+        :placeholder="placeholder"
+        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      />
+
+      <input
+        v-if="pInputType === 'zip-code'"
+        v-maska
+        :data-maska="['#####']"
+        :value="modelValue"
+        @blur="emit('blur')"
+        class="ml-4 outline-none bg-none w-11/12 h-9"
+        :type="inputType"
+        :placeholder="placeholder"
+        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      />
+
+      <input
+        v-if="pInputType === 'verify'"
+        v-maska
+        :data-maska="['######']"
+        :value="modelValue"
+        @blur="emit('blur')"
+        class="ml-4 outline-none bg-none w-11/12 h-9"
+        :type="inputType"
+        :placeholder="placeholder"
+        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      />
+
+      <input
+        v-if="pInputType === 'card-number'"
+        v-maska
+        :data-maska="['#### #### #### ####']"
+        :value="modelValue"
+        @blur="emit('blur')"
+        class="ml-4 outline-none bg-none w-11/12 h-9"
+        :type="inputType"
+        :placeholder="placeholder"
+        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      />
+
+      <input
+        v-if="pInputType === 'card-date'"
+        v-maska
+        :data-maska="['##/##']"
+        :value="modelValue"
+        @blur="emit('blur')"
+        class="ml-4 outline-none bg-none w-11/12 h-9"
+        :type="inputType"
+        :placeholder="placeholder"
+        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      />
+
+      <input
+        v-if="pInputType === 'card-cvv'"
+        v-maska
+        :data-maska="['####']"
+        :value="modelValue"
+        @blur="emit('blur')"
+        class="ml-4 outline-none bg-none w-11/12 h-9"
         :type="inputType"
         :placeholder="placeholder"
         @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"

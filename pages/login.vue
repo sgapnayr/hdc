@@ -34,14 +34,6 @@ const code = ref()
 const loginButtonState = ref<'idle' | 'loading' | 'success' | 'failed' | 'disabled'>('idle')
 
 // METHODS ********************************************************************
-async function confirmAccount(username: string, confirmationCode: string) {
-  try {
-    await Auth.confirmSignUp(username, confirmationCode)
-  } catch (error) {
-    console.log('Error confirming account:', error)
-  }
-}
-
 async function signIn(username: string, password: string) {
   loginButtonState.value = 'loading'
   try {
@@ -49,25 +41,12 @@ async function signIn(username: string, password: string) {
     loginButtonState.value = 'success'
   } catch (error) {
     console.log('Error signing in:', error)
+    loginButtonState.value = 'failed'
   }
 
   setTimeout(() => {
     loginButtonState.value = 'idle'
-  })
-}
-
-async function signUp(username: string, password: string, email: string) {
-  try {
-    await Auth.signUp({
-      username,
-      password,
-      attributes: {
-        email,
-      },
-    })
-  } catch (error) {
-    console.log('Error signing up:', error)
-  }
+  }, 1000)
 }
 
 async function resetPassword(username: string, confirmationCode: string, newPassword: string) {
@@ -88,58 +67,6 @@ async function forgotPassword(username: string) {
 </script>
 
 <template>
-  <div>
-    <!-- Sign Up -->
-    <h2>Sign Up</h2>
-    <form @submit.prevent="signUp(signUpUsername, signUpPassword, signUpEmail)">
-      <label for="sign-up-username">Username:</label>
-      <input type="text" id="sign-up-username" v-model="signUpUsername" />
-      <br />
-      <label for="sign-up-password">Password:</label>
-      <input type="password" id="sign-up-password" v-model="signUpPassword" />
-      <br />
-      <label for="sign-up-email">Email:</label>
-      <input type="email" id="sign-up-email" v-model="signUpEmail" />
-      <br />
-      <button type="submit">Sign Up</button>
-    </form>
-
-    <!-- Confirm Account -->
-    <h2>Confirm Account</h2>
-    <form @submit.prevent="confirmAccount(signUpUsername, code)">
-      <label for="confirm-username">Username:</label>
-      <input type="text" id="confirm-username" v-model="signUpUsername" />
-      <br />
-      <label for="confirm-code">Confirmation Code:</label>
-      <input type="text" id="confirm-code" v-model="code" />
-      <br />
-      <button type="submit">Confirm Account</button>
-    </form>
-
-    <!-- Forgot Password -->
-    <h2>Forgot Password</h2>
-    <form @submit.prevent="forgotPassword(username)">
-      <label for="forgot-password-username">Username:</label>
-      <input type="text" id="forgot-password-username" v-model="username" />
-      <br />
-      <button type="submit">Request Password Reset</button>
-    </form>
-    <!-- Reset Password -->
-    <h2>Reset Password</h2>
-    <form @submit.prevent="resetPassword(username, code, newPassword)">
-      <label for="reset-password-username">Username:</label>
-      <input type="text" id="reset-password-username" v-model="username" />
-      <br />
-      <label for="reset-password-code">Reset Code:</label>
-      <input type="text" id="reset-password-code" v-model="code" />
-      <br />
-      <label for="reset-password-new">New Password:</label>
-      <input type="password" id="reset-password-new" v-model="newPassword" />
-      <br />
-      <button type="submit">Reset Password</button>
-    </form>
-  </div>
-
   <div>
     <BaseWrapper>
       <h1 class="text-[32px] font-[700] leading-[40px] mt-[124px] text-gray-3">Welcome back</h1>

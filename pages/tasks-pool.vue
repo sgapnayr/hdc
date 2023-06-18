@@ -380,12 +380,13 @@ tasksStore.setAssigneeTasks()
             :class="[idx === task.length - 1 ? 'rounded-b-[16px]' : '']"
             class="grid grid-cols-5 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 items-center"
           >
-            <div>{{ task.patientId?.patientProfile?.patientFirstName }} {{ task.patientId?.patientProfile?.patientLastName }}</div>
+            {{ task }}
+            <!-- <div>{{ task.patientId?.patientProfile?.patientFirstName }} {{ task.patientId?.patientProfile?.patientLastName }}</div> -->
             <div>
-              {{ task.taskAssignedAt }}
+              <!-- {{ task.taskAssignedAt }} -->
             </div>
             <div>
-              {{ task.description }}
+              <!-- {{ task.description }} -->
             </div>
             <div class="flex">
               <div
@@ -406,10 +407,10 @@ tasksStore.setAssigneeTasks()
                     : '',
                 ]"
               >
-                {{ task.description }}
+                <!-- {{ task.description }} -->
               </div>
             </div>
-            <div class="w-full flex justify-end">asdf</div>
+            <!-- <div class="w-full flex justify-end">Action</div> -->
           </div>
         </div>
       </div>
@@ -467,8 +468,8 @@ tasksStore.setAssigneeTasks()
             :class="[idx === task.length - 1 ? 'rounded-b-[16px]' : '']"
             class="grid grid-cols-5 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 items-center"
           >
+            {{ task }}
             <div>{{ task.patientId?.patientProfile?.patientFirstName }} {{ task.patientId?.patientProfile?.patientLastName }}</div>
-            <div></div>
             <div class="flex">
               <div
                 class="px-4 py-2 rounded-[24px]"

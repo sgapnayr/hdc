@@ -92,7 +92,7 @@ changeSlide()
             We use an evidence-based approach to track your skin progress and refine your plan.
           </p>
         </div>
-        <div class="grid grid-cols-4 w-full justify-center items-center relative">
+        <div class="grid grid-cols-4 w-full justify-center items-center relative top-8">
           <div class="absolute w-full flex justify-center items-center">
             <img class="bottom-40 absolute rounded-[18px] hidden md:flex scale-90" :src="Arrow1" alt="Arrow" />
           </div>

@@ -44,8 +44,6 @@ function handleOpen(idx: string) {
 function handleSelected(selectedVal: string) {
   isSelected.value = selectedVal
 }
-
-
 </script>
 
 <template>
@@ -76,7 +74,7 @@ function handleSelected(selectedVal: string) {
         <!-- Treatment History -->
         <div v-if="treatmentHistoryOrDocumentsSelected === 'Treatment History'" class="p-8">
           <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Medical background</h1>
-          <div v-for="(data, idx) in profileStore.profileData" :key="idx" class="w-full rounded-lg mt-[32px]">
+          <div v-for="(data, idx) in patientprofileData" :key="idx" class="w-full rounded-lg mt-[32px]">
             <div class="mb-[32px]" v-for="(medicalItem, jdx) in data.medicalBackground" :key="jdx">
               <div @click="handleOpen(medicalItem.title)" class="flex justify-start cursor-pointer text-[18px] font-[500] mb-[16px]">
                 <div class="transition flex justify-center items-center mr-[12px]" :class="[isOpen.includes(medicalItem.title) ? '' : '-rotate-90']">

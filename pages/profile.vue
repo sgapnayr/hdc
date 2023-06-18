@@ -86,6 +86,7 @@ profileStore.setMyProfile()
 
 <template>
   <div class="flex flex-col py-8">
+    {{ profileStore }}
     <BaseWrapper>
       <!-- Upper cards -->
       <div class="flex gap-x-6">
@@ -115,11 +116,12 @@ profileStore.setMyProfile()
               <p class="text-gray-5 mt-[16px] w-3/4">Complete the sign up process and select a time for your initial visit.</p>
             </div>
             <div>
-              <button
-                class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap"
+              <NuxtLink
+                to="/schedule-my-free-visit"
+                class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-2/3"
               >
                 schedule my free visit
-              </button>
+              </NuxtLink>
             </div>
           </div>
           <div class="w-[286px] h-[396px] rounded-[8px] px-8 pt-8 bg-honeydew-bg4 relative">

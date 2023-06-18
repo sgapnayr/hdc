@@ -1,22 +1,32 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
+import { vMaska } from 'maska'
 import { useProfileStore } from '@/stores/profile'
+import { Auth } from 'aws-amplify'
+import { useRouter } from 'vue-router'
+import VerifyEmail from '@/assets/images/verify-email.svg'
+import VerifyEmailSuccess from '@/assets/images/verify-email-success.svg'
 
 // LAYOUT **********************************************************************
 definePageMeta({
   layout: 'logo',
 })
 
+// ROUTING **********************************************************************
+const router = useRouter()
+
 // STORE **********************************************************************
 const profileStore = useProfileStore()
 
 // STATE **********************************************************************
-const currentQuestionIdx = ref<number>(5)
+const currentQuestionIdx = ref<number>(6)
 const currentSelectedAnswer = ref<string>()
 const secondCurrentSelectedAnswer = ref<string>()
 const thirdCurrentSelectedAnswer = ref<string | boolean>()
+const fourthCurrentSelectedAnswer = ref<string | boolean>()
+const buttonLoadingState = ref<'idle' | 'loading' | 'failed' | 'success' | 'disabled'>('idle')
 
-// DATA ********************************************************************
+// SIGN UP QUESTIONS ********************************************************************
 const signUpQuestions = [
   { questionText: 'Which best describes you?', questionAnswers: [{ text: "I'm signing up my child" }, { text: "I'm signing up myself" }] },
   { questionText: 'What is your zip code?', questionAnswers: [{ text: '1111' }] },
@@ -24,6 +34,7 @@ const signUpQuestions = [
   { questionText: 'Okay, and what is your Date of Birth?', questionAnswers: [{ text: 'DOB' }] },
   { questionText: "Since you're under 18, we'll need your parent's contact info.", questionAnswers: [{ text: 'Okay' }] },
   { questionText: "Great news! You're eligible for Honeydew!", questionAnswers: [{ text: 'OKAY' }] },
+  { questionText: 'Email', questionAnswers: [{ text: 'Email' }] },
 ]
 
 // METHODS ********************************************************************
@@ -31,9 +42,10 @@ function handleSelectedQuestion(selectedAnswer: string) {
   currentSelectedAnswer.value = selectedAnswer
 }
 
-function handleAnswerSubmitValidation() {
+async function handleAnswerSubmitValidation() {
   if (!currentSelectedAnswer.value) return
 
+  // Which Best Describes You Validation
   if (currentQuestionIdx.value === 0) {
     if (!currentSelectedAnswer.value) return
     profileStore.signUpDescribeYouAnswer = currentSelectedAnswer.value
@@ -42,6 +54,7 @@ function handleAnswerSubmitValidation() {
     return
   }
 
+  // Zip Code Validation
   if (currentQuestionIdx.value === 1) {
     if (currentSelectedAnswer.value.length !== 5) return
     profileStore.signUpZipCode = currentSelectedAnswer.value
@@ -50,6 +63,7 @@ function handleAnswerSubmitValidation() {
     return
   }
 
+  // Name Validation
   if (currentQuestionIdx.value === 2) {
     if (!currentSelectedAnswer.value) return
     profileStore.signUpName = currentSelectedAnswer.value
@@ -58,17 +72,36 @@ function handleAnswerSubmitValidation() {
     return
   }
 
+  // DOB Validation
   if (currentQuestionIdx.value === 3) {
+    await checkOver18(currentSelectedAnswer.value)
     profileStore.signUpDOB = currentSelectedAnswer.value
     currentQuestionIdx.value = 4
     currentSelectedAnswer.value = ''
     return
   }
 
-  if (currentQuestionIdx.value === 4) {
-    profileStore.signUpMinorFullName = currentSelectedAnswer.value
-    profileStore.signUpMinorEmailAddress = secondCurrentSelectedAnswer.value
-    profileStore.signUpMinorPhoneNumber = thirdCurrentSelectedAnswer.value as string
+  // Under 18 Validation
+  if (currentQuestionIdx.value === 4 && !profileStore.overEighteen) {
+    profileStore.signUpName = currentSelectedAnswer.value
+    profileStore.signUpEmail = secondCurrentSelectedAnswer.value
+    profileStore.signUpPassword = thirdCurrentSelectedAnswer.value as string
+    profileStore.signUpPhoneNumber = fourthCurrentSelectedAnswer.value as string
+    signUp(profileStore.signUpEmail as string, profileStore.signUpPassword as string, profileStore.signUpEmail as string)
+    currentQuestionIdx.value = 5
+    currentSelectedAnswer.value = ''
+    secondCurrentSelectedAnswer.value = ''
+    thirdCurrentSelectedAnswer.value = ''
+    fourthCurrentSelectedAnswer.value = ''
+    return
+  }
+
+  // Over 18 Validation
+  if (currentQuestionIdx.value === 4 && profileStore.overEighteen) {
+    profileStore.signUpEmail = currentSelectedAnswer.value
+    profileStore.signUpPassword = secondCurrentSelectedAnswer.value
+    profileStore.signUpAgreement = thirdCurrentSelectedAnswer.value as boolean
+    signUp(profileStore.signUpEmail as string, profileStore.signUpPassword as string, profileStore.signUpEmail as string)
     currentQuestionIdx.value = 5
     currentSelectedAnswer.value = ''
     secondCurrentSelectedAnswer.value = ''
@@ -76,51 +109,115 @@ function handleAnswerSubmitValidation() {
     return
   }
 
+  // Confirm Email Validation
   if (currentQuestionIdx.value === 5) {
-    profileStore.signUpEmail = currentSelectedAnswer.value
-    profileStore.signUpPassword = secondCurrentSelectedAnswer.value
-    profileStore.signUpAgreement = thirdCurrentSelectedAnswer.value as boolean
-    currentQuestionIdx.value = 6
+    profileStore.signUpConfirmationCode = currentSelectedAnswer.value
+    await confirmAccount(profileStore.signUpEmail as string, profileStore.signUpConfirmationCode as string)
+    currentSelectedAnswer.value = ''
+    return
+  }
+
+  // Credit Card Question
+  if (currentQuestionIdx.value === 6) {
+    profileStore.creditCardNumber = currentSelectedAnswer.value
+    profileStore.creditCardHolder = secondCurrentSelectedAnswer.value
+    profileStore.creditCardExpiration = thirdCurrentSelectedAnswer.value as string
+    profileStore.creditCardCVV = fourthCurrentSelectedAnswer.value as string
+    currentQuestionIdx.value = 0
+    router.push('/admin')
     currentSelectedAnswer.value = ''
     secondCurrentSelectedAnswer.value = ''
     thirdCurrentSelectedAnswer.value = ''
+    fourthCurrentSelectedAnswer.value = ''
     return
   }
 }
 
-function testState() {
-  currentQuestionIdx.value -= 1
+function checkOver18(birthday: string): boolean {
+  // Convert birthday string to a Date object
+  const birthDate = new Date(birthday)
+
+  // Calculate the current year
+  const currentYear = new Date().getFullYear()
+
+  // Get the birth year from the birthday
+  const birthYear = birthDate.getFullYear()
+
+  // Calculate the age
+  const age = currentYear - birthYear
+
+  // Check if the age is over 18
+  if (age >= 18) {
+    return (profileStore.overEighteen = true)
+  } else {
+    return (profileStore.overEighteen = false)
+  }
 }
+
+async function confirmAccount(username: string, confirmationCode: string) {
+  buttonLoadingState.value = 'loading'
+  try {
+    await Auth.confirmSignUp(username, confirmationCode)
+    buttonLoadingState.value = 'success'
+
+    await signIn(profileStore.signUpEmail as string, profileStore.signUpPassword as string)
+    setTimeout(() => {
+      buttonLoadingState.value = 'idle'
+      currentQuestionIdx.value = 6
+    }, 1000)
+  } catch (error) {
+    console.log('Error confirming account:', error)
+    buttonLoadingState.value = 'failed'
+
+    setTimeout(() => {
+      buttonLoadingState.value = 'idle'
+    }, 1000)
+  }
+}
+
+async function signIn(username: string, password: string) {
+  try {
+    await Auth.signIn(username, password)
+  } catch (error) {
+    console.log('Error signing in:', error)
+  }
+}
+
+async function signUp(username: string, password: string, email: string) {
+  try {
+    await Auth.signUp({
+      username,
+      password,
+      attributes: {
+        email,
+      },
+    })
+  } catch (error) {
+    console.log('Error signing up:', error)
+  }
+}
+
+watch(
+  () => currentSelectedAnswer.value,
+  (newVal) => {
+    if (currentQuestionIdx.value === 5 && currentSelectedAnswer.value?.length === 6) {
+      handleAnswerSubmitValidation()
+    }
+  }
+)
 </script>
 
 <template>
-  <button @click="testState">Back</button>
-  <br />
-  Describe you: {{ profileStore.signUpDescribeYouAnswer }}
-  <br />
-  Zippy: {{ profileStore.signUpZipCode }}
-  <br />
-  Name: {{ profileStore.signUpName }}
-  <br />
-  DOB: {{ profileStore.signUpDOB }}
-  <br />
-  Minor Name: {{ profileStore.signUpMinorFullName }}
-  <br />
-  Minor Email: {{ profileStore.signUpMinorEmailAddress }}
-  <br />
-  Minor Number: {{ profileStore.signUpMinorPhoneNumber }}
-  <br />
-  Agreement: {{ profileStore.signUpAgreement }}
-  <br />
-  Answer: {{ currentSelectedAnswer }}
-
   <div v-for="(signUpQuestion, idx) in signUpQuestions" :key="idx">
     <div class="w-[390px]" v-if="currentQuestionIdx === idx">
-      <div class="mt-[72px] text-honeydew-green">{{ currentQuestionIdx + 1 }} of {{ signUpQuestions.length }}</div>
-      <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">{{ signUpQuestion.questionText }}</h1>
+      <div class="mt-[72px] text-honeydew-green">
+        {{ currentQuestionIdx + 1 }} of
+        {{ signUpQuestions.length }}
+      </div>
 
-      <!-- First Question -->
+      <!-- Which Best Describes You Question -->
       <div v-if="currentQuestionIdx === 0">
+        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Which best describes you?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
             @click="currentSelectedAnswer = questionAnswer.text"
@@ -140,40 +237,45 @@ function testState() {
         <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
       </div>
 
-      <!-- Second Question -->
+      <!-- Zip Code Question -->
       <div v-if="currentQuestionIdx === 1">
-        <BaseInput v-model="currentSelectedAnswer" type="text" class="w-full" />
+        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">What is your zip code?</h1>
+        <BaseInput v-model="currentSelectedAnswer" type="text" p-input-type="zip-code" class="w-full" />
         <BaseButton
           :state="currentSelectedAnswer && currentSelectedAnswer.length > 4 && currentSelectedAnswer.length < 6 ? 'idle' : 'disabled'"
           @click="handleAnswerSubmitValidation"
           class="w-full mt-[16px]"
           >Continue</BaseButton
         >
-        <p class="text-red text-sm" v-if="currentSelectedAnswer && currentSelectedAnswer.length > 5">Zip code should be 5 digits</p>
+        <p class="text-red text-sm" v-if="currentSelectedAnswer && currentSelectedAnswer.length > 5">Zip code should be 4 or 5 digits</p>
       </div>
 
-      <!-- Third Question -->
+      <!-- What Is Your Name Question -->
       <div v-if="currentQuestionIdx === 2">
+        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Great, what is your name?</h1>
         <p class="mb-[32px] font-[400] text-gray-5">Please, enter your full name</p>
         <BaseInput v-model="currentSelectedAnswer" type="text" class="w-full" />
         <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
       </div>
 
-      <!-- Forth Question -->
+      <!-- Date Of Birth Question -->
       <div v-if="currentQuestionIdx === 3">
+        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Okay, and what is your Date of Birth?</h1>
         <p class="mb-[32px] font-[400] text-gray-5">We cannot provide service without an accurate Date of Birth</p>
         <BaseInput :placeholder="'MM-DD-YYYY'" v-model="currentSelectedAnswer" p-input-type="date" class="w-full" />
         <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
       </div>
 
       <!-- Under 18 Question -->
-      <div v-if="currentQuestionIdx === 4">
+      <div v-if="currentQuestionIdx === 4 && !profileStore.overEighteen">
+        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Since you're under 18, we'll need your parent's contact info.</h1>
         <p class="mb-[32px] font-[400] text-gray-5">
           Please enter your parent or guardian's contact information below, and have them be present for the initial consultation to provide consent.
         </p>
         <BaseInput :placeholder="'Full Name'" v-model="currentSelectedAnswer" class="w-full" />
         <BaseInput :placeholder="'Email address'" v-model="secondCurrentSelectedAnswer" class="w-full" />
-        <BaseInput :p-input-type="'phone-number'" v-model="(thirdCurrentSelectedAnswer as string)" class="w-full" />
+        <BaseInput :placeholder="'Password'" p-input-type="password" v-model="(thirdCurrentSelectedAnswer as string)" class="w-full" />
+        <BaseInput :placeholder="'+1 (123) 456-7890'" :p-input-type="'phone-number'" v-model="(fourthCurrentSelectedAnswer as string)" class="w-full" />
         <BaseButton
           :state="currentSelectedAnswer && secondCurrentSelectedAnswer && thirdCurrentSelectedAnswer ? 'idle' : 'disabled'"
           @click="handleAnswerSubmitValidation"
@@ -182,8 +284,9 @@ function testState() {
         >
       </div>
 
-      <!-- Great News! Question -->
-      <div v-if="currentQuestionIdx === 5">
+      <!-- Over 18, Great News! Question -->
+      <div v-if="currentQuestionIdx === 4 && profileStore.overEighteen">
+        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Great news! You're eligible for Honeydew!</h1>
         <p class="mb-[32px] font-[400] text-gray-5">Create your account to get started and schedule your initial consultation.</p>
         <BaseInput :placeholder="'jane@example.com'" v-model="currentSelectedAnswer" p-input-type="text" class="w-full" />
         <BaseInput :placeholder="'Password'" v-model="secondCurrentSelectedAnswer" p-input-type="password" class="w-full" />
@@ -196,6 +299,46 @@ function testState() {
           class="w-full mt-[16px]"
           >Continue</BaseButton
         >
+      </div>
+
+      <!-- Verify Email -->
+      <div v-if="currentQuestionIdx === 5">
+        <div class="flex w-full justify-center items-center">
+          <img v-if="buttonLoadingState !== 'success'" :src="VerifyEmail" alt="Verify Email" />
+          <img v-if="buttonLoadingState === 'success'" :src="VerifyEmailSuccess" alt="Verify Email" />
+        </div>
+        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Verify your email</h1>
+        <p class="mb-[32px] font-[400] text-gray-5">
+          We've sent a verification email to {{ profileStore.signUpEmail }}. Please, verify your email address
+          <span class="underline">by entering the code</span> sent to your email before you continue with your free visit.
+        </p>
+        <BaseInput v-model="currentSelectedAnswer" p-input-type="verify" type="text" class="w-full" />
+        <BaseButton :state="buttonLoadingState" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
+      </div>
+
+      <!-- Add Payment Question -->
+      <div v-if="currentQuestionIdx === 6">
+        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Add payment information to complete your profile</h1>
+        <p class="mb-[32px] font-[400] text-gray-5">
+          Don't worry, you will not be charged. You can have your initial consultation for FREE before deciding if you want to sign up.
+        </p>
+        <BaseInput v-model="currentSelectedAnswer" placeholder="0000 0000 0000 0000" p-input-type="card-number" class="w-full" />
+        <BaseInput :placeholder="'Card holder name'" v-model="secondCurrentSelectedAnswer" p-input-type="text" class="w-full" />
+        <div class="flex gap-x-2 mt-4">
+          <div class="h-[60px] rounded-[60px] outline-none bg-white flex justify-between items-center border border-gray-2">
+            <input v-maska :data-maska="['##/##']" v-model="thirdCurrentSelectedAnswer" class="ml-4 outline-none w-10/12" :placeholder="'MM/YY'" />
+          </div>
+          <div class="h-[60px] rounded-[60px] outline-none bg-white flex justify-between items-center border border-gray-2">
+            <input v-maska :data-maska="['####']" v-model="fourthCurrentSelectedAnswer" class="ml-4 outline-none w-10/12" :placeholder="'CVV'" />
+          </div>
+        </div>
+        <BaseButton
+          :state="currentSelectedAnswer && secondCurrentSelectedAnswer && thirdCurrentSelectedAnswer ? 'idle' : 'disabled'"
+          @click="handleAnswerSubmitValidation"
+          class="w-full mt-[16px]"
+          >schedule my free visit</BaseButton
+        >
+        <BaseButton @click="router.push('/profile')" class="w-full mt-[16px]">Skip For Now</BaseButton>
       </div>
     </div>
   </div>
