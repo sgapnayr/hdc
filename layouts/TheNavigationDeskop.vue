@@ -7,11 +7,6 @@ import { useRouter } from 'vue-router'
 
 // ROUTING **********************************************************************
 const router = useRouter()
-
-definePageMeta({
-  middleware: ['auth'],
-  // or middleware: 'auth'
-})
 </script>
 
 <template>
@@ -23,7 +18,7 @@ definePageMeta({
           <img class="w-[40px] md:w-auto mr-[16px]" :src="HoneydewIcon" alt="Honeydew Icon" />
           <img class="w-[148px] md:w-auto" :src="HoneydewLogo" alt="Honeydew Logo" />
         </NuxtLink>
-        <div class="w-full justify-center gap-x-[48px] hidden md:flex items-center">
+        <div class="w-full justify-center gap-x-4 lg:gap-x-[48px] hidden md:flex items-center">
           <NuxtLink to="/whyus">WHY US</NuxtLink>
           <NuxtLink to="/pricing">PRICING</NuxtLink>
           <NuxtLink to="/faq">FAQ</NuxtLink>

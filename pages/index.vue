@@ -75,7 +75,9 @@ changeSlide()
               Licensed experts, prescription medication, and ongoing support. At home, on your schedule.
             </p>
             <div class="w-full md:w-auto flex justify-center items-center flex-col md:ml-[24px]">
-              <BaseButton class="mt-[24px] w-[328px]">Start Free Online Visit</BaseButton>
+              <NuxtLink to="/sign-up">
+                <BaseButton class="mt-[24px] w-[328px]">Start Free Online Visit</BaseButton>
+              </NuxtLink>
               <p class="font-[400] text-[16px] leading-[20px] mx-[24px] mt-[24px] pb-[48px]">Currently available in New York</p>
             </div>
           </div>
@@ -84,7 +86,7 @@ changeSlide()
     </div>
 
     <!-- The Process -->
-    <div class="flex flex-col w-full items-center bg-white pb-[196px]">
+    <div class="hidden md:flex flex-col w-full items-center bg-white pb-[196px]">
       <BaseWrapper>
         <div class="mx-[24px] mb-[124px] w-full">
           <p class="font-[700] text-[32px] leading-[42px] mt-[120px]">The process</p>
@@ -114,8 +116,8 @@ changeSlide()
     <!-- We Focus On Getting You Better -->
     <div class="flex flex-col bg-honeydew-bg5">
       <BaseWrapper>
-        <div class="my-[120px] w-full flex justify-center items-center font-[700] text-[32px] leading-[40px]">We focus on getting you better</div>
-        <div class="flex flex-col lg:flex-row mb-[100px] justify-between items-center">
+        <div class="my-[48px] md:my-[120px] w-full flex justify-center items-center font-[700] text-[32px] leading-[40px]">We focus on getting you better</div>
+        <div class="flex flex-col lg:flex-row mb-[48px] md:mb-[100px] justify-between items-center">
           <img class="rounded-[18px] w-[572px]" :src="ExpertCare" alt="Expert Care" />
           <div class="lg:w-1/2 my-8 lg:ml-10">
             <div class="text-honeydew-green font-[500] text-[16px] leading-[20px] mt-[16px] lg:mt-[0px]">Expert care</div>
@@ -129,7 +131,7 @@ changeSlide()
             </p>
           </div>
         </div>
-        <div class="flex flex-col-reverse lg:flex-row mb-[100px] items-center">
+        <div class="flex flex-col-reverse lg:flex-row mb-[48px] md:mb-[100px] items-center">
           <div class="lg:w-1/2 my-8 lg:mr-10">
             <div class="text-honeydew-green font-[500] text-[16px] leading-[20px] mt-[16px] lg:mt-[0px]">Clinically-proven treatments</div>
             <div class="mt-[24px] text-[24px] md:text-[32px] font-[700]">Access prescriptions that are right for you</div>
@@ -141,7 +143,7 @@ changeSlide()
           </div>
           <img class="rounded-[18px] w-[572px]" :src="AccessPrescriptions" alt="Access Prescriptions" />
         </div>
-        <div class="flex flex-col lg:flex-row mb-[100px] justify-between items-center">
+        <div class="flex flex-col lg:flex-row mb-[48px] md:mb-[100px] justify-between items-center">
           <img class="rounded-[18px] w-[572px]" :src="DoItBetterOnline" alt="Expert Care" />
           <div class="lg:w-1/2 my-8 lg:ml-10">
             <div class="text-honeydew-green font-[500] text-[16px] leading-[20px] mt-[16px] lg:mt-[0px]">Evidence-based approach</div>
@@ -165,7 +167,7 @@ changeSlide()
             <div class="flex flex-col-reverse lg:flex-row justify-center items-center text-center lg:text-start">
               <div class="mx-[24px] lg:mt-[48px] mb-[124px] w-full">
                 <div class="flex justify-center items-center lg:items-start flex-col w-full">
-                  <img :src="GiantQuotes" alt="Quotes" class="mb-[16px]" />
+                  <img :src="GiantQuotes" alt="Quotes" class="md:mb-[16px]" />
                   <p class="font-[400] text-[20px] leading-[30px] text-gray-3 mt-[48px] w-full lg:w-10/12 text-start">
                     I've suffered with acne for about 15 years and <span class="font-[600]">this is the first time I'm actually seeing progress.</span> I never
                     thought my skin could look how healthy it does now. The monthly follow ups are wonderful, as they help you stay on track.”
@@ -180,7 +182,7 @@ changeSlide()
                   <img :src="StarIcon" alt="Star Icon" />
                 </div>
               </div>
-              <div class="mb-[124px] w-full mt-[120px] grid grid-cols-2">
+              <div class="mb-[48px] md:mb-[124px] w-full mt-[120px] grid grid-cols-2">
                 <img class="rounded-[20px] w-full pr-[8px]" :src="TestimonyImage1" alt="Testimony-image" />
                 <img class="rounded-[20px] w-full pl-[8px]" :src="TestimonyImage2" alt="Testimony-image" />
                 <img class="rounded-[20px] w-full pr-[8px]" :src="TestimonyImage3" alt="Testimony-image" />
@@ -195,7 +197,7 @@ changeSlide()
             <div class="flex flex-col-reverse lg:flex-row justify-center items-center text-center lg:text-start">
               <div class="mx-[24px] lg:mt-[48px] mb-[124px] w-full">
                 <div class="flex justify-center items-center lg:items-start flex-col w-full">
-                  <img :src="GiantQuotes" alt="Quotes" class="mb-[16px]" />
+                  <img :src="GiantQuotes" alt="Quotes" class="md:mb-[16px]" />
                   <p class="font-[400] text-[20px] leading-[30px] text-gray-3 mt-[48px] w-full lg:w-9/12 text-start">
                     I used to wait 4 months to see a dermatologist in person. Never again. Now I have immediate access to my care team, I can track my progress,
                     and I don't have to go anywhere.”
@@ -210,7 +212,7 @@ changeSlide()
                   <img :src="StarIcon" alt="Star Icon" />
                 </div>
               </div>
-              <div class="mb-[124px] w-full mt-[120px] grid grid-cols-2 pb-2 pt-2">
+              <div class="mb-[48px] md:mb-[124px] w-full mt-[120px] grid grid-cols-2 pb-2 pt-2">
                 <img class="rounded-[20px] w-full pr-[8px] mb-[16px]" :src="Testimony2ImageArrow" alt="Testimony-image" />
                 <img class="rounded-[20px] w-full pl-[8px] mb-[16px]" :src="Testimony2Image2" alt="Testimony-image" />
                 <img class="rounded-[20px] w-full pr-[8px]" :src="Testimony2Image1" alt="Testimony-image" />
@@ -225,7 +227,7 @@ changeSlide()
             <div class="flex flex-col-reverse lg:flex-row justify-center items-center text-center lg:text-start">
               <div class="mx-[24px] lg:mt-[48px] mb-[124px] w-full">
                 <div class="flex justify-center items-center lg:items-start flex-col w-full">
-                  <img :src="GiantQuotes" alt="Quotes" class="mb-[16px]" />
+                  <img :src="GiantQuotes" alt="Quotes" class="md:mb-[16px]" />
                   <p class="font-[400] text-[20px] leading-[30px] text-gray-3 mt-[48px] w-full lg:w-10/12 text-start">
                     Using Honeydew to help clear my skin has been life changing. As a full time student and teacher, being able to receive such amazing support
                     without ever going into an office made dealing with my acne a lot easier. I am so so thankful for Honeydew, Accutane, and the whole team!!
@@ -240,7 +242,7 @@ changeSlide()
                   <img :src="StarIcon" alt="Star Icon" />
                 </div>
               </div>
-              <div class="mb-[124px] w-full mt-[120px] grid grid-cols-2">
+              <div class="mb-[48px] md:mb-[124px] w-full mt-[120px] grid grid-cols-2">
                 <img class="rounded-[20px] w-full pr-[8px]" :src="Testimony3Image1" alt="Testimony-image" />
                 <img class="rounded-[20px] w-full pl-[8px]" :src="Testimony3Image2" alt="Testimony-image" />
                 <img class="rounded-[20px] w-full pr-[8px]" :src="Testimony3Image3" alt="Testimony-image" />
@@ -249,7 +251,8 @@ changeSlide()
             </div>
           </div>
 
-          <div class="flex gap-x-3 -mt-[64px] pb-[64px] justify-center lg:justify-start lg:ml-[32px]">
+          <!-- Dot Compoennt -->
+          <div class="flex gap-x-3 -mt-[72px] md:-mt-[64px] pb-[64px] justify-center lg:justify-start lg:ml-[32px]">
             <div
               @click="slideSelected = '1'"
               :class="[slideSelected === '1' ? 'bg-[#EEEBFC]' : 'bg-none']"
