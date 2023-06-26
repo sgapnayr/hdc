@@ -58,7 +58,7 @@ const date = new Date()
             <img class="w-[148px] md:w-auto" :src="HoneydewLogo" alt="Honeydew Logo" />
           </NuxtLink>
         </div>
-        <div class="w-full justify-center flex-wrap flex text-gray-5 font-[400] gap-x-8 gap-y-8 m-4 my-[36px]">
+        <div class="w-full justify-center flex-wrap flex text-gray-5 font-[400] gap-x-8 gap-y-8 my-[36px]">
           <NuxtLink>Why Us</NuxtLink>
           <NuxtLink>info@honeydewcare.com</NuxtLink>
           <NuxtLink>Pricing</NuxtLink>
@@ -66,8 +66,8 @@ const date = new Date()
           <NuxtLink>FAQ</NuxtLink>
         </div>
         <div class="flex w-full justify-center">
-          <img class="w-[148px] md:w-auto mr-[48px]" :src="HippaImage" alt="Hippa Compliance" />
-          <img class="w-[148px] md:w-auto" :src="CertificationImage" alt="Certification" />
+          <img class="w-[148px] md:w-auto mr-[24px] scale-90" :src="HippaImage" alt="Hippa Compliance" />
+          <img class="w-[148px] md:w-auto scale-90" :src="CertificationImage" alt="Certification" />
         </div>
         <div class="flex gap-x-8 justify-center mt-[98px]">
           <img class="w-[20px]" :src="TwitterIcon" alt="Twitter Icon" />

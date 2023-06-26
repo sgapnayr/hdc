@@ -54,6 +54,40 @@ import HoneydewLogo from '@/assets/images/honeydew-logo.svg'
 </template>
 
 <style scoped>
+@keyframes fallingAnimation {
+  0% {
+    transform: translate(0, -15px);
+    opacity: 0;
+  }
+  25%,
+  50%,
+  75% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 15px);
+    opacity: 0;
+  }
+}
+.dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #6c6a7c;
+}
+
+.container .dot:nth-last-child(1) {
+  animation: fallingAnimation 1s 0.3s linear infinite;
+}
+.container .dot:nth-last-child(2) {
+  animation: fallingAnimation 1s 0.2s linear infinite;
+}
+.container .dot:nth-last-child(3) {
+  animation: fallingAnimation 1s 0.1s linear infinite;
+}
+
 .outer-outer-spin {
   animation: spin 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
 
@@ -101,39 +135,5 @@ import HoneydewLogo from '@/assets/images/honeydew-logo.svg'
       transform: rotate(360deg);
     }
   }
-}
-
-@keyframes fallingAnimation {
-  0% {
-    transform: translate(0, -15px);
-    opacity: 0;
-  }
-  25%,
-  50%,
-  75% {
-    transform: translate(0, 0);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(0, 15px);
-    opacity: 0;
-  }
-}
-.dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: #6c6a7c;
-}
-
-.container .dot:nth-last-child(1) {
-  animation: fallingAnimation 1s 0.3s linear infinite;
-}
-.container .dot:nth-last-child(2) {
-  animation: fallingAnimation 1s 0.2s linear infinite;
-}
-.container .dot:nth-last-child(3) {
-  animation: fallingAnimation 1s 0.1s linear infinite;
 }
 </style>

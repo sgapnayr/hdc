@@ -1,0 +1,134 @@
+{
+  "categories": [
+    { "category": "All" },
+    {
+      "category": "Medical Consultation",
+      "questions": [
+        {
+          "header": "Do I really need a licensed provider to treat my skin condition?",
+          "description": "In order to ensure the best care and expertise, it is recommended to consult a licensed healthcare provider for the treatment of your skin condition."
+        },
+        {
+          "header": "What kind of providers are on the platform / what are their credentials?",
+          "description": "The platform offers a range of healthcare providers, including licensed doctors, dermatologists, and other qualified medical professionals. Their credentials and qualifications are thoroughly verified before they join the platform."
+        },
+        {
+          "header": "What if I need to see someone in person?",
+          "description": "Your provider will provide a referral for an in-person visit if necessary. Most chronic skin conditions can be treated extremely effectively online."
+        },
+        {
+          "header": "Can I switch my provider?",
+          "description": "Your provider will provide a referral for an in-person visit if necessary. Most chronic skin conditions can be treated extremely effectively online."
+        },
+        {
+          "header": "Can I get a copy of my visit chart notes sent to my provider?",
+          "description": "Yes. Upon request, we can forward your chart notes directly to your provider."
+        },
+        {
+          "header": "Can I see the same provider each time I visit the site?",
+          "description": "Absolutely. You will be automatically matched up to your provider unless you request otherwise, as sticking with the same provider throughout your care can have a meaningful influence on your success at treating your skin condition."
+        }
+      ]
+    },
+    {
+      "category": "Treatment",
+      "questions": [
+        {
+          "header": "What kind of products are used in acne care?",
+          "description": "The right products can vary from patient to patient and we recommend meeting with a medical provider to understand which products are right for you. There are cleansers, topical antibiotics, topical retinoids, oral antibiotics, hormonal therapies (topical or oral), or oral retinoids."
+        },
+        {
+          "header": "Are the prescriptions the same as the ones I get from my pharmacy?",
+          "description": "Yes! We simply coordinate the pharmacy order for you and make sure it is delivered to your house."
+        },
+        {
+          "header": "Do I need a prescription for my acne?",
+          "description": "It depends! Meet with your licensed clinician through our platform and review the options that are best for your skin. If you have milder acne, you may not need prescription products to beat it and your clinician will help you select the most effective over-the-counter options."
+        },
+        {
+          "header": "Are the medications part of the Honeydew membership?",
+          "description": "The Honeydew membership does not include the cost of medication or over-the-counter products. However, our team will help you get your products covered by insurance or source the lowest cost out-of-pocket options. Your products are also eligible for coverage through HSAs and FSAs."
+        },
+        {
+          "header": "Can I get prescription medicine for my acne through this platform?",
+          "description": "Yes! Schedule a visit with a licensed clinician through our platform and review your treatment options. If a prescription is necessary, Honeydew will provide a prescription to the appropriate pharmacy."
+        },
+        {
+          "header": "Do you prescribe oral medication?",
+          "description": "Yes."
+        },
+        {
+          "header": "Can I purchase non-prescription products through this platform as well?",
+          "description": "Yes! If your treatment plan includes non-prescription products like a cleanser, moisturizer, or mild topical cream, we can coordinate the order for you and deliver it to you."
+        }
+      ]
+    },
+    {
+      "category": "Membership",
+      "questions": [
+        {
+          "header": "When will I be charged for my membership?",
+          "description": "We will not charge you until you meet your provider and feel comfortable under their care. After your first visit, you will be given the opportunity to start your membership with Honeydew. Once Membership is activated, you will be able to access the platform, order your treatment plan, chat with your care team at any time and follow-up with your provider."
+        },
+        {
+          "header": "Are medications covered by the membership fee?",
+          "description": "As part of our commitment to connecting you with the best, unbiased medical guidance, we do not sell our own medication. However, our team will help you get your products covered by insurance or source the lowest cost out-of-pocket options. Your products are also eligible for coverage through HSAs and FSAs."
+        },
+        {
+          "header": "Can insurance cover the cost of membership?",
+          "description": "At this time, the Honeydew membership is not processed through insurance. However, it is eligible for HSA and FSA reimbursement and you may be able to receive out-of-network reimbursement from your insurance company. Your insurance can also be used to cover the costs of prescriptions or labs in your treatment plan."
+        },
+        {
+          "header": "What does my membership cover?",
+          "description": "Your membership covers all of your virtual consultations, prescriptions for FDA-approved treatments, ongoing support from your care team 7 days/week, and access to our platform to manage your care."
+        },
+        {
+          "header": "How many times can I see my provider as a member?",
+          "description": "Generally follow-ups are once a month, but your provider may recommend more frequent follow-ups if necessary. You can also reach out to your care team if you need medical attention sooner."
+        },
+        {
+          "header": "Can I cancel my membership?",
+          "description": "You can cancel your membership from renewing anytime by emailing membership@honeydewcare.com. Please note that the monthly plan has a 3-month minimum, so your plan would only cancel after the third month in this case."
+        }
+      ]
+    },
+    {
+      "category": "Logistics",
+      "questions": [
+        {
+          "header": "What if I am/my child is under the age of 18?",
+          "description": "If you or your child is under the age of 18, we will need a parent or legal guardian present in the initial video consultation. If this is not possible, please contact our team. For patients 17 years of age, we may accept a parental photo holding parental ID with a signed consent form."
+        },
+        {
+          "header": "Can my Honeydew products and medications be delivered to my door without a signature?",
+          "description": "In most cases, yes. You may receive an email authorization to process the order but you will not need to be present for the delivery. However, all deliveries of isotretinoin (accutane) require a signature at the door."
+        },
+        {
+          "header": "How long will it take to receive my medications?",
+          "description": "It will take between one day to one week depending on your location."
+        },
+        {
+          "header": "Is Honeydew available in every state?",
+          "description": "Currently, Honeydew is available in Connecticut, Florida, Michigan, Nevada, New Jersey, New York, Utah, and Wyoming. We are working to be available to everyone all over the country. If we are not in your state but you wish to use Honeydew, please sign up so we know where to go next and can notify you when we are available in your state!"
+        },
+        {
+          "header": "Is there a fee for shipping?",
+          "description": "No. All products shipped from Honeydew are shipped for free. Medications delivered by specialty pharmacies are also delivered for free in almost all cases."
+        }
+      ]
+    },
+    {
+      "category": "Results",
+      "questions": [
+        {
+          "header": "How soon should my acne get better?",
+          "description": "Results vary for every patient. Your Honeydew Provider can provide a personalized estimate, but it depends on your skin, severity of acne, and the specific treatments in your plan. Generally you should start seeing results in 6-8 weeks. Your provider will work with you to find the most effective treatment for your specific acne and can adjust the plan over time."
+        },
+        {
+          "header": "If I have questions about my care, who do I contact?",
+          "description": "As a Honeydew member, you have access to your care team 7 days per week through the chat, which includes your Provider, a Care Coordinator, and an Admin."
+        }
+      ]
+    }
+  ]
+}

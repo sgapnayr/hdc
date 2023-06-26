@@ -78,7 +78,7 @@ changeSlide()
               <NuxtLink to="/sign-up">
                 <BaseButton class="mt-[24px] w-[328px]">Start Free Online Visit</BaseButton>
               </NuxtLink>
-              <p class="font-[400] text-[16px] leading-[20px] mx-[24px] mt-[24px] pb-[48px]">Currently available in New York</p>
+              <BaseCurrentlyAvailableIn />
             </div>
           </div>
         </div>
