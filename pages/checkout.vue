@@ -10,7 +10,7 @@ import { useAuthenticator } from '@aws-amplify/ui-vue'
 
 // LAYOUT **********************************************************************
 definePageMeta({
-  layout: 'captured',
+  layout: 'in-app',
   middleware: ['auth'],
 })
 

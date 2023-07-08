@@ -35,9 +35,8 @@ function handleCheckBox() {
 </script>
 
 <template>
-  <div class="flex items-start text-gray-4 w-full">
+  <div @click.stop="handleCheckBox" class="flex items-center md:items-start text-gray-4 w-full cursor-pointer">
     <div
-      @click.stop="handleCheckBox"
       class="border border-gray-2 w-[26px] h-[20px] rounded-[4px] mr-[16px] cursor-pointer text-white flex justify-center items-center"
       :class="[isSelected ? 'bg-honeydew-green' : '']"
     >

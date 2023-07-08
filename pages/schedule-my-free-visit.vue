@@ -18,9 +18,12 @@ const router = useRouter()
 const profileStore = useProfileStore()
 
 // STATE **********************************************************************
-const currentQuestionIdx = ref<number>(0)
+const currentQuestionIdx = ref<number>(17)
 const currentSelectedAnswer = ref<string>()
 const buttonLoadingState = ref<'idle' | 'loading' | 'failed' | 'success' | 'disabled'>('idle')
+const photo = ref()
+const previewURL = ref()
+const dragging = ref(false)
 
 // SIGN UP QUESTIONS ********************************************************************
 const signUpQuestions = [
@@ -83,6 +86,47 @@ function handleSelectedQuestion(selectedAnswer: string) {
   currentSelectedAnswer.value = selectedAnswer
 }
 
+const handleFileSelect = (e: any) => {
+  const file = e.target.files[0]
+  if (file) {
+    photo.value = file
+    generatePreview(file)
+  }
+}
+
+const handleDrop = (e: any) => {
+  e.preventDefault()
+  dragging.value = false
+  const file = e.dataTransfer.files[0]
+  if (file) {
+    photo.value = file
+    generatePreview(file)
+  }
+}
+
+const generatePreview = (file: any) => {
+  const reader = new FileReader()
+  reader.onload = () => {
+    previewURL.value = reader.result
+  }
+  reader.readAsDataURL(file)
+}
+
+const uploadPhoto = async () => {
+  const formData = new FormData()
+  formData.append('photo', photo.value)
+
+  // try {
+  //   const response = await axios.post('/api/upload', formData, {
+  //     headers: { 'Content-Type': 'multipart/form-data' },
+  //   })
+  //   console.log(response.data)
+  // } catch (error) {
+  //   console.error(error)
+  // }
+}
+
+// VALIDATION ********************************************************************
 async function handleAnswerSubmitValidation() {
   if (!currentSelectedAnswer.value) return
 
@@ -621,6 +665,16 @@ async function handleAnswerSubmitValidation() {
       <div v-if="currentQuestionIdx === 17">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Last step! Let's see your skin</h1>
         <p class="mb-[32px] font-[400] text-gray-5">Take or upload photos of your skin from three profiles.</p>
+
+        <div>
+          <div class="bg-red-100 p-1 text-center" @dragover.prevent="dragging = true" @dragleave="dragging = false" @drop="handleDrop">
+            <div v-if="dragging">Drop the photo here</div>
+            <input type="file" @change="handleFileSelect" />
+            <img v-if="previewURL" :src="previewURL" alt="Photo Preview" />
+          </div>
+          <button @click="uploadPhoto" :disabled="!photo">Upload Photo</button>
+        </div>
+
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
             @click="currentSelectedAnswer = questionAnswer.text"

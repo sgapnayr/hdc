@@ -5,7 +5,6 @@ import HoneyDewIcon from '@/assets/icons/honeydew-icon.svg'
 import { useRouter } from 'vue-router'
 import { useRoute } from 'vue-router'
 import { Auth } from 'aws-amplify'
-import { Authenticator, useAuthenticator } from '@aws-amplify/ui-vue'
 import WavingLady from '@/assets/images/waving-lady.svg'
 
 // ROUTER **********************************************************************

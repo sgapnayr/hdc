@@ -9,10 +9,6 @@ import ClockPurple from '@/assets/icons/clock-purple.svg'
 import SmilePurple from '@/assets/icons/smile-purple.svg'
 import PricingGuy1 from '@/assets/images/pricing-guy-1.png'
 import PricingGuy1Mobile from '@/assets/images/pricing-guy-1-mobile.png'
-import { useLandingPageStore } from '@/stores/landing-page'
-
-// STORE ********************************************************************
-const landingPageStore = useLandingPageStore()
 
 // STATE ********************************************************************
 const membershipSelected = ref('yearly')
@@ -143,16 +139,12 @@ const membershipSelected = ref('yearly')
             </div>
           </div>
 
-          <img class="mt-[80px]" :src="PricingGuy1Mobile" alt="Pricing Guy 1" />
-          <h1 class="w-full mt-[32px] text-[32px] font-[700] leading-[40px] text-[#403E48]">Schedule your free consultation today.</h1>
-          <div class="w-full flex justify-center items-center">
-            <div
-              class="flex items-center justify-center gap-[10px] w-full max-w-[380px] h-[56px] px-[32px] py-[15px] flex-shrink-0 rounded-[60px] bg-[#5e39f5] text-white mt-[40px]"
-            >
-              TRY IT FOR FREE
-            </div>
-          </div>
-
+          <BaseCallToAction
+            alt-text="Pricing Guy 1"
+            :image-path="PricingGuy1Mobile"
+            button-text="TRY IT FOR FREE"
+            large-text="Schedule your free consultation today."
+          />
           <BaseCurrentlyAvailableIn />
         </div>
       </BaseWrapper>

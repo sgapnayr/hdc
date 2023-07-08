@@ -208,142 +208,144 @@ watch(
 </script>
 
 <template>
-  <div v-for="(signUpQuestion, idx) in signUpQuestions" :key="idx">
-    <div class="w-[390px]" v-if="currentQuestionIdx === idx">
-      <div class="mt-[72px] text-honeydew-green">
-        {{ currentQuestionIdx + 1 }} of
-        {{ signUpQuestions.length }}
-      </div>
+  <BaseWrapper>
+    <div class="flex flex-col justify-center items-center" v-for="(signUpQuestion, idx) in signUpQuestions" :key="idx">
+      <div class="max-w-[390px]" v-if="currentQuestionIdx === idx">
+        <div class="mt-[32px] md:mt-[72px] text-honeydew-green">
+          {{ currentQuestionIdx + 1 }} of
+          {{ signUpQuestions.length }}
+        </div>
 
-      <!-- Which Best Describes You Question -->
-      <div v-if="currentQuestionIdx === 0">
-        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Which best describes you?</h1>
-        <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
-          <div
-            @click="currentSelectedAnswer = questionAnswer.text"
-            class="w-full h-[60px] rounded-[60px] outline-none bg-white flex justify-start items-center cursor-pointer mb-[16px] border border-gray-2"
-          >
+        <!-- Which Best Describes You Question -->
+        <div v-if="currentQuestionIdx === 0">
+          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Which best describes you?</h1>
+          <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
             <div
-              class="border rounded-full w-[20px] h-[20px] border-gray-2 ml-[22px] mr-[16px] flex justify-center items-center"
-              :class="[currentSelectedAnswer === questionAnswer.text ? 'bg-honeydew-green' : '']"
+              @click="currentSelectedAnswer = questionAnswer.text"
+              class="w-full h-[60px] rounded-[60px] outline-none bg-white flex justify-start items-center cursor-pointer mb-[16px] border border-gray-2"
             >
-              <div class="w-[12px] h-[12px] bg-white rounded-full"></div>
+              <div
+                class="border rounded-full w-[20px] h-[20px] border-gray-2 ml-[22px] mr-[16px] flex justify-center items-center"
+                :class="[currentSelectedAnswer === questionAnswer.text ? 'bg-honeydew-green' : '']"
+              >
+                <div class="w-[12px] h-[12px] bg-white rounded-full"></div>
+              </div>
+              <div class="text-gray-3">
+                {{ questionAnswer.text }}
+              </div>
             </div>
-            <div class="text-gray-3">
-              {{ questionAnswer.text }}
+          </div>
+          <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
+        </div>
+
+        <!-- Zip Code Question -->
+        <div v-if="currentQuestionIdx === 1">
+          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">What is your zip code?</h1>
+          <BaseInput v-model="currentSelectedAnswer" type="text" p-input-type="zip-code" class="w-full" />
+          <BaseButton
+            :state="currentSelectedAnswer && currentSelectedAnswer.length > 4 && currentSelectedAnswer.length < 6 ? 'idle' : 'disabled'"
+            @click="handleAnswerSubmitValidation"
+            class="w-full mt-[16px]"
+            >Continue</BaseButton
+          >
+          <p class="text-red text-sm" v-if="currentSelectedAnswer && currentSelectedAnswer.length > 5">Zip code should be 4 or 5 digits</p>
+        </div>
+
+        <!-- What Is Your Name Question -->
+        <div v-if="currentQuestionIdx === 2">
+          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Great, what is your name?</h1>
+          <p class="mb-[32px] font-[400] text-gray-5">Please, enter your full name</p>
+          <BaseInput v-model="currentSelectedAnswer" type="text" class="w-full" />
+          <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
+        </div>
+
+        <!-- Date Of Birth Question -->
+        <div v-if="currentQuestionIdx === 3">
+          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Okay, and what is your Date of Birth?</h1>
+          <p class="mb-[32px] font-[400] text-gray-5">We cannot provide service without an accurate Date of Birth</p>
+          <BaseInput :placeholder="'MM-DD-YYYY'" v-model="currentSelectedAnswer" p-input-type="date" class="w-full" />
+          <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
+        </div>
+
+        <!-- Under 18 Question -->
+        <div v-if="currentQuestionIdx === 4 && !profileStore.overEighteen">
+          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Since you're under 18, we'll need your parent's contact info.</h1>
+          <p class="mb-[32px] font-[400] text-gray-5">
+            Please enter your parent or guardian's contact information below, and have them be present for the initial consultation to provide consent.
+          </p>
+          <BaseInput :placeholder="'Full Name'" v-model="currentSelectedAnswer" class="w-full" />
+          <BaseInput :placeholder="'Email address'" v-model="secondCurrentSelectedAnswer" class="w-full" />
+          <BaseInput :placeholder="'Password'" p-input-type="password" v-model="(thirdCurrentSelectedAnswer as string)" class="w-full" />
+          <BaseInput :placeholder="'+1 (123) 456-7890'" :p-input-type="'phone-number'" v-model="(fourthCurrentSelectedAnswer as string)" class="w-full" />
+          <BaseButton
+            :state="currentSelectedAnswer && secondCurrentSelectedAnswer && thirdCurrentSelectedAnswer ? 'idle' : 'disabled'"
+            @click="handleAnswerSubmitValidation"
+            class="w-full mt-[16px]"
+            >Continue</BaseButton
+          >
+        </div>
+
+        <!-- Over 18, Great News! Question -->
+        <div v-if="currentQuestionIdx === 4 && profileStore.overEighteen">
+          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Great news! You're eligible for Honeydew!</h1>
+          <p class="mb-[32px] font-[400] text-gray-5">Create your account to get started and schedule your initial consultation.</p>
+          <BaseInput :placeholder="'jane@example.com'" v-model="currentSelectedAnswer" p-input-type="text" class="w-full" />
+          <BaseInput :placeholder="'Password'" v-model="secondCurrentSelectedAnswer" p-input-type="password" class="w-full" />
+          <BaseCheckBox @checkbox-selected="thirdCurrentSelectedAnswer = !thirdCurrentSelectedAnswer" class="mt-[32px]">
+            I agree with Terms of Service, Privacy Policy, and Telehealth Consent
+          </BaseCheckBox>
+          <BaseButton
+            :state="currentSelectedAnswer && secondCurrentSelectedAnswer && thirdCurrentSelectedAnswer ? 'idle' : 'disabled'"
+            @click="handleAnswerSubmitValidation"
+            class="w-full mt-[16px]"
+            >Continue</BaseButton
+          >
+        </div>
+
+        <!-- Verify Email -->
+        <div v-if="currentQuestionIdx === 5">
+          <div class="flex w-full justify-center items-center">
+            <TheTransitionWrapper>
+              <img v-if="buttonLoadingState !== 'success'" :src="VerifyEmail" alt="Verify Email" />
+            </TheTransitionWrapper>
+            <TheTransitionWrapper>
+              <img v-if="buttonLoadingState === 'success'" :src="VerifyEmailSuccess" alt="Verify Email" />
+            </TheTransitionWrapper>
+          </div>
+          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Verify your email</h1>
+          <p class="mb-[32px] font-[400] text-gray-5">
+            We've sent a verification email to {{ profileStore.signUpEmail }}. Please, verify your email address
+            <span class="underline">by entering the code</span> sent to your email before you continue with your free visit.
+          </p>
+          <BaseInput v-model="currentSelectedAnswer" p-input-type="verify" type="text" class="w-full" />
+          <BaseButton :state="buttonLoadingState" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
+        </div>
+
+        <!-- Add Payment Question -->
+        <div v-if="currentQuestionIdx === 6">
+          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Add payment information to complete your profile</h1>
+          <p class="mb-[32px] font-[400] text-gray-5">
+            Don't worry, you will not be charged. You can have your initial consultation for FREE before deciding if you want to sign up.
+          </p>
+          <BaseInput v-model="currentSelectedAnswer" placeholder="0000 0000 0000 0000" p-input-type="card-number" class="w-full" />
+          <BaseInput :placeholder="'Card holder name'" v-model="secondCurrentSelectedAnswer" p-input-type="text" class="w-full" />
+          <div class="flex gap-x-2 mt-4">
+            <div class="h-[60px] rounded-[60px] outline-none bg-white flex justify-between items-center border border-gray-2">
+              <input v-maska :data-maska="['##/##']" v-model="thirdCurrentSelectedAnswer" class="ml-4 outline-none w-10/12" :placeholder="'MM/YY'" />
+            </div>
+            <div class="h-[60px] rounded-[60px] outline-none bg-white flex justify-between items-center border border-gray-2">
+              <input v-maska :data-maska="['####']" v-model="fourthCurrentSelectedAnswer" class="ml-4 outline-none w-10/12" :placeholder="'CVV'" />
             </div>
           </div>
+          <BaseButton
+            :state="currentSelectedAnswer && secondCurrentSelectedAnswer && thirdCurrentSelectedAnswer ? 'idle' : 'disabled'"
+            @click="handleAnswerSubmitValidation"
+            class="w-full mt-[16px]"
+            >schedule my free visit</BaseButton
+          >
+          <BaseButton @click="router.push('/profile')" class="w-full mt-[16px]">Skip For Now</BaseButton>
         </div>
-        <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
-      </div>
-
-      <!-- Zip Code Question -->
-      <div v-if="currentQuestionIdx === 1">
-        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">What is your zip code?</h1>
-        <BaseInput v-model="currentSelectedAnswer" type="text" p-input-type="zip-code" class="w-full" />
-        <BaseButton
-          :state="currentSelectedAnswer && currentSelectedAnswer.length > 4 && currentSelectedAnswer.length < 6 ? 'idle' : 'disabled'"
-          @click="handleAnswerSubmitValidation"
-          class="w-full mt-[16px]"
-          >Continue</BaseButton
-        >
-        <p class="text-red text-sm" v-if="currentSelectedAnswer && currentSelectedAnswer.length > 5">Zip code should be 4 or 5 digits</p>
-      </div>
-
-      <!-- What Is Your Name Question -->
-      <div v-if="currentQuestionIdx === 2">
-        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Great, what is your name?</h1>
-        <p class="mb-[32px] font-[400] text-gray-5">Please, enter your full name</p>
-        <BaseInput v-model="currentSelectedAnswer" type="text" class="w-full" />
-        <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
-      </div>
-
-      <!-- Date Of Birth Question -->
-      <div v-if="currentQuestionIdx === 3">
-        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Okay, and what is your Date of Birth?</h1>
-        <p class="mb-[32px] font-[400] text-gray-5">We cannot provide service without an accurate Date of Birth</p>
-        <BaseInput :placeholder="'MM-DD-YYYY'" v-model="currentSelectedAnswer" p-input-type="date" class="w-full" />
-        <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
-      </div>
-
-      <!-- Under 18 Question -->
-      <div v-if="currentQuestionIdx === 4 && !profileStore.overEighteen">
-        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Since you're under 18, we'll need your parent's contact info.</h1>
-        <p class="mb-[32px] font-[400] text-gray-5">
-          Please enter your parent or guardian's contact information below, and have them be present for the initial consultation to provide consent.
-        </p>
-        <BaseInput :placeholder="'Full Name'" v-model="currentSelectedAnswer" class="w-full" />
-        <BaseInput :placeholder="'Email address'" v-model="secondCurrentSelectedAnswer" class="w-full" />
-        <BaseInput :placeholder="'Password'" p-input-type="password" v-model="(thirdCurrentSelectedAnswer as string)" class="w-full" />
-        <BaseInput :placeholder="'+1 (123) 456-7890'" :p-input-type="'phone-number'" v-model="(fourthCurrentSelectedAnswer as string)" class="w-full" />
-        <BaseButton
-          :state="currentSelectedAnswer && secondCurrentSelectedAnswer && thirdCurrentSelectedAnswer ? 'idle' : 'disabled'"
-          @click="handleAnswerSubmitValidation"
-          class="w-full mt-[16px]"
-          >Continue</BaseButton
-        >
-      </div>
-
-      <!-- Over 18, Great News! Question -->
-      <div v-if="currentQuestionIdx === 4 && profileStore.overEighteen">
-        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Great news! You're eligible for Honeydew!</h1>
-        <p class="mb-[32px] font-[400] text-gray-5">Create your account to get started and schedule your initial consultation.</p>
-        <BaseInput :placeholder="'jane@example.com'" v-model="currentSelectedAnswer" p-input-type="text" class="w-full" />
-        <BaseInput :placeholder="'Password'" v-model="secondCurrentSelectedAnswer" p-input-type="password" class="w-full" />
-        <BaseCheckBox @checkbox-selected="thirdCurrentSelectedAnswer = !thirdCurrentSelectedAnswer" class="mt-[32px]">
-          I agree with Terms of Service, Privacy Policy, and Telehealth Consent
-        </BaseCheckBox>
-        <BaseButton
-          :state="currentSelectedAnswer && secondCurrentSelectedAnswer && thirdCurrentSelectedAnswer ? 'idle' : 'disabled'"
-          @click="handleAnswerSubmitValidation"
-          class="w-full mt-[16px]"
-          >Continue</BaseButton
-        >
-      </div>
-
-      <!-- Verify Email -->
-      <div v-if="currentQuestionIdx === 5">
-        <div class="flex w-full justify-center items-center">
-          <TheTransitionWrapper>
-            <img v-if="buttonLoadingState !== 'success'" :src="VerifyEmail" alt="Verify Email" />
-          </TheTransitionWrapper>
-          <TheTransitionWrapper>
-            <img v-if="buttonLoadingState === 'success'" :src="VerifyEmailSuccess" alt="Verify Email" />
-          </TheTransitionWrapper>
-        </div>
-        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Verify your email</h1>
-        <p class="mb-[32px] font-[400] text-gray-5">
-          We've sent a verification email to {{ profileStore.signUpEmail }}. Please, verify your email address
-          <span class="underline">by entering the code</span> sent to your email before you continue with your free visit.
-        </p>
-        <BaseInput v-model="currentSelectedAnswer" p-input-type="verify" type="text" class="w-full" />
-        <BaseButton :state="buttonLoadingState" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
-      </div>
-
-      <!-- Add Payment Question -->
-      <div v-if="currentQuestionIdx === 6">
-        <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Add payment information to complete your profile</h1>
-        <p class="mb-[32px] font-[400] text-gray-5">
-          Don't worry, you will not be charged. You can have your initial consultation for FREE before deciding if you want to sign up.
-        </p>
-        <BaseInput v-model="currentSelectedAnswer" placeholder="0000 0000 0000 0000" p-input-type="card-number" class="w-full" />
-        <BaseInput :placeholder="'Card holder name'" v-model="secondCurrentSelectedAnswer" p-input-type="text" class="w-full" />
-        <div class="flex gap-x-2 mt-4">
-          <div class="h-[60px] rounded-[60px] outline-none bg-white flex justify-between items-center border border-gray-2">
-            <input v-maska :data-maska="['##/##']" v-model="thirdCurrentSelectedAnswer" class="ml-4 outline-none w-10/12" :placeholder="'MM/YY'" />
-          </div>
-          <div class="h-[60px] rounded-[60px] outline-none bg-white flex justify-between items-center border border-gray-2">
-            <input v-maska :data-maska="['####']" v-model="fourthCurrentSelectedAnswer" class="ml-4 outline-none w-10/12" :placeholder="'CVV'" />
-          </div>
-        </div>
-        <BaseButton
-          :state="currentSelectedAnswer && secondCurrentSelectedAnswer && thirdCurrentSelectedAnswer ? 'idle' : 'disabled'"
-          @click="handleAnswerSubmitValidation"
-          class="w-full mt-[16px]"
-          >schedule my free visit</BaseButton
-        >
-        <BaseButton @click="router.push('/profile')" class="w-full mt-[16px]">Skip For Now</BaseButton>
       </div>
     </div>
-  </div>
+  </BaseWrapper>
 </template>

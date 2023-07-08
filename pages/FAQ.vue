@@ -3,6 +3,12 @@
 import { ref, computed } from 'vue'
 import FAQJSON from '@/assets/json/faq.json'
 import ChevronIcon from '@/assets/icons/chevron-down-icon.svg'
+import QuestionMarkCircle from '@/assets/icons/question-mark-circle.svg'
+import FAQGuy1 from '@/assets/images/faq-guy-1.png'
+import { useLandingPageStore } from '@/stores/landing-page'
+
+// STORE ********************************************************************
+const landingPageStore = useLandingPageStore()
 
 // STATE ****************************************************************
 const selectedCategory = ref<string>('Medical Consultation')
@@ -55,7 +61,7 @@ function handelCardSelect(cardHeader: string) {
     </BaseWrapper>
 
     <!-- Question Cards -->
-    <div class="bg-white mt-[40px] py-6">
+    <div class="bg-white mt-[40px] py-6 flex flex-col justify-center items-center">
       <BaseWrapper>
         <div v-for="(questionCard, idx) in availableCards">
           <div
@@ -64,7 +70,8 @@ function handelCardSelect(cardHeader: string) {
             @click="handelCardSelect(question.header)"
           >
             <div class="w-full flex justify-between">
-              <div class="w-11/12">
+              <div class="w-11/12 flex">
+                <img :src="QuestionMarkCircle" alt="Question Mark Circle" class="mr-2 hidden md:flex" />
                 {{ question.header }}
               </div>
               <img :src="ChevronIcon" alt="Chevron Icon" class="transition" :class="[selectedCard.includes(question.header) ? 'rotate-180' : '']" />
@@ -74,6 +81,9 @@ function handelCardSelect(cardHeader: string) {
             </div>
           </div>
         </div>
+
+        <BaseCallToAction alt-text="FAQ Guy 1" :image-path="FAQGuy1" button-text="TRY IT FOR FREE" large-text="Join those who say no to acne." />
+        <BaseCurrentlyAvailableIn />
       </BaseWrapper>
     </div>
   </div>

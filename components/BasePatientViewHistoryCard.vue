@@ -34,9 +34,9 @@ const toDoListOrDetailsSelected = ref<'To do' | 'Details'>('To do')
           <div class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
             <img :src="PencilIcon" alt="Pencil Icon" />
           </div>
-          <div class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
+          <NuxtLink to="/pdf-page" class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
             <img :src="PaperIcon" alt="Paper Icon" />
-          </div>
+          </NuxtLink>
         </div>
       </div>
 

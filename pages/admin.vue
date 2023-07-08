@@ -14,21 +14,12 @@ import { Patient, Patients } from '@/types/patient-types'
 
 // LAYOUT **********************************************************************
 definePageMeta({
-  layout: 'captured',
+  layout: 'in-app',
   middleware: ['auth'],
 })
 
 // ROUTER **********************************************************************
-const router = useRouter()
 const user = useAuthenticator()
-const loadingPageExists = ref(true)
-
-function showPageForFiveSeconds() {
-  loadingPageExists.value = true
-  setTimeout(() => {
-    loadingPageExists.value = false
-  }, 2000)
-}
 
 onMounted(() => {
   const unmountWatcher = watchEffect(() => {
@@ -36,8 +27,6 @@ onMounted(() => {
       navigateTo('/')
     }
   })
-
-  showPageForFiveSeconds()
 
   onBeforeUnmount(() => {
     unmountWatcher()
@@ -160,30 +149,29 @@ getPatientsInit()
 </script>
 
 <template>
-  <Loading v-if="loadingPageExists" />
-  <div v-else class="w-full py-8">
+  <div class="w-full py-8">
     <BaseWrapper>
       <!-- Summary Top -->
       <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative">
         <div class="w-full">
-          <h1 class="text-[32px] font-[500]">Hi, Admin</h1>
-          <div class="flex gap-x-6 mt-[32px]">
+          <h1 class="text-[24px] md:text-[32px] font-[500]">Hi, Admin</h1>
+          <div class="flex gap-x-6 mt-[32px] text-[12px] md:text-[16px]">
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#FEF0F5] text-[#AE4768] relative">
-              <div class="text-[32px] font-[500] leading-[40px]">3</div>
+              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">3</div>
               New Patients
               <img l :src="BellIcon" alt="Bell Icon" class="top-4 absolute right-4" />
             </div>
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE]">
-              <div class="text-[32px] font-[500] leading-[40px]">3</div>
+              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">3</div>
               Follow-ups
             </div>
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34]">
-              <div class="text-[32px] font-[500] leading-[40px]">3</div>
+              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">3</div>
               New Messages
             </div>
           </div>
         </div>
-        <img class="absolute bottom-0 right-8" :src="GroupDoctors" alt="Group of Doctors" />
+        <img class="absolute bottom-0 right-8 hidden xl:flex" :src="GroupDoctors" alt="Group of Doctors" />
       </div>
 
       <!-- Table -->
@@ -208,15 +196,15 @@ getPatientsInit()
         <!-- Search -->
         <div class="bg-honeydew-bg2 w-full h-[48px] mt-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-start">
           <img class="ml-4 mr-2" :src="SearchIcon" alt="Search Icon" />
-          <input class="bg-honeydew-bg2 outline-none focus:ring-0 w-full" placeholder="Search by patient's name" type="text" />
+          <input class="bg-honeydew-bg2 outline-none focus:ring-0 w-[80%]" placeholder="Search by patient's name" type="text" />
         </div>
         <!-- Chips -->
-        <div class="mt-[24px]">
-          <div v-for="(categoryChip, idx) in handleChipData" :key="idx" class="flex">
+        <div class="mt-[24px] flex-wrap">
+          <div v-for="(categoryChip, idx) in handleChipData" :key="idx" class="flex flex-wrap">
             <div @click="() => handleSelectingChip(chip)" v-for="(chip, jdx) in categoryChip.chips" :key="jdx">
               <div
                 :class="[selectedChip?.text === chip.text ? 'bg-[#EEEBFC] text-honeydew-purple' : 'bg-honeydew-bg2']"
-                class="rounded-[20px] p-2 px-4 flex items-center justify-between mr-2 cursor-pointer"
+                class="rounded-[20px] p-2 px-4 flex items-center justify-between mr-2 cursor-pointer whitespace-nowrap mb-2"
                 v-if="chip.text"
               >
                 {{ chip.text }}

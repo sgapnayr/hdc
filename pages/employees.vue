@@ -14,7 +14,7 @@ import { Patient, Patients } from '@/types/patient-types'
 
 // LAYOUT **********************************************************************
 definePageMeta({
-  layout: 'captured',
+  layout: 'in-app',
   middleware: ['auth'],
 })
 

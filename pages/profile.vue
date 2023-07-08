@@ -17,10 +17,11 @@ import PlusIcon from '@/assets/icons/plus-icon-cart.svg'
 import MinusIcon from '@/assets/icons/minus-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { useProfileStore } from '@/stores/profile'
+import BaseCompletePregnancy from '~/components/BaseCompletePregnancy.vue'
 
 // LAYOUT **********************************************************************
 definePageMeta({
-  layout: 'captured',
+  layout: 'in-app',
   middleware: ['auth'],
 })
 
@@ -85,6 +86,7 @@ profileStore.setMyProfile()
 
 <template>
   <div class="flex flex-col py-8">
+    <BaseCompletePregnancy />
     <BaseWrapper>
       <!-- Upper cards -->
       <div class="flex gap-x-6">

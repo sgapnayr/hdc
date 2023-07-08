@@ -5,17 +5,18 @@ import HoneydewIcon from '@/assets/icons/honeydew-icon.svg'
 import HamburgerIcon from '@/assets/icons/hamburger.svg'
 import XIcon from '@/assets/icons/x-icon.svg'
 import { useRouter } from 'vue-router'
+import { Auth } from 'aws-amplify'
 
 // STATE **********************************************************************
 const isMenuOpen = ref(false)
 
 // DATA **********************************************************************
 const linkData = [
-  { text: 'HOME', route: '/' },
-  { text: 'WHY US', route: '/why-us' },
-  { text: 'PRICING', route: '/pricing' },
-  { text: 'FAQ', route: '/faq' },
-  { text: 'LOG IN', route: '/login' },
+  { text: 'Admin', route: '/admin' },
+  { text: 'Tasks Pool', route: '/tasks-pool' },
+  { text: 'Profile', route: '/profile' },
+  { text: 'Help', route: '' },
+  { text: 'Employees', route: '/employees' },
 ]
 
 // COMPUTED *********************************************************************
@@ -25,27 +26,36 @@ const currentRoute = computed(() => {
 
 // ROUTER *********************************************************************
 const router = useRouter()
+const route = useRoute()
 
 // Close the menu when the route changes
 router.beforeEach(() => {
   isMenuOpen.value = false
 })
+
+// METHODS *********************************************************************
+async function signOut() {
+  console.log('SIGN OUT')
+  try {
+    await Auth.signOut()
+    navigateTo('/')
+    // Sign-out successful
+    // You can redirect the user or perform other actions here
+  } catch (error) {
+    console.log('Error signing out:', error)
+    // Handle sign-out error
+  }
+}
 </script>
 
 <template>
-  <BaseAlert />
   <div class="h-[80px] flex justify-center items-center w-full">
     <BaseWrapper>
-      <div class="flex justify-between w-full items-center relative">
-        <NuxtLink to="/" class="flex w-full h-[28px] items-center">
+      <div class="flex justify-between w-full items-center relative bg-red-100">
+        <NuxtLink class="flex w-full h-[28px] items-center">
           <img class="w-[40px] md:w-auto mr-[16px]" :src="HoneydewIcon" alt="Honeydew Icon" />
           <img class="w-[148px] md:w-auto" :src="HoneydewLogo" alt="Honeydew Logo" />
         </NuxtLink>
-        <div class="w-full justify-center gap-x-4 xl:gap-x-[48px] hidden md:flex items-center">
-          <NuxtLink to="/whyus" :class="[currentRoute === '/whyus' ? 'text-honeydew-purple' : 'hover:text-honeydew-purple']">WHY US</NuxtLink>
-          <NuxtLink to="/pricing" :class="[currentRoute === '/pricing' ? 'text-honeydew-purple' : 'hover:text-honeydew-purple']">PRICING</NuxtLink>
-          <NuxtLink to="/faq" :class="[currentRoute === '/faq' ? 'text-honeydew-purple' : 'hover:text-honeydew-purple']">FAQ</NuxtLink>
-        </div>
 
         <div
           @click="isMenuOpen = !isMenuOpen"
@@ -57,9 +67,20 @@ router.beforeEach(() => {
       </div>
     </BaseWrapper>
   </div>
-  <div v-if="isMenuOpen" class="bg-white flex justify-start flex-col w-full gap-y-12 px-5 mt-[24px] transition" :class="[isMenuOpen ? 'h-screen' : 'h-0']">
+  <div
+    v-if="isMenuOpen"
+    class="bg-white flex justify-start flex-col w-full gap-y-12 px-5 mt-[24px] transition uppercase"
+    :class="[isMenuOpen ? 'h-screen' : 'h-0']"
+  >
     <NuxtLink v-for="(link, idx) in linkData" :key="idx" :to="link.route" :class="[currentRoute === link.route ? 'text-honeydew-purple' : '']">
       {{ link.text }}
     </NuxtLink>
+    <div
+      @click="signOut"
+      class="bg-white flex justify-start flex-col w-full transition uppercase cursor-pointer"
+      :class="[route.path === '/login' ? 'bg-[#EEEBFC]' : '']"
+    >
+      LOG OUT
+    </div>
   </div>
 </template>

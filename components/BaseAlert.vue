@@ -31,7 +31,7 @@ withDefaults(
   {
     alertText: 'New Coupon',
     linkText: 'Book Now',
-    linkDestination: '',
+    linkDestination: '/sign-up',
     canClose: true,
   }
 )

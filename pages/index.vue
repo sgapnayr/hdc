@@ -28,7 +28,6 @@ import Testimony3Image1 from '@/assets/images/testimony-3-image-1.svg'
 import Testimony3Image2 from '@/assets/images/testimony-3-image-2.svg'
 import Testimony3Image3 from '@/assets/images/testimony-3-image-3.svg'
 import Testimony3Image4 from '@/assets/images/testimony-3-image-4.svg'
-
 import GiantQuotes from '@/assets/icons/quotes.svg'
 import StarIcon from '@/assets/icons/star.svg'
 
@@ -50,6 +49,7 @@ function changeSlide() {
 }
 changeSlide()
 </script>
+``
 
 <template>
   <div class="flex flex-col w-full">

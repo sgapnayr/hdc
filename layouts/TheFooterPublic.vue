@@ -53,17 +53,21 @@ const date = new Date()
     <BaseWrapper>
       <div class="lg:hidden flex flex-col">
         <div class="w-full mt-[72px] flex items-center">
-          <NuxtLink to="/home" class="flex w-full justify-center items-center">
+          <NuxtLink to="/" class="flex w-full justify-center items-center">
             <img class="w-[40px] md:w-auto mr-[16px]" :src="HoneydewIcon" alt="Honeydew Icon" />
             <img class="w-[148px] md:w-auto" :src="HoneydewLogo" alt="Honeydew Logo" />
           </NuxtLink>
         </div>
         <div class="w-full justify-center flex-wrap flex text-gray-5 font-[400] gap-x-8 gap-y-8 my-[36px]">
-          <NuxtLink>Why Us</NuxtLink>
-          <NuxtLink>info@honeydewcare.com</NuxtLink>
-          <NuxtLink>Pricing</NuxtLink>
-          <NuxtLink>+1 (833) 801-8010</NuxtLink>
-          <NuxtLink>FAQ</NuxtLink>
+          <NuxtLink to="/why-us">Why Us</NuxtLink>
+          <NuxtLink to="/pricing">Pricing</NuxtLink>
+          <NuxtLink to="/faq">FAQ</NuxtLink>
+          <NuxtLink class="hidden md:flex">info@honeydewcare.com</NuxtLink>
+          <NuxtLink class="hidden md:flex">+1 (833) 801-8010</NuxtLink>
+          <div class="flex flex-col items-center justify-center gap-y-8 md:hidden">
+            <NuxtLink>info@honeydewcare.com</NuxtLink>
+            <NuxtLink>+1 (833) 801-8010</NuxtLink>
+          </div>
         </div>
         <div class="flex w-full justify-center">
           <img class="w-[148px] md:w-auto mr-[24px] scale-90" :src="HippaImage" alt="Hippa Compliance" />
