@@ -72,7 +72,7 @@ const uploadPhoto = async () => {
           <div @click="emit('close-modal')" class="border-r border-r-[#E1E0E6] p-6 mr-8">
             <img class="rotate-90" :src="ChevronIcon2" alt="Chevron Icon" />
           </div>
-          <div class="flex text-[#403E48] text-[20px]">Complete pregnancy test</div>
+          <div class="flex text-[#403E48] text-[20px]">Edit additional patient's details</div>
         </div>
         <button
           @click="uploadPhoto"
@@ -80,47 +80,87 @@ const uploadPhoto = async () => {
           :class="[isChecked && signName ? 'bg-honeydew-purple ' : 'bg-gray-2']"
           class="w-[150px] rounded-[80px] text-white p-3 text-center cursor-pointer transition active:scale-90 text-[12px]"
         >
-          SIGN & SEND
+          SAVE CHANGES
         </button>
       </div>
       <div class="px-6">
-        <p class="text-[#6C6A7C] text-[16px]">
-          iPledge requires a negative pregnancy test to enroll you and begin your 30-day wait period. Please upload a picture of your urine pregnancy test.
-        </p>
+        <p class="text-[#6C6A7C] text-[16px]">After you save the applied changes the details will be changed for patient as well.</p>
       </div>
-      <div class="bg-[#E2EBFD] p-5 flex gap-x-4 rounded-xl shadow-sm items-start mx-6 mt-6">
-        <img :src="BlueIcon" alt="Blue Icon" />
-        <p class="text-[#403E48] text-[16px]">
-          After this test, a pregnancy test will be required every 30 days and must be done at a CLIA-certified lab. We will send you a lab order before your
-          first lab test in 30 days.
-        </p>
-      </div>
-      <div class="p-6 mx-6 rounded-xl shadow-sm bg-white mt-6">
-        <div class="mb-3 text-[18px]">1. Upload an image of your pregnancy test</div>
-        <div
-          class="border border-[#F2F4F7] p-20 rounded-xl flex justify-center items-center flex-col"
-          @dragover.prevent="dragging = true"
-          @dragleave="dragging = false"
-          @drop="handleDrop"
-        >
-          <img :src="UploadIcon" alt="Upload Icon" />
-          <label for="fileInput" class="text-center relative cursor-pointer mt-2">
-            <p>Choose a photo</p>
-          </label>
-          <input id="fileInput" type="file" @change="handleFileSelect" class="hidden" />
-          <p class="text-[#6C6A7C]">{{ dragging ? 'You can drop it' : 'or drag it here' }}</p>
-          <img v-if="previewURL" class="rounded-xl h-[320px]" :src="previewURL" alt="Photo Preview" />
+      <div class="flex flex-col rounded-xl shadow-sm bg-white mt-6 mx-6">
+        <div class="p-6 flex justify-between border-b border-[#F2F4F7]">
+          <div class="mb-3 text-[18px] w-full">Parent's contact information</div>
+          <div class="w-full">
+            <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Full name</p>
+            <input
+              v-model="signName"
+              :placeholder="profileStore.signUpName || 'Enter your full name'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+            />
+            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">Phone Number</p>
+            <input
+              v-model="signName"
+              :placeholder="profileStore.signUpName || 'Enter your full name'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+            />
+            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">Email Address</p>
+            <input
+              v-model="signName"
+              :placeholder="profileStore.signUpName || 'Enter your full name'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+            />
+          </div>
         </div>
-        <BaseCheckBox @checkbox-selected="(val) => (isChecked = val)" class="my-8"
-          >I confirm that this is my own pregnancy test and it was taken today</BaseCheckBox
-        >
-        <div class="mt-4 border-t border-[#F2F4F7] pt-3">
-          <div class="mb-3 text-[18px]">2. Type your name to provide an e-signature</div>
-          <input
-            v-model="signName"
-            :placeholder="profileStore.signUpName || 'Enter your full name'"
-            class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
-          />
+        <div class="p-6 flex justify-between border-b border-[#F2F4F7]">
+          <div class="mb-3 text-[18px] w-full">Shipping address</div>
+          <div class="w-full">
+            <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Country</p>
+            <input
+              v-model="signName"
+              :placeholder="profileStore.signUpName || 'Enter your full name'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+            />
+            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">Postal Code</p>
+            <input
+              v-model="signName"
+              :placeholder="profileStore.signUpName || 'Enter your full name'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+            />
+            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">CITY</p>
+            <input
+              v-model="signName"
+              :placeholder="profileStore.signUpName || 'Enter your full name'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+            />
+            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">STREET, APT.</p>
+            <input
+              v-model="signName"
+              :placeholder="profileStore.signUpName || 'Enter your full name'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+            />
+          </div>
+        </div>
+        <div class="p-6 flex justify-between border-b border-[#F2F4F7]">
+          <div class="mb-3 text-[18px] w-full">Parent's contact information</div>
+          <div class="w-full">
+            <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Full name</p>
+            <input
+              v-model="signName"
+              :placeholder="profileStore.signUpName || 'Enter your full name'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+            />
+            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">Phone Number</p>
+            <input
+              v-model="signName"
+              :placeholder="profileStore.signUpName || 'Enter your full name'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+            />
+            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">Email Address</p>
+            <input
+              v-model="signName"
+              :placeholder="profileStore.signUpName || 'Enter your full name'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+            />
+          </div>
         </div>
       </div>
       <button
@@ -129,7 +169,7 @@ const uploadPhoto = async () => {
         :class="[isChecked && signName ? 'bg-honeydew-purple ' : 'bg-gray-2']"
         class="w-[150px] rounded-[80px] text-white p-3 text-center cursor-pointer transition active:scale-90 text-[12px] mx-6 mt-6"
       >
-        SIGN & SEND
+        SAVE CHANGES
       </button>
     </div>
   </div>
@@ -142,10 +182,8 @@ const uploadPhoto = async () => {
           <img :src="ChevronIcon" alt="Chevron Icon" />
           Back
         </div>
-        <div class="flex text-[#403E48] text-[18px] mb-[10px]">Complete pregnancy test</div>
-        <p class="text-[#6C6A7C] text-[14px]">
-          iPledge requires a negative pregnancy test to enroll you and begin your 30-day wait period. Please upload a picture of your urine pregnancy test.
-        </p>
+        <div class="flex text-[#403E48] text-[18px] mb-[8px]">Complete pregnancy test</div>
+        <p class="text-[#6C6A7C] text-[14px]">After you save the applied changes the details will be changed for patient as well.</p>
       </div>
       <div class="bg-[#E2EBFD] mt-2 p-5 flex gap-x-4 rounded-xl shadow-sm items-start">
         <img :src="BlueIcon" alt="Blue Icon" />

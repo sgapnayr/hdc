@@ -90,50 +90,23 @@ import HoneydewLogo from '@/assets/images/honeydew-logo.svg'
 
 .outer-outer-spin {
   animation: spin 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
-
-  @keyframes spin {
-    0% {
-      transform: rotate(360deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
 }
 .outer-spin {
   animation: spin 3s cubic-bezier(0.23, 1, 0.32, 1) infinite;
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
 }
 .inner-spin {
   animation: spin 5s cubic-bezier(0.23, 1, 0.32, 1) infinite;
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
 }
 .inner-inner-spin {
   animation: spin 0.5s linear infinite;
+}
 
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>

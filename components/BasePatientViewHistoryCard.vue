@@ -31,7 +31,10 @@ const toDoListOrDetailsSelected = ref<'To do' | 'Details'>('To do')
       <div class="flex w-full justify-between mt-[48px]">
         <div class="w-[72px] h-[72px] flex justify-center items-center bg-gray-1 rounded-xl">{photo}</div>
         <div class="flex gap-x-[12px]">
-          <div class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
+          <div
+            @click="profileStore.handlePatientDetailsForm"
+            class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer"
+          >
             <img :src="PencilIcon" alt="Pencil Icon" />
           </div>
           <NuxtLink to="/pdf-page" class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">

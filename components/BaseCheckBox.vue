@@ -37,11 +37,13 @@ function handleCheckBox() {
 <template>
   <div @click.stop="handleCheckBox" class="flex items-center md:items-start text-gray-4 w-full cursor-pointer">
     <div
-      class="border border-gray-2 w-[26px] h-[20px] rounded-[4px] mr-[16px] cursor-pointer text-white flex justify-center items-center"
+      class="border border-gray-2 w-6 h-6 rounded-[4px] cursor-pointer text-white flex justify-center items-center"
       :class="[isSelected ? 'bg-honeydew-green' : '']"
     >
       <img v-if="isSelected" :src="CheckIcon" alt="Checkmark Icon" class="scale-75" />
     </div>
-    <slot>I agree to terms and conditions.</slot>
+    <div class="ml-[16px]">
+      <slot>I agree to terms and conditions.</slot>
+    </div>
   </div>
 </template>

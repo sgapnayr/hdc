@@ -17,7 +17,7 @@ import PlusIcon from '@/assets/icons/plus-icon-cart.svg'
 import MinusIcon from '@/assets/icons/minus-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { useProfileStore } from '@/stores/profile'
-import BaseCompletePregnancy from '~/components/BaseCompletePregnancy.vue'
+import BaseAccutane from '~/components/BaseAccutane.vue'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -86,10 +86,11 @@ profileStore.setMyProfile()
 
 <template>
   <div class="flex flex-col py-8">
-    <BaseCompletePregnancy />
+    <BaseAccutane />
     <BaseWrapper>
+      <div class="w-full text-center opacity-50" @click="profileStore.handleModal">test pregnancy form</div>
       <!-- Upper cards -->
-      <div class="flex gap-x-6">
+      <div class="flex gap-x-6 lg:flex-row flex-col gap-y-6">
         <!-- Hi, Profile! -->
         <div class="bg-white w-full rounded-[8px] p-8 flex justify-between">
           <div class="flex flex-col justify-between w-1/2">
@@ -118,7 +119,7 @@ profileStore.setMyProfile()
             <div>
               <NuxtLink
                 to="/schedule-my-free-visit"
-                class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-2/3"
+                class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-[160px]"
               >
                 schedule my free visit
               </NuxtLink>
@@ -137,7 +138,7 @@ profileStore.setMyProfile()
       </div>
 
       <!-- Lower cards -->
-      <div class="flex gap-x-6 mt-[24px]">
+      <div class="flex gap-x-6 mt-[24px] md:flex-row flex-col gap-y-6">
         <!-- My treatment plan -->
         <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col">
           <img :src="MyTreatmentPlan" alt="My Treatment Plan" class="w-full" />

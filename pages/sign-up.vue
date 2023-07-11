@@ -275,8 +275,8 @@ watch(
           </p>
           <BaseInput :placeholder="'Full Name'" v-model="currentSelectedAnswer" class="w-full" />
           <BaseInput :placeholder="'Email address'" v-model="secondCurrentSelectedAnswer" class="w-full" />
-          <BaseInput :placeholder="'Password'" p-input-type="password" v-model="(thirdCurrentSelectedAnswer as string)" class="w-full" />
-          <BaseInput :placeholder="'+1 (123) 456-7890'" :p-input-type="'phone-number'" v-model="(fourthCurrentSelectedAnswer as string)" class="w-full" />
+          <!-- <BaseInput :placeholder="'Password'" p-input-type="password" v-model="(thirdCurrentSelectedAnswer as string)" class="w-full" /> -->
+          <!-- <BaseInput :placeholder="'+1 (123) 456-7890'" :p-input-type="'phone-number'" v-model="(fourthCurrentSelectedAnswer as string)" class="w-full" /> -->
           <BaseButton
             :state="currentSelectedAnswer && secondCurrentSelectedAnswer && thirdCurrentSelectedAnswer ? 'idle' : 'disabled'"
             @click="handleAnswerSubmitValidation"

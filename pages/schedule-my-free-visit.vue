@@ -4,6 +4,9 @@ import { useProfileStore } from '@/stores/profile'
 import { useRouter } from 'vue-router'
 import MedicalBackground from '@/assets/images/medical-background.svg'
 import BackChevronIcon from '@/assets/icons/back-chevron-icon.svg'
+import FaceFrontOutline from '@/assets/images/face-front-outline.svg'
+import FaceLeftOutline from '@/assets/images/face-left-outline.svg'
+import FaceRightOutline from '@/assets/images/face-right-outline.svg'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -21,9 +24,7 @@ const profileStore = useProfileStore()
 const currentQuestionIdx = ref<number>(17)
 const currentSelectedAnswer = ref<string>()
 const buttonLoadingState = ref<'idle' | 'loading' | 'failed' | 'success' | 'disabled'>('idle')
-const photo = ref()
-const previewURL = ref()
-const dragging = ref(false)
+const isPhotoUploaded = ref(false)
 
 // SIGN UP QUESTIONS ********************************************************************
 const signUpQuestions = [
@@ -84,46 +85,6 @@ const signUpQuestions = [
 // METHODS ********************************************************************
 function handleSelectedQuestion(selectedAnswer: string) {
   currentSelectedAnswer.value = selectedAnswer
-}
-
-const handleFileSelect = (e: any) => {
-  const file = e.target.files[0]
-  if (file) {
-    photo.value = file
-    generatePreview(file)
-  }
-}
-
-const handleDrop = (e: any) => {
-  e.preventDefault()
-  dragging.value = false
-  const file = e.dataTransfer.files[0]
-  if (file) {
-    photo.value = file
-    generatePreview(file)
-  }
-}
-
-const generatePreview = (file: any) => {
-  const reader = new FileReader()
-  reader.onload = () => {
-    previewURL.value = reader.result
-  }
-  reader.readAsDataURL(file)
-}
-
-const uploadPhoto = async () => {
-  const formData = new FormData()
-  formData.append('photo', photo.value)
-
-  // try {
-  //   const response = await axios.post('/api/upload', formData, {
-  //     headers: { 'Content-Type': 'multipart/form-data' },
-  //   })
-  //   console.log(response.data)
-  // } catch (error) {
-  //   console.error(error)
-  // }
 }
 
 // VALIDATION ********************************************************************
@@ -308,14 +269,14 @@ async function handleAnswerSubmitValidation() {
     <img class="ml-[16px]" :src="BackChevronIcon" alt="Back Chevron Icon" />
   </div>
   <div v-for="(signUpQuestion, idx) in signUpQuestions" :key="idx">
-    <div class="w-[390px]" v-if="currentQuestionIdx === idx">
+    <div v-if="currentQuestionIdx === idx">
       <div class="mt-[72px] text-honeydew-green">
         {{ currentQuestionIdx + 1 }} of
         {{ signUpQuestions.length }}
       </div>
 
       <!-- Start Medical Background -->
-      <div class="text-center" v-if="currentQuestionIdx === 0">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 0">
         <img :src="MedicalBackground" alt="Medical Background" />
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Let's fill in your medical background</h1>
         <p class="mb-[32px] font-[400] text-gray-5">Don't worry -- we'll make this quick!</p>
@@ -323,7 +284,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- How Long Have You Had Acne Question -->
-      <div v-if="currentQuestionIdx === 1">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 1">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">How long have you had acne?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
@@ -345,8 +306,9 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- Do you have dry skin? -->
-      <div v-if="currentQuestionIdx === 2">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 2">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Do you have dry skin?</h1>
+
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
             @click="currentSelectedAnswer = questionAnswer.text"
@@ -367,7 +329,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- Do you have sensitive skin? -->
-      <div v-if="currentQuestionIdx === 3">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 3">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Do you have sensitive skin?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
@@ -389,7 +351,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- What is your sex? -->
-      <div v-if="currentQuestionIdx === 4">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 4">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">What is your sex assigned at birth?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
@@ -433,7 +395,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- Do you break out during or leading up to your menstrual cycle specifically? -->
-      <div v-if="currentQuestionIdx === 6">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 6">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Do you break out during or leading up to your menstrual cycle specifically?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
@@ -455,7 +417,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- Do you break out during or leading up to your menstrual cycle specifically? -->
-      <div v-if="currentQuestionIdx === 7">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 7">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Is your menstrual cycle regular?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
@@ -477,7 +439,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- Do you take birth control? -->
-      <div v-if="currentQuestionIdx === 8">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 8">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Do you take birth control?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
@@ -499,7 +461,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- Do you have a history of PCOS (Polystic Ovarian Syndrome)? -->
-      <div v-if="currentQuestionIdx === 9">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 9">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Do you have a history of PCOS (Polystic Ovarian Syndrome)?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
@@ -521,7 +483,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- What kind of products have you tried for acne in the past? -->
-      <div v-if="currentQuestionIdx === 10">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 10">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">What kind of products have you tried for acne in the past?</h1>
         <p class="mb-[32px] font-[400] text-gray-5">You can select multiple options from the list</p>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
@@ -544,7 +506,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- Which non-prescription products do you use on your skin? -->
-      <div v-if="currentQuestionIdx === 11">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 11">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Which non-prescription products do you use on your skin?</h1>
         <p class="mb-[32px] font-[400] text-gray-5">E.g. washes, cleansers, masks, creams, ets. Please include the brand and product name if you can.</p>
         <BaseInput v-model="currentSelectedAnswer" type="text" class="w-full" />
@@ -552,7 +514,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- Which non-prescription products do you use on your skin? -->
-      <div v-if="currentQuestionIdx === 12">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 12">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Are you taking any other medications/pills for any other medical condition?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
@@ -574,7 +536,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- Do you have any allergies to perscription medications or ingredients? -->
-      <div v-if="currentQuestionIdx === 13">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 13">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Do you have any allergies to perscription medications or ingredients?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
@@ -596,7 +558,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- In the past month, how would you describe your stress level? -->
-      <div v-if="currentQuestionIdx === 14">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 14">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">In the past month, how would you describe your stress level?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
@@ -618,7 +580,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- In the past month, how would you describe your sleep? -->
-      <div v-if="currentQuestionIdx === 15">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 15">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">In the past month, how would you describe your sleep?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
@@ -640,7 +602,7 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- How often do you consume dairy? -->
-      <div v-if="currentQuestionIdx === 16">
+      <div class="text-center w-[390px]" v-if="currentQuestionIdx === 16">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">How often do you consume dairy?</h1>
         <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
           <div
@@ -666,32 +628,29 @@ async function handleAnswerSubmitValidation() {
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Last step! Let's see your skin</h1>
         <p class="mb-[32px] font-[400] text-gray-5">Take or upload photos of your skin from three profiles.</p>
 
-        <div>
-          <div class="bg-red-100 p-1 text-center" @dragover.prevent="dragging = true" @dragleave="dragging = false" @drop="handleDrop">
-            <div v-if="dragging">Drop the photo here</div>
-            <input type="file" @change="handleFileSelect" />
-            <img v-if="previewURL" :src="previewURL" alt="Photo Preview" />
-          </div>
-          <button @click="uploadPhoto" :disabled="!photo">Upload Photo</button>
+        <div class="flex gap-x-6">
+          <BaseImageUpload
+            @photo-uploaded="isPhotoUploaded = true"
+            buttonText="Left profile"
+            describedImage="The left side of your face"
+            :image-URL="FaceLeftOutline"
+          />
+          <BaseImageUpload
+            @photo-uploaded="isPhotoUploaded = true"
+            buttonText="Front profile"
+            describedImage="The front of your face"
+            :image-URL="FaceFrontOutline"
+          />
+          <BaseImageUpload
+            @photo-uploaded="isPhotoUploaded = true"
+            buttonText="Right profile"
+            describedImage="The right side of your face"
+            :image-URL="FaceRightOutline"
+          />
         </div>
-
-        <div v-for="(questionAnswer, jdx) in signUpQuestion.questionAnswers" @click="handleSelectedQuestion(questionAnswer.text)">
-          <div
-            @click="currentSelectedAnswer = questionAnswer.text"
-            class="w-full h-[60px] rounded-[60px] outline-none bg-white flex justify-start items-center cursor-pointer mb-[16px] border border-gray-2"
-          >
-            <div
-              class="border rounded-full w-[20px] h-[20px] border-gray-2 ml-[22px] mr-[16px] flex justify-center items-center"
-              :class="[currentSelectedAnswer === questionAnswer.text ? 'bg-honeydew-green' : '']"
-            >
-              <div class="w-[12px] h-[12px] bg-white rounded-full"></div>
-            </div>
-            <div class="text-gray-3">
-              {{ questionAnswer.text }}
-            </div>
-          </div>
-        </div>
-        <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
+        <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full max-w-[220px] mt-[32px]"
+          >SUBMIT IMAGES</BaseButton
+        >
       </div>
 
       <!-- End -->

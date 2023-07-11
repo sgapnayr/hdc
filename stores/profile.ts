@@ -2,6 +2,10 @@ import { defineStore } from 'pinia'
 import { getMyProfile } from '@/lib/endpoints'
 
 export const useProfileStore = defineStore('profile', () => {
+  const isPregnantModalOpen = ref(false)
+  const isBloodSlipFormOpen = ref(false)
+  const isPatientDetailsFormOpen = ref(false)
+
   const profileData = ref()
   const isPatientMember = ref(false)
   const scheduleVisitDataArr = ref<any>([])
@@ -61,6 +65,18 @@ export const useProfileStore = defineStore('profile', () => {
     }
   }
 
+  function handleModal() {
+    isPregnantModalOpen.value = !isPregnantModalOpen.value
+  }
+
+  function handleBloodSlipForm() {
+    isBloodSlipFormOpen.value = !isBloodSlipFormOpen.value
+  }
+
+  function handlePatientDetailsForm() {
+    isPatientDetailsFormOpen.value = !isPatientDetailsFormOpen.value
+  }
+
   // Schedule Visit Flow
   const saveScheduleVisitData = () => {
     const scheduleVisitData = [
@@ -112,6 +128,9 @@ export const useProfileStore = defineStore('profile', () => {
 
   // EXPORTS ****************************************************************
   return {
+    isPregnantModalOpen,
+    isBloodSlipFormOpen,
+    isPatientDetailsFormOpen,
     profileData,
     scheduleVisitDataArr,
     saveScheduleVisitData,
@@ -151,5 +170,8 @@ export const useProfileStore = defineStore('profile', () => {
     lastStepLetsSeeYourSkin,
     signUpHeight,
     signUpWeight,
+    handleModal,
+    handleBloodSlipForm,
+    handlePatientDetailsForm,
   }
 })

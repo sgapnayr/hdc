@@ -43,9 +43,14 @@ import XIcon from '@/assets/icons/x-icon.svg'
 withDefaults(
   defineProps<{
     canClose?: boolean
+    customHeader?: boolean
+    customButtons?: boolean
+    hardClose?: boolean
   }>(),
   {
     canClose: true,
+    customHeader: false,
+    customButtons: false,
   }
 )
 
@@ -70,16 +75,16 @@ function test() {
       class="shadow fixed w-screen z-30 min-h-screen flex justify-center items-start left-0 top-0 bottom-0"
       @click="canClose ? (modalIsOpen = false) : ''"
     >
-      <div class="relative flex justify-center top-40 lg:top-1/5 w-full">
+      <div class="relative flex justify-center top-24 lg:top-1/5 w-full">
         <transition name="modal">
           <div class="bg-white rounded-[8px] shadow-xl" @click.stop>
-            <div class="text-[18px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between p-4 px-6">
+            <div v-if="!customHeader" class="text-[18px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between p-4 px-6">
               <slot name="header"> Header </slot>
               <img @click="modalIsOpen = false" :src="XIcon" alt="X Icon" class="text-black scale-90 cursor-pointer" />
             </div>
-            <div class="p-5 bg-honeydew-bg2 rounded-b-[8px]">
+            <div :class="[customHeader ? 'rounded-[8px]' : 'rounded-b-[8px] bg-honeydew-bg2']" class="p-5">
               <slot name="content"> Content </slot>
-              <div class="flex w-full justify-end gap-x-4">
+              <div v-if="!customButtons" class="flex w-full justify-end gap-x-4">
                 <div
                   @click="modalIsOpen = false"
                   class="text-[12px] h-[40px] w-[133px] flex justify-center items-center rounded-[60px] bg-[#EEEBFC] text-honeydew-purple uppercase cursor-pointer mt-[32px]"

@@ -16,6 +16,8 @@ export default defineNuxtConfig({
   loading: '@/components/Loading.vue',
   postcss: {
     plugins: {
+      'postcss-import': {},
+      'tailwindcss/nesting': 'postcss-nesting',
       tailwindcss: {},
       autoprefixer: {},
     },

@@ -3,6 +3,8 @@
 import { ref } from 'vue'
 import { useProfileStore } from '~/stores/profile'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
+import PlusCircleIcon from '@/assets/icons/plus-circle.svg'
+import UploadIcon from '@/assets/icons/upload-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 
 // LAYOUT **********************************************************************
@@ -29,6 +31,10 @@ const profileStore = useProfileStore()
 const treatmentHistoryOrDocumentsSelected = ref<'Treatment History' | 'Documents'>('Treatment History')
 const isOpen = ref<any[]>([])
 const isSelected = ref('Treatment History')
+const documentModalMenuOpen = ref(false)
+const photo = ref()
+const previewURL = ref()
+const dragging = ref(false)
 
 // METHODS *********************************************************************
 function handleOpen(idx: string) {
@@ -43,6 +49,47 @@ function handleOpen(idx: string) {
 function handleSelected(selectedVal: string) {
   isSelected.value = selectedVal
 }
+
+const handleFileSelect = (e: any) => {
+  const file = e.target.files[0]
+  if (file) {
+    photo.value = file
+    generatePreview(file)
+  }
+}
+
+const handleDrop = (e: any) => {
+  e.preventDefault()
+  dragging.value = false
+  const file = e.dataTransfer.files[0]
+  if (file) {
+    photo.value = file
+    generatePreview(file)
+  }
+}
+
+const generatePreview = (file: any) => {
+  const reader = new FileReader()
+  reader.onload = () => {
+    previewURL.value = reader.result
+  }
+  reader.readAsDataURL(file)
+}
+
+const uploadPhoto = async () => {
+  const formData = new FormData()
+  formData.append('photo', photo.value)
+  emit('close-modal')
+
+  // try {
+  //   const response = await axios.post('/api/upload', formData, {
+  //     headers: { 'Content-Type': 'multipart/form-data' },
+  //   })
+  //   console.log(response.data)
+  // } catch (error) {
+  //   console.error(error)
+  // }
+}
 </script>
 
 <template>
@@ -51,7 +98,7 @@ function handleSelected(selectedVal: string) {
       <!-- Left Side -->
       <BasePatientViewHistoryCard />
 
-      <!-- Right Side (Treatment history & Documents) -->
+      <!-- Right Side (Treatment history & @photo-uploaded="isPhotoUploaded = true") -->
       <div class="w-1/2 rounded-[8px] flex flex-col">
         <div class="bg-white flex px-8 gap-x-6">
           <div
@@ -99,8 +146,37 @@ function handleSelected(selectedVal: string) {
         </div>
 
         <!-- Documents -->
-        <div v-if="treatmentHistoryOrDocumentsSelected === 'Documents'" class="p-8">
+        <div v-if="treatmentHistoryOrDocumentsSelected === 'Documents'" class="p-8 flex w-full justify-between relative">
           <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Documents</h1>
+          <img @click="documentModalMenuOpen = !documentModalMenuOpen" class="hover:opacity-50 cursor-pointer" :src="PlusCircleIcon" alt="Plus Circle Icon" />
+          <div class="absolute right-8 mt-10 bg-white p-4 rounded-[12px] border border-[#F2F4F7]" v-if="documentModalMenuOpen">
+            <BaseModal>
+              <template #header> Upload a document </template>
+              <template #content>
+                <div class="p-6 mx-6 rounded-xl shadow-sm bg-white mt-6">
+                  <div
+                    class="border border-[#F2F4F7] p-20 rounded-xl flex justify-center items-center flex-col w-[450px]"
+                    @dragover.prevent="dragging = true"
+                    @dragleave="dragging = false"
+                    @drop="handleDrop"
+                  >
+                    <img :src="UploadIcon" alt="Upload Icon" />
+                    <label for="fileInput" class="text-center relative cursor-pointer mt-2">
+                      <p>Choose a photo</p>
+                    </label>
+                    <input id="fileInput" type="file" @change="handleFileSelect" class="hidden" />
+                    <p class="text-[#6C6A7C]">{{ dragging ? 'You can drop it' : 'or drag it here' }}</p>
+                    <img v-if="previewURL" class="rounded-xl h-[320px]" :src="previewURL" alt="Photo Preview" />
+                  </div>
+                </div>
+              </template>
+              <template #button>
+                <div class="hover:text-honeydew-purple cursor-pointer transition">Upload Document</div>
+              </template>
+              <template #button-text> Next </template>
+            </BaseModal>
+            <div @click="profileStore.handleBloodSlipForm" class="hover:text-honeydew-purple cursor-pointer transition mt-1">Create a form</div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,7 @@
 <template>
+  <BaseCompletePregnancy v-if="profileStore.isPregnantModalOpen" @close-modal="profileStore.handleModal" />
+  <BasePatientDetailsForm v-if="profileStore.isPatientDetailsFormOpen" @close-modal="profileStore.handlePatientDetailsForm" />
+  <BaseBloodSlipForm v-if="profileStore.isBloodSlipFormOpen" @close-modal="profileStore.handleBloodSlipForm" />
   <div class="flex flex-col justify-center items-center">
     <TheSideBar v-if="!isMobile" class="fixed w-[80px] left-0 top-0 z-10 hidden md:flex" />
     <TheNavigationMobileInApp v-if="isMobile" class="flex md:hidden" />
@@ -14,9 +17,13 @@
 import TheNavigationMobileInApp from './TheNavigationMobileInApp.vue'
 import TheSideBar from './TheSideBar.vue'
 import { Auth } from 'aws-amplify'
+import { useProfileStore } from '@/stores/profile'
+
+const profileStore = useProfileStore()
 
 const user = ref()
 const isMobile = ref(false)
+const isModalOpen = ref(true)
 
 async function getUser() {
   try {

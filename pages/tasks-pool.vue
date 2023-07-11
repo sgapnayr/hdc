@@ -7,7 +7,7 @@ import DeleteIcon from '@/assets/icons/delete-icon.svg'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import ClaimIcon from '@/assets/icons/claim-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { createTask, assignTask, getPatient } from '@/lib/endpoints'
+import { createTask, assignTask, getPatient, getAllTasks } from '@/lib/endpoints'
 import { useTasksStore } from '@/stores/task'
 import { usePatientStore } from '~/stores/patient'
 
@@ -45,6 +45,7 @@ const taskTypeMenuOpen = ref<boolean>(false)
 const taskPriority = ref<'Low' | 'Medium' | 'High'>('Medium')
 const taskPriorityMenuOpen = ref<boolean>(false)
 const taskComments = ref<string>()
+const allTasks = ref()
 
 // MEMBER DATA ****************************************************************
 const categoryChips = [
@@ -90,6 +91,11 @@ const handleChipData = computed(() => {
 })
 
 // METHODS ****************************************************************
+function handleGetAllTasks() {}
+getAllTasks().then((response) => {
+  allTasks.value = response.data
+})
+
 function handleSelectingChip(chip: any) {
   selectedChip.value = chip
 }
@@ -121,10 +127,12 @@ function handleSubmitNewTask() {
 patientStore.getAllPatients()
 tasksStore.setAllTasks()
 tasksStore.setAssigneeTasks()
+handleGetAllTasks()
 </script>
 
 <template>
   <div class="w-full py-8">
+    {{ tasksStore.allTasks }}
     <BaseWrapper>
       <!-- Add New Task Button & Modal -->
       <div class="w-full flex justify-end my-4">
@@ -503,7 +511,7 @@ tasksStore.setAssigneeTasks()
 
               <BaseModal v-if="tabSelected === 'Inactive Patients'">
                 <template #button>
-                  <img @click="handleSelectedPatient(task)" class="cursor-pointer" :src="DeleteIcon" alt="Delete Icon" />
+                  <img @click="handleSelectedPatient(task, '123')" class="cursor-pointer" :src="DeleteIcon" alt="Delete Icon" />
                 </template>
                 <template #content>
                   <div class="flex flex-col p-8">
@@ -511,7 +519,7 @@ tasksStore.setAssigneeTasks()
                     <div class="mt-[16px] text-[16px] font-[400] flex flex-col">
                       <div>
                         Delete
-                        <span class="font-[500]">{{ selectedPatient?.fullName }}</span>
+                        <span class="font-[500]">{{ selectedPatient }}</span>
                         from the system. <br />
                       </div>
                       <div>
