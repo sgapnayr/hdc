@@ -34,7 +34,7 @@ router.beforeEach(() => {
 
 <template>
   <BaseAlert />
-  <div class="h-[80px] flex justify-center items-center w-full">
+  <div class="h-[72px] flex justify-center items-center w-full bg-white">
     <BaseWrapper>
       <div class="flex justify-between w-full items-center relative">
         <NuxtLink to="/" class="flex w-full h-[28px] items-center">

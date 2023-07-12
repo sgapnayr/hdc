@@ -50,7 +50,7 @@ async function signOut() {
 </script>
 
 <template>
-  <div class="h-[80px] flex justify-center items-center w-full">
+  <div class="h-[80px] flex justify-center items-center w-full bg-white">
     <BaseWrapper>
       <div class="flex justify-between w-full items-center relative">
         <NuxtLink class="flex w-full h-[28px] items-center">
@@ -63,7 +63,7 @@ async function signOut() {
           class="md:hidden relative flex justify-center items-center border w-[48px] h-[48px] rounded-[12px] cursor-pointer border-gray-2 text-gray-3 hover:opacity-50 active:opacity-30"
         >
           <img v-if="!isMenuOpen" class="absolute w-[18px]" :src="HamburgerIcon" alt="Hamburger Menu" />
-          <img v-if="isMenuOpen" class="absolute w-[18px]" :src="XIcon" alt="X Icon" />
+          <img v-if="isMenuOpen" class="absolute w-[18px] scale-90" :src="XIcon" alt="X Icon" />
         </div>
       </div>
     </BaseWrapper>

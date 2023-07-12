@@ -30,9 +30,13 @@ import Testimony3Image3 from '@/assets/images/testimony-3-image-3.svg'
 import Testimony3Image4 from '@/assets/images/testimony-3-image-4.svg'
 import GiantQuotes from '@/assets/icons/quotes.svg'
 import StarIcon from '@/assets/icons/star.svg'
+import { useLandingPageStore } from '@/stores/landing-page'
 
 // STATE **********************************************************************
 const slideSelected = ref<'1' | '2' | '3'>('1')
+
+// STORES **********************************************************************
+const landingPageStore = useLandingPageStore()
 
 // METHODS **********************************************************************
 function changeSlide() {
@@ -48,11 +52,18 @@ function changeSlide() {
   }, 12000)
 }
 changeSlide()
+
+landingPageStore.handleFirstVisitCouponVisible()
 </script>
-``
 
 <template>
   <div class="flex flex-col w-full">
+    <BaseModalCoupon :trigger-open="landingPageStore.firstVisitCouponVisible" v-if="landingPageStore.firstVisitCouponVisible">
+      <template #button>
+        <div class="invisible absolute">.</div>
+      </template>
+      <template #content> </template>
+    </BaseModalCoupon>
     <!-- Acne Care That Works For You -->
     <div class="flex flex-col w-full items-center bg-honeydew-bg3">
       <BaseWrapper>

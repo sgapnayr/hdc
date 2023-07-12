@@ -79,7 +79,6 @@ const generatePreview = (file: any) => {
 const uploadPhoto = async () => {
   const formData = new FormData()
   formData.append('photo', photo.value)
-  emit('close-modal')
 
   // try {
   //   const response = await axios.post('/api/upload', formData, {

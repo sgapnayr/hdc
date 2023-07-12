@@ -3,10 +3,11 @@
 import HoneydewLogo from '@/assets/images/honeydew-logo.svg'
 import HoneydewIcon from '@/assets/icons/honeydew-icon.svg'
 import HamburgerIcon from '@/assets/icons/hamburger.svg'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 // ROUTING **********************************************************************
 const router = useRouter()
+const route = useRoute()
 </script>
 
 <template>
@@ -19,15 +20,15 @@ const router = useRouter()
           <img class="w-[148px] md:w-auto" :src="HoneydewLogo" alt="Honeydew Logo" />
         </NuxtLink>
         <div class="w-full justify-center gap-x-4 lg:gap-x-[48px] hidden md:flex items-center">
-          <NuxtLink to="/whyus">WHY US</NuxtLink>
-          <NuxtLink to="/pricing">PRICING</NuxtLink>
-          <NuxtLink to="/faq">FAQ</NuxtLink>
+          <NuxtLink class="transition" :class="[route.path === '/why-us' ? 'text-honeydew-purple' : '']" to="/why-us">WHY US</NuxtLink>
+          <NuxtLink class="transition" :class="[route.path === '/pricing' ? 'text-honeydew-purple' : '']" to="/pricing">PRICING</NuxtLink>
+          <NuxtLink class="transition" :class="[route.path === '/faq' ? 'text-honeydew-purple' : '']" to="/faq">FAQ</NuxtLink>
         </div>
         <div class="flex w-full justify-end items-center">
           <NuxtLink to="/login" class="hidden md:flex cursor-pointer">LOGIN</NuxtLink>
           <NuxtLink
             to="/sign-up"
-            class="bg-honeydew-purple h-[48px] justify-center text-white items-center flex w-[153px] rounded-[60px] ml-[40px] font-[500] text-[14px] leading-[24px] cursor-pointer"
+            class="bg-honeydew-purple h-[48px] justify-center text-white items-center flex w-[153px] rounded-[60px] ml-6 lg:ml-[40px] font-[500] text-[14px] leading-[24px] cursor-pointer"
           >
             GET STARTED
           </NuxtLink>
