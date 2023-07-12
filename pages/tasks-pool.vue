@@ -134,8 +134,29 @@ handleGetAllTasks()
   <div class="w-full py-8">
     {{ tasksStore.allTasks }}
     <BaseWrapper>
+      <!-- Summary Top -->
+      <div class="flex gap-x-6">
+        <!-- General tasks pool -->
+        <div class="bg-white p-8 rounded-[16px] flex justify-between relative w-full">
+          <div class="w-full">
+            <h1 class="text-[32px] font-[500]">General tasks pool</h1>
+            <div class="flex gap-x-6 mt-[32px]">
+              <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE]">
+                <div class="text-[32px] font-[500] leading-[40px]">{{ tasksStore.assigneeTasks?.length }}</div>
+                In progress
+              </div>
+              <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34]">
+                <div class="text-[32px] font-[500] leading-[40px]">{{ tasksStore.allTasks?.length }}</div>
+                Issued
+              </div>
+            </div>
+          </div>
+          <img class="absolute bottom-0 right-8 hidden xl:flex" :src="GroupDoctors" alt="Group of Doctors" />
+        </div>
+      </div>
+
       <!-- Add New Task Button & Modal -->
-      <div class="w-full flex justify-end my-4">
+      <div class="w-full flex justify-start my-4">
         <BaseModal @action-click="handleSubmitNewTask">
           <template #button>
             <div
@@ -313,26 +334,6 @@ handleGetAllTasks()
           </template>
           <template #button-text @click="handleSubmitNewTask"> Submit New Task </template>
         </BaseModal>
-      </div>
-      <!-- Summary Top -->
-      <div class="flex gap-x-6">
-        <!-- General tasks pool -->
-        <div class="bg-white p-8 rounded-[16px] flex justify-between relative w-full">
-          <div class="w-full">
-            <h1 class="text-[32px] font-[500]">General tasks pool</h1>
-            <div class="flex gap-x-6 mt-[32px]">
-              <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE]">
-                <div class="text-[32px] font-[500] leading-[40px]">{{ tasksStore.assigneeTasks?.length }}</div>
-                In progress
-              </div>
-              <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34]">
-                <div class="text-[32px] font-[500] leading-[40px]">{{ tasksStore.allTasks?.length }}</div>
-                Issued
-              </div>
-            </div>
-          </div>
-          <img class="absolute bottom-0 right-8 hidden xl:flex" :src="GroupDoctors" alt="Group of Doctors" />
-        </div>
       </div>
 
       <!-- Assigned To Me Table -->

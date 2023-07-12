@@ -21,13 +21,13 @@
 // }
 
 export interface Patient {
-  fullName: string
-  dateOfBirth: string
-  acneCategory: string
-  dateOfService: string
-  nextFollowUp: string
-  provider: string
-  careCoordinator: string
+  patientName: string
+  patientDOB: string
+  patientAcneCategory: string
+  patientDateOfService: string
+  patientNextFollowUp: string
+  patientProviderAssigned: string
+  patientCareCoordinatorAssinged: string
 }
 
 export interface Patients {

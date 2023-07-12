@@ -64,6 +64,7 @@ const categoryChips: CategoryChips[] = [
       { text: 'New patients', amount: 10 },
       { text: 'Follow-up visits', amount: 10 },
       { text: 'New messages', amount: 10 },
+      { text: 'Accutane', amount: 10 },
     ],
   },
   {
@@ -71,10 +72,11 @@ const categoryChips: CategoryChips[] = [
     chips: [
       { text: 'All', amount: 10 },
       { text: 'Inactive membership', amount: 10 },
-      { text: 'Follow-No shows', amount: 10 },
-      { text: 'Canceled', amount: 10 },
+      { text: 'No shows', amount: 10 },
+      { text: 'Cancelled', amount: 10 },
       { text: 'Archived', amount: 10 },
       { text: 'New Messages', amount: 10 },
+      { text: 'Unscheduled accounts', amount: 10 },
     ],
   },
 ]
@@ -95,30 +97,70 @@ const tableHeaderCategories: TableHeaderCategory[] = [
   },
 ]
 
-function helloChris(number1: number, number2: number) {
-  return number1 + number2
-}
-
-helloChris(1, 3)
-
-const testPatients: Patient[] = [
+// ASK CHESTER FOR THIS OBJECT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+const patientData: Patient[] = [
   {
-    fullName: 'Ryan Pagelion',
-    dateOfBirth: 'Apr 3rd, 1995',
-    acneCategory: 'Mild acne',
-    dateOfService: 'Jun 6, 6:36 pm',
-    nextFollowUp: '',
-    provider: 'Dr. Joel',
-    careCoordinator: 'Mahor Sr.',
+    patientName: 'Ryan Pagelion',
+    patientDOB: 'Apr 3rd, 1995',
+    patientAcneCategory: 'Mild acne',
+    patientDateOfService: 'Jun 6, 6:36 pm',
+    patientNextFollowUp: '',
+    patientProviderAssigned: 'Dr. Joel',
+    patientCareCoordinatorAssinged: 'Mahor Sr.',
   },
   {
-    fullName: 'Jessica Smith',
-    dateOfBirth: 'Jan 15th, 1988',
-    acneCategory: 'Severe acne',
-    dateOfService: 'May 20, 10:15 am',
-    nextFollowUp: 'Jun 10, 3:00 pm',
-    provider: 'Dr. Emily',
-    careCoordinator: 'Lisa Thompson',
+    patientName: 'Jessica Smith',
+    patientDOB: 'Jan 15th, 1988',
+    patientAcneCategory: 'Severe acne',
+    patientDateOfService: 'May 20, 10:15 am',
+    patientNextFollowUp: 'Jun 10, 3:00 pm',
+    patientProviderAssigned: 'Dr. Emily',
+    patientCareCoordinatorAssinged: 'Lisa Thompson',
+  },
+  {
+    patientName: 'Jessica Smith',
+    patientDOB: 'Jan 15th, 1988',
+    patientAcneCategory: 'Severe acne',
+    patientDateOfService: 'May 20, 10:15 am',
+    patientNextFollowUp: 'Jun 10, 3:00 pm',
+    patientProviderAssigned: 'Dr. Emily',
+    patientCareCoordinatorAssinged: 'Lisa Thompson',
+  },
+  {
+    patientName: 'Jessica Smith',
+    patientDOB: 'Jan 15th, 1988',
+    patientAcneCategory: 'Severe acne',
+    patientDateOfService: 'May 20, 10:15 am',
+    patientNextFollowUp: 'Jun 10, 3:00 pm',
+    patientProviderAssigned: 'Dr. Emily',
+    patientCareCoordinatorAssinged: 'Lisa Thompson',
+  },
+  {
+    patientName: 'Jessica Smith',
+    patientDOB: 'Jan 15th, 1988',
+    patientAcneCategory: 'Severe acne',
+    patientDateOfService: 'May 20, 10:15 am',
+    patientNextFollowUp: 'Jun 10, 3:00 pm',
+    patientProviderAssigned: 'Dr. Emily',
+    patientCareCoordinatorAssinged: 'Lisa Thompson',
+  },
+  {
+    patientName: 'Jessica Smith',
+    patientDOB: 'Jan 15th, 1988',
+    patientAcneCategory: 'Severe acne',
+    patientDateOfService: 'May 20, 10:15 am',
+    patientNextFollowUp: 'Jun 10, 3:00 pm',
+    patientProviderAssigned: 'Dr. Emily',
+    patientCareCoordinatorAssinged: 'Lisa Thompson',
+  },
+  {
+    patientName: 'Jessica Smith',
+    patientDOB: 'Jan 15th, 1988',
+    patientAcneCategory: 'Severe acne',
+    patientDateOfService: 'May 20, 10:15 am',
+    patientNextFollowUp: 'Jun 10, 3:00 pm',
+    patientProviderAssigned: 'Dr. Emily',
+    patientCareCoordinatorAssinged: 'Lisa Thompson',
   },
 ]
 
@@ -154,19 +196,19 @@ getPatientsInit()
       <!-- Summary Top -->
       <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative">
         <div class="w-full">
-          <h1 class="text-[24px] md:text-[32px] font-[500]">Hi, Admin</h1>
+          <h1 class="text-[24px] md:text-[32px] font-[500]">Hi, {adminName}!</h1>
           <div class="flex gap-x-6 mt-[32px] text-[12px] md:text-[16px]">
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#FEF0F5] text-[#AE4768] relative">
-              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">3</div>
+              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{newPatients.length}</div>
               New Patients
               <img l :src="BellIcon" alt="Bell Icon" class="top-4 absolute right-4" />
             </div>
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE]">
-              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">3</div>
+              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{follow-ups.length}</div>
               Follow-ups
             </div>
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34]">
-              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">3</div>
+              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{new-messages.length}</div>
               New Messages
             </div>
           </div>
@@ -183,14 +225,14 @@ getPatientsInit()
             class="h-full py-4 cursor-pointer"
             @click="tabSelected = 'Active Patients'"
           >
-            Active Patients
+            Your Active Patients
           </div>
           <div
             :class="[tabSelected === 'Inactive Patients' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
             class="h-full py-4 cursor-pointer"
             @click="tabSelected = 'Inactive Patients'"
           >
-            Inactive Patients
+            Your Inactive Patients
           </div>
         </div>
         <!-- Search -->
@@ -209,7 +251,7 @@ getPatientsInit()
               >
                 {{ chip.text }}
                 <div class="h-1 w-1 bg-black mx-2 rounded-full"></div>
-                {{ chip.amount }}
+                {chipAmount.length}
               </div>
             </div>
           </div>
@@ -232,22 +274,15 @@ getPatientsInit()
             {{ patientList?.patients }}
           </div>
           <!-- Table Patients -->
-          <button @click="getPatient()">getPatient</button>
           <div
-            v-for="(patient, idx) in testPatients"
+            v-for="(patient, idx) in patientData"
             :key="idx"
-            :class="[idx === testPatients.length - 1 ? 'rounded-b-[16px]' : '']"
+            :class="[idx === patientData.length - 1 ? 'rounded-b-[16px]' : '']"
             class="grid grid-cols-9 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
           >
-            <div class="col-span-2">
-              {{ patient.fullName ? patient.fullName : '-' }}
-            </div>
-            <div>
-              {{ patient.dateOfBirth ? patient.dateOfBirth : '-' }}
-            </div>
-            <div>
-              {{ patient.acneCategory ? patient.acneCategory : '-' }}
-            </div>
+            <div class="col-span-2">{patientName}</div>
+            <div>{patientDOB}</div>
+            <div>{patientAcneCategory}</div>
             <div>
               {{ patient.dateOfService ? patient.dateOfService : '-' }}
             </div>

@@ -95,7 +95,7 @@ function test() {
                   @click="test"
                   class="text-[12px] h-[40px] px-6 flex justify-center items-center rounded-[60px] bg-honeydew-purple text-white uppercase cursor-pointer mt-[32px] whitespace-nowrap"
                 >
-                  <slot name="button-text"> Content </slot>
+                  <slot name="button-text"> Continue </slot>
                 </div>
               </div>
             </div>
@@ -106,7 +106,7 @@ function test() {
   </TheTransitionWrapper>
   <div @click="modalIsOpen = true">
     <slot name="button">
-      <BaseButton color-scheme="gray" @click="modalIsOpen = true"> Press For Modal </BaseButton>
+      <BaseButton color-scheme="gray" @click.stop="modalIsOpen = true"> Press For Modal </BaseButton>
     </slot>
   </div>
 </template>

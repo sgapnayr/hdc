@@ -18,6 +18,7 @@ import MinusIcon from '@/assets/icons/minus-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { useProfileStore } from '@/stores/profile'
 import BaseAccutane from '~/components/BaseAccutane.vue'
+import ChevronIcon2 from '@/assets/icons/chevron-down-icon.svg'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -75,6 +76,7 @@ const treatments: Treatment[] = [
   {
     treatmentName: 'Antibiotic',
     isPrescription: true,
+
     treatmentInstructions: 'Take with food, either in the morning or at night',
     morningNightOrBoth: 'both',
   },
@@ -86,9 +88,7 @@ profileStore.setMyProfile()
 
 <template>
   <div class="flex flex-col py-8">
-    <BaseAccutane />
     <BaseWrapper>
-      <div class="w-full text-center opacity-50" @click="profileStore.handleModal">test pregnancy form</div>
       <!-- Upper cards -->
       <div class="flex gap-x-6 lg:flex-row flex-col gap-y-6">
         <!-- Hi, Profile! -->
@@ -98,7 +98,23 @@ profileStore.setMyProfile()
               <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Hi, {{ profileStore.signUpName ? profileStore.signUpName : '...' }}!</h1>
               <p class="text-gray-5 mt-[16px] w-3/4">Welcome to your patient portal</p>
             </div>
-            <div>{toDoListItems}</div>
+            <!-- To do list items -->
+            <div class="flex justify-start items-start flex-col gap-y-4">
+              <div class="flex items-center justify-between w-full">
+                <div class="flex items-center w-full">
+                  <div class="w-5 h-5 bg-honeydew-bg2 border border-[#F2F4F7] rounded-full mr-2"></div>
+                  <div class="w-full opacity-50 cursor-pointer" @click="profileStore.handleModal">Submit pregnancy test</div>
+                </div>
+                <img class="rotate-[270deg]" :src="ChevronIcon2" alt="Chevron Icon 2" />
+              </div>
+              <div class="flex items-center justify-between w-full">
+                <div class="flex items-center w-full">
+                  <div class="w-5 h-5 bg-honeydew-bg2 border border-[#F2F4F7] rounded-full mr-2"></div>
+                  <BaseAccutane />
+                </div>
+                <img class="rotate-[270deg]" :src="ChevronIcon2" alt="Chevron Icon 2" />
+              </div>
+            </div>
           </div>
           <div class="w-[286px] h-[396px] rounded-[8px] px-8 pt-8 bg-honeydew-bg4 relative z-0">
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3">Refer a friend</h1>
@@ -119,7 +135,7 @@ profileStore.setMyProfile()
             <div>
               <NuxtLink
                 to="/schedule-my-free-visit"
-                class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-[160px]"
+                class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[11px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-[160px]"
               >
                 schedule my free visit
               </NuxtLink>
@@ -128,7 +144,7 @@ profileStore.setMyProfile()
           <div class="w-[286px] h-[396px] rounded-[8px] px-8 pt-8 bg-honeydew-bg4 relative">
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3">How do follow-ups work?</h1>
             <p class="text-gray-5 mt-[12px] text-[14px]">
-              Answer a few key questions and submitt new photos of your skin. Your provider will review your submission and outline next steps.
+              Answer a few key questions and submitting new photos of your skin. Your provider will review your submission and outline next steps.
             </p>
             <div class="w-full flex justify-center pt-[32px] absolute bottom-0 left-0 right-0">
               <img :src="DoctorWithClipboard" alt="Doctor with Clipboard" />

@@ -94,12 +94,12 @@ const uploadPhoto = async () => {
 
 <template>
   <BaseWrapper>
-    <div class="flex py-8 gap-x-6">
+    <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
       <BasePatientViewHistoryCard />
 
       <!-- Right Side (Treatment history & @photo-uploaded="isPhotoUploaded = true") -->
-      <div class="w-1/2 rounded-[8px] flex flex-col">
+      <div class="md:w-1/2 rounded-[8px] flex flex-col">
         <div class="bg-white flex px-8 gap-x-6">
           <div
             @click="treatmentHistoryOrDocumentsSelected = 'Treatment History'"
@@ -120,28 +120,31 @@ const uploadPhoto = async () => {
         <!-- Treatment History -->
         <div v-if="treatmentHistoryOrDocumentsSelected === 'Treatment History'" class="p-8">
           <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Medical background</h1>
-          <div v-for="(medicalItem, jdx) in profileStore.scheduleVisitDataArr">
-            <div :class="[profileStore.sexAssignedAtBirth === 'Female' ? '' : 'hidden']" class="my-[32px] w-full" :key="jdx">
-              <div @click="handleOpen(medicalItem.medicalTitle)" class="flex justify-start cursor-pointer text-[18px] font-[500] mb-[16px]">
-                <div class="transition flex justify-center items-center mr-[12px]" :class="[isOpen.includes(medicalItem.medicalTitle) ? '' : '-rotate-90']">
-                  <img :src="CaretIcon" alt="Caret Icon" />
+          <div>
+            <div v-for="(medicalItem, jdx) in profileStore.scheduleVisitDataArr">
+              <div :class="[profileStore.sexAssignedAtBirth === 'Female' ? '' : 'hidden']" class="my-[32px] w-full" :key="jdx">
+                <div @click="handleOpen(medicalItem.medicalTitle)" class="flex justify-start cursor-pointer text-[18px] font-[500] mb-[16px]">
+                  <div class="transition flex justify-center items-center mr-[12px]" :class="[isOpen.includes(medicalItem.medicalTitle) ? '' : '-rotate-90']">
+                    <img :src="CaretIcon" alt="Caret Icon" />
+                  </div>
+                  {{ medicalItem.medicalTitle }}
                 </div>
-                {{ medicalItem.medicalTitle }}
-              </div>
-              <div
-                v-for="(itemDesc, kdx) in medicalItem.content"
-                :key="kdx"
-                :class="[isOpen.includes(medicalItem.medicalTitle) ? '' : 'hidden']"
-                class="flex w-full justify-between mb-[16px] pl-8"
-              >
-                <div class="w-1/2 text-gray-5 font-[400]">
-                  {{ itemDesc.name }}
-                </div>
-                <div class="w-1/2 flex justify-end text-gray-5 font-[400]">
-                  {{ itemDesc.value }}
+                <div
+                  v-for="(itemDesc, kdx) in medicalItem.content"
+                  :key="kdx"
+                  :class="[isOpen.includes(medicalItem.medicalTitle) ? '' : 'hidden']"
+                  class="flex w-full justify-between mb-[16px] pl-8"
+                >
+                  <div class="w-1/2 text-gray-5 font-[400]">
+                    {{ itemDesc.name }}
+                  </div>
+                  <div class="w-1/2 flex justify-end text-gray-5 font-[400]">
+                    {{ itemDesc.value }}
+                  </div>
                 </div>
               </div>
             </div>
+            <div>{notesComponent}</div>
           </div>
         </div>
 

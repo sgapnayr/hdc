@@ -15,10 +15,20 @@ const profileStore = useProfileStore()
 
 // STATE *********************************************************************
 const toDoListOrDetailsSelected = ref<'To do' | 'Details'>('To do')
+const selectedItem = ref<string[]>([])
+
+// METHODS *********************************************************************
+function handleSelectedItem(selectedItemVal: string) {
+  if (selectedItem.value.includes(selectedItemVal)) {
+    selectedItem.value = selectedItem.value.filter((item) => item !== selectedItemVal)
+  } else {
+    selectedItem.value.push(selectedItemVal)
+  }
+}
 </script>
 
 <template>
-  <div class="bg-white w-1/2 rounded-[8px]">
+  <div class="bg-white md:w-1/2 rounded-[8px]">
     <!-- Padding Wrapper -->
     <div class="p-8">
       <!-- Navigation -->
@@ -76,22 +86,55 @@ const toDoListOrDetailsSelected = ref<'To do' | 'Details'>('To do')
     </div>
 
     <!-- Padding Wrapper -->
-    <div class="py-6 px-8">
-      <!-- Diagnosis codes -->
-      <div class="mb-5 text-gray-3 font-[500]">Diagnosis codes</div>
-      <!-- V_FOR_THROUGH_CODES -->
-      <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
-        <div>Diagnosis codes</div>
-        <div>{diagnosisCodes}</div>
-      </div>
-
-      <!-- iPledge Details -->
-      <div class="mb-5 text-gray-3 font-[500] flex justify-between">
-        <div>iPledge details</div>
-        <div class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
-          <img :src="PencilIcon" alt="Pencil Icon" />
+    <div class="pb-6 px-8">
+      <div @click="handleSelectedItem('Shipping Address')" class="text-gray-3 font-[500] w-full border-b border-[#E1E0E6] py-5 cursor-pointer flex flex-col">
+        <div class="flex w-full justify-between">
+          <div>Shipping address</div>
+          <img :class="[selectedItem.includes('Shipping Address') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
+        </div>
+        <div v-if="selectedItem.includes('Shipping Address')" class="flex w-full justify-between text-gray-5 font-[400]">
+          <div>{patientAddress}</div>
         </div>
       </div>
+
+      <div @click="handleSelectedItem('Health Insurance')" class="text-gray-3 font-[500] w-full border-b border-[#E1E0E6] py-5 cursor-pointer flex flex-col">
+        <div class="flex w-full justify-between">
+          <div>Health Insurance</div>
+          <div class="flex gap-x-2">
+            <BaseModal>
+              <template #button>
+                <div class="w-[24px] h-[24px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
+                  <img class="scale-75" :src="PencilIcon" alt="Pencil Icon" />
+                </div>
+              </template>
+            </BaseModal>
+            <img :class="[selectedItem.includes('Health Insurance') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
+          </div>
+        </div>
+        <div v-if="selectedItem.includes('Health Insurance')" class="flex w-full justify-between text-gray-5 font-[400]">
+          <div>
+            <div>{patientMemeberID}</div>
+            <div>{patientInsuranceName}</div>
+            <div>{patientPolicyHolderName}</div>
+            <div>{patientGroupNumber}</div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        @click="handleSelectedItem('Patient\'s current tasks')"
+        class="text-gray-3 font-[500] w-full border-b border-[#E1E0E6] py-5 cursor-pointer flex flex-col"
+      >
+        <div class="flex w-full justify-between">
+          <div>Patient's current tasks</div>
+          <img :class="[selectedItem.includes('Patient\'s current tasks') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
+        </div>
+        <div v-if="selectedItem.includes('Patient\'s current tasks')" class="flex w-full justify-between text-gray-5 font-[400]">
+          <div>{patientTasks}</div>
+        </div>
+      </div>
+
+      <div>iPledge details</div>
       <!-- Patient Pregnancy Status -->
       <div class="mt-[24px] mb-[16px] text-gray-3 font-[500]">{patientCanOrCannotGetPregnant}</div>
       <!-- Service Details -->

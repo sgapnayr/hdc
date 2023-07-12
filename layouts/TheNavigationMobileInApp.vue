@@ -15,6 +15,7 @@ const linkData = [
   { text: 'Admin', route: '/admin' },
   { text: 'Tasks Pool', route: '/tasks-pool' },
   { text: 'Profile', route: '/profile' },
+  { text: 'Medications', route: '/medications' },
   { text: 'Help', route: '' },
   { text: 'Employees', route: '/employees' },
 ]
@@ -51,7 +52,7 @@ async function signOut() {
 <template>
   <div class="h-[80px] flex justify-center items-center w-full">
     <BaseWrapper>
-      <div class="flex justify-between w-full items-center relative bg-red-100">
+      <div class="flex justify-between w-full items-center relative">
         <NuxtLink class="flex w-full h-[28px] items-center">
           <img class="w-[40px] md:w-auto mr-[16px]" :src="HoneydewIcon" alt="Honeydew Icon" />
           <img class="w-[148px] md:w-auto" :src="HoneydewLogo" alt="Honeydew Logo" />

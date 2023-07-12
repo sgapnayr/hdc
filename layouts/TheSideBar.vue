@@ -103,7 +103,7 @@ async function signOut() {
       </div>
 
       <!-- Question Icon -->
-      <BaseModal>
+      <BaseModal :customHeader="true" :customButtons="true">
         <template #button>
           <div
             class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition"
@@ -118,13 +118,21 @@ async function signOut() {
             </svg>
           </div>
         </template>
-        <template #header>
-          <img :src="WavingLady" alt="Waving Lady" />
-        </template>
         <template #content>
-          <div class="bg-white mt-[24px] px-5">
+          <div class="relative w-full items-center justify-center">
+            <img :src="WavingLady" alt="Waving Lady" class="w-full" />
+          </div>
+          <div class="bg-white mt-[24px] px-2">
             <div class="text-[20px] font-[500] leading-[24px] text-gray-3">Have questions?</div>
-            <div class="text-[16px] mt-[8px] font-[400] leading-[24px]">Have questions?</div>
+            <div class="text-[16px] mt-[8px] font-[400] leading-[24px] text-gray-3">Contact Honeydew's team 8am-10pm EST</div>
+            <p class="uppercase mt-4 text-sm">Call Us</p>
+            <p class="text-honeydew-green font-semibold">
+              <a href="tel:516-210-5600">516-210-5600</a>
+            </p>
+            <p class="uppercase mt-4 text-sm">Email Us</p>
+            <p class="text-honeydew-green font-semibold">
+              <a href="mailto:info@honeydewcare.com">info@honeydewcare.com</a>
+            </p>
           </div>
         </template>
       </BaseModal>

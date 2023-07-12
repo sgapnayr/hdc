@@ -21,7 +21,7 @@ const router = useRouter()
 const profileStore = useProfileStore()
 
 // STATE **********************************************************************
-const currentQuestionIdx = ref<number>(17)
+const currentQuestionIdx = ref<number>(0)
 const currentSelectedAnswer = ref<string>()
 const buttonLoadingState = ref<'idle' | 'loading' | 'failed' | 'success' | 'disabled'>('idle')
 const isPhotoUploaded = ref(false)
@@ -648,7 +648,7 @@ async function handleAnswerSubmitValidation() {
             :image-URL="FaceRightOutline"
           />
         </div>
-        <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full max-w-[220px] mt-[32px]"
+        <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[220px] mt-[32px]"
           >SUBMIT IMAGES</BaseButton
         >
       </div>

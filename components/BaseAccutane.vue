@@ -26,6 +26,9 @@ function handleNext() {
 
 <template>
   <BaseModal v-if="slideSelected !== 7" :custom-header="true" :custom-buttons="true">
+    <template #button>
+      <div class="opacity-50 cursor-pointer">View Accutane flow</div>
+    </template>
     <template #content>
       <div class="flex flex-col w-full max-w-[600px]">
         <!-- Card content -->
