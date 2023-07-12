@@ -5,7 +5,7 @@ import HoneydewLogo from '@/assets/images/honeydew-logo.svg'
 
 <template>
   <transition>
-    <div class="absolute w-full min-h-screen z-50 bg-honeydew-bg left-0">
+    <div class="fixed w-full min-h-screen z-50 bg-honeydew-bg left-0">
       <div class="flex justify-center items-center min-h-screen">
         <div class="absolute bottom-24 flex flex-col justify-center items-center">
           <div class="flex">

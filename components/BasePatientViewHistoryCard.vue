@@ -9,6 +9,7 @@ import PhoneIcon from '@/assets/icons/phone-icon.svg'
 import EmailIcon from '@/assets/icons/email-icon.svg'
 import AlertIcon from '@/assets/icons/alert-icon.svg'
 import { useProfileStore } from '@/stores/profile'
+import { BaseInput } from '~/.nuxt/components'
 
 // STORES *********************************************************************
 const profileStore = useProfileStore()
@@ -102,11 +103,27 @@ function handleSelectedItem(selectedItemVal: string) {
           <div>Health Insurance</div>
           <div class="flex gap-x-2">
             <BaseModal>
-              <template #button>
-                <div class="w-[24px] h-[24px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
-                  <img class="scale-75" :src="PencilIcon" alt="Pencil Icon" />
+              <template #header>
+                <div>Payment information</div>
+              </template>
+              <template #content>
+                <div class="min-w-[380px]">
+                  <div class="mb-[10px] px-2 uppercase text-[12px] font-[500] text-[#313337]">Health Plan Name</div>
+                  <input class="rounded-[80px] border border-[#E4E7EC] mb-6 h-[48px] w-full" type="text" placeholder="Enter health plan name" />
+                  <div class="mb-[10px] px-2 uppercase text-[12px] font-[500] text-[#313337]">Member ID</div>
+                  <input class="rounded-[80px] border border-[#E4E7EC] mb-6 h-[48px] w-full" type="text" placeholder="Enter member identification number" />
+                  <div class="mb-[10px] px-2 uppercase text-[12px] font-[500] text-[#313337]">Policy holder name</div>
+                  <input class="rounded-[80px] border border-[#E4E7EC] mb-6 h-[48px] w-full" type="text" placeholder="Enter policy holder name" />
+                  <div class="mb-[10px] px-2 uppercase text-[12px] font-[500] text-[#313337]">Group number</div>
+                  <input class="rounded-[80px] border border-[#E4E7EC] mb-6 h-[48px] w-full" type="text" placeholder="Enter group number" />
                 </div>
               </template>
+              <template #button>
+                <div class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
+                  <img :src="PencilIcon" alt="Pencil Icon" />
+                </div>
+              </template>
+              <template #button-text> Submit </template>
             </BaseModal>
             <img :class="[selectedItem.includes('Health Insurance') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
           </div>
@@ -200,5 +217,19 @@ function handleSelectedItem(selectedItemVal: string) {
 <style scoped>
 .boxShadow {
   box-shadow: 0px 1px 2px rgba(49, 51, 55, 0.05);
+}
+
+*:focus {
+  text-decoration: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+input::placeholder,
+input {
+  font-weight: 400;
+  font-size: 12px;
+  text-align: start;
+  padding: 0 0 0 8px;
 }
 </style>
