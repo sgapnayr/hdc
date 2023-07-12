@@ -4,11 +4,14 @@ import HoneydewLogo from '@/assets/images/honeydew-logo.svg'
 import HoneydewIcon from '@/assets/icons/honeydew-icon.svg'
 import HamburgerIcon from '@/assets/icons/hamburger.svg'
 import XIcon from '@/assets/icons/x-icon.svg'
+import WavingLady from '@/assets/images/waving-lady.svg'
 import { useRouter } from 'vue-router'
 import { Auth } from 'aws-amplify'
 
 // STATE **********************************************************************
 const isMenuOpen = ref(false)
+const modalExists = ref(false)
+const isModalOpen = ref(false)
 
 // DATA **********************************************************************
 const linkData = [
@@ -35,6 +38,13 @@ router.beforeEach(() => {
 })
 
 // METHODS *********************************************************************
+function handleModal() {
+  modalExists.value = true
+  setTimeout(() => {
+    isModalOpen.value = true
+  }, 1)
+}
+
 async function signOut() {
   console.log('SIGN OUT')
   try {
@@ -74,7 +84,31 @@ async function signOut() {
     :class="[isMenuOpen ? 'h-screen' : 'h-0']"
   >
     <NuxtLink v-for="(link, idx) in linkData" :key="idx" :to="link.route" :class="[currentRoute === link.route ? 'text-honeydew-purple' : '']">
-      {{ link.text }}
+      <BaseModal v-if="link.text === 'Help'" :customHeader="true" :customButtons="true">
+        <template #button>
+          <div class="cursor-pointer">Help</div>
+        </template>
+        <template #content>
+          <div class="relative w-full items-center justify-center">
+            <img :src="WavingLady" alt="Waving Lady" class="w-full" />
+          </div>
+          <div class="bg-white mt-[24px] px-2">
+            <div class="text-[16px] font-[500] leading-[24px] text-gray-3">Have questions?</div>
+            <div class="text-[12px] mt-[8px] font-[400] leading-[24px] text-gray-3">Contact Honeydew's team 8am-10pm EST</div>
+            <p class="uppercase mt-4 text-sm">Call Us</p>
+            <p class="text-honeydew-green font-semibold text-[12px] cursor-pointer">
+              <a href="tel:516-210-5600">516-210-5600</a>
+            </p>
+            <p class="uppercase mt-4 text-sm">Email Us</p>
+            <p class="text-honeydew-green font-semibold text-[12px] cursor-pointer">
+              <a href="mailto:info@honeydewcare.com">info@honeydewcare.com</a>
+            </p>
+          </div>
+        </template>
+      </BaseModal>
+      <div v-if="link.text !== 'Help'">
+        {{ link.text }}
+      </div>
     </NuxtLink>
     <div
       @click="signOut"
