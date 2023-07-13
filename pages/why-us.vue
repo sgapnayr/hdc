@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
-import { ref } from 'vue'
 import WhyUsLady1 from '@/assets/images/why-us-lady-1.png'
 import DavidBeforeAcne from '@/assets/images/david-before-acne.png'
 import DavidAfterAcne from '@/assets/images/david-after-acne.png'

@@ -162,7 +162,7 @@ profileStore.setMyProfile()
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 mt-[20px]">My treatment plan</h1>
             <p class="text-gray-5 mt-[8px] text-[14px]">View the latest plan your provider recommended for you.</p>
             <!-- Modal -->
-            <BaseModal @action-click="router.push('/view-history')">
+            <BaseModal @action-click="router.push('/view-history/1')">
               <template #button>
                 <button
                   class="bg-honeydew-purple h-[40px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap mt-[16px]"

@@ -6,6 +6,7 @@ import CaretIcon from '@/assets/icons/caret-icon.svg'
 import PlusCircleIcon from '@/assets/icons/plus-circle.svg'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
+import { useRouter, useRoute } from 'vue-router'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -14,6 +15,8 @@ definePageMeta({
 })
 
 // ROUTER **********************************************************************
+const router = useRouter()
+const route = useRoute()
 const user = useAuthenticator()
 
 onMounted(() => {
@@ -95,6 +98,7 @@ const uploadPhoto = async () => {
   <BaseWrapper>
     <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
+      Viewing Profile: {{ route.params.patientId }}
       <BasePatientViewHistoryCard />
 
       <!-- Right Side (Treatment history & @photo-uploaded="isPhotoUploaded = true") -->

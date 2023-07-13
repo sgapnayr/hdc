@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
 import { ref, computed } from 'vue'
-import { Authenticator, useAuthenticator } from '@aws-amplify/ui-vue'
+import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { Auth } from 'aws-amplify'
 import { password } from 'iron-webcrypto'
 
@@ -25,12 +25,6 @@ onMounted(() => {
 const username = ref()
 const password = ref()
 
-const signUpPassword = ref()
-const signUpUsername = ref()
-const signUpEmail = ref()
-const newPassword = ref()
-const code = ref()
-
 const loginButtonState = ref<'idle' | 'loading' | 'success' | 'failed' | 'disabled'>('idle')
 
 // METHODS ********************************************************************
@@ -47,22 +41,6 @@ async function signIn(username: string, password: string) {
   setTimeout(() => {
     loginButtonState.value = 'idle'
   }, 1000)
-}
-
-async function resetPassword(username: string, confirmationCode: string, newPassword: string) {
-  try {
-    await Auth.forgotPasswordSubmit(username, confirmationCode, newPassword)
-  } catch (error) {
-    console.log('Error resetting password:', error)
-  }
-}
-
-async function forgotPassword(username: string) {
-  try {
-    await Auth.forgotPassword(username)
-  } catch (error) {
-    console.log('Error requesting password reset:', error)
-  }
 }
 </script>
 

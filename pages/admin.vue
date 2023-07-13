@@ -11,6 +11,7 @@ import EyeIcon from '@/assets/icons/eye-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { getPatients, getPatient } from '@/lib/endpoints'
 import { Patient, Patients } from '@/types/patient-types'
+import { useRouter } from 'vue-router'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -19,6 +20,7 @@ definePageMeta({
 })
 
 // ROUTER **********************************************************************
+const router = useRouter()
 const user = useAuthenticator()
 
 onMounted(() => {
@@ -274,11 +276,12 @@ getPatientsInit()
             {{ patientList?.patients }}
           </div>
           <!-- Table Patients -->
-          <div
+          <NuxtLink
             v-for="(patient, idx) in patientData"
             :key="idx"
             :class="[idx === patientData.length - 1 ? 'rounded-b-[16px]' : '']"
             class="grid grid-cols-9 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
+            :to="`/view-history/${idx}`"
           >
             <div class="col-span-2">{patientName}</div>
             <div>{patientDOB}</div>
@@ -327,7 +330,7 @@ getPatientsInit()
                 </template>
               </BaseModal>
             </div>
-          </div>
+          </NuxtLink>
         </div>
       </div>
     </BaseWrapper>
