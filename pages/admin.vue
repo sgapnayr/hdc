@@ -62,31 +62,6 @@ const showAccutaneMessage = ref(false)
 const showNewMessageMessage = ref(false)
 const hoveredIdx = ref()
 
-// MEMBER DATA ****************************************************************
-const categoryChips: CategoryChips[] = [
-  {
-    group: 'Active Patients',
-    chips: [
-      { text: 'All', amount: 10 },
-      { text: 'New patients', amount: 10 },
-      { text: 'Follow-up visits', amount: 10 },
-      { text: 'New messages', amount: 10 },
-      { text: 'Accutane', amount: 10 },
-    ],
-  },
-  {
-    group: 'Inactive Patients',
-    chips: [
-      { text: 'All', amount: 10 },
-      { text: 'Inactive membership', amount: 10 },
-      { text: 'No shows', amount: 10 },
-      { text: 'Cancelled', amount: 10 },
-      { text: 'Archived', amount: 10 },
-      { text: 'Unscheduled accounts', amount: 10 },
-    ],
-  },
-]
-
 const tableHeaderCategories: TableHeaderCategory[] = [
   {
     role: 'admin', // Change for admin, care coord. etc
@@ -145,7 +120,7 @@ const patientData: Patient[] = [
     patientNextFollowUp: '',
     patientProviderAssigned: 'Dr. Williams',
     patientCareCoordinatorAssigned: 'Michael Clark',
-    currentPatientStatus: [],
+    currentPatientStatus: ['Cancelled', 'Inactive'],
     patientMedicaBackground: null,
   },
   {
@@ -222,7 +197,7 @@ const patientData: Patient[] = [
     patientNextFollowUp: '',
     patientProviderAssigned: 'Dr. Anderson',
     patientCareCoordinatorAssigned: 'Mark Wilson',
-    currentPatientStatus: ['Inactive'],
+    currentPatientStatus: ['Inactive', 'Archived'],
     patientMedicaBackground: null,
   },
 ]
@@ -309,6 +284,59 @@ async function getPatientsInit() {
   }
 }
 
+// MEMBER DATA ****************************************************************
+const categoryChips: CategoryChips[] = [
+  {
+    group: 'Active Patients',
+    chips: [
+      { text: 'All', amount: patientData.filter((patient) => !patient.currentPatientStatus.includes('Inactive')).length },
+      {
+        text: 'New patients',
+        amount: filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('New Patient')).length,
+      },
+      { text: 'Follow-up visits', amount: filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Follow Up')).length },
+      { text: 'New messages', amount: filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('New Message')).length },
+      { text: 'Accutane', amount: filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Accutane')).length },
+    ],
+  },
+  {
+    group: 'Inactive Patients',
+    chips: [
+      { text: 'All', amount: patientData.filter((patient) => patient.currentPatientStatus.includes('Inactive')).length },
+      {
+        text: 'Inactive membership',
+        amount: patientData
+          .filter((patient) => patient.currentPatientStatus.includes('Inactive'))
+          .filter((patient) => patient.currentPatientStatus.includes('Inactive')).length,
+      },
+      {
+        text: 'No shows',
+        amount: patientData
+          .filter((patient) => patient.currentPatientStatus.includes('Inactive'))
+          .filter((patient) => patient.currentPatientStatus.includes('No Shows')).length,
+      },
+      {
+        text: 'Cancelled',
+        amount: patientData
+          .filter((patient) => patient.currentPatientStatus.includes('Inactive'))
+          .filter((patient) => patient.currentPatientStatus.includes('Cancelled')).length,
+      },
+      {
+        text: 'Archived',
+        amount: patientData
+          .filter((patient) => patient.currentPatientStatus.includes('Inactive'))
+          .filter((patient) => patient.currentPatientStatus.includes('Archived')).length,
+      },
+      {
+        text: 'Unscheduled accounts',
+        amount: patientData
+          .filter((patient) => patient.currentPatientStatus.includes('Inactive'))
+          .filter((patient) => patient.currentPatientStatus.includes('Unscheduled')).length,
+      },
+    ],
+  },
+]
+
 getPatientsInit()
 </script>
 
@@ -373,7 +401,7 @@ getPatientsInit()
               >
                 {{ chip.text }}
                 <div class="h-1 w-1 bg-black mx-2 rounded-full"></div>
-                {chipAmount.length}
+                {{ chip.amount }}
               </div>
             </div>
           </div>
