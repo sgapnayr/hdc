@@ -434,6 +434,7 @@ getPatientsInit()
               idx === patientData.length - 1 ? 'rounded-b-[16px]' : '',
               patient.currentPatientStatus.includes('New Patient') ? 'bg-[#FEF0F5]' : '',
               patient.currentPatientStatus.includes('Follow Up') ? 'bg-[#F0F5FE]' : '',
+              patient.currentPatientStatus.includes('New Message') ? 'bg-[#F3FAF2]' : '',
             ]"
             @mouseenter="hoveredIdx = idx"
             @mouseleave="hoveredIdx = null"
