@@ -351,15 +351,17 @@ getPatientsInit()
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#FEF0F5] text-[#AE4768] relative">
               <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{{ totalNewPatients }}</div>
               New Patients
-              <img :src="BellIcon" alt="Bell Icon" class="top-4 absolute right-4" />
+              <div class="top-4 absolute right-4 h-2 w-2 bg-[#AE4768] rounded-full" />
             </div>
-            <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE]">
+            <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE] relative">
               <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{{ totalFollowUps }}</div>
               Follow-ups
+              <div class="top-4 absolute right-4 h-2 w-2 bg-[#4768AE] rounded-full" />
             </div>
-            <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34]">
+            <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34] relative">
               <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{{ totalNewMessages }}</div>
               New Messages
+              <div class="top-4 absolute right-4 h-2 w-2 bg-[#3A6A34] rounded-full" />
             </div>
           </div>
         </div>
