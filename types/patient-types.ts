@@ -20,6 +20,19 @@
 //   # flags(contains flags for different purposes)
 // }
 
+export type patientStatus =
+  | 'New Patient'
+  | 'Follow Up'
+  | 'New Message'
+  | 'Active'
+  | 'Inactive'
+  | 'Accutane'
+  | 'No Shows'
+  | 'Cancelled'
+  | 'Archived'
+  | 'Transferred'
+  | 'Unscheduled'
+
 export interface Patient {
   patientId: string
   patientName: string
@@ -28,10 +41,8 @@ export interface Patient {
   patientNextFollowUp: string
   patientProviderAssigned: string
   patientCareCoordinatorAssigned: string
-  isPatientNewPatientFollowUpOrNewMessage: 'New Patient' | 'Follow Up' | null
-  patientNewMessage: string | null
-  patientMedicaBackground: null | string
-  isPatientAccutane: boolean
+  currentPatientStatus: patientStatus[]
+  patientMedicaBackground: null | string // need type for medica background
 }
 
 export interface Patients {

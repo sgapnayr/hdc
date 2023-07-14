@@ -102,7 +102,7 @@ const tableHeaderCategories: TableHeaderCategory[] = [
   },
 ]
 
-// ASK CHESTER FOR THIS OBJECT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// ASK CHESTER FOR THIS OBJECT
 const patientData: Patient[] = [
   {
     patientId: '068d12b0-226f-11ee-be56-0242ac120002',
@@ -112,10 +112,8 @@ const patientData: Patient[] = [
     patientNextFollowUp: '',
     patientProviderAssigned: 'Dr. Joel',
     patientCareCoordinatorAssigned: 'Mahor Sr.',
-    isPatientNewPatientFollowUpOrNewMessage: 'New Patient',
-    patientNewMessage: null,
+    currentPatientStatus: ['New Patient'],
     patientMedicaBackground: null,
-    isPatientAccutane: false,
   },
   {
     patientId: '12345678',
@@ -125,10 +123,8 @@ const patientData: Patient[] = [
     patientNextFollowUp: '',
     patientProviderAssigned: 'Dr. Smith',
     patientCareCoordinatorAssigned: 'Jane Johnson',
-    isPatientNewPatientFollowUpOrNewMessage: 'New Patient',
-    patientNewMessage: null,
+    currentPatientStatus: ['New Patient'],
     patientMedicaBackground: 'Hypertension',
-    isPatientAccutane: false,
   },
   {
     patientId: '98765432',
@@ -138,10 +134,8 @@ const patientData: Patient[] = [
     patientNextFollowUp: 'Jul 20, 10:00 am',
     patientProviderAssigned: 'Dr. Johnson',
     patientCareCoordinatorAssigned: 'Mary Brown',
-    isPatientNewPatientFollowUpOrNewMessage: 'Follow Up',
-    patientNewMessage: null,
+    currentPatientStatus: ['Follow Up'],
     patientMedicaBackground: null,
-    isPatientAccutane: false,
   },
   {
     patientId: '13579246',
@@ -151,10 +145,8 @@ const patientData: Patient[] = [
     patientNextFollowUp: '',
     patientProviderAssigned: 'Dr. Williams',
     patientCareCoordinatorAssigned: 'Michael Clark',
-    isPatientNewPatientFollowUpOrNewMessage: null,
-    patientNewMessage: null,
+    currentPatientStatus: [],
     patientMedicaBackground: null,
-    isPatientAccutane: false,
   },
   {
     patientId: '24681357',
@@ -164,10 +156,8 @@ const patientData: Patient[] = [
     patientNextFollowUp: 'Jul 18, 9:30 am',
     patientProviderAssigned: 'Dr. Brown',
     patientCareCoordinatorAssigned: 'Michelle Smith',
-    isPatientNewPatientFollowUpOrNewMessage: 'Follow Up',
-    patientNewMessage: null,
+    currentPatientStatus: ['Follow Up', 'New Message', 'Accutane'],
     patientMedicaBackground: 'Acne',
-    isPatientAccutane: true,
   },
   {
     patientId: '31415926',
@@ -177,10 +167,8 @@ const patientData: Patient[] = [
     patientNextFollowUp: '',
     patientProviderAssigned: 'Dr. Anderson',
     patientCareCoordinatorAssigned: 'Mark Wilson',
-    isPatientNewPatientFollowUpOrNewMessage: 'New Patient',
-    patientNewMessage: 'New Message',
+    currentPatientStatus: ['New Patient', 'Accutane'],
     patientMedicaBackground: null,
-    isPatientAccutane: false,
   },
   {
     patientId: '24681357',
@@ -190,10 +178,8 @@ const patientData: Patient[] = [
     patientNextFollowUp: 'Jul 20, 10:00 am',
     patientProviderAssigned: 'Dr. Johnson',
     patientCareCoordinatorAssigned: 'Michael Clark',
-    isPatientNewPatientFollowUpOrNewMessage: 'Follow Up',
-    patientNewMessage: null,
+    currentPatientStatus: ['Follow Up'],
     patientMedicaBackground: 'Diabetes',
-    isPatientAccutane: false,
   },
   {
     patientId: '97531024',
@@ -203,10 +189,8 @@ const patientData: Patient[] = [
     patientNextFollowUp: '',
     patientProviderAssigned: 'Dr. Williams',
     patientCareCoordinatorAssigned: 'Michelle Smith',
-    isPatientNewPatientFollowUpOrNewMessage: null,
-    patientNewMessage: null,
+    currentPatientStatus: [],
     patientMedicaBackground: 'Asthma',
-    isPatientAccutane: false,
   },
   {
     patientId: '98765432',
@@ -216,10 +200,8 @@ const patientData: Patient[] = [
     patientNextFollowUp: 'Jul 18, 10:30 am',
     patientProviderAssigned: 'Dr. Brown',
     patientCareCoordinatorAssigned: 'Mary Brown',
-    isPatientNewPatientFollowUpOrNewMessage: 'Follow Up',
-    patientNewMessage: null,
+    currentPatientStatus: ['Follow Up'],
     patientMedicaBackground: null,
-    isPatientAccutane: true,
   },
   {
     patientId: '13579246',
@@ -229,10 +211,8 @@ const patientData: Patient[] = [
     patientNextFollowUp: '',
     patientProviderAssigned: 'Dr. Smith',
     patientCareCoordinatorAssigned: 'Jane Johnson',
-    isPatientNewPatientFollowUpOrNewMessage: 'New Patient',
-    patientNewMessage: null,
+    currentPatientStatus: ['New Patient'],
     patientMedicaBackground: null,
-    isPatientAccutane: false,
   },
   {
     patientId: '31415926',
@@ -242,10 +222,8 @@ const patientData: Patient[] = [
     patientNextFollowUp: '',
     patientProviderAssigned: 'Dr. Anderson',
     patientCareCoordinatorAssigned: 'Mark Wilson',
-    isPatientNewPatientFollowUpOrNewMessage: null,
-    patientNewMessage: 'New Message',
+    currentPatientStatus: ['Inactive'],
     patientMedicaBackground: null,
-    isPatientAccutane: false,
   },
 ]
 
@@ -254,15 +232,63 @@ const handleChipData = computed(() => {
   return categoryChips.filter((chip) => chip.group === tabSelected.value)
 })
 
+const filterByActiveOrInactive = computed(() => {
+  if (tabSelected.value === 'Active Patients') {
+    selectedChip.value = { text: 'All', amount: 10 } // Set selected chip to 'All' for Active Patients
+    return patientData.filter((patient) => !patient.currentPatientStatus.includes('Inactive'))
+  } else {
+    selectedChip.value = { text: 'All', amount: 10 } // Set selected chip to 'All' for Inactive Patients
+    return patientData.filter((patient) => patient.currentPatientStatus.includes('Inactive'))
+  }
+})
+
+const filterBySelectedChip = computed(() => {
+  if (selectedChip.value.text === 'All') {
+    return filterByActiveOrInactive.value
+  } else if (selectedChip.value.text === 'New patients') {
+    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('New Patient'))
+  } else if (selectedChip.value.text === 'Follow-up visits') {
+    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Follow Up'))
+  } else if (selectedChip.value.text === 'New messages') {
+    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('New Message'))
+  } else if (selectedChip.value.text === 'Accutane') {
+    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Accutane'))
+  } else if (selectedChip.value.text === 'Inactive membership') {
+    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Inactive'))
+  } else if (selectedChip.value.text === 'No shows') {
+    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('No Shows'))
+  } else if (selectedChip.value.text === 'Cancelled') {
+    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Cancelled'))
+  } else if (selectedChip.value.text === 'Archived') {
+    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Archived'))
+  } else if (selectedChip.value.text === 'Unscheduled accounts') {
+    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Unscheduled'))
+  }
+
+  return [] // Return an empty array if no matching chip is found
+})
+
 const totalPages = computed(() => {
-  return Math.ceil(patientData.length / pageSize.value)
+  return Math.ceil(filterBySelectedChip.value.length / pageSize.value)
 })
 
 const pagesData = computed(() => {
   let start = currentPage.value * pageSize.value
   let end = (currentPage.value + 1) * pageSize.value
 
-  return patientData.slice(start, end)
+  return filterBySelectedChip.value.slice(start, end)
+})
+
+const totalNewPatients = computed(() => {
+  return patientData.filter((patient) => patient.currentPatientStatus.includes('New Patient')).length
+})
+
+const totalFollowUps = computed(() => {
+  return patientData.filter((patient) => patient.currentPatientStatus.includes('Follow Up')).length
+})
+
+const totalNewMessages = computed(() => {
+  return patientData.filter((patient) => patient.currentPatientStatus.includes('New Message')).length
 })
 
 // METHODS ****************************************************************
@@ -295,16 +321,16 @@ getPatientsInit()
           <h1 class="text-[24px] md:text-[32px] font-[500]">Hi, {adminName}!</h1>
           <div class="flex gap-x-6 mt-[32px] text-[12px] md:text-[16px]">
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#FEF0F5] text-[#AE4768] relative">
-              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{newPatients.length}</div>
+              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{{ totalNewPatients }}</div>
               New Patients
               <img :src="BellIcon" alt="Bell Icon" class="top-4 absolute right-4" />
             </div>
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE]">
-              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{follow-ups.length}</div>
+              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{{ totalFollowUps }}</div>
               Follow-ups
             </div>
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34]">
-              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{new-messages.length}</div>
+              <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{{ totalNewMessages }}</div>
               New Messages
             </div>
           </div>
@@ -376,8 +402,8 @@ getPatientsInit()
             :key="idx"
             :class="[
               idx === patientData.length - 1 ? 'rounded-b-[16px]' : '',
-              patient.isPatientNewPatientFollowUpOrNewMessage === 'New Patient' ? 'bg-[#FEF0F5]' : '',
-              patient.isPatientNewPatientFollowUpOrNewMessage === 'Follow Up' ? 'bg-[#F0F5FE]' : '',
+              patient.currentPatientStatus.includes('New Patient') ? 'bg-[#FEF0F5]' : '',
+              patient.currentPatientStatus.includes('Follow Up') ? 'bg-[#F0F5FE]' : '',
             ]"
             @mouseenter="hoveredIdx = idx"
             @mouseleave="hoveredIdx = null"
@@ -387,7 +413,7 @@ getPatientsInit()
             <div
               @mouseenter="showNewMessageMessage = true"
               @mouseleave="showNewMessageMessage = false"
-              v-if="patient.patientNewMessage"
+              v-if="patient.currentPatientStatus.includes('New Message')"
               class="absolute items-center -left-4 top-4 flex justify-center text-[10px]"
             >
               <div v-if="showNewMessageMessage && hoveredIdx === idx" class="absolute bg-[#403E48] text-white rounded-md -top-8 font-semibold px-2 py-1">
@@ -413,7 +439,7 @@ getPatientsInit()
               <div
                 @mouseenter="showAccutaneMessage = true"
                 @mouseleave="showAccutaneMessage = false"
-                v-if="patient.isPatientAccutane"
+                v-if="patient.currentPatientStatus.includes('Accutane')"
                 class="text-[10px] shadow-md bg-[#ffdc99] px-2 py-[2px] rounded-[80px] flex justify-center items-center"
               >
                 <div v-if="showAccutaneMessage && hoveredIdx === idx" class="absolute bg-[#403E48] text-white rounded-md -top-2 font-semibold px-2 py-1">
