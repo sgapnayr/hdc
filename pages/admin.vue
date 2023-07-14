@@ -57,6 +57,10 @@ const selectedPatient = ref<Patient>()
 const patientList = ref<Patients>()
 const pageSize = ref(7)
 const currentPage = ref(0)
+const showNoMedicalMessage = ref(false)
+const showAccutaneMessage = ref(false)
+const showNewMessageMessage = ref(false)
+const hoveredIdx = ref()
 
 // MEMBER DATA ****************************************************************
 const categoryChips: CategoryChips[] = [
@@ -375,10 +379,20 @@ getPatientsInit()
               patient.isPatientNewPatientFollowUpOrNewMessage === 'New Patient' ? 'bg-[#FEF0F5]' : '',
               patient.isPatientNewPatientFollowUpOrNewMessage === 'Follow Up' ? 'bg-[#F0F5FE]' : '',
             ]"
+            @mouseenter="hoveredIdx = idx"
+            @mouseleave="hoveredIdx = null"
             class="grid grid-cols-8 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
             :to="`/view-history/${patient.patientId}`"
           >
-            <div v-if="patient.patientNewMessage" class="absolute items-center -left-4 top-4">
+            <div
+              @mouseenter="showNewMessageMessage = true"
+              @mouseleave="showNewMessageMessage = false"
+              v-if="patient.patientNewMessage"
+              class="absolute items-center -left-4 top-4 flex justify-center text-[10px]"
+            >
+              <div v-if="showNewMessageMessage && hoveredIdx === idx" class="absolute bg-[#403E48] text-white rounded-md -top-8 font-semibold px-2 py-1">
+                New Message
+              </div>
               <div class="bg-white shadow-md p-1 rounded-md">
                 <img :src="ChatIcon" alt="New Message Icon" class="h-5 w-5" />
               </div>
@@ -386,12 +400,27 @@ getPatientsInit()
             <div class="col-span-2 flex gap-x-2 items-center">
               {{ patient.patientName }}
               <div
+                @mouseenter="showNoMedicalMessage = true"
+                @mouseleave="showNoMedicalMessage = false"
                 v-if="patient.patientMedicaBackground"
                 class="text-[10px] bg-[#D35F84] text-white shadow-md w-4 h-4 flex justify-center items-center font-bold rounded-[80px]"
               >
+                <div v-if="showNoMedicalMessage && hoveredIdx === idx" class="absolute bg-[#403E48] text-white rounded-md -top-2 font-semibold px-2 py-1">
+                  No medical background
+                </div>
                 !
               </div>
-              <div v-if="patient.isPatientAccutane" class="text-[10px] shadow-md bg-[#ffdc99] px-2 py-[2px] rounded-[80px]">Accutane</div>
+              <div
+                @mouseenter="showAccutaneMessage = true"
+                @mouseleave="showAccutaneMessage = false"
+                v-if="patient.isPatientAccutane"
+                class="text-[10px] shadow-md bg-[#ffdc99] px-2 py-[2px] rounded-[80px] flex justify-center items-center"
+              >
+                <div v-if="showAccutaneMessage && hoveredIdx === idx" class="absolute bg-[#403E48] text-white rounded-md -top-2 font-semibold px-2 py-1">
+                  Accutane Patient
+                </div>
+                Accutane
+              </div>
             </div>
             <div>{{ patient.patientDOB ? patient.patientDOB : '-' }}</div>
             <div>{{ patient.patientDateOfService ? patient.patientDateOfService : '-' }}</div>
