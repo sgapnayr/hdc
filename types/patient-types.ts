@@ -21,13 +21,17 @@
 // }
 
 export interface Patient {
+  patientId: string
   patientName: string
   patientDOB: string
-  patientAcneCategory: string
   patientDateOfService: string
   patientNextFollowUp: string
   patientProviderAssigned: string
-  patientCareCoordinatorAssinged: string
+  patientCareCoordinatorAssigned: string
+  isPatientNewPatientFollowUpOrNewMessage: 'New Patient' | 'Follow Up' | null
+  patientNewMessage: string | null
+  patientMedicaBackground: null | string
+  isPatientAccutane: boolean
 }
 
 export interface Patients {

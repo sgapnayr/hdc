@@ -8,10 +8,10 @@ import SearchIcon from '@/assets/icons/search-icon.svg'
 import DeleteIcon from '@/assets/icons/delete-icon.svg'
 import ArchiveIcon from '@/assets/icons/archive-icon.svg'
 import EyeIcon from '@/assets/icons/eye-icon.svg'
+import ChatIcon from '@/assets/icons/chat-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { getPatients, getPatient } from '@/lib/endpoints'
 import { Patient, Patients } from '@/types/patient-types'
-import { useRouter } from 'vue-router'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -20,7 +20,6 @@ definePageMeta({
 })
 
 // ROUTER **********************************************************************
-const router = useRouter()
 const user = useAuthenticator()
 
 onMounted(() => {
@@ -56,6 +55,8 @@ const tabSelected = ref<'Active Patients' | 'Inactive Patients'>('Active Patient
 const selectedChip = ref<Chip>({ text: 'All', amount: 10 })
 const selectedPatient = ref<Patient>()
 const patientList = ref<Patients>()
+const pageSize = ref(7)
+const currentPage = ref(0)
 
 // MEMBER DATA ****************************************************************
 const categoryChips: CategoryChips[] = [
@@ -77,7 +78,6 @@ const categoryChips: CategoryChips[] = [
       { text: 'No shows', amount: 10 },
       { text: 'Cancelled', amount: 10 },
       { text: 'Archived', amount: 10 },
-      { text: 'New Messages', amount: 10 },
       { text: 'Unscheduled accounts', amount: 10 },
     ],
   },
@@ -89,7 +89,6 @@ const tableHeaderCategories: TableHeaderCategory[] = [
     categories: [
       { text: 'Full name' },
       { text: 'Date of birth' },
-      { text: 'Acne category' },
       { text: 'Date of service' },
       { text: 'Next follow-up' },
       { text: 'Provider' },
@@ -102,73 +101,164 @@ const tableHeaderCategories: TableHeaderCategory[] = [
 // ASK CHESTER FOR THIS OBJECT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const patientData: Patient[] = [
   {
+    patientId: '068d12b0-226f-11ee-be56-0242ac120002',
     patientName: 'Ryan Pagelion',
     patientDOB: 'Apr 3rd, 1995',
-    patientAcneCategory: 'Mild acne',
     patientDateOfService: 'Jun 6, 6:36 pm',
     patientNextFollowUp: '',
     patientProviderAssigned: 'Dr. Joel',
-    patientCareCoordinatorAssinged: 'Mahor Sr.',
+    patientCareCoordinatorAssigned: 'Mahor Sr.',
+    isPatientNewPatientFollowUpOrNewMessage: 'New Patient',
+    patientNewMessage: null,
+    patientMedicaBackground: null,
+    isPatientAccutane: false,
   },
   {
-    patientName: 'Jessica Smith',
-    patientDOB: 'Jan 15th, 1988',
-    patientAcneCategory: 'Severe acne',
-    patientDateOfService: 'May 20, 10:15 am',
-    patientNextFollowUp: 'Jun 10, 3:00 pm',
-    patientProviderAssigned: 'Dr. Emily',
-    patientCareCoordinatorAssinged: 'Lisa Thompson',
+    patientId: '12345678',
+    patientName: 'John Doe',
+    patientDOB: 'Jan 1st, 1980',
+    patientDateOfService: 'Jul 10, 9:00 am',
+    patientNextFollowUp: '',
+    patientProviderAssigned: 'Dr. Smith',
+    patientCareCoordinatorAssigned: 'Jane Johnson',
+    isPatientNewPatientFollowUpOrNewMessage: 'New Patient',
+    patientNewMessage: null,
+    patientMedicaBackground: 'Hypertension',
+    isPatientAccutane: false,
   },
   {
-    patientName: 'Jessica Smith',
-    patientDOB: 'Jan 15th, 1988',
-    patientAcneCategory: 'Severe acne',
-    patientDateOfService: 'May 20, 10:15 am',
-    patientNextFollowUp: 'Jun 10, 3:00 pm',
-    patientProviderAssigned: 'Dr. Emily',
-    patientCareCoordinatorAssinged: 'Lisa Thompson',
+    patientId: '98765432',
+    patientName: 'Jane Smith',
+    patientDOB: 'Mar 15th, 1975',
+    patientDateOfService: 'Jul 12, 2:30 pm',
+    patientNextFollowUp: 'Jul 20, 10:00 am',
+    patientProviderAssigned: 'Dr. Johnson',
+    patientCareCoordinatorAssigned: 'Mary Brown',
+    isPatientNewPatientFollowUpOrNewMessage: 'Follow Up',
+    patientNewMessage: null,
+    patientMedicaBackground: null,
+    isPatientAccutane: false,
   },
   {
-    patientName: 'Jessica Smith',
-    patientDOB: 'Jan 15th, 1988',
-    patientAcneCategory: 'Severe acne',
-    patientDateOfService: 'May 20, 10:15 am',
-    patientNextFollowUp: 'Jun 10, 3:00 pm',
-    patientProviderAssigned: 'Dr. Emily',
-    patientCareCoordinatorAssinged: 'Lisa Thompson',
+    patientId: '13579246',
+    patientName: 'Sarah Anderson',
+    patientDOB: 'Dec 10th, 1992',
+    patientDateOfService: 'Jul 8, 4:45 pm',
+    patientNextFollowUp: '',
+    patientProviderAssigned: 'Dr. Williams',
+    patientCareCoordinatorAssigned: 'Michael Clark',
+    isPatientNewPatientFollowUpOrNewMessage: null,
+    patientNewMessage: null,
+    patientMedicaBackground: null,
+    isPatientAccutane: false,
   },
   {
-    patientName: 'Jessica Smith',
-    patientDOB: 'Jan 15th, 1988',
-    patientAcneCategory: 'Severe acne',
-    patientDateOfService: 'May 20, 10:15 am',
-    patientNextFollowUp: 'Jun 10, 3:00 pm',
-    patientProviderAssigned: 'Dr. Emily',
-    patientCareCoordinatorAssinged: 'Lisa Thompson',
+    patientId: '24681357',
+    patientName: 'David Johnson',
+    patientDOB: 'Aug 20th, 1998',
+    patientDateOfService: 'Jul 11, 11:15 am',
+    patientNextFollowUp: 'Jul 18, 9:30 am',
+    patientProviderAssigned: 'Dr. Brown',
+    patientCareCoordinatorAssigned: 'Michelle Smith',
+    isPatientNewPatientFollowUpOrNewMessage: 'Follow Up',
+    patientNewMessage: null,
+    patientMedicaBackground: 'Acne',
+    isPatientAccutane: true,
   },
   {
-    patientName: 'Jessica Smith',
-    patientDOB: 'Jan 15th, 1988',
-    patientAcneCategory: 'Severe acne',
-    patientDateOfService: 'May 20, 10:15 am',
-    patientNextFollowUp: 'Jun 10, 3:00 pm',
-    patientProviderAssigned: 'Dr. Emily',
-    patientCareCoordinatorAssinged: 'Lisa Thompson',
+    patientId: '31415926',
+    patientName: 'Emily Davis',
+    patientDOB: 'Sep 5th, 1985',
+    patientDateOfService: 'Jul 9, 1:00 pm',
+    patientNextFollowUp: '',
+    patientProviderAssigned: 'Dr. Anderson',
+    patientCareCoordinatorAssigned: 'Mark Wilson',
+    isPatientNewPatientFollowUpOrNewMessage: 'New Patient',
+    patientNewMessage: 'New Message',
+    patientMedicaBackground: null,
+    isPatientAccutane: false,
   },
   {
-    patientName: 'Jessica Smith',
-    patientDOB: 'Jan 15th, 1988',
-    patientAcneCategory: 'Severe acne',
-    patientDateOfService: 'May 20, 10:15 am',
-    patientNextFollowUp: 'Jun 10, 3:00 pm',
-    patientProviderAssigned: 'Dr. Emily',
-    patientCareCoordinatorAssinged: 'Lisa Thompson',
+    patientId: '24681357',
+    patientName: 'Emma Thompson',
+    patientDOB: 'Feb 14th, 1988',
+    patientDateOfService: 'Jul 13, 3:30 pm',
+    patientNextFollowUp: 'Jul 20, 10:00 am',
+    patientProviderAssigned: 'Dr. Johnson',
+    patientCareCoordinatorAssigned: 'Michael Clark',
+    isPatientNewPatientFollowUpOrNewMessage: 'Follow Up',
+    patientNewMessage: null,
+    patientMedicaBackground: 'Diabetes',
+    isPatientAccutane: false,
+  },
+  {
+    patientId: '97531024',
+    patientName: 'Jessica Adams',
+    patientDOB: 'Nov 25th, 1990',
+    patientDateOfService: 'Jul 12, 5:15 pm',
+    patientNextFollowUp: '',
+    patientProviderAssigned: 'Dr. Williams',
+    patientCareCoordinatorAssigned: 'Michelle Smith',
+    isPatientNewPatientFollowUpOrNewMessage: null,
+    patientNewMessage: null,
+    patientMedicaBackground: 'Asthma',
+    isPatientAccutane: false,
+  },
+  {
+    patientId: '98765432',
+    patientName: 'Michael Johnson',
+    patientDOB: 'Jan 5th, 1978',
+    patientDateOfService: 'Jul 11, 9:30 am',
+    patientNextFollowUp: 'Jul 18, 10:30 am',
+    patientProviderAssigned: 'Dr. Brown',
+    patientCareCoordinatorAssigned: 'Mary Brown',
+    isPatientNewPatientFollowUpOrNewMessage: 'Follow Up',
+    patientNewMessage: null,
+    patientMedicaBackground: null,
+    isPatientAccutane: true,
+  },
+  {
+    patientId: '13579246',
+    patientName: 'Daniel Wilson',
+    patientDOB: 'Mar 8th, 1993',
+    patientDateOfService: 'Jul 10, 11:45 am',
+    patientNextFollowUp: '',
+    patientProviderAssigned: 'Dr. Smith',
+    patientCareCoordinatorAssigned: 'Jane Johnson',
+    isPatientNewPatientFollowUpOrNewMessage: 'New Patient',
+    patientNewMessage: null,
+    patientMedicaBackground: null,
+    isPatientAccutane: false,
+  },
+  {
+    patientId: '31415926',
+    patientName: 'Sophia Davis',
+    patientDOB: 'Oct 17th, 1983',
+    patientDateOfService: 'Jul 13, 2:00 pm',
+    patientNextFollowUp: '',
+    patientProviderAssigned: 'Dr. Anderson',
+    patientCareCoordinatorAssigned: 'Mark Wilson',
+    isPatientNewPatientFollowUpOrNewMessage: null,
+    patientNewMessage: 'New Message',
+    patientMedicaBackground: null,
+    isPatientAccutane: false,
   },
 ]
 
 // COMPUTED METHODS ****************************************************************
 const handleChipData = computed(() => {
   return categoryChips.filter((chip) => chip.group === tabSelected.value)
+})
+
+const totalPages = computed(() => {
+  return Math.ceil(patientData.length / pageSize.value)
+})
+
+const pagesData = computed(() => {
+  let start = currentPage.value * pageSize.value
+  let end = (currentPage.value + 1) * pageSize.value
+
+  return patientData.slice(start, end)
 })
 
 // METHODS ****************************************************************
@@ -196,14 +286,14 @@ getPatientsInit()
   <div class="w-full py-8">
     <BaseWrapper>
       <!-- Summary Top -->
-      <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative">
+      <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative min-w-[1244px] shadow-sm">
         <div class="w-full">
           <h1 class="text-[24px] md:text-[32px] font-[500]">Hi, {adminName}!</h1>
           <div class="flex gap-x-6 mt-[32px] text-[12px] md:text-[16px]">
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#FEF0F5] text-[#AE4768] relative">
               <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{newPatients.length}</div>
               New Patients
-              <img l :src="BellIcon" alt="Bell Icon" class="top-4 absolute right-4" />
+              <img :src="BellIcon" alt="Bell Icon" class="top-4 absolute right-4" />
             </div>
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE]">
               <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{follow-ups.length}</div>
@@ -215,11 +305,11 @@ getPatientsInit()
             </div>
           </div>
         </div>
-        <img class="absolute bottom-0 right-8 hidden xl:flex" :src="GroupDoctors" alt="Group of Doctors" />
+        <img class="absolute bottom-0 right-8 flex" :src="GroupDoctors" alt="Group of Doctors" />
       </div>
 
       <!-- Table -->
-      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full mt-[32px] flex-col">
+      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full min-w-[1244px] mt-[32px] flex-col shadow-sm">
         <!-- Tabs -->
         <div class="flex text-[16px] font-[400] gap-x-8">
           <div
@@ -265,7 +355,7 @@ getPatientsInit()
             <div
               v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
               :key="idx"
-              class="grid grid-cols-9 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
+              class="grid grid-cols-8 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
             >
               <div v-for="(category, jdx) in tableHeaderCategory.categories" :key="jdx" :class="[category.text === 'Full name' ? 'col-span-2' : 'col-span-1']">
                 <div :class="category.text === 'Actions' ? 'w-full flex justify-end' : ''">
@@ -275,29 +365,46 @@ getPatientsInit()
             </div>
             {{ patientList?.patients }}
           </div>
-          <!-- Table Patients -->
+
+          <!-- Table Body -->
           <NuxtLink
-            v-for="(patient, idx) in patientData"
+            v-for="(patient, idx) in pagesData"
             :key="idx"
-            :class="[idx === patientData.length - 1 ? 'rounded-b-[16px]' : '']"
-            class="grid grid-cols-9 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
-            :to="`/view-history/${idx}`"
+            :class="[
+              idx === patientData.length - 1 ? 'rounded-b-[16px]' : '',
+              patient.isPatientNewPatientFollowUpOrNewMessage === 'New Patient' ? 'bg-[#FEF0F5]' : '',
+              patient.isPatientNewPatientFollowUpOrNewMessage === 'Follow Up' ? 'bg-[#F0F5FE]' : '',
+            ]"
+            class="grid grid-cols-8 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
+            :to="`/view-history/${patient.patientId}`"
           >
-            <div class="col-span-2">{patientName}</div>
-            <div>{patientDOB}</div>
-            <div>{patientAcneCategory}</div>
+            <div v-if="patient.patientNewMessage" class="absolute items-center -left-4 top-4">
+              <div class="bg-white shadow-md p-1 rounded-md">
+                <img :src="ChatIcon" alt="New Message Icon" class="h-5 w-5" />
+              </div>
+            </div>
+            <div class="col-span-2 flex gap-x-2 items-center">
+              {{ patient.patientName }}
+              <div
+                v-if="patient.patientMedicaBackground"
+                class="text-[10px] bg-[#D35F84] text-white shadow-md w-4 h-4 flex justify-center items-center font-bold rounded-[80px]"
+              >
+                !
+              </div>
+              <div v-if="patient.isPatientAccutane" class="text-[10px] shadow-md bg-[#ffdc99] px-2 py-[2px] rounded-[80px]">Accutane</div>
+            </div>
+            <div>{{ patient.patientDOB ? patient.patientDOB : '-' }}</div>
+            <div>{{ patient.patientDateOfService ? patient.patientDateOfService : '-' }}</div>
             <div>
-              {{ patient.dateOfService ? patient.dateOfService : '-' }}
+              {{ patient.patientNextFollowUp ? patient.patientNextFollowUp : '-' }}
             </div>
             <div>
-              {{ patient.nextFollowUp ? patient.nextFollowUp : '-' }}
+              {{ patient.patientProviderAssigned ? patient.patientProviderAssigned : '-' }}
             </div>
             <div>
-              {{ patient.provider ? patient.provider : '-' }}
+              {{ patient.patientCareCoordinatorAssigned ? patient.patientCareCoordinatorAssigned : '-' }}
             </div>
-            <div>
-              {{ patient.careCoordinator ? patient.careCoordinator : '-' }}
-            </div>
+
             <div class="w-full flex justify-end gap-x-3">
               <img v-if="tabSelected === 'Active Patients'" class="cursor-pointer" :src="EyeIcon" alt="Eye Icon" />
               <img v-if="tabSelected === 'Active Patients'" class="cursor-pointer" :src="ArchiveIcon" alt="Archive Icon" />
@@ -331,6 +438,16 @@ getPatientsInit()
               </BaseModal>
             </div>
           </NuxtLink>
+
+          <!-- Pagination -->
+          <BasePagination
+            class="mx-4"
+            @page-forward="currentPage < totalPages - 1 ? (currentPage += 1) : ''"
+            @page-back="currentPage > 0 ? (currentPage -= 1) : ''"
+            @skip-to="(val) => (currentPage = val)"
+            :currentPageProps="currentPage"
+            :totalPages="totalPages"
+          />
         </div>
       </div>
     </BaseWrapper>

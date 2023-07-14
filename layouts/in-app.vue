@@ -2,7 +2,8 @@
   <BaseCompletePregnancy v-if="profileStore.isPregnantModalOpen" @close-modal="profileStore.handleModal" />
   <BasePatientDetailsForm v-if="profileStore.isPatientDetailsFormOpen" @close-modal="profileStore.handlePatientDetailsForm" />
   <BaseBloodSlipForm v-if="profileStore.isBloodSlipFormOpen" @close-modal="profileStore.handleBloodSlipForm" />
-  <div class="flex flex-col justify-center items-center">
+  <div class="bg-honeydew-bg2 absolute w-full h-screen p-10 min-w-[1440px] -z-20"></div>
+  <div class="flex flex-col justify-center items-center w-full">
     <TheSideBar v-if="!isMobile" class="fixed w-[80px] left-0 top-0 z-10 hidden md:flex" />
     <TheNavigationMobileInApp v-if="isMobile" class="flex md:hidden" />
     <div class="flex w-full justify-end">
