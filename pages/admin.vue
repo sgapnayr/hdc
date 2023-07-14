@@ -12,6 +12,7 @@ import ChatIcon from '@/assets/icons/chat-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { getPatients, getPatient } from '@/lib/endpoints'
 import { Patient, Patients } from '@/types/patient-types'
+import { current } from 'immer'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -337,6 +338,15 @@ const categoryChips: CategoryChips[] = [
   },
 ]
 
+// WATCH ****************************************************************
+watch(
+  () => selectedChip.value,
+  (newValue) => {
+    currentPage.value = 0
+  }
+)
+
+// INIT ****************************************************************
 getPatientsInit()
 </script>
 
@@ -527,6 +537,7 @@ getPatientsInit()
 
           <!-- Pagination -->
           <BasePagination
+            v-if="totalPages > 1"
             class="mx-4"
             @page-forward="currentPage < totalPages - 1 ? (currentPage += 1) : ''"
             @page-back="currentPage > 0 ? (currentPage -= 1) : ''"

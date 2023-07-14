@@ -36,7 +36,7 @@ const leftNumberVisible = computed(() => {
 </script>
 
 <template>
-  <div class="flex gap-x-1 mt-4">
+  <div class="flex gap-x-2 mt-4">
     <div class="cursor-pointer flex justify-center items-center transition active:scale-90" @click="emit('page-back')">
       <img class="rotate-90" :src="ChevronIcon" alt="Chevron Icon" />
     </div>
