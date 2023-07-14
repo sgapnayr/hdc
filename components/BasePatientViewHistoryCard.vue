@@ -11,6 +11,11 @@ import AlertIcon from '@/assets/icons/alert-icon.svg'
 import { useProfileStore } from '@/stores/profile'
 import { BaseInput } from '~/.nuxt/components'
 
+// PROPS *********************************************************************
+defineProps<{
+  patientData: any
+}>()
+
 // STORES *********************************************************************
 const profileStore = useProfileStore()
 
@@ -55,27 +60,29 @@ function handleSelectedItem(selectedItemVal: string) {
       </div>
 
       <!-- Patient Info -->
-      <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">{{ profileStore.signUpName || 'Name' }}</h1>
+      <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">
+        {{ patientData?.patientName }}
+      </h1>
       <div class="mt-[8px] w-3/4 flex flex-wrap items-center">
-        <p class="text-[16px] text-gray-5 font-[400]">{{ profileStore.sexAssignedAtBirth || '-' }}</p>
+        <p class="text-[16px] text-gray-5 font-[400]">{{ patientData?.patientSex }}</p>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-        <p class="text-[16px] text-gray-5 font-[400]">{{ profileStore.signUpAge || '-' }}</p>
+        <p class="text-[16px] text-gray-5 font-[400]">Age {{ patientData?.patientAge }}</p>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-        <p class="text-[16px] text-gray-5 font-[400]">{{ profileStore.signUpDOB || '-' }}</p>
+        <p class="text-[16px] text-gray-5 font-[400]">{{ patientData?.patientDOB }}</p>
       </div>
       <div class="text-[16px] font-[400] mt-[8px] text-gray-5 flex items-center">
-        <div class="text-">H: {{ profileStore.signUpHeight || '-' }}</div>
+        <div class="text-">H: {{ patientData?.patientHeight }}</div>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-        <div class="text-">W: {{ profileStore.signUpWeight || '-' }}</div>
+        <div class="text-">W: {{ patientData?.patientWeight }}lbs</div>
       </div>
       <div class="text-[16px] font-[400] mt-[32px] text-gray-3 flex flex-col items-start gap-y-6">
         <div class="flex items-center gap-x-[14px]">
           <img :src="PhoneIcon" alt="Phone Icon" />
-          <div>{{ profileStore.signUpPhoneNumber || '-' }}</div>
+          <div>{{ patientData?.patientPhoneNumber }}</div>
         </div>
         <div class="flex items-center gap-x-[14px]">
           <img :src="EmailIcon" alt="Email Icon" />
-          <div>{{ profileStore.signUpEmail || '-' }}</div>
+          <div>{{ patientData?.patientEmail }}</div>
         </div>
       </div>
     </div>
@@ -94,7 +101,7 @@ function handleSelectedItem(selectedItemVal: string) {
           <img :class="[selectedItem.includes('Shipping Address') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
         </div>
         <div v-if="selectedItem.includes('Shipping Address')" class="flex w-full justify-between text-gray-5 font-[400]">
-          <div>{patientAddress}</div>
+          <div>{{ patientData?.patientAddress }} {{ patientData?.patientCity }} {{ patientData?.patientState }} {{ patientData?.patientZipCode }}</div>
         </div>
       </div>
 
@@ -130,10 +137,10 @@ function handleSelectedItem(selectedItemVal: string) {
         </div>
         <div v-if="selectedItem.includes('Health Insurance')" class="flex w-full justify-between text-gray-5 font-[400]">
           <div>
-            <div>{patientMemeberID}</div>
-            <div>{patientInsuranceName}</div>
-            <div>{patientPolicyHolderName}</div>
-            <div>{patientGroupNumber}</div>
+            <div>{{ patientData?.patientInsuranceMemberID }}</div>
+            <div>{{ patientData?.patientHealthInsurance }}</div>
+            <div>{{ patientData?.patientInsurancePolicyHolderName }}</div>
+            <div>{{ patientData?.patientInsuranceGroupNumber }}</div>
           </div>
         </div>
       </div>
@@ -147,7 +154,7 @@ function handleSelectedItem(selectedItemVal: string) {
           <img :class="[selectedItem.includes('Patient\'s current tasks') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
         </div>
         <div v-if="selectedItem.includes('Patient\'s current tasks')" class="flex w-full justify-between text-gray-5 font-[400]">
-          <div>{patientTasks}</div>
+          <div>{{ patientData?.patientCurrentTasks }}</div>
         </div>
       </div>
 

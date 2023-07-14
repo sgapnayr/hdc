@@ -2,6 +2,7 @@
 // IMPORTS ********************************************************************
 import { ref } from 'vue'
 import { useProfileStore } from '~/stores/profile'
+import { usePatientStore } from '~/stores/patient'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import PlusCircleIcon from '@/assets/icons/plus-circle.svg'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
@@ -29,6 +30,7 @@ onMounted(() => {
 
 // STORE **********************************************************************
 const profileStore = useProfileStore()
+const patientStore = usePatientStore()
 
 // STATE *********************************************************************
 const treatmentHistoryOrDocumentsSelected = ref<'Treatment History' | 'Documents'>('Treatment History')
@@ -38,6 +40,7 @@ const documentModalMenuOpen = ref(false)
 const photo = ref()
 const previewURL = ref()
 const dragging = ref(false)
+const patientData = ref()
 
 // METHODS *********************************************************************
 function handleOpen(idx: string) {
@@ -92,14 +95,17 @@ const uploadPhoto = async () => {
   //   console.error(error)
   // }
 }
+
+patientStore.getPatient(route.params.patientId as string).then((patient) => {
+  patientData.value = patient
+})
 </script>
 
 <template>
   <BaseWrapper>
     <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
-      Viewing Profile: {{ route.params.patientId }}
-      <BasePatientViewHistoryCard />
+      <BasePatientViewHistoryCard :patientData="patientData" />
 
       <!-- Right Side (Treatment history & @photo-uploaded="isPhotoUploaded = true") -->
       <div class="md:w-1/2 rounded-[8px] flex flex-col">

@@ -135,7 +135,7 @@ profileStore.setMyProfile()
             <div>
               <NuxtLink
                 to="/schedule-my-free-visit"
-                class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[11px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-[160px]"
+                class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-[190px]"
               >
                 schedule my free visit
               </NuxtLink>

@@ -3,7 +3,6 @@
 import { ref, computed } from 'vue'
 import GroupDoctors from '@/assets/images/group-doctors.svg'
 import BaseWrapper from '~/components/BaseWrapper.vue'
-import BellIcon from '@/assets/icons/bell-icon.svg'
 import SearchIcon from '@/assets/icons/search-icon.svg'
 import DeleteIcon from '@/assets/icons/delete-icon.svg'
 import ArchiveIcon from '@/assets/icons/archive-icon.svg'
@@ -12,13 +11,16 @@ import ChatIcon from '@/assets/icons/chat-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { getPatients, getPatient } from '@/lib/endpoints'
 import { Patient, Patients } from '@/types/patient-types'
-import { current } from 'immer'
+import { usePatientStore } from '@/stores/patient'
 
 // LAYOUT **********************************************************************
 definePageMeta({
   layout: 'in-app',
   middleware: ['auth'],
 })
+
+// STORES **********************************************************************
+const patientStore = usePatientStore()
 
 // ROUTER **********************************************************************
 const user = useAuthenticator()
@@ -78,130 +80,7 @@ const tableHeaderCategories: TableHeaderCategory[] = [
   },
 ]
 
-// ASK CHESTER FOR THIS OBJECT
-const patientData: Patient[] = [
-  {
-    patientId: '068d12b0-226f-11ee-be56-0242ac120002',
-    patientName: 'Ryan Pagelion',
-    patientDOB: 'Apr 3rd, 1995',
-    patientDateOfService: 'Jun 6, 6:36 pm',
-    patientNextFollowUp: '',
-    patientProviderAssigned: 'Dr. Joel',
-    patientCareCoordinatorAssigned: 'Mahor Sr.',
-    currentPatientStatus: ['New Patient'],
-    patientMedicaBackground: null,
-  },
-  {
-    patientId: '12345678',
-    patientName: 'John Doe',
-    patientDOB: 'Jan 1st, 1980',
-    patientDateOfService: 'Jul 10, 9:00 am',
-    patientNextFollowUp: '',
-    patientProviderAssigned: 'Dr. Smith',
-    patientCareCoordinatorAssigned: 'Jane Johnson',
-    currentPatientStatus: ['New Patient'],
-    patientMedicaBackground: 'Hypertension',
-  },
-  {
-    patientId: '98765432',
-    patientName: 'Jane Smith',
-    patientDOB: 'Mar 15th, 1975',
-    patientDateOfService: 'Jul 12, 2:30 pm',
-    patientNextFollowUp: 'Jul 20, 10:00 am',
-    patientProviderAssigned: 'Dr. Johnson',
-    patientCareCoordinatorAssigned: 'Mary Brown',
-    currentPatientStatus: ['Follow Up'],
-    patientMedicaBackground: null,
-  },
-  {
-    patientId: '13579246',
-    patientName: 'Sarah Anderson',
-    patientDOB: 'Dec 10th, 1992',
-    patientDateOfService: 'Jul 8, 4:45 pm',
-    patientNextFollowUp: '',
-    patientProviderAssigned: 'Dr. Williams',
-    patientCareCoordinatorAssigned: 'Michael Clark',
-    currentPatientStatus: ['Cancelled', 'Inactive'],
-    patientMedicaBackground: null,
-  },
-  {
-    patientId: '24681357',
-    patientName: 'David Johnson',
-    patientDOB: 'Aug 20th, 1998',
-    patientDateOfService: 'Jul 11, 11:15 am',
-    patientNextFollowUp: 'Jul 18, 9:30 am',
-    patientProviderAssigned: 'Dr. Brown',
-    patientCareCoordinatorAssigned: 'Michelle Smith',
-    currentPatientStatus: ['Follow Up', 'New Message', 'Accutane'],
-    patientMedicaBackground: 'Acne',
-  },
-  {
-    patientId: '31415926',
-    patientName: 'Emily Davis',
-    patientDOB: 'Sep 5th, 1985',
-    patientDateOfService: 'Jul 9, 1:00 pm',
-    patientNextFollowUp: '',
-    patientProviderAssigned: 'Dr. Anderson',
-    patientCareCoordinatorAssigned: 'Mark Wilson',
-    currentPatientStatus: ['New Patient', 'Accutane'],
-    patientMedicaBackground: null,
-  },
-  {
-    patientId: '24681357',
-    patientName: 'Emma Thompson',
-    patientDOB: 'Feb 14th, 1988',
-    patientDateOfService: 'Jul 13, 3:30 pm',
-    patientNextFollowUp: 'Jul 20, 10:00 am',
-    patientProviderAssigned: 'Dr. Johnson',
-    patientCareCoordinatorAssigned: 'Michael Clark',
-    currentPatientStatus: ['Follow Up'],
-    patientMedicaBackground: 'Diabetes',
-  },
-  {
-    patientId: '97531024',
-    patientName: 'Jessica Adams',
-    patientDOB: 'Nov 25th, 1990',
-    patientDateOfService: 'Jul 12, 5:15 pm',
-    patientNextFollowUp: '',
-    patientProviderAssigned: 'Dr. Williams',
-    patientCareCoordinatorAssigned: 'Michelle Smith',
-    currentPatientStatus: [],
-    patientMedicaBackground: 'Asthma',
-  },
-  {
-    patientId: '98765432',
-    patientName: 'Michael Johnson',
-    patientDOB: 'Jan 5th, 1978',
-    patientDateOfService: 'Jul 11, 9:30 am',
-    patientNextFollowUp: 'Jul 18, 10:30 am',
-    patientProviderAssigned: 'Dr. Brown',
-    patientCareCoordinatorAssigned: 'Mary Brown',
-    currentPatientStatus: ['Follow Up'],
-    patientMedicaBackground: null,
-  },
-  {
-    patientId: '13579246',
-    patientName: 'Daniel Wilson',
-    patientDOB: 'Mar 8th, 1993',
-    patientDateOfService: 'Jul 10, 11:45 am',
-    patientNextFollowUp: '',
-    patientProviderAssigned: 'Dr. Smith',
-    patientCareCoordinatorAssigned: 'Jane Johnson',
-    currentPatientStatus: ['New Patient'],
-    patientMedicaBackground: null,
-  },
-  {
-    patientId: '31415926',
-    patientName: 'Sophia Davis',
-    patientDOB: 'Oct 17th, 1983',
-    patientDateOfService: 'Jul 13, 2:00 pm',
-    patientNextFollowUp: '',
-    patientProviderAssigned: 'Dr. Anderson',
-    patientCareCoordinatorAssigned: 'Mark Wilson',
-    currentPatientStatus: ['Inactive', 'Archived'],
-    patientMedicaBackground: null,
-  },
-]
+const patientData = patientStore.patientDataForAdminPage
 
 // COMPUTED METHODS ****************************************************************
 const handleChipData = computed(() => {
@@ -354,7 +233,7 @@ getPatientsInit()
   <div class="w-full py-8">
     <BaseWrapper>
       <!-- Summary Top -->
-      <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative min-w-[1244px] shadow-sm">
+      <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative shadow-sm">
         <div class="w-full">
           <h1 class="text-[24px] md:text-[32px] font-[500]">Hi, {adminName}!</h1>
           <div class="flex gap-x-6 mt-[32px] text-[12px] md:text-[16px]">

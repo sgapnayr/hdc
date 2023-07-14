@@ -42,7 +42,22 @@ export interface Patient {
   patientProviderAssigned: string
   patientCareCoordinatorAssigned: string
   currentPatientStatus: patientStatus[]
-  patientMedicaBackground: null | string // need type for medica background
+  patientMedicalBackground: null | string
+  patientSex: string
+  patientAge: string
+  patientWeight: string
+  patientHeight: string
+  patientPhoneNumber: string
+  patientEmail: string
+  patientAddress: string
+  patientCity: string
+  patientState: string
+  patientZipCode: string
+  patientHealthInsurance: string
+  patientInsuranceMemberID: string
+  patientInsurancePolicyHolderName: string
+  patientInsuranceGroupNumber: string
+  patientCurrentTasks: string[]
 }
 
 export interface Patients {

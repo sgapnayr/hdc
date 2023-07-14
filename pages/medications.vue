@@ -116,8 +116,60 @@ getPatientsInit()
 <template>
   <div class="w-full py-8">
     <BaseWrapper>
+      <!-- Manage Team Top -->
+      <div class="w-full">
+        <div class="flex justify-between w-full">
+          <div class="text-[32px] font-[500]">Medication</div>
+          <div class="flex">
+            <!-- Create New Buttons -->
+            <div v-if="tabSelected === 'Medicine'" class="flex">
+              <BaseModal :custom-header="true">
+                <template #button>
+                  <div
+                    class="text-[12px] h-[40px] flex justify-center items-center rounded-[60px] bg-[#EEEBFC] text-honeydew-purple uppercase cursor-pointer mt-[16px] text-center whitespace-nowrap px-4"
+                  >
+                    Create New Medicine
+                  </div>
+                </template>
+                <template #content>
+                  <div class="mb-4 text-[16px]">Add New Medication</div>
+                  <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Name</p>
+                  <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
+                  <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Strength</p>
+                  <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
+                  <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Size</p>
+                  <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
+                </template>
+              </BaseModal>
+            </div>
+
+            <div v-if="tabSelected === 'Treatment Plans'" class="flex">
+              <BaseModal :custom-header="true">
+                <template #button>
+                  <div
+                    class="text-[12px] h-[40px] flex justify-center items-center rounded-[60px] bg-[#EEEBFC] text-honeydew-purple uppercase cursor-pointer mt-[16px] text-center whitespace-nowrap px-4"
+                  >
+                    Create New Treatment Plan
+                  </div>
+                </template>
+                <template #content>
+                  <div class="mb-4 text-[16px]">Add New Medication</div>
+                  <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Name</p>
+                  <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
+                  <div class="mb-[8px] mt-4 flex w-full justify-between items-center">
+                    <p class="px-4 uppercase text-[12px] text-[#403E48]">Groups</p>
+                    <img :src="PlusIcon" alt="Plus Icon" class="opacity-50 px-4 cursor-pointer" />
+                  </div>
+                </template>
+              </BaseModal>
+            </div>
+          </div>
+        </div>
+        <div class="text-[16px] font-[400]">Edit details, add a new medication, remove medication, etc.</div>
+      </div>
+
       <!-- Table -->
-      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full flex-col">
+      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full flex-col mt-[32px] shadow-sm">
         <!-- Tabs -->
         <div class="flex text-[16px] font-[400] gap-x-8">
           <div
@@ -134,49 +186,6 @@ getPatientsInit()
           >
             Treatment Plans
           </div>
-        </div>
-
-        <!-- Create New Buttons -->
-        <div v-if="tabSelected === 'Medicine'" class="flex">
-          <BaseModal :custom-header="true">
-            <template #button>
-              <div
-                class="text-[12px] h-[40px] flex justify-center items-center rounded-[60px] bg-[#EEEBFC] text-honeydew-purple uppercase cursor-pointer mt-[16px] text-center whitespace-nowrap px-4"
-              >
-                Create New Medicine
-              </div>
-            </template>
-            <template #content>
-              <div class="mb-4 text-[16px]">Add New Medication</div>
-              <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Name</p>
-              <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
-              <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Strength</p>
-              <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
-              <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Size</p>
-              <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
-            </template>
-          </BaseModal>
-        </div>
-
-        <div v-if="tabSelected === 'Treatment Plans'" class="flex">
-          <BaseModal :custom-header="true">
-            <template #button>
-              <div
-                class="text-[12px] h-[40px] flex justify-center items-center rounded-[60px] bg-[#EEEBFC] text-honeydew-purple uppercase cursor-pointer mt-[16px] text-center whitespace-nowrap px-4"
-              >
-                Create New Treatment Plan
-              </div>
-            </template>
-            <template #content>
-              <div class="mb-4 text-[16px]">Add New Medication</div>
-              <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Name</p>
-              <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
-              <div class="mb-[8px] mt-4 flex w-full justify-between items-center">
-                <p class="px-4 uppercase text-[12px] text-[#403E48]">Groups</p>
-                <img :src="PlusIcon" alt="Plus Icon" class="opacity-50 px-4 cursor-pointer" />
-              </div>
-            </template>
-          </BaseModal>
         </div>
 
         <!-- Medicine Table -->
