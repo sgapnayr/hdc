@@ -171,7 +171,7 @@ function handleSelectedPatient(patient: Patient) {
       </div>
 
       <!-- Table -->
-      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full flex-col mt-[32px] shadow-sm">
+      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full flex-col mt-[32px] shadow-sm min-w-[1244px]">
         <!-- Tabs -->
         <div class="flex text-[16px] font-[400] gap-x-8">
           <div
