@@ -154,7 +154,6 @@ function handleSubmitNewTask() {
 }
 
 // INIT ****************************************************************
-patientStore.getAllPatients()
 tasksStore.setAllTasks()
 tasksStore.setAssigneeTasks()
 handleGetAllTasks()

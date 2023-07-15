@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
-import { getMyProfile, getPatients, getPatient } from '@/lib/endpoints'
+import { getPatients, getMyProfile, getPatient } from '@/lib/endpoints'
 import { Patient, Patients } from '@/types/patient-types'
+import { API, graphqlOperation } from 'aws-amplify'
+import gql from 'graphql-tag'
 
 export const usePatientStore = defineStore('patient', () => {
   const allPatients = ref()
-  const allPatientsDummy = ref()
 
   // ASK CHESTER FOR THIS OBJECT
   const patientDataForAdminPage: Patient[] = [
@@ -297,18 +298,59 @@ export const usePatientStore = defineStore('patient', () => {
   ]
 
   // GETTERS ****************************************************************
-  async function getAllPatients() {
+  async function getPatientsFromGraphQL() {
     try {
       const response = await getPatients()
-      allPatients.value = response
-      allPatientsDummy.value = response
+      const mappedData: Patients = {
+        patients: response.patients.map((backendPatient: any) => {
+          const frontendPatient: Patient = {
+            patientId: backendPatient.patientId,
+            patientName: '', // Not available in the backend response, set as an empty string
+            patientDOB: backendPatient.patientProfile.patientDOB || '',
+            patientDateOfService: '', // Not available in the backend response, set as an empty string
+            patientNextFollowUp: '', // Not available in the backend response, set as an empty string
+            patientProviderAssigned: '', // Not available in the backend response, set as an empty string
+            patientCareCoordinatorAssigned: '', // Not available in the backend response, set as an empty string
+            currentPatientStatus: [], // Assuming patientStatus is an enum type or defined elsewhere
+            patientMedicalBackground: backendPatient.patientProfile.patientMedicalBackgroundSkinSurvey || null,
+            patientSex: backendPatient.patientProfile.patientSex || '',
+            patientAge: backendPatient.patientProfile.patientAge || '',
+            patientWeight: backendPatient.patientProfile.patientWeight || '',
+            patientHeight: backendPatient.patientProfile.patientHeight || '',
+            patientPhoneNumber: backendPatient.patientProfile.patientPhoneNumber || '',
+            patientEmail: backendPatient.patientProfile.patientEmail || '',
+            patientAddress: backendPatient.patientProfile.patientAddress || '',
+            patientCity: '', // Not available in the backend response, set as an empty string
+            patientState: '', // Not available in the backend response, set as an empty string
+            patientZipCode: '', // Not available in the backend response, set as an empty string
+            patientHealthInsurance: backendPatient.patientProfile.healthInsurance || '',
+            patientInsuranceMemberID: 'asdf', // Not available in the backend response, set as an empty string
+            patientInsurancePolicyHolderName: '', // Not available in the backend response, set as an empty string
+            patientInsuranceGroupNumber: '', // Not available in the backend response, set as an empty string
+            patientCurrentTasks: [], // Not available in the backend response, set as an empty array
+          }
+
+          return frontendPatient
+        }),
+      }
+
+      console.log(mappedData)
+      allPatients.value = mappedData
     } catch (error) {
-      console.error('Error retrieving employees:', error)
+      console.error('Error retrieving patients:', error)
     }
   }
 
-  async function getPatient(patientId: string) {
+  async function getPatientFromGraphQL(patientId: string) {
+    console.log('CALLING')
+    try {
+      const response = await getPatient(patientId)
+      console.log(response)
+    } catch (error) {
+      console.error('Error retrieving patients:', error)
+    }
     return patientDataForAdminPage.find((patient) => patient.patientId === patientId)
   }
-  return { allPatients, getAllPatients, patientDataForAdminPage, getPatient }
+
+  return { allPatients, getPatientFromGraphQL, getPatientsFromGraphQL, patientDataForAdminPage, getPatient }
 })

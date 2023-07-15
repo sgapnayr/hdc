@@ -96,7 +96,7 @@ const uploadPhoto = async () => {
   // }
 }
 
-patientStore.getPatient(route.params.patientId as string).then((patient) => {
+patientStore.getPatientFromGraphQL(route.params.patientId as string).then((patient) => {
   patientData.value = patient
 })
 </script>

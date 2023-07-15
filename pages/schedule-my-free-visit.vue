@@ -21,7 +21,7 @@ const router = useRouter()
 const profileStore = useProfileStore()
 
 // STATE **********************************************************************
-const currentQuestionIdx = ref<number>(0)
+const currentQuestionIdx = ref<number>(17)
 const currentSelectedAnswer = ref<string>()
 const buttonLoadingState = ref<'idle' | 'loading' | 'failed' | 'success' | 'disabled'>('idle')
 const isPhotoUploaded = ref(false)

@@ -340,6 +340,7 @@ getEmployeesInit()
             </div>
           </div>
           <!-- Table Employees -->
+          {{ employeesList?.employees }}
           <div
             v-for="(employee, idx) in employeesList?.employees"
             :key="idx"

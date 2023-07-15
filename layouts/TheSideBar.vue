@@ -96,7 +96,7 @@ async function signOut() {
       <!-- Medications Icon -->
       <div
         class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition flex justify-center items-center text-[#A09DB1]"
-        :class="[route.path === '/medications' ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
+        :class="[route.path === '/medications' ? 'bg-[#EEEBFC] text-honeydew-purple' : 'hover:bg-[#EEEBFC]']"
         @click="router.push('/medications')"
       >
         DX

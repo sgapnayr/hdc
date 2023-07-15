@@ -64,6 +64,7 @@ const showNoMedicalMessage = ref(false)
 const showAccutaneMessage = ref(false)
 const showNewMessageMessage = ref(false)
 const hoveredIdx = ref()
+const patients = ref()
 
 const tableHeaderCategories: TableHeaderCategory[] = [
   {
@@ -81,6 +82,10 @@ const tableHeaderCategories: TableHeaderCategory[] = [
 ]
 
 const patientData = patientStore.patientDataForAdminPage
+setTimeout(() => {
+  patients.value = patientStore?.allPatients?.patients
+  console.log(patients.value)
+}, 1000)
 
 // COMPUTED METHODS ****************************************************************
 const handleChipData = computed(() => {
@@ -155,15 +160,6 @@ function handleSelectedPatient(patient: Patient) {
   selectedPatient.value = patient
 }
 
-async function getPatientsInit() {
-  try {
-    const response = await getPatients()
-    patientList.value = response
-  } catch (error) {
-    console.error('Error retrieving patient:', error)
-  }
-}
-
 // MEMBER DATA ****************************************************************
 const categoryChips: CategoryChips[] = [
   {
@@ -226,11 +222,11 @@ watch(
 )
 
 // INIT ****************************************************************
-getPatientsInit()
 </script>
 
 <template>
   <div class="w-full py-8">
+    <button @click="patientStore.getPatientsFromGraphQL()">Get Patiuents</button>
     <BaseWrapper>
       <!-- Summary Top -->
       <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative shadow-sm">
@@ -317,10 +313,10 @@ getPatientsInit()
 
           <!-- Table Body -->
           <NuxtLink
-            v-for="(patient, idx) in pagesData"
+            v-for="(patient, idx) in patients"
             :key="idx"
             :class="[
-              idx === patientData.length - 1 ? 'rounded-b-[16px]' : '',
+              idx === patients.length - 1 ? 'rounded-b-[16px]' : '',
               patient.currentPatientStatus.includes('New Patient') ? 'bg-[#FEF0F5]' : '',
               patient.currentPatientStatus.includes('Follow Up') ? 'bg-[#F0F5FE]' : '',
               patient.currentPatientStatus.includes('New Message') ? 'bg-[#F3FAF2]' : '',
