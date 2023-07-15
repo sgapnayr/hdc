@@ -87,7 +87,7 @@ function handleSelectedPatient(patient: Patient) {
       <!-- Manage Team Top -->
       <div class="w-full">
         <div class="flex justify-between w-full">
-          <div class="text-[32px] font-[500]">Medications</div>
+          <div class="text-[32px] font-[500] text-[#403E48]">Medications</div>
           <div class="flex">
             <!-- Create New Buttons -->
             <div v-if="tabSelected === 'Medicine'" class="flex">
@@ -167,7 +167,7 @@ function handleSelectedPatient(patient: Patient) {
             </div>
           </div>
         </div>
-        <div class="text-[16px] font-[400]">Edit details, add a new medication, remove medication, etc.</div>
+        <div class="text-[16px] font-[400] text-[#403E48]">Edit details, add a new medication, remove medication, etc.</div>
       </div>
 
       <!-- Table -->

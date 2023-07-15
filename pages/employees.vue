@@ -183,13 +183,12 @@ getEmployeesInit()
 </script>
 
 <template>
-  <div @click="createEmployee">createEmployee</div>
   <div class="w-full py-8">
     <BaseWrapper>
       <!-- Manage Team Top -->
       <div class="w-full">
         <div class="flex justify-between w-full">
-          <div class="text-[32px] font-[500]">Manage Honeydew Team</div>
+          <div class="text-[32px] font-[500] text-[#403E48]">Manage Honeydew Team</div>
           <div class="flex">
             <!-- Add Time Off -->
             <BaseModal>
@@ -273,7 +272,7 @@ getEmployeesInit()
             </BaseModal>
           </div>
         </div>
-        <div class="text-[16px] font-[400]">Edit details, add a new team member, remove employees etc.</div>
+        <div class="text-[16px] font-[400] text-[#403E48]">Edit details, add a new team member, remove employees etc.</div>
       </div>
 
       <!-- Table -->

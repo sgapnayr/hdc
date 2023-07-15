@@ -166,7 +166,7 @@ handleGetAllTasks()
       <!-- Summary Top -->
       <div class="w-full">
         <div class="flex justify-between w-full">
-          <div class="text-[32px] font-[500]">General Tasks Pool</div>
+          <div class="text-[32px] font-[500] text-[#403E48]">General Tasks Pool</div>
           <div class="flex">
             <!-- Add New Task Button & Modal -->
             <div class="w-full flex justify-start">
@@ -356,7 +356,7 @@ handleGetAllTasks()
             </div>
           </div>
         </div>
-        <div class="text-[16px] font-[400]">Edit tasks, add a new tasks, remove tasks, etc.</div>
+        <div class="text-[16px] font-[400] text-[#403E48]">Edit tasks, add a new tasks, remove tasks, etc.</div>
       </div>
 
       <div class="flex gap-x-6">
