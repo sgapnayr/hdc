@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getAllTasks, getTaskByAssignee } from '@/lib/endpoints'
+import { getAllTasks, getTaskByAssignee, getAllTasksByAssignee } from '@/lib/endpoints'
 
 export const useTasksStore = defineStore('tasks', () => {
   // STATE ****************************************************************
@@ -200,24 +200,58 @@ export const useTasksStore = defineStore('tasks', () => {
     },
   ]
 
-  // SETTERS ****************************************************************
-  async function setAllTasks() {
+  // GETTERS ****************************************************************
+  async function getAllTasksFromGraphQL() {
     try {
       const response = await getAllTasks()
-      allTasks.value = response.tasks
+      const mappedData = response.tasks.map((task: any) => {
+        const frontendTask = {
+          taskId: task.taskId,
+          taskPatienFirstName: task.patientId?.patientProfile?.patientFirstName || '', // Use the patientLastName as the patient's name
+          taskPatienLastName: task.patientId?.patientProfile?.patientLastName || '', // Use the patientLastName as the patient's name
+          taskCareCoordinator: '', // This field is not available in the backend response, set as an empty string
+          taskStatus: task.status || '', // Use the status field as the task status
+          taskPriority: '', // This field is not available in the backend response, set as an empty string
+          taskType: task.type || '', // Use the type field as the task type
+          taskComments: '', // This field is not available in the backend response, set as an empty string
+          taskAssignedAt: task.taskAssignedAt, // This field is not available in the backend response
+          taskDueAt: task.dueDate,
+        }
+        return frontendTask
+      })
+      allTasks.value = mappedData
     } catch (error) {
       console.error('Error retrieving employees:', error)
     }
   }
 
-  async function setAssigneeTasks() {
+  async function getAllTasksFromGraphQLByAssignee(assigneeId: string) {
+    console.log('HERE')
     try {
-      const response = await getTaskByAssignee()
-      assigneeTasks.value = response.tasks
+      console.log('HERE')
+      const response = await getAllTasksByAssignee(assigneeId)
+      console.log('HERE')
+      const mappedData = response.tasks.map((task: any) => {
+        const frontendTask = {
+          taskId: task.taskId,
+          taskPatienFirstName: task.patientId?.patientProfile?.patientFirstName || '', // Use the patientLastName as the patient's name
+          taskPatienLastName: task.patientId?.patientProfile?.patientLastName || '', // Use the patientLastName as the patient's name
+          taskCareCoordinator: '', // This field is not available in the backend response, set as an empty string
+          taskStatus: task.status || '', // Use the status field as the task status
+          taskPriority: '', // This field is not available in the backend response, set as an empty string
+          taskType: task.type || '', // Use the type field as the task type
+          taskComments: '', // This field is not available in the backend response, set as an empty string
+          taskAssignedAt: task.taskAssignedAt, // This field is not available in the backend response
+          taskDueAt: task.dueDate,
+        }
+        return frontendTask
+      })
+      console.log(mappedData)
+      assigneeTasks.value = mappedData
     } catch (error) {
       console.error('Error retrieving employees:', error)
     }
   }
 
-  return { allTasks, setAllTasks, setAssigneeTasks, assigneeTasks, taskData }
+  return { allTasks, getAllTasksFromGraphQL, getAllTasksFromGraphQLByAssignee, assigneeTasks, taskData }
 })

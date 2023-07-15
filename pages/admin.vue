@@ -222,11 +222,11 @@ watch(
 )
 
 // INIT ****************************************************************
+patientStore.getPatientsFromGraphQL()
 </script>
 
 <template>
   <div class="w-full py-8">
-    <button @click="patientStore.getPatientsFromGraphQL()">Get Patiuents</button>
     <BaseWrapper>
       <!-- Summary Top -->
       <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative shadow-sm">
@@ -313,7 +313,7 @@ watch(
 
           <!-- Table Body -->
           <NuxtLink
-            v-for="(patient, idx) in patients"
+            v-for="(patient, idx) in patientStore?.allPatients?.patients"
             :key="idx"
             :class="[
               idx === patients.length - 1 ? 'rounded-b-[16px]' : '',

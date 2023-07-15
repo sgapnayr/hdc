@@ -305,13 +305,13 @@ export const usePatientStore = defineStore('patient', () => {
         patients: response.patients.map((backendPatient: any) => {
           const frontendPatient: Patient = {
             patientId: backendPatient.patientId,
-            patientName: '', // Not available in the backend response, set as an empty string
-            patientDOB: backendPatient.patientProfile.patientDOB || '',
-            patientDateOfService: '', // Not available in the backend response, set as an empty string
-            patientNextFollowUp: '', // Not available in the backend response, set as an empty string
-            patientProviderAssigned: '', // Not available in the backend response, set as an empty string
+            patientName: '{patientName}', // Not available in the backend response, set as an empty string
+            patientDOB: backendPatient.patientProfile.patientDOB || '{patientDOB}',
+            patientDateOfService: '{patientDateOfService}', // Not available in the backend response, set as an empty string
+            patientNextFollowUp: '{patientNextFollowUp}', // Not available in the backend response, set as an empty string
+            patientProviderAssigned: '{patientProviderAssigned}', // Not available in the backend response, set as an empty string
             patientCareCoordinatorAssigned: '', // Not available in the backend response, set as an empty string
-            currentPatientStatus: [], // Assuming patientStatus is an enum type or defined elsewhere
+            currentPatientStatus: ['New Patient'], // Assuming patientStatus is an enum type or defined elsewhere
             patientMedicalBackground: backendPatient.patientProfile.patientMedicalBackgroundSkinSurvey || null,
             patientSex: backendPatient.patientProfile.patientSex || '',
             patientAge: backendPatient.patientProfile.patientAge || '',
@@ -327,7 +327,7 @@ export const usePatientStore = defineStore('patient', () => {
             patientInsuranceMemberID: 'asdf', // Not available in the backend response, set as an empty string
             patientInsurancePolicyHolderName: '', // Not available in the backend response, set as an empty string
             patientInsuranceGroupNumber: '', // Not available in the backend response, set as an empty string
-            patientCurrentTasks: [], // Not available in the backend response, set as an empty array
+            patientCurrentTasks: [''], // Not available in the backend response, set as an empty array
           }
 
           return frontendPatient

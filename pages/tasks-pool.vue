@@ -9,6 +9,8 @@ import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { createTask, getAllTasks } from '@/lib/endpoints'
 import { useTasksStore } from '@/stores/task'
 import { usePatientStore } from '~/stores/patient'
+import { useProfileStore } from '@/stores/profile'
+import { assignTask } from '@/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -32,9 +34,9 @@ onMounted(() => {
 // STORES **********************************************************************
 const tasksStore = useTasksStore()
 const patientStore = usePatientStore()
+const profileStore = useProfileStore()
 
 // STATE **********************************************************************
-const tabSelected = ref<'Assigned to me' | 'General'>('Assigned to me')
 const selectedChip = ref({ text: 'All', amount: 10 })
 const selectedPatient = ref<{ patientName: string; patientID: string }>()
 const selectedPatientID = ref<string>()
@@ -49,23 +51,16 @@ const pageSize = ref(7)
 const currentPage = ref(0)
 
 // MEMBER DATA ****************************************************************
-const categoryChips = [
-  {
-    group: 'Assigned to me',
-    chips: [
-      { text: 'All', amount: 10 },
-      { text: 'New treatment plans', amount: 10 },
-      { text: 'New messages', amount: 10 },
-    ],
-  },
-  {
-    group: 'General',
-    chips: [
-      { text: 'All', amount: 10 },
-      { text: 'New treatment plans', amount: 10 },
-      { text: 'New messages', amount: 10 },
-    ],
-  },
+const assignedToMeChips = [
+  { text: 'All', amount: 10 },
+  { text: 'New treatment plans', amount: 10 },
+  { text: 'New messages', amount: 10 },
+]
+
+const generalChips = [
+  { text: 'All', amount: 10 },
+  { text: 'New treatment plans', amount: 10 },
+  { text: 'New messages', amount: 10 },
 ]
 
 const tableHeaderCategories = [
@@ -94,20 +89,7 @@ const taskTypes = [
 const taskPriorities = [{ text: 'Low' as 'Low' }, { text: 'Medium' as 'Medium' }, { text: 'High' as 'High' }]
 
 // COMPUTED METHODS ****************************************************************
-const handleChipData = computed(() => {
-  return categoryChips.filter((chip) => chip.group === tabSelected.value)
-})
-
 const taskData = tasksStore.taskData
-const filterByAssignedToMeOrGeneral = computed(() => {
-  if (tabSelected.value === 'Assigned to me') {
-    selectedChip.value = { text: 'All', amount: 0 } // Set selected chip to 'All' for Active Patients
-    return taskData.filter((task) => !task.taskStatus.includes('Inactive'))
-  } else {
-    selectedChip.value = { text: 'All', amount: 0 } // Set selected chip to 'All' for Inactive Patients
-    return taskData.filter((task) => task.taskStatus.includes('Inactive'))
-  }
-})
 
 const totalPages = computed(() => {
   return Math.ceil(taskData.length / pageSize.value)
@@ -138,13 +120,14 @@ function handleSelectedPatient(patientName: string, patientID: string) {
 function handleSubmitNewTask() {
   const query = {
     patientId: selectedPatientID,
-    assigneeId: 'YOUR_ASSIGNEE_ID',
+    assigneeId: profileStore.profileData,
     dueDate: '2023-06-10T00:00:00Z',
     description: taskComments,
     status: 'YOUR_STATUS',
     priority: taskPriority,
     type: taskType,
   }
+  console.log(query)
   createTask(query)
 
   selectedPatient.value = { patientName: '', patientID: '' }
@@ -154,14 +137,25 @@ function handleSubmitNewTask() {
 }
 
 // INIT ****************************************************************
-tasksStore.setAllTasks()
-tasksStore.setAssigneeTasks()
+async function fetchTasksByAssignee() {
+  if (!profileStore?.profileData?.patientId) {
+    setTimeout(() => {
+      fetchTasksByAssignee()
+      console.log('FETCHIBNG')
+    }, 200)
+  } else {
+    await tasksStore.getAllTasksFromGraphQLByAssignee(profileStore?.profileData?.patientId)
+  }
+}
+fetchTasksByAssignee()
+tasksStore.getAllTasksFromGraphQL()
+profileStore.setMyProfile()
 handleGetAllTasks()
 </script>
 
 <template>
   <div class="w-full py-8">
-    <button @click="tasksStore.setAllTasks()">Get All Tasks</button>
+    {{ tasksStore?.allTasks?.length }}
     <BaseWrapper>
       <!-- Summary Top -->
       <div class="w-full">
@@ -188,30 +182,13 @@ handleGetAllTasks()
                 <template #content>
                   <!-- Patient Name Drop Down -->
                   <div>
-                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Patient's Name</h2>
-                    <div
-                      class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4 relative cursor-pointer"
-                      :class="[patientMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
-                      placeholder="Search by patient's name"
+                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Task Name</h2>
+                    <input
+                      class="bg-white w-[518px] h-[48px] mb-[10px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                      placeholder="Task name"
                       type="text"
-                      @click="patientMenuOpen = !patientMenuOpen"
-                    >
-                      <div>{{ selectedPatient?.patientName || selectedPatient?.patientID || 'Select Patient' }}</div>
-                      <img :class="[patientMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
-                      <div v-if="patientMenuOpen">
-                        <div class="absolute left-0 top-12 w-full">
-                          <div
-                            class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4 cursor-pointer shadow-md"
-                            v-for="(patient, idx) in patientStore.allPatients.patients"
-                            :key="idx"
-                            :class="[patientStore.allPatients.patients.length - 1 === idx ? 'rounded-b-[28px]' : '']"
-                            @click="handleSelectedPatient(patient.patientProfile.name || patient.patientProfile.patientLastName, patient.patientId)"
-                          >
-                            {{ patient.patientProfile.name || patient.patientProfile.patientLastName || patient.patientId }}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      v-model="taskComments"
+                    />
                   </div>
                   <!-- Task Type Drop Down -->
                   <div :class="[taskTypeMenuOpen ? 'z-40' : 'z-0']">
@@ -288,7 +265,7 @@ handleGetAllTasks()
                   </div>
                   <!-- Priority Drop Down -->
                   <div :class="[taskPriorityMenuOpen ? 'z-40' : 'z-0']">
-                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Type</h2>
+                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Priority</h2>
                     <div
                       class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
                       :class="[taskPriorityMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
@@ -366,9 +343,9 @@ handleGetAllTasks()
             <div class="flex gap-x-6">
               <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#FEF0F5] text-[#AE4768] relative">
                 <div class="text-[32px] font-[500] leading-[40px]">
-                  {{ tasksStore.taskData.filter((task) => task.taskStatus.includes('Completed')).length }}
+                  {{ tasksStore?.assigneeTasks?.length || '-' }}
                 </div>
-                Completed
+                My tasks
                 <div class="top-4 absolute right-4 h-2 w-2 bg-[#AE4768] rounded-full" />
               </div>
               <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE] relative">
@@ -390,41 +367,25 @@ handleGetAllTasks()
 
       <!-- Table -->
       <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full min-w-[1244px] mt-[32px] flex-col shadow-sm">
-        <!-- Tabs -->
         <div class="flex text-[16px] font-[400] gap-x-8">
-          <div
-            :class="[tabSelected === 'Assigned to me' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
-            class="h-full py-4 cursor-pointer"
-            @click="tabSelected = 'Assigned to me'"
-          >
-            Assigned to me
-          </div>
-          <div
-            :class="[tabSelected === 'General' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
-            class="h-full py-4 cursor-pointer"
-            @click="tabSelected = 'General'"
-          >
-            General
-          </div>
+          <div class="h-full py-4 cursor-pointer border-b-2 border-b-honeydew-purple text-honeydew-purple">Assigned to me</div>
         </div>
 
         <!-- Chips -->
-        <div class="mt-[24px] flex-wrap">
-          <div v-for="(categoryChip, idx) in handleChipData" :key="idx" class="flex flex-wrap">
-            <div @click="() => handleSelectingChip(chip)" v-for="(chip, jdx) in categoryChip.chips" :key="jdx">
-              <div
-                :class="[selectedChip?.text === chip.text ? 'bg-[#EEEBFC] text-honeydew-purple' : 'bg-honeydew-bg2']"
-                class="rounded-[20px] p-2 px-4 flex items-center justify-between mr-2 cursor-pointer whitespace-nowrap mb-2"
-                v-if="chip.text"
-              >
-                {{ chip.text }}
-                <div class="h-1 w-1 bg-black mx-2 rounded-full"></div>
-                {{ chip.amount }}
-              </div>
+        <div class="mt-[24px] flex-wrap flex">
+          <div v-for="(categoryChip, idx) in assignedToMeChips" :key="idx" class="flex flex-wrap" @click="() => handleSelectingChip(categoryChip)">
+            <div
+              :class="[selectedChip?.text === categoryChip.text ? 'bg-[#EEEBFC] text-honeydew-purple' : 'bg-honeydew-bg2']"
+              class="rounded-[20px] p-2 px-4 flex items-center justify-between mr-2 cursor-pointer whitespace-nowrap mb-2"
+              v-if="categoryChip.text"
+            >
+              {{ categoryChip.text }}
+              <div class="h-1 w-1 bg-black mx-2 rounded-full"></div>
+              {{ categoryChip.amount }}
             </div>
           </div>
         </div>
-        <!-- Patients Table -->
+        <!-- Assigned to me Table -->
         <div class="bg-white">
           <!-- Table Header -->
           <div class="mt-[24px]">
@@ -447,16 +408,16 @@ handleGetAllTasks()
 
           <!-- Table Body -->
           <NuxtLink
-            v-for="(task, idx) in pagesData"
+            v-for="(task, idx) in tasksStore.assigneeTasks"
             :key="idx"
             :class="[idx === tasksStore.taskData.length - 1 ? 'rounded-b-[16px]' : '']"
             class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
           >
             <div class="col-span-2 flex gap-x-2 items-center">
-              {{ task.taskPatientName }}
+              {{ task.taskPatienFirstName + ' ' + task.taskPatienLastName }}
             </div>
             <div>
-              {{ task.taskCareCoordinator }}
+              {{ task.taskDueAt }}
             </div>
             <div>
               {{ task.taskPriority }}
@@ -488,7 +449,7 @@ handleGetAllTasks()
             </div>
 
             <div class="w-full flex justify-end gap-x-3">
-              <BaseModal v-if="tabSelected === 'Assigned to me'">
+              <BaseModal>
                 <template #button>
                   <img class="cursor-pointer" :src="DeleteIcon" alt="Delete Icon" />
                 </template>
@@ -515,32 +476,115 @@ handleGetAllTasks()
                   </div>
                 </template>
               </BaseModal>
+            </div>
+          </NuxtLink>
 
-              <BaseModal v-if="tabSelected === 'General'">
+          <!-- Pagination -->
+          <BasePagination
+            v-if="totalPages > 1"
+            class="mx-4"
+            @page-forward="currentPage < totalPages - 1 ? (currentPage += 1) : ''"
+            @page-back="currentPage > 0 ? (currentPage -= 1) : ''"
+            @skip-to="(val) => (currentPage = val)"
+            :currentPageProps="currentPage"
+            :totalPages="totalPages"
+          />
+        </div>
+      </div>
+      <!-- Table -->
+      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full min-w-[1244px] mt-[32px] flex-col shadow-sm">
+        <!-- Tabs -->
+        <div class="flex text-[16px] font-[400] gap-x-8">
+          <div class="h-full py-4 cursor-pointer border-b-2 border-b-honeydew-purple text-honeydew-purple">General</div>
+        </div>
+
+        <!-- Chips -->
+        <div class="mt-[24px] flex-wrap flex">
+          <div v-for="(categoryChip, idx) in generalChips" :key="idx" class="flex flex-wrap" @click="() => handleSelectingChip(categoryChip)">
+            <div
+              :class="[selectedChip?.text === categoryChip.text ? 'bg-[#EEEBFC] text-honeydew-purple' : 'bg-honeydew-bg2']"
+              class="rounded-[20px] p-2 px-4 flex items-center justify-between mr-2 cursor-pointer whitespace-nowrap mb-2"
+              v-if="categoryChip.text"
+            >
+              {{ categoryChip.text }}
+              <div class="h-1 w-1 bg-black mx-2 rounded-full"></div>
+              {{ categoryChip.amount }}
+            </div>
+          </div>
+        </div>
+        <!-- Patients Table -->
+        <div class="bg-white">
+          <!-- Table Header -->
+          <div class="mt-[24px]">
+            <div
+              v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
+              :key="idx"
+              class="grid grid-cols-7 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
+            >
+              <div
+                v-for="(category, jdx) in tableHeaderCategory.categories"
+                :key="jdx"
+                :class="[category.text.includes('Full name') ? 'col-span-2' : 'col-span-1']"
+              >
+                <div :class="[category.text === 'Actions' ? 'w-full flex justify-end' : '']">
+                  {{ category.text }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table Body -->
+          <NuxtLink
+            v-for="(task, idx) in tasksStore.allTasks"
+            :key="idx"
+            :class="[idx === tasksStore.taskData.length - 1 ? 'rounded-b-[16px]' : '']"
+            class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
+          >
+            <div class="col-span-2 flex gap-x-2 items-center">
+              {{ task.taskPatienFirstName + ' ' + task.taskPatienLastName }}
+            </div>
+            <div>
+              {{ task.taskDueAt }}
+            </div>
+            <div>
+              {{ task.taskPriority }}
+            </div>
+            <div class="flex">
+              <div
+                class="px-4 py-1 rounded-[24px]"
+                :class="[
+                  task.taskType === 'Submit Prescription'
+                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                    : task.taskType === 'New messages'
+                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                    : task.taskType === 'Send blood slip'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : task.taskType === 'New patient'
+                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                    : task.taskType === 'Accutane'
+                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                    : task.taskType === 'Documents needed'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : '',
+                ]"
+              >
+                {{ task.taskType }}
+              </div>
+            </div>
+            <div>
+              {{ task.taskComments }}
+            </div>
+
+            <div class="w-full flex justify-end gap-x-3 items-center">
+              <BaseModal @action-click="assignTask(task.taskId)">
                 <template #button>
                   <img class="cursor-pointer" :src="ClaimIcon" alt="Claim Icon" />
                 </template>
+                <template #header>
+                  <div>Confirmation</div>
+                </template>
                 <template #content>
-                  <div class="flex flex-col p-8">
-                    <div class="text-[24px] font-[500] leading-[32px]">Delete patient?</div>
-                    <div class="mt-[16px] text-[16px] font-[400] flex flex-col">
-                      <div>
-                        Delete
-                        <!-- <span class="font-[500]">{{ selectedPatient?.fullName }}</span> -->
-                        from the system. <br />
-                      </div>
-                      <div>
-                        You will not be able to restore patient's data after <br />
-                        submitting the action.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="p-6 h-[88px] w-full flex justify-end border-t border-honeydew-bg2">
-                    <div class="flex">
-                      <div class="h-[40px] w-[96px] flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple mr-[16px]">Cancel</div>
-                      <div class="h-[40px] w-[96px] flex justify-center items-center rounded-[60px] bg-honeydew-purple text-white">Delete</div>
-                    </div>
-                  </div>
+                  <div class="text-[16px] font-[500]">Are you sure you want to claim task?</div>
                 </template>
               </BaseModal>
             </div>
