@@ -89,10 +89,10 @@ const handleChipData = computed(() => {
 
 const filterByActiveOrInactive = computed(() => {
   if (tabSelected.value === 'Active Patients') {
-    selectedChip.value = { text: 'All', amount: 10 } // Set selected chip to 'All' for Active Patients
+    selectedChip.value = { text: 'All', amount: 0 } // Set selected chip to 'All' for Active Patients
     return patientData.filter((patient) => !patient.currentPatientStatus.includes('Inactive'))
   } else {
-    selectedChip.value = { text: 'All', amount: 10 } // Set selected chip to 'All' for Inactive Patients
+    selectedChip.value = { text: 'All', amount: 0 } // Set selected chip to 'All' for Inactive Patients
     return patientData.filter((patient) => patient.currentPatientStatus.includes('Inactive'))
   }
 })
