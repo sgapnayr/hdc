@@ -1,14 +1,12 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
 import { ref, computed } from 'vue'
-import GroupDoctors from '@/assets/images/group-doctors.svg'
 import BaseWrapper from '~/components/BaseWrapper.vue'
 import DeleteIcon from '@/assets/icons/delete-icon.svg'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import ClaimIcon from '@/assets/icons/claim-icon.svg'
-import Clipboard from '@/assets/images/clipboard.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { createTask, assignTask, getPatient, getAllTasks } from '@/lib/endpoints'
+import { createTask, getAllTasks } from '@/lib/endpoints'
 import { useTasksStore } from '@/stores/task'
 import { usePatientStore } from '~/stores/patient'
 
@@ -47,6 +45,8 @@ const taskPriority = ref<'Low' | 'Medium' | 'High'>('Medium')
 const taskPriorityMenuOpen = ref<boolean>(false)
 const taskComments = ref<string>()
 const allTasks = ref()
+const pageSize = ref(7)
+const currentPage = ref(0)
 
 // MEMBER DATA ****************************************************************
 const categoryChips = [
@@ -71,7 +71,14 @@ const categoryChips = [
 const tableHeaderCategories = [
   {
     role: 'admin', // Change for admin, care coord. etc
-    categories: [{ text: "Patient's Full name" }, { text: 'Priority' }, { text: 'Task Type' }, { text: 'Comments' }, { text: 'Actions' }],
+    categories: [
+      { text: "Patient's Full name" },
+      { text: 'Care Coordinator' },
+      { text: 'Priority' },
+      { text: 'Task Type' },
+      { text: 'Comments' },
+      { text: 'Actions' },
+    ],
   },
 ]
 
@@ -89,6 +96,28 @@ const taskPriorities = [{ text: 'Low' as 'Low' }, { text: 'Medium' as 'Medium' }
 // COMPUTED METHODS ****************************************************************
 const handleChipData = computed(() => {
   return categoryChips.filter((chip) => chip.group === tabSelected.value)
+})
+
+const taskData = tasksStore.taskData
+const filterByAssignedToMeOrGeneral = computed(() => {
+  if (tabSelected.value === 'Assigned to me') {
+    selectedChip.value = { text: 'All', amount: 0 } // Set selected chip to 'All' for Active Patients
+    return taskData.filter((task) => !task.taskStatus.includes('Inactive'))
+  } else {
+    selectedChip.value = { text: 'All', amount: 0 } // Set selected chip to 'All' for Inactive Patients
+    return taskData.filter((task) => task.taskStatus.includes('Inactive'))
+  }
+})
+
+const totalPages = computed(() => {
+  return Math.ceil(taskData.length / pageSize.value)
+})
+
+const pagesData = computed(() => {
+  let start = currentPage.value * pageSize.value
+  let end = (currentPage.value + 1) * pageSize.value
+
+  return taskData.slice(start, end)
 })
 
 // METHODS ****************************************************************
@@ -335,13 +364,24 @@ handleGetAllTasks()
         <div class="bg-white p-8 rounded-[16px] flex justify-between relative mt-[32px] shadow-sm">
           <div class="w-full">
             <div class="flex gap-x-6">
-              <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE]">
-                <div class="text-[32px] font-[500] leading-[40px]">{{ tasksStore.assigneeTasks?.length }}1</div>
-                In progress
+              <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#FEF0F5] text-[#AE4768] relative">
+                <div class="text-[32px] font-[500] leading-[40px]">
+                  {{ tasksStore.taskData.filter((task) => task.taskStatus.includes('Completed')).length }}
+                </div>
+                Completed
+                <div class="top-4 absolute right-4 h-2 w-2 bg-[#AE4768] rounded-full" />
               </div>
-              <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34]">
-                <div class="text-[32px] font-[500] leading-[40px]">{{ tasksStore.allTasks?.length }}1</div>
+              <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE] relative">
+                <div class="text-[32px] font-[500] leading-[40px]">
+                  {{ tasksStore.taskData.filter((task) => task.taskStatus.includes('In Progress')).length }}
+                </div>
+                In progress
+                <div class="top-4 absolute right-4 h-2 w-2 bg-[#4768AE] rounded-full" />
+              </div>
+              <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34] relative">
+                <div class="text-[32px] font-[500] leading-[40px]">{{ tasksStore.taskData.length }}</div>
                 Issued
+                <div class="top-4 absolute right-4 h-2 w-2 bg-[#3A6A34] rounded-full" />
               </div>
             </div>
           </div>
@@ -391,10 +431,14 @@ handleGetAllTasks()
             <div
               v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
               :key="idx"
-              class="grid grid-cols-8 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
+              class="grid grid-cols-7 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
             >
-              <div v-for="(category, jdx) in tableHeaderCategory.categories" :key="jdx" :class="[category.text === 'Full name' ? 'col-span-2' : 'col-span-1']">
-                <div :class="category.text === 'Actions' ? 'w-full flex justify-end' : ''">
+              <div
+                v-for="(category, jdx) in tableHeaderCategory.categories"
+                :key="jdx"
+                :class="[category.text.includes('Full name') ? 'col-span-2' : 'col-span-1']"
+              >
+                <div :class="[category.text === 'Actions' ? 'w-full flex justify-end' : '']">
                   {{ category.text }}
                 </div>
               </div>
@@ -403,39 +447,51 @@ handleGetAllTasks()
 
           <!-- Table Body -->
           <NuxtLink
-            v-for="(patient, idx) in pagesData"
+            v-for="(task, idx) in pagesData"
             :key="idx"
-            :class="[
-              idx === patientData.length - 1 ? 'rounded-b-[16px]' : '',
-              patient.currentPatientStatus.includes('New Patient') ? 'bg-[#FEF0F5]' : '',
-              patient.currentPatientStatus.includes('Follow Up') ? 'bg-[#F0F5FE]' : '',
-              patient.currentPatientStatus.includes('New Message') ? 'bg-[#F3FAF2]' : '',
-            ]"
-            class="grid grid-cols-8 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
-            :to="`/view-history/${patient.patientId}`"
+            :class="[idx === tasksStore.taskData.length - 1 ? 'rounded-b-[16px]' : '']"
+            class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
+            :to="`/view-history/${task.taskId}`"
           >
             <div class="col-span-2 flex gap-x-2 items-center">
-              {{ patient.patientName }}
-            </div>
-            <div>{{ patient.patientDOB ? patient.patientDOB : '-' }}</div>
-            <div>{{ patient.patientDateOfService ? patient.patientDateOfService : '-' }}</div>
-            <div>
-              {{ patient.patientNextFollowUp ? patient.patientNextFollowUp : '-' }}
+              {{ task.taskPatientName }}
             </div>
             <div>
-              {{ patient.patientProviderAssigned ? patient.patientProviderAssigned : '-' }}
+              {{ task.taskCareCoordinator }}
             </div>
             <div>
-              {{ patient.patientCareCoordinatorAssigned ? patient.patientCareCoordinatorAssigned : '-' }}
+              {{ task.taskPriority }}
+            </div>
+            <div class="flex">
+              <div
+                class="px-4 py-1 rounded-[24px]"
+                :class="[
+                  task.taskType === 'Submit Prescription'
+                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                    : task.taskType === 'New messages'
+                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                    : task.taskType === 'Send blood slip'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : task.taskType === 'New patient'
+                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                    : task.taskType === 'Accutane'
+                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                    : task.taskType === 'Documents needed'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : '',
+                ]"
+              >
+                {{ task.taskType }}
+              </div>
+            </div>
+            <div>
+              {{ task.taskComments }}
             </div>
 
             <div class="w-full flex justify-end gap-x-3">
-              <img v-if="tabSelected === 'Active Patients'" class="cursor-pointer" :src="EyeIcon" alt="Eye Icon" />
-              <img v-if="tabSelected === 'Active Patients'" class="cursor-pointer" :src="ArchiveIcon" alt="Archive Icon" />
-
               <BaseModal v-if="tabSelected === 'Assigned to me'">
                 <template #button>
-                  <img @click="handleSelectedPatient(patient)" class="cursor-pointer" :src="DeleteIcon" alt="Delete Icon" />
+                  <img class="cursor-pointer" :src="DeleteIcon" alt="Delete Icon" />
                 </template>
                 <template #content>
                   <div class="flex flex-col p-8">
@@ -443,7 +499,35 @@ handleGetAllTasks()
                     <div class="mt-[16px] text-[16px] font-[400] flex flex-col">
                       <div>
                         Delete
-                        <span class="font-[500]">{{ selectedPatient?.fullName }}</span>
+                        <!-- <span class="font-[500]">{{ selectedPatient?.fullName }}</span> -->
+                        from the system. <br />
+                      </div>
+                      <div>
+                        You will not be able to restore patient's data after <br />
+                        submitting the action.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="p-6 h-[88px] w-full flex justify-end border-t border-honeydew-bg2">
+                    <div class="flex">
+                      <div class="h-[40px] w-[96px] flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple mr-[16px]">Cancel</div>
+                      <div class="h-[40px] w-[96px] flex justify-center items-center rounded-[60px] bg-honeydew-purple text-white">Delete</div>
+                    </div>
+                  </div>
+                </template>
+              </BaseModal>
+
+              <BaseModal v-if="tabSelected === 'General'">
+                <template #button>
+                  <img class="cursor-pointer" :src="ClaimIcon" alt="Claim Icon" />
+                </template>
+                <template #content>
+                  <div class="flex flex-col p-8">
+                    <div class="text-[24px] font-[500] leading-[32px]">Delete patient?</div>
+                    <div class="mt-[16px] text-[16px] font-[400] flex flex-col">
+                      <div>
+                        Delete
+                        <!-- <span class="font-[500]">{{ selectedPatient?.fullName }}</span> -->
                         from the system. <br />
                       </div>
                       <div>
