@@ -2,20 +2,21 @@
 // IMPORTS ********************************************************************
 import { ref, computed } from 'vue'
 import BaseWrapper from '~/components/BaseWrapper.vue'
-import ArchiveIcon from '@/assets/icons/archive-icon.svg'
-import EyeIcon from '@/assets/icons/eye-icon.svg'
 import PlusIcon from '@/assets/icons/plus-circle.svg'
 import PencilIcon from '@/assets/icons/pencil-icon.svg'
 import DeleteIcon from '@/assets/icons/delete-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { getPatients, getPatient } from '@/lib/endpoints'
 import { Patient, Patients } from '@/types/patient-types'
+import { useMedicationStore } from '@/stores/medications'
 
 // LAYOUT **********************************************************************
 definePageMeta({
   layout: 'in-app',
   middleware: ['auth'],
 })
+
+// STORE **********************************************************************
+const medicationsStore = useMedicationStore()
 
 // ROUTER **********************************************************************
 const user = useAuthenticator()
@@ -56,7 +57,6 @@ const patientList = ref<Patients>()
 const newMedicationName = ref()
 
 // MEMBER DATA ****************************************************************
-
 const tableHeaderCategories: TableHeaderCategory[] = [
   {
     role: 'admin', // Change for admin, care coord. etc
@@ -71,27 +71,6 @@ const tableHeaderCategories: TableHeaderCategory[] = [
   },
 ]
 
-const testPatients: Patient[] = [
-  {
-    fullName: 'Ryan Pagelion',
-    dateOfBirth: 'Apr 3rd, 1995',
-    acneCategory: 'Mild acne',
-    dateOfService: 'Jun 6, 6:36 pm',
-    nextFollowUp: '',
-    provider: 'Dr. Joel',
-    careCoordinator: 'Mahor Sr.',
-  },
-  {
-    fullName: 'Jessica Smith',
-    dateOfBirth: 'Jan 15th, 1988',
-    acneCategory: 'Severe acne',
-    dateOfService: 'May 20, 10:15 am',
-    nextFollowUp: 'Jun 10, 3:00 pm',
-    provider: 'Dr. Emily',
-    careCoordinator: 'Lisa Thompson',
-  },
-]
-
 // METHODS ****************************************************************
 function handleSelectingChip(chip: Chip) {
   selectedChip.value = chip
@@ -100,17 +79,6 @@ function handleSelectingChip(chip: Chip) {
 function handleSelectedPatient(patient: Patient) {
   selectedPatient.value = patient
 }
-
-async function getPatientsInit() {
-  try {
-    const response = await getPatients()
-    patientList.value = response
-  } catch (error) {
-    console.error('Error retrieving patient:', error)
-  }
-}
-
-getPatientsInit()
 </script>
 
 <template>
@@ -119,7 +87,7 @@ getPatientsInit()
       <!-- Manage Team Top -->
       <div class="w-full">
         <div class="flex justify-between w-full">
-          <div class="text-[32px] font-[500]">Medication</div>
+          <div class="text-[32px] font-[500]">Medications</div>
           <div class="flex">
             <!-- Create New Buttons -->
             <div v-if="tabSelected === 'Medicine'" class="flex">
@@ -132,13 +100,47 @@ getPatientsInit()
                   </div>
                 </template>
                 <template #content>
-                  <div class="mb-4 text-[16px]">Add New Medication</div>
-                  <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Name</p>
-                  <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
-                  <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Strength</p>
-                  <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
-                  <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Size</p>
-                  <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
+                  <div class="w-[500px] grow">
+                    <div class="mb-4 text-[16px]">Add New Medication</div>
+                    <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Name</p>
+                    <input
+                      v-model="newMedicationName"
+                      class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+                      placeholder="Absorica Micronized"
+                    />
+                    <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Strength</p>
+                    <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" placeholder="16mg" />
+                    <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Size</p>
+                    <input
+                      v-model="newMedicationName"
+                      class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+                      placeholder="60 capsules"
+                    />
+                    <div class="flex flex-col gap-y-4 my-6">
+                      <BaseCheckBox> Morning</BaseCheckBox>
+                      <BaseCheckBox> Evening</BaseCheckBox>
+                    </div>
+                    <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">SPECIAL INSTRUCTIONS</p>
+                    <input
+                      v-model="newMedicationName"
+                      class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+                      placeholder="Take one in the morning and one at night"
+                    />
+                    <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">REFILL COUNT</p>
+                    <input
+                      v-model="newMedicationName"
+                      class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+                      placeholder="Take one in the morning and one at night"
+                      type="number"
+                    />
+                    <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">REFILL EXPIRATION RATE (DAYS)</p>
+                    <input
+                      v-model="newMedicationName"
+                      class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+                      placeholder="Take one in the morning and one at night"
+                      type="number"
+                    />
+                  </div>
                 </template>
               </BaseModal>
             </div>
@@ -198,7 +200,7 @@ getPatientsInit()
               class="grid grid-cols-6 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
             >
               <div v-for="(category, jdx) in tableHeaderCategory.categories" :key="jdx" :class="[category.text === 'Full name' ? 'col-span-2' : 'col-span-1']">
-                <div :class="category.text === 'Actions' ? 'w-full flex justify-end' : ''">
+                <div :class="[category.text === 'Actions' ? 'w-full flex justify-end' : '']">
                   {{ category.text }}
                 </div>
               </div>
@@ -208,16 +210,16 @@ getPatientsInit()
 
           <!-- Table Medicine -->
           <div
-            v-for="(patient, idx) in testPatients"
+            v-for="(medication, idx) in medicationsStore.medicationData"
             :key="idx"
-            :class="[idx === testPatients.length - 1 ? 'rounded-b-[16px]' : '']"
+            :class="[idx === medicationsStore.medicationData.length - 1 ? 'rounded-b-[16px]' : '']"
             class="grid grid-cols-6 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
           >
-            <div>{treatmentName}</div>
-            <div>{medicineInstructions}</div>
-            <div>{medicineSpecialInstructions}</div>
-            <div>{medicineRefills}</div>
-            <div>{medicineRefillExpirationDate}</div>
+            <div class="whitespace-pre-wrap w-1/2">{{ medication.medicationName || '-' }}</div>
+            <div class="whitespace-pre-wrap w-1/2">{{ medication.medicationInstructions || '-' }}</div>
+            <div class="whitespace-pre-wrap w-1/2">{{ medication.medicationSpecialInstructions || '-' }}</div>
+            <div>{{ medication.medicationRefills || '-' }}</div>
+            <div>{{ medication.medicationRefillExpirationInDays || '-' }}</div>
             <div class="w-full flex justify-end gap-x-3">
               <BaseModal>
                 <template #button>
@@ -248,13 +250,24 @@ getPatientsInit()
           </div>
           <!-- Table Medicine -->
           <div
-            v-for="(patient, idx) in testPatients"
+            v-for="(treatment, idx) in medicationsStore.treatmentData"
             :key="idx"
-            :class="[idx === testPatients.length - 1 ? 'rounded-b-[16px]' : '']"
+            :class="[idx === medicationsStore.treatmentData.length - 1 ? 'rounded-b-[16px]' : '']"
             class="grid grid-cols-3 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
           >
-            <div>{treatmentName}</div>
-            <div>{medicineDetails}</div>
+            <div>{{ treatment.treatmentName }}</div>
+            <div>
+              <div
+                v-for="(group, jdx) in treatment.treatmentGroups"
+                :key="jdx"
+                class="flex flex-col whitespace-pre-wrap py-2"
+                :class="jdx === treatment.treatmentGroups.length - 1 ? '' : 'border-b'"
+              >
+                <div v-for="(medicines, kdx) in group" :key="kdx" class="flex-wrap flex">
+                  <div v-for="(medicine, ldx) in medicines">{{ medicine }} {{ ldx !== medicines.length - 1 ? ' | ' : '' }}</div>
+                </div>
+              </div>
+            </div>
             <div class="w-full flex justify-end gap-x-3">
               <BaseModal>
                 <template #button>
