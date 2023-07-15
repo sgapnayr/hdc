@@ -451,7 +451,6 @@ handleGetAllTasks()
             :key="idx"
             :class="[idx === tasksStore.taskData.length - 1 ? 'rounded-b-[16px]' : '']"
             class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
-            :to="`/view-history/${task.taskId}`"
           >
             <div class="col-span-2 flex gap-x-2 items-center">
               {{ task.taskPatientName }}

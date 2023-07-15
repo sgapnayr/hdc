@@ -254,7 +254,7 @@ getPatientsInit()
             </div>
           </div>
         </div>
-        <img class="absolute bottom-0 right-8 flex" :src="GroupDoctors" alt="Group of Doctors" />
+        <img class="absolute bottom-0 right-8 lg:flex hidden" :src="GroupDoctors" alt="Group of Doctors" />
       </div>
 
       <!-- Table -->

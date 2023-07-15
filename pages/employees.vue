@@ -276,7 +276,7 @@ getEmployeesInit()
       </div>
 
       <!-- Table -->
-      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full mt-[32px] flex-col">
+      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full mt-[32px] flex-col shadow-sm">
         <!-- Tabs -->
         <div class="flex text-[16px] font-[400] gap-x-8">
           <div
