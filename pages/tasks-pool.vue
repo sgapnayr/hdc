@@ -161,6 +161,7 @@ handleGetAllTasks()
 
 <template>
   <div class="w-full py-8">
+    <button @click="tasksStore.setAllTasks()">Get All Tasks</button>
     <BaseWrapper>
       <!-- Summary Top -->
       <div class="w-full">
