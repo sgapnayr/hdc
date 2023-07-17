@@ -13,7 +13,7 @@ const countDownExpired = ref(false)
 
 // METHODS ********************************************************************
 function countdown(initialTime: string) {
-  const COUNT_DOWN_IN_DAYS = 2
+  const COUNT_DOWN_IN_DAYS = 5
   const expirationDate = new Date(initialTime)
 
   expirationDate.setDate(expirationDate.getDate() + COUNT_DOWN_IN_DAYS)
