@@ -104,7 +104,7 @@ const assignedToMeChips = [
 const generalChips = [
   { text: 'All', amount: numberOfTasks },
   { text: 'Assigned', amount: numberOfAssignedTasks },
-  { text: 'Unassigned Tasks', amount: numberOfUnassignedTasks },
+  { text: 'Unassigned', amount: numberOfUnassignedTasks },
   { text: 'Low', amount: numberOfLowPriorityTasks },
   { text: 'Medium', amount: numberOfMediumPriorityTasks },
   { text: 'High', amount: numberOfHighPriorityTasks },
@@ -132,13 +132,13 @@ const taskPriorities = [{ text: 'Low' as 'Low' }, { text: 'Medium' as 'Medium' }
 const taskData = tasksStore.taskData
 
 const totalPagesForGeneralTable = computed(() => {
-  return Math.ceil(taskData.length / generalPageSize.value)
+  return Math.ceil(filterGeneralTaskByChips?.value?.length / generalPageSize.value)
 })
 
 const filterGeneralTaskByChips = computed(() => {
   if (selectedGeneralChip.value.text === 'All') {
     return tasksStore?.allTasks
-  } else if (selectedGeneralChip.value.text === 'Unassigned Tasks') {
+  } else if (selectedGeneralChip.value.text === 'Unassigned') {
     return tasksStore?.allTasks?.filter((task: any) => task.taskStatus !== 'ASSIGNED')
   } else if (selectedGeneralChip.value.text === 'Assigned') {
     return tasksStore?.allTasks?.filter((task: any) => task.taskStatus === 'ASSIGNED')
@@ -159,7 +159,7 @@ const generalPages = computed(() => {
 })
 
 const totalPagesForAssigneeTable = computed(() => {
-  return Math.ceil(tasksStore?.assigneeTasks?.length / pageSize.value)
+  return Math.ceil(filterAsigneeTaskByChips?.value?.length / pageSize.value)
 })
 
 const filterAsigneeTaskByChips = computed(() => {
@@ -183,9 +183,8 @@ const assigneePages = computed(() => {
 
 // METHODS ****************************************************************
 async function handleGetAllTasks() {
-  await getAllTasks().then((response) => {
-    allTasks.value = response.data
-  })
+  fetchTasksByAssignee()
+  tasksStore.getAllTasksFromGraphQL()
 }
 
 function handleSubmitNewTask() {
@@ -202,7 +201,7 @@ function handleSubmitNewTask() {
   }
 
   const patientId = 'ec3f69b1-6275-4498-aa07-5f31250d2370'
-  const priority = 'medium'
+  const priority = 'high'
   const description = 'New Task'
 
   setTimeout(() => {
@@ -216,6 +215,7 @@ function handleSubmitNewTask() {
     taskPriority.value = 'Low'
     taskComments.value = ''
     addTaskButtonState.value = 'idle'
+    handleGetAllTasks()
   }, 1500)
 }
 
@@ -233,6 +233,7 @@ async function handleAssignTask(taskId: string) {
     taskPriority.value = 'Low'
     taskComments.value = ''
     claimTaskButtonState.value = 'idle'
+    handleGetAllTasks()
   }, 1500)
 }
 
@@ -247,8 +248,6 @@ async function fetchTasksByAssignee() {
   }
 }
 
-fetchTasksByAssignee()
-tasksStore.getAllTasksFromGraphQL()
 profileStore.setMyProfile()
 handleGetAllTasks()
 </script>

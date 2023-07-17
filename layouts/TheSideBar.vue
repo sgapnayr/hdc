@@ -6,12 +6,16 @@ import { useRouter } from 'vue-router'
 import { useRoute } from 'vue-router'
 import { Auth } from 'aws-amplify'
 import WavingLady from '@/assets/images/waving-lady.svg'
+import { useProfileStore } from '~/stores/profile'
 
 // ROUTER **********************************************************************
 const route = useRoute()
 const router = useRouter()
 const isModalOpen = ref(false)
 const modalExists = ref(false)
+
+// STORE *************************************************************
+const profileStore = useProfileStore()
 
 // METHODS *************************************************************
 function handleModal() {
@@ -41,14 +45,40 @@ async function signOut() {
       <img :src="HoneyDewIcon" alt="Honey Dew Icon" class="mb-[36px] mt-[28px]" />
     </div>
     <div class="gap-y-[14px] flex flex-col">
+      <!-- Admin Icon -->
+      <div
+        class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition flex justify-center items-center text-[#A09DB1] text-[8px]"
+        :class="[route.path === '/admin' ? 'bg-[#EEEBFC] text-honeydew-purple' : 'hover:bg-[#EEEBFC]']"
+        @click="router.push('/admin')"
+      >
+        <svg class="scale-125" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            :class="[route.path.includes('/admin') ? 'showIcon' : '']"
+            d="M14.25 7.875H13.625V4.75C13.625 3.75544 13.2299 2.80161 12.5266 2.09835C11.8234 1.39509 10.8696 1 9.875 1C8.88044 1 7.92661 1.39509 7.22335 2.09835C6.52009 2.80161 6.125 3.75544 6.125 4.75V7.875H5.5C4.83718 7.87572 4.20172 8.13935 3.73303 8.60803C3.26435 9.07671 3.00072 9.71218 3 10.375V15.8754C3.00072 16.5382 3.26435 17.1737 3.73303 17.6423C4.20172 18.111 4.83718 18.3746 5.5 18.3754H14.25C14.9128 18.3746 15.5483 18.111 16.017 17.6423C16.4856 17.1737 16.7493 16.5382 16.75 15.8754V10.375C16.7493 9.71218 16.4856 9.07671 16.017 8.60803C15.5483 8.13935 14.9128 7.87572 14.25 7.875ZM12.375 7.875H7.375V4.75C7.375 4.08696 7.63839 3.45107 8.10723 2.98223C8.57607 2.51339 9.21196 2.25 9.875 2.25C10.538 2.25 11.1739 2.51339 11.6428 2.98223C12.1116 3.45107 12.375 4.08696 12.375 4.75V7.875Z"
+            fill="#A09DB1"
+          />
+          <path
+            d="M10.75 13.7993C11.1984 13.54 11.5 13.0552 11.5 12.5C11.5 11.6716 10.8284 11 10 11C9.17157 11 8.5 11.6716 8.5 12.5C8.5 13.0552 8.80165 13.54 9.25 13.7993V14.75C9.25 15.1642 9.58579 15.5 10 15.5C10.4142 15.5 10.75 15.1642 10.75 14.75V13.7993Z"
+            fill="white"
+          />
+        </svg>
+      </div>
+
       <!-- Home Icon -->
       <div
         class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition"
-        :class="[route.path === '/admin' ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
+        :class="[route.path.includes('/view-history') ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
       >
-        <svg @click="router.push('/admin')" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          @click="router.push('/view-history/' + profileStore.profileData.patientId)"
+          width="48"
+          height="48"
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
-            :class="[route.path === '/admin' ? 'showIcon' : '']"
+            :class="[route.path.includes('/view-history') ? 'showIcon' : '']"
             class="cursor-pointer"
             d="
         M24.2614 16.7479C24.1916 16.6811 24.0988 16.6439 24.0022 16.6439C23.9056 16.6439 23.8128 16.6811 23.743 16.7479L15.1133 24.9918C15.0766 25.0268 15.0475 25.069 15.0276 25.1156C15.0077 25.1623 14.9974 25.2125 14.9975 25.2632L14.9961 33.0004C14.9961 33.3982 15.1541 33.7797 15.4354 34.061C15.7167 34.3423 16.0983 34.5004 16.4961 34.5004H21.0008C21.1997 34.5004 21.3905 34.4214 21.5311 34.2807C21.6718 34.1401 21.7508 33.9493 21.7508 33.7504V27.3754C21.7508 27.2759 21.7903 27.1805 21.8606 27.1102C21.9309 27.0399 22.0263 27.0004 22.1258 27.0004H25.8758C25.9752 27.0004 26.0706 27.0399 26.1409 27.1102C26.2113 27.1805 26.2508 27.2759 26.2508 27.3754V33.7504C26.2508 33.9493 26.3298 34.1401 26.4705 34.2807C26.6111 34.4214 26.8019 34.5004 27.0008 34.5004H31.5036C31.9014 34.5004 32.2829 34.3423 32.5643 34.061C32.8456 33.7797 33.0036 33.3982 33.0036 33.0004V25.2632C33.0037 25.2125 32.9934 25.1623 32.9735 25.1156C32.9536 25.069 32.9245 25.0268 32.8878 24.9918L24.2614 16.7479Z
