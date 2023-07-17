@@ -13,7 +13,7 @@ const countDownExpired = ref(false)
 
 // METHODS ********************************************************************
 function countdown(initialTime: string) {
-  const COUNT_DOWN_IN_DAYS = 10
+  const COUNT_DOWN_IN_DAYS = 2
   const expirationDate = new Date(initialTime)
 
   expirationDate.setDate(expirationDate.getDate() + COUNT_DOWN_IN_DAYS)
@@ -56,7 +56,7 @@ onMounted(() => {
         ? 'text-white bg-honeydew-green animate-pulse'
         : 'bg-[#EEEBFC] text-honeydew-purple',
     ]"
-    class="py-1 px-2 rounded-[80px] flex items-center text-[10px] shadow-sm"
+    class="py-1 px-3 rounded-[80px] flex items-center text-[10px] shadow-sm"
   >
     <span v-if="!remainingTime"> Loading...</span>
     <span v-else>

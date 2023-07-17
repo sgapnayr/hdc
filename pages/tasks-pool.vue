@@ -2,13 +2,11 @@
 // IMPORTS ********************************************************************
 import { ref, computed } from 'vue'
 import BaseWrapper from '~/components/BaseWrapper.vue'
-import DeleteIcon from '@/assets/icons/delete-icon.svg'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import ClaimIcon from '@/assets/icons/claim-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { createTask, getAllTasks } from '@/lib/endpoints'
 import { useTasksStore } from '@/stores/task'
-import { usePatientStore } from '~/stores/patient'
 import { useProfileStore } from '@/stores/profile'
 import { assignTask } from '@/lib/endpoints'
 
@@ -44,8 +42,8 @@ const taskPriority = ref<'Low' | 'Medium' | 'High'>('Medium')
 const taskPriorityMenuOpen = ref<boolean>(false)
 const taskComments = ref<string>()
 const taskName = ref<string>()
-const allTasks = ref()
 const pageSize = ref(3)
+const generalPageSize = ref(10)
 const currentPage = ref(0)
 const assigneeTablecurrentPage = ref(0)
 const showTaskAssignedMessage = ref(false)
@@ -53,17 +51,62 @@ const hoveredIdx = ref()
 const claimTaskButtonState = ref<'idle' | 'loading' | 'success' | 'failed' | 'disabled'>('idle')
 const addTaskButtonState = ref<'idle' | 'loading' | 'success' | 'failed' | 'disabled'>('idle')
 
+// DATA ****************************************************************
+const numberOfTaskAssignedToMe = computed(() => {
+  return tasksStore?.assigneeTasks?.length
+})
+
+const numberOfLowPriorityTasksAssginedToMe = computed(() => {
+  return tasksStore?.assigneeTasks?.filter((task: any) => task?.taskPriority === 'low' || task?.taskPriority === 'Low').length
+})
+
+const numberOfMediumPriorityTasksAssginedToMe = computed(() => {
+  return tasksStore?.assigneeTasks?.filter((task: any) => task?.taskPriority === 'medium' || task?.taskPriority === 'Medium').length
+})
+
+const numberOfHighPriorityTasksAssginedToMe = computed(() => {
+  return tasksStore?.assigneeTasks?.filter((task: any) => task?.taskPriority === 'high' || task?.taskPriority === 'High').length
+})
+
+const numberOfTasks = computed(() => {
+  return tasksStore.allTasks?.length
+})
+
+const numberOfAssignedTasks = computed(() => {
+  return tasksStore?.allTasks?.filter((task: any) => task.taskStatus !== 'ASSIGNED').length
+})
+
+const numberOfUnassignedTasks = computed(() => {
+  return tasksStore?.allTasks?.filter((task: any) => task.taskStatus === 'ASSIGNED').length
+})
+
+const numberOfLowPriorityTasks = computed(() => {
+  return tasksStore?.allTasks?.filter((task: any) => task?.taskPriority === 'low' || task?.taskPriority === 'Low').length
+})
+
+const numberOfMediumPriorityTasks = computed(() => {
+  return tasksStore?.allTasks?.filter((task: any) => task?.taskPriority === 'medium' || task?.taskPriority === 'Medium').length
+})
+
+const numberOfHighPriorityTasks = computed(() => {
+  return tasksStore?.allTasks?.filter((task: any) => task?.taskPriority === 'high' || task?.taskPriority === 'High').length
+})
+
 // MEMBER DATA ****************************************************************
 const assignedToMeChips = [
-  { text: 'All', amount: 10 },
-  { text: 'New treatment plans', amount: 10 },
-  { text: 'New messages', amount: 10 },
+  { text: 'All', amount: numberOfTaskAssignedToMe },
+  { text: 'Low', amount: numberOfLowPriorityTasksAssginedToMe },
+  { text: 'Medium', amount: numberOfMediumPriorityTasksAssginedToMe },
+  { text: 'High', amount: numberOfHighPriorityTasksAssginedToMe },
 ]
 
 const generalChips = [
-  { text: 'All', amount: tasksStore?.allTasks?.length },
-  { text: 'Assigned', amount: tasksStore?.allTasks.filter((task: any) => task.taskStatus !== 'ASSIGNED').length },
-  { text: 'Unassigned Tasks', amount: tasksStore?.allTasks.filter((task: any) => task.taskStatus === 'ASSIGNED').length },
+  { text: 'All', amount: numberOfTasks },
+  { text: 'Assigned', amount: numberOfAssignedTasks },
+  { text: 'Unassigned Tasks', amount: numberOfUnassignedTasks },
+  { text: 'Low', amount: numberOfLowPriorityTasks },
+  { text: 'Medium', amount: numberOfMediumPriorityTasks },
+  { text: 'High', amount: numberOfHighPriorityTasks },
 ]
 
 const tableHeaderCategories = [
@@ -88,7 +131,7 @@ const taskPriorities = [{ text: 'Low' as 'Low' }, { text: 'Medium' as 'Medium' }
 const taskData = tasksStore.taskData
 
 const totalPagesForGeneralTable = computed(() => {
-  return Math.ceil(taskData.length / pageSize.value)
+  return Math.ceil(taskData.length / generalPageSize.value)
 })
 
 const filterGeneralTaskByChips = computed(() => {
@@ -98,12 +141,18 @@ const filterGeneralTaskByChips = computed(() => {
     return tasksStore?.allTasks.filter((task: any) => task.taskStatus !== 'ASSIGNED')
   } else if (selectedGeneralChip.value.text === 'Assigned') {
     return tasksStore?.allTasks.filter((task: any) => task.taskStatus === 'ASSIGNED')
+  } else if (selectedGeneralChip.value.text === 'Low') {
+    return tasksStore?.allTasks.filter((task: any) => task?.taskPriority === 'low' || task?.taskPriority === 'Low')
+  } else if (selectedGeneralChip.value.text === 'Medium') {
+    return tasksStore?.allTasks.filter((task: any) => task?.taskPriority === 'medium' || task?.taskPriority === 'Medium')
+  } else if (selectedGeneralChip.value.text === 'High') {
+    return tasksStore?.allTasks.filter((task: any) => task?.taskPriority === 'high' || task?.taskPriority === 'High')
   }
 })
 
 const generalPages = computed(() => {
-  let start = currentPage.value * pageSize.value
-  let end = (currentPage.value + 1) * pageSize.value
+  let start = currentPage.value * generalPageSize.value
+  let end = (currentPage.value + 1) * generalPageSize.value
 
   return filterGeneralTaskByChips?.value?.slice(start, end)
 })
@@ -112,11 +161,23 @@ const totalPagesForAssigneeTable = computed(() => {
   return Math.ceil(tasksStore?.assigneeTasks?.length / pageSize.value)
 })
 
+const filterAsigneeTaskByChips = computed(() => {
+  if (selectedAssignedToMeChip.value.text === 'All') {
+    return tasksStore?.assigneeTasks
+  } else if (selectedAssignedToMeChip.value.text === 'Low') {
+    return tasksStore?.assigneeTasks.filter((task: any) => task?.taskPriority === 'low' || task?.taskPriority === 'Low')
+  } else if (selectedAssignedToMeChip.value.text === 'Medium') {
+    return tasksStore?.assigneeTasks.filter((task: any) => task?.taskPriority === 'medium' || task?.taskPriority === 'Medium')
+  } else if (selectedAssignedToMeChip.value.text === 'High') {
+    return tasksStore?.assigneeTasks.filter((task: any) => task?.taskPriority === 'high' || task?.taskPriority === 'High')
+  }
+})
+
 const assigneePages = computed(() => {
   let start = assigneeTablecurrentPage.value * pageSize.value
   let end = (assigneeTablecurrentPage.value + 1) * pageSize.value
 
-  return tasksStore?.assigneeTasks?.slice(start, end)
+  return filterAsigneeTaskByChips?.value?.slice(start, end)
 })
 
 // METHODS ****************************************************************
@@ -459,19 +520,23 @@ handleGetAllTasks()
             <div>
               {{ task.taskStatus }}
             </div>
-            <div
-              class="px-4 py-1 rounded-[24px]"
-              :class="[
-                task.taskPriority === 'low'
-                  ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                  : task.taskPriority === 'medium'
-                  ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                  : task.taskPriority === 'high'
-                  ? 'bg-[#FFF7E5] text-[#996600]'
-                  : '',
-              ]"
-            >
-              {{ task?.taskPriority }}
+            <div class="flex">
+              <div
+                class="px-4 py-1 rounded-[24px] shadow-sm"
+                :class="[
+                  task?.taskPriority === 'low'
+                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                    : task?.taskPriority === 'medium'
+                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                    : task?.taskPriority === 'high'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : task?.taskPriority === 'High'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : '',
+                ]"
+              >
+                {{ task?.taskPriority }}
+              </div>
             </div>
             <div class="flex">
               <div
@@ -576,14 +641,16 @@ handleGetAllTasks()
             </div>
             <div class="flex">
               <div
-                class="px-4 py-1 rounded-[24px]"
+                class="px-4 py-1 rounded-[24px] shadow-sm"
                 :class="[
                   task?.taskPriority === 'low'
-                    ? 'bg-[#F0F5FE] text-[#5E83D4] shadow-sm'
+                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
                     : task?.taskPriority === 'medium'
-                    ? 'bg-[#EEF7EE] text-[#3A6A34] shadow-sm'
+                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
                     : task?.taskPriority === 'high'
-                    ? 'bg-[#FFF7E5] text-[#996600] shadow-sm'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : task?.taskPriority === 'High'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
                     : '',
                 ]"
               >
@@ -658,6 +725,8 @@ handleGetAllTasks()
                               : task?.taskPriority === 'medium'
                               ? 'bg-[#EEF7EE] text-[#3A6A34]'
                               : task?.taskPriority === 'high'
+                              ? 'bg-[#FFF7E5] text-[#996600]'
+                              : task?.taskPriority === 'High'
                               ? 'bg-[#FFF7E5] text-[#996600]'
                               : '',
                           ]"
