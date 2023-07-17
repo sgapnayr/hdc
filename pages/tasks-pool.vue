@@ -42,6 +42,7 @@ const taskPriority = ref<'Low' | 'Medium' | 'High'>('Medium')
 const taskPriorityMenuOpen = ref<boolean>(false)
 const taskComments = ref<string>()
 const taskName = ref<string>()
+const allTasks = ref()
 const pageSize = ref(3)
 const generalPageSize = ref(10)
 const currentPage = ref(0)
@@ -138,15 +139,15 @@ const filterGeneralTaskByChips = computed(() => {
   if (selectedGeneralChip.value.text === 'All') {
     return tasksStore?.allTasks
   } else if (selectedGeneralChip.value.text === 'Unassigned Tasks') {
-    return tasksStore?.allTasks.filter((task: any) => task.taskStatus !== 'ASSIGNED')
+    return tasksStore?.allTasks?.filter((task: any) => task.taskStatus !== 'ASSIGNED')
   } else if (selectedGeneralChip.value.text === 'Assigned') {
-    return tasksStore?.allTasks.filter((task: any) => task.taskStatus === 'ASSIGNED')
+    return tasksStore?.allTasks?.filter((task: any) => task.taskStatus === 'ASSIGNED')
   } else if (selectedGeneralChip.value.text === 'Low') {
-    return tasksStore?.allTasks.filter((task: any) => task?.taskPriority === 'low' || task?.taskPriority === 'Low')
+    return tasksStore?.allTasks?.filter((task: any) => task?.taskPriority === 'low' || task?.taskPriority === 'Low')
   } else if (selectedGeneralChip.value.text === 'Medium') {
-    return tasksStore?.allTasks.filter((task: any) => task?.taskPriority === 'medium' || task?.taskPriority === 'Medium')
+    return tasksStore?.allTasks?.filter((task: any) => task?.taskPriority === 'medium' || task?.taskPriority === 'Medium')
   } else if (selectedGeneralChip.value.text === 'High') {
-    return tasksStore?.allTasks.filter((task: any) => task?.taskPriority === 'high' || task?.taskPriority === 'High')
+    return tasksStore?.allTasks?.filter((task: any) => task?.taskPriority === 'high' || task?.taskPriority === 'High')
   }
 })
 
@@ -165,11 +166,11 @@ const filterAsigneeTaskByChips = computed(() => {
   if (selectedAssignedToMeChip.value.text === 'All') {
     return tasksStore?.assigneeTasks
   } else if (selectedAssignedToMeChip.value.text === 'Low') {
-    return tasksStore?.assigneeTasks.filter((task: any) => task?.taskPriority === 'low' || task?.taskPriority === 'Low')
+    return tasksStore?.assigneeTasks?.filter((task: any) => task?.taskPriority === 'low' || task?.taskPriority === 'Low')
   } else if (selectedAssignedToMeChip.value.text === 'Medium') {
-    return tasksStore?.assigneeTasks.filter((task: any) => task?.taskPriority === 'medium' || task?.taskPriority === 'Medium')
+    return tasksStore?.assigneeTasks?.filter((task: any) => task?.taskPriority === 'medium' || task?.taskPriority === 'Medium')
   } else if (selectedAssignedToMeChip.value.text === 'High') {
-    return tasksStore?.assigneeTasks.filter((task: any) => task?.taskPriority === 'high' || task?.taskPriority === 'High')
+    return tasksStore?.assigneeTasks?.filter((task: any) => task?.taskPriority === 'high' || task?.taskPriority === 'High')
   }
 })
 
