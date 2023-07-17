@@ -3,6 +3,7 @@
 import { ref } from 'vue'
 import { useProfileStore } from '~/stores/profile'
 import { usePatientStore } from '~/stores/patient'
+import { useTasksStore } from '~/stores/task'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import PlusCircleIcon from '@/assets/icons/plus-circle.svg'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
@@ -31,6 +32,7 @@ onMounted(() => {
 // STORE **********************************************************************
 const profileStore = useProfileStore()
 const patientStore = usePatientStore()
+const tasksStore = useTasksStore()
 
 // STATE *********************************************************************
 const treatmentHistoryOrDocumentsSelected = ref<'Treatment History' | 'Documents'>('Treatment History')
@@ -99,6 +101,7 @@ const uploadPhoto = async () => {
 patientStore.getPatientFromGraphQL(route.params.patientId as string).then((patient) => {
   patientData.value = patient
 })
+tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 </script>
 
 <template>

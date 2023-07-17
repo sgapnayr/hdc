@@ -10,15 +10,21 @@ import EmailIcon from '@/assets/icons/email-icon.svg'
 import AlertIcon from '@/assets/icons/alert-icon.svg'
 import NotesImage from '@/assets/images/notes-image.png'
 import { useProfileStore } from '@/stores/profile'
+import { useTasksStore } from '@/stores/task'
 import { BaseInput } from '~/.nuxt/components'
+import { useRoute } from 'vue-router'
 
 // PROPS *********************************************************************
 defineProps<{
   patientData: any
 }>()
 
+// ROUTER *********************************************************************
+const route = useRoute()
+
 // STORES *********************************************************************
 const profileStore = useProfileStore()
+const tasksStore = useTasksStore()
 
 // STATE *********************************************************************
 const toDoListOrDetailsSelected = ref<'To do' | 'Details'>('To do')
@@ -32,6 +38,9 @@ function handleSelectedItem(selectedItemVal: string) {
     selectedItem.value.push(selectedItemVal)
   }
 }
+
+console.log(route.params.patientId)
+tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 </script>
 
 <template>
@@ -162,6 +171,7 @@ function handleSelectedItem(selectedItemVal: string) {
         </div>
         <div v-if="selectedItem.includes('Patient\'s current tasks')" class="flex w-full justify-between text-gray-5 font-[400]">
           <div>{{ patientData?.patientCurrentTasks }}</div>
+          {{ tasksStore.taskForPatient }}
         </div>
       </div>
 

@@ -334,7 +334,7 @@ export const usePatientStore = defineStore('patient', () => {
           return frontendPatient
         }),
       }
-
+      console.log(mappedData.patients)
       allPatients.value = mappedData.patients
     } catch (error) {
       console.error('Error retrieving patients:', error)
