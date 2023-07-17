@@ -56,6 +56,8 @@ export const useProfileStore = defineStore('profile', () => {
   const lastStepLetsSeeYourSkin = ref() // Change to image upload
 
   // SETTERS ****************************************************************
+  async function createProfile() {}
+
   async function setMyProfile() {
     try {
       const response = await getMyProfile()

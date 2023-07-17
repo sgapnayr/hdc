@@ -299,10 +299,11 @@ export const usePatientStore = defineStore('patient', () => {
 
   // GETTERS ****************************************************************
   async function getPatientsFromGraphQL() {
+    console.log('RUNNING')
     try {
       const response = await getPatients()
       const mappedData: Patients = {
-        patients: response.patients.map((backendPatient: any) => {
+        patients: response?.patients?.map((backendPatient: any) => {
           const frontendPatient: Patient = {
             patientId: backendPatient.patientId,
             patientName: '{patientName}', // Not available in the backend response, set as an empty string
@@ -334,15 +335,13 @@ export const usePatientStore = defineStore('patient', () => {
         }),
       }
 
-      console.log(mappedData)
-      allPatients.value = mappedData
+      allPatients.value = mappedData.patients
     } catch (error) {
       console.error('Error retrieving patients:', error)
     }
   }
 
   async function getPatientFromGraphQL(patientId: string) {
-    console.log('CALLING')
     try {
       const response = await getPatient(patientId)
       console.log(response)

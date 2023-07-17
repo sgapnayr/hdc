@@ -63,3 +63,14 @@ export interface Patient {
 export interface Patients {
   patients: Patient[]
 }
+
+export interface SignUpPatientPayload {
+  patientSignUpSelfOrOtherAccount: string
+  patientZipCode: string
+  patientName: string
+  patientDOB: string
+  patientCreditCardNumber?: string
+  patientCreditCardHolder?: string
+  patientCreditCardExpiration?: string
+  patientCreditCardCVV?: string
+}

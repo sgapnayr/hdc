@@ -8,6 +8,7 @@ import PaperIcon from '@/assets/icons/paper-icon.svg'
 import PhoneIcon from '@/assets/icons/phone-icon.svg'
 import EmailIcon from '@/assets/icons/email-icon.svg'
 import AlertIcon from '@/assets/icons/alert-icon.svg'
+import NotesImage from '@/assets/images/notes-image.png'
 import { useProfileStore } from '@/stores/profile'
 import { BaseInput } from '~/.nuxt/components'
 
@@ -37,15 +38,9 @@ function handleSelectedItem(selectedItemVal: string) {
   <div class="bg-white md:w-1/2 rounded-[8px]">
     <!-- Padding Wrapper -->
     <div class="p-8">
-      <!-- Navigation -->
-      <NuxtLink to="/profile" class="flex text-honeydew-purple">
-        <img :src="ChevronIcon" alt="Chevron Icon" class="mr-[14px]" />
-        Back
-      </NuxtLink>
-
       <!-- Patient Photo -->
-      <div class="flex w-full justify-between mt-[48px]">
-        <div class="w-[72px] h-[72px] flex justify-center items-center bg-gray-1 rounded-xl">{photo}</div>
+      <div class="flex w-full justify-between">
+        <img class="w-[90px]" :src="NotesImage" alt="Notes image" />
         <div class="flex gap-x-[12px]">
           <div
             @click="profileStore.handlePatientDetailsForm"
@@ -106,7 +101,7 @@ function handleSelectedItem(selectedItemVal: string) {
       </div>
 
       <div @click="handleSelectedItem('Health Insurance')" class="text-gray-3 font-[500] w-full border-b border-[#E1E0E6] py-5 cursor-pointer flex flex-col">
-        <div class="flex w-full justify-between">
+        <div class="flex w-full justify-between items-center">
           <div>Health Insurance</div>
           <div class="flex gap-x-2">
             <BaseModal>
@@ -136,11 +131,23 @@ function handleSelectedItem(selectedItemVal: string) {
           </div>
         </div>
         <div v-if="selectedItem.includes('Health Insurance')" class="flex w-full justify-between text-gray-5 font-[400]">
-          <div>
-            <div>{{ patientData?.patientInsuranceMemberID }}</div>
-            <div>{{ patientData?.patientHealthInsurance }}</div>
-            <div>{{ patientData?.patientInsurancePolicyHolderName }}</div>
-            <div>{{ patientData?.patientInsuranceGroupNumber }}</div>
+          <div class="w-1/2">
+            <div class="w-full flex justify-between">
+              <div class="w-full">MemberID:</div>
+              <div>{{ patientData?.patientInsuranceMemberID }}</div>
+            </div>
+            <div class="w-full flex justify-between">
+              <div class="w-full">Health Insurance:</div>
+              {{ patientData?.patientHealthInsurance }}
+            </div>
+            <div class="w-full flex justify-between whitespace-nowrap">
+              <div class="w-full">Policy Holder:</div>
+              {{ patientData?.patientInsurancePolicyHolderName }}
+            </div>
+            <div class="w-full flex justify-between">
+              <div class="w-full">Group Number:</div>
+              {{ patientData?.patientInsuranceGroupNumber }}
+            </div>
           </div>
         </div>
       </div>

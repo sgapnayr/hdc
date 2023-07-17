@@ -12,6 +12,7 @@ import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { getPatients, getPatient } from '@/lib/endpoints'
 import { Patient, Patients } from '@/types/patient-types'
 import { usePatientStore } from '@/stores/patient'
+import { useProfileStore } from '~/stores/profile'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -21,6 +22,7 @@ definePageMeta({
 
 // STORES **********************************************************************
 const patientStore = usePatientStore()
+const profileStore = useProfileStore()
 
 // ROUTER **********************************************************************
 const user = useAuthenticator()
@@ -84,7 +86,6 @@ const tableHeaderCategories: TableHeaderCategory[] = [
 const patientData = patientStore.patientDataForAdminPage
 setTimeout(() => {
   patients.value = patientStore?.allPatients?.patients
-  console.log(patients.value)
 }, 1000)
 
 // COMPUTED METHODS ****************************************************************
@@ -140,7 +141,7 @@ const pagesData = computed(() => {
 })
 
 const totalNewPatients = computed(() => {
-  return patientData.filter((patient) => patient.currentPatientStatus.includes('New Patient')).length
+  return patientStore?.allPatients?.map((patient: any) => patient.currentPatientStatus.includes('New Patient')).length
 })
 
 const totalFollowUps = computed(() => {
@@ -222,7 +223,16 @@ watch(
 )
 
 // INIT ****************************************************************
-patientStore.getPatientsFromGraphQL()
+async function fetchPatients() {
+  if (!patientStore?.allPatients) {
+    await patientStore.getPatientsFromGraphQL()
+    console.log('FETCHIBNG')
+  } else {
+    await patientStore.getPatientsFromGraphQL()
+  }
+}
+
+fetchPatients()
 </script>
 
 <template>
@@ -231,7 +241,9 @@ patientStore.getPatientsFromGraphQL()
       <!-- Summary Top -->
       <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative shadow-sm">
         <div class="w-full">
-          <h1 class="text-[24px] md:text-[32px] font-[500]">Hi, {adminName}!</h1>
+          <h1 class="text-[24px] md:text-[32px] font-[500]">
+            Hi, {{ profileStore?.profileData?.patientFirstName || '-' }} {{ profileStore?.profileData?.patientLastName || '-' }}!
+          </h1>
           <div class="flex gap-x-6 mt-[32px] text-[12px] md:text-[16px]">
             <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#FEF0F5] text-[#AE4768] relative">
               <div class="text-[24px] md:text-[32px] font-[500] leading-[40px]">{{ totalNewPatients }}</div>
@@ -313,10 +325,10 @@ patientStore.getPatientsFromGraphQL()
 
           <!-- Table Body -->
           <NuxtLink
-            v-for="(patient, idx) in patientStore?.allPatients?.patients"
+            v-for="(patient, idx) in patientData"
             :key="idx"
             :class="[
-              idx === patients.length - 1 ? 'rounded-b-[16px]' : '',
+              idx === patientData.length - 1 ? 'rounded-b-[16px]' : '',
               patient.currentPatientStatus.includes('New Patient') ? 'bg-[#FEF0F5]' : '',
               patient.currentPatientStatus.includes('Follow Up') ? 'bg-[#F0F5FE]' : '',
               patient.currentPatientStatus.includes('New Message') ? 'bg-[#F3FAF2]' : '',

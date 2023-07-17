@@ -25,6 +25,15 @@ const rightNumberVisible = computed(() => {
   return ''
 })
 
+const rightRightNumberVisible = computed(() => {
+  for (let idx = 0; idx < props.totalPages; idx++) {
+    if (props.currentPageProps + 2 !== props.totalPages) {
+      return props.currentPageProps + 3
+    }
+  }
+  return ''
+})
+
 const leftNumberVisible = computed(() => {
   for (let idx = 0; idx < props.totalPages; idx++) {
     if (props.currentPageProps === 0) {
@@ -36,8 +45,8 @@ const leftNumberVisible = computed(() => {
 </script>
 
 <template>
-  <div class="flex gap-x-2 mt-4">
-    <div class="cursor-pointer flex justify-center items-center transition active:scale-90" @click="emit('page-back')">
+  <div class="flex gap-x-4 mt-4 items-center">
+    <div class="cursor-pointer flex justify-center items-center transition active:scale-90 p-2 border border-[#E1E0E6] rounded-md" @click="emit('page-back')">
       <img class="rotate-90" :src="ChevronIcon" alt="Chevron Icon" />
     </div>
 
@@ -56,7 +65,17 @@ const leftNumberVisible = computed(() => {
     <div v-if="rightNumberVisible" @click="emit('page-forward')" class="active:scale-90 opacity-25 hover:opacity-50 cursor-pointer">
       {{ rightNumberVisible }}
     </div>
-    <div class="cursor-pointer flex justify-center items-center transition active:scale-90" @click="emit('page-forward')">
+    <div
+      v-if="rightRightNumberVisible && currentPageProps < 1"
+      @click="emit('page-forward')"
+      class="active:scale-90 opacity-25 hover:opacity-50 cursor-pointer"
+    >
+      {{ rightRightNumberVisible }}
+    </div>
+    <div
+      class="cursor-pointer flex justify-center items-center transition active:scale-90 p-2 border border-[#E1E0E6] rounded-md"
+      @click="emit('page-forward')"
+    >
       <img class="rotate-[270deg]" :src="ChevronIcon" alt="Chevron Icon" />
     </div>
   </div>

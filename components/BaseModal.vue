@@ -38,19 +38,22 @@ import { ref } from 'vue'
 import BaseButton from './BaseButton.vue'
 import TheTransitionWrapper from '@/components/TheTransitionWrapper.vue'
 import XIcon from '@/assets/icons/x-icon.svg'
+import { twMerge } from 'tailwind-merge'
 
 // PROPS ****************************************************************
-withDefaults(
+const props = withDefaults(
   defineProps<{
     canClose?: boolean
     customHeader?: boolean
     customButtons?: boolean
     hardClose?: boolean
+    buttonState?: any
   }>(),
   {
     canClose: true,
     customHeader: false,
     customButtons: false,
+    buttonState: 'idle',
   }
 )
 
@@ -64,7 +67,11 @@ const modalIsOpen = ref<boolean>(false)
 
 function test() {
   emit('action-click')
-  modalIsOpen.value = false
+  if (props.buttonState) {
+    modalIsOpen.value = true
+  } else {
+    modalIsOpen.value = false
+  }
 }
 </script>
 

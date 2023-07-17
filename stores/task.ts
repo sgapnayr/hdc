@@ -207,13 +207,13 @@ export const useTasksStore = defineStore('tasks', () => {
       const mappedData = response.tasks.map((task: any) => {
         const frontendTask = {
           taskId: task.taskId,
-          taskPatienFirstName: task.patientId?.patientProfile?.patientFirstName || '', // Use the patientLastName as the patient's name
-          taskPatienLastName: task.patientId?.patientProfile?.patientLastName || '', // Use the patientLastName as the patient's name
+          taskPatienFirstName: task.patientId?.patientProfile?.patientFirstName || '{patientFirstName}', // Use the patientLastName as the patient's name
+          taskPatienLastName: task.patientId?.patientProfile?.patientLastName || '{patientLastName}', // Use the patientLastName as the patient's name
           taskCareCoordinator: '', // This field is not available in the backend response, set as an empty string
           taskStatus: task.status || '', // Use the status field as the task status
-          taskPriority: '', // This field is not available in the backend response, set as an empty string
+          taskPriority: task.priority || '', // This field is not available in the backend response, set as an empty string
           taskType: task.type || '', // Use the type field as the task type
-          taskComments: '', // This field is not available in the backend response, set as an empty string
+          taskComments: task.description || '', // This field is not available in the backend response, set as an empty string
           taskAssignedAt: task.taskAssignedAt, // This field is not available in the backend response
           taskDueAt: task.dueDate,
         }
@@ -226,28 +226,25 @@ export const useTasksStore = defineStore('tasks', () => {
   }
 
   async function getAllTasksFromGraphQLByAssignee(assigneeId: string) {
-    console.log('HERE')
     try {
-      console.log('HERE')
       const response = await getAllTasksByAssignee(assigneeId)
-      console.log('HERE')
       const mappedData = response.tasks.map((task: any) => {
         const frontendTask = {
           taskId: task.taskId,
-          taskPatienFirstName: task.patientId?.patientProfile?.patientFirstName || '', // Use the patientLastName as the patient's name
-          taskPatienLastName: task.patientId?.patientProfile?.patientLastName || '', // Use the patientLastName as the patient's name
+          taskPatienFirstName: task.patientId?.patientProfile?.patientFirstName || '{patientFirstName}', // Use the patientLastName as the patient's name
+          taskPatienLastName: task.patientId?.patientProfile?.patientLastName || '{patientLastName}', // Use the patientLastName as the patient's name
           taskCareCoordinator: '', // This field is not available in the backend response, set as an empty string
           taskStatus: task.status || '', // Use the status field as the task status
-          taskPriority: '', // This field is not available in the backend response, set as an empty string
+          taskPriority: task.priority || '', // This field is not available in the backend response, set as an empty string
           taskType: task.type || '', // Use the type field as the task type
-          taskComments: '', // This field is not available in the backend response, set as an empty string
+          taskComments: task.description || '', // This field is not available in the backend response, set as an empty string
           taskAssignedAt: task.taskAssignedAt, // This field is not available in the backend response
           taskDueAt: task.dueDate,
         }
         return frontendTask
       })
-      console.log(mappedData)
       assigneeTasks.value = mappedData
+      console.log(assigneeTasks.value)
     } catch (error) {
       console.error('Error retrieving employees:', error)
     }
