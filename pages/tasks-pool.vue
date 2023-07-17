@@ -472,7 +472,7 @@ handleGetAllTasks()
 
         <!-- Chips -->
         <div class="mt-[24px] flex-wrap flex">
-          <div v-for="(categoryChip, idx) in assignedToMeChips" :key="idx" class="flex flex-wrap" @click="selectedAssignedToMeChip = categoryChip">
+          <div v-for="(categoryChip, idx) in assignedToMeChips" :key="idx" class="flex flex-wrap" @click="selectedAssignedToMeChip.text = categoryChip.text">
             <div
               :class="[selectedAssignedToMeChip?.text === categoryChip.text ? 'bg-[#EEEBFC] text-honeydew-purple' : 'bg-honeydew-bg2']"
               class="rounded-[20px] p-2 px-4 flex items-center justify-between mr-2 cursor-pointer whitespace-nowrap mb-2"
@@ -590,7 +590,7 @@ handleGetAllTasks()
 
         <!-- Chips -->
         <div class="mt-[24px] flex-wrap flex">
-          <div v-for="(categoryChip, idx) in generalChips" :key="idx" class="flex flex-wrap" @click="selectedGeneralChip = categoryChip">
+          <div v-for="(categoryChip, idx) in generalChips" :key="idx" class="flex flex-wrap" @click="selectedGeneralChip.text = categoryChip.text">
             <div
               :class="[selectedGeneralChip?.text === categoryChip.text ? 'bg-[#EEEBFC] text-honeydew-purple' : 'bg-honeydew-bg2']"
               class="rounded-[20px] p-2 px-4 flex items-center justify-between mr-2 cursor-pointer whitespace-nowrap mb-2"
