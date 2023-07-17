@@ -37,6 +37,8 @@ async function signOut() {
     // Handle sign-out error
   }
 }
+
+profileStore.setMyProfile()
 </script>
 
 <template>
