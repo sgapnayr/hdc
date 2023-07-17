@@ -200,7 +200,7 @@ function handleSubmitNewTask() {
     // type: taskType,
   }
 
-  const patientId = 'ec3f69b1-6275-4498-aa07-5f31250d2370'
+  const patientId = '5712b020-5784-4b46-b22a-af55fd820621'
   const priority = 'high'
   const description = 'New Task'
 
@@ -447,13 +447,13 @@ handleGetAllTasks()
                 <div class="top-4 absolute right-4 h-2 w-2 bg-[#AE4768] rounded-full" />
               </div>
               <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE] relative">
-                <div class="text-[32px] font-[500] leading-[40px]">{{ tasksStore?.allTasks?.length }}</div>
+                <div class="text-[32px] font-[500] leading-[40px]">{{ tasksStore?.allTasks?.length || '-' }}</div>
                 Issued
                 <div class="top-4 absolute right-4 h-2 w-2 bg-[#4768AE] rounded-full" />
               </div>
               <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34] relative">
                 <div class="text-[32px] font-[500] leading-[40px]">
-                  {{ tasksStore.taskData.filter((task) => task?.taskStatus?.includes('Completed')).length }}
+                  {{ tasksStore.taskData.filter((task) => task?.taskStatus?.includes('Completed')).length || '-' }}
                 </div>
                 Completed
                 <div class="top-4 absolute right-4 h-2 w-2 bg-[#3A6A34] rounded-full" />
@@ -540,7 +540,7 @@ handleGetAllTasks()
             </div>
             <div class="flex">
               <div
-                class="px-4 py-1 rounded-[24px]"
+                class="px-4 py-1 rounded-[24px] shdow-sm"
                 :class="[
                   task.taskType === 'Submit Prescription'
                     ? 'bg-[#F0F5FE] text-[#5E83D4]'
@@ -554,7 +554,7 @@ handleGetAllTasks()
                     ? 'bg-[#EEF7EE] text-[#3A6A34]'
                     : task.taskType === 'Documents needed'
                     ? 'bg-[#FFF7E5] text-[#996600]'
-                    : '',
+                    : 'bg-[#FFF7E5] text-[#996600]',
                 ]"
               >
                 {{ task.taskType }}
@@ -659,7 +659,7 @@ handleGetAllTasks()
             </div>
             <div class="flex">
               <div
-                class="px-4 py-1 rounded-[24px]"
+                class="px-4 py-1 rounded-[24px] shdow-sm"
                 :class="[
                   task.taskType === 'Submit Prescription'
                     ? 'bg-[#F0F5FE] text-[#5E83D4]'
@@ -673,7 +673,7 @@ handleGetAllTasks()
                     ? 'bg-[#EEF7EE] text-[#3A6A34]'
                     : task.taskType === 'Documents needed'
                     ? 'bg-[#FFF7E5] text-[#996600]'
-                    : '',
+                    : 'bg-[#FFF7E5] text-[#996600]',
                 ]"
               >
                 {{ task.taskType }}
@@ -712,9 +712,34 @@ handleGetAllTasks()
                     Are you sure you want to claim task?
                     <div class="flex flex-col my-4 gap-y-2">
                       <span v-if="task.taskPatienFirstName" class="font-normal text-[14px] opacity-50"
-                        >Name: {{ task.taskPatienFirstName + '' + task.taskPatienLastName }}</span
+                        >Name: {{ task.taskPatienFirstName + ' ' + task.taskPatienLastName }}</span
                       >
-                      <span v-if="task.taskType" class="font-normal text-[14px] opacity-50">Type: {{ task.taskType }}</span>
+
+                      <div v-if="task.taskPriority" class="flex">
+                        <span class="font-normal text-[14px] opacity-50 flex items-center">Type:</span>
+                        <div class="flex">
+                          <div
+                            class="px-4 py-1 rounded-[24px] shdow-sm"
+                            :class="[
+                              task.taskType === 'Submit Prescription'
+                                ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                                : task.taskType === 'New messages'
+                                ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                                : task.taskType === 'Send blood slip'
+                                ? 'bg-[#FFF7E5] text-[#996600]'
+                                : task.taskType === 'New patient'
+                                ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                                : task.taskType === 'Accutane'
+                                ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                                : task.taskType === 'Documents needed'
+                                ? 'bg-[#FFF7E5] text-[#996600]'
+                                : 'bg-[#FFF7E5] text-[#996600]',
+                            ]"
+                          >
+                            {{ task.taskType }}
+                          </div>
+                        </div>
+                      </div>
                       <div v-if="task.taskPriority" class="flex">
                         <span class="font-normal text-[14px] opacity-50 flex items-center">Priority:</span>
                         <div

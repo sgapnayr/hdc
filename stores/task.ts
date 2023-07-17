@@ -211,8 +211,8 @@ export const useTasksStore = defineStore('tasks', () => {
           taskPatienLastName: task.patientId?.patientProfile?.patientLastName || '{patientLastName}', // Use the patientLastName as the patient's name
           taskCareCoordinator: '', // This field is not available in the backend response, set as an empty string
           taskStatus: task.status || '', // Use the status field as the task status
-          taskPriority: task.priority || '', // This field is not available in the backend response, set as an empty string
-          taskType: task.type || '', // Use the type field as the task type
+          taskPriority: task.priority || 'low', // This field is not available in the backend response, set as an empty string
+          taskType: task.type || 'New patient', // Use the type field as the task type
           taskComments: task.description || '', // This field is not available in the backend response, set as an empty string
           taskAssignedAt: task.taskAssignedAt, // This field is not available in the backend response
           taskDueAt: task.dueDate,
@@ -235,8 +235,8 @@ export const useTasksStore = defineStore('tasks', () => {
           taskPatienLastName: task.patientId?.patientProfile?.patientLastName || '{patientLastName}', // Use the patientLastName as the patient's name
           taskCareCoordinator: '', // This field is not available in the backend response, set as an empty string
           taskStatus: task.status || '', // Use the status field as the task status
-          taskPriority: task.priority || '', // This field is not available in the backend response, set as an empty string
-          taskType: task.type || '', // Use the type field as the task type
+          taskPriority: task.priority || 'low', // This field is not available in the backend response, set as an empty string
+          taskType: task.type || 'New patient', // Use the type field as the task type
           taskComments: task.description || '', // This field is not available in the backend response, set as an empty string
           taskAssignedAt: task.taskAssignedAt, // This field is not available in the backend response
           taskDueAt: task.dueDate,
