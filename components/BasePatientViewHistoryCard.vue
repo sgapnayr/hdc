@@ -39,12 +39,11 @@ function handleSelectedItem(selectedItemVal: string) {
   }
 }
 
-console.log(route.params.patientId)
 tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 </script>
 
 <template>
-  <div class="bg-white md:w-1/2 rounded-[8px]">
+  <div class="bg-white md:w-1/2 rounded-[8px] shadow-sm">
     <!-- Padding Wrapper -->
     <div class="p-8">
       <!-- Patient Photo -->
@@ -98,19 +97,21 @@ tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
     </div>
 
     <!-- Padding Wrapper -->
-    <div class="pb-6 px-8">
+    <div class="pb-6">
       <div @click="handleSelectedItem('Shipping Address')" class="text-gray-3 font-[500] w-full border-b border-[#E1E0E6] py-5 cursor-pointer flex flex-col">
-        <div class="flex w-full justify-between">
-          <div>Shipping address</div>
-          <img :class="[selectedItem.includes('Shipping Address') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
-        </div>
-        <div v-if="selectedItem.includes('Shipping Address')" class="flex w-full justify-between text-gray-5 font-[400]">
-          <div>{{ patientData?.patientAddress }} {{ patientData?.patientCity }} {{ patientData?.patientState }} {{ patientData?.patientZipCode }}</div>
+        <div class="px-8">
+          <div class="flex w-full justify-between">
+            <div>Shipping address</div>
+            <img :class="[selectedItem.includes('Shipping Address') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
+          </div>
+          <div v-if="selectedItem.includes('Shipping Address')" class="flex w-full justify-between text-gray-5 font-[400]">
+            <div>{{ patientData?.patientAddress }} {{ patientData?.patientCity }} {{ patientData?.patientState }} {{ patientData?.patientZipCode }}</div>
+          </div>
         </div>
       </div>
 
       <div @click="handleSelectedItem('Health Insurance')" class="text-gray-3 font-[500] w-full border-b border-[#E1E0E6] py-5 cursor-pointer flex flex-col">
-        <div class="flex w-full justify-between items-center">
+        <div class="flex w-full justify-between items-center px-8">
           <div>Health Insurance</div>
           <div class="flex gap-x-2">
             <BaseModal>
@@ -139,7 +140,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
             <img :class="[selectedItem.includes('Health Insurance') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
           </div>
         </div>
-        <div v-if="selectedItem.includes('Health Insurance')" class="flex w-full justify-between text-gray-5 font-[400]">
+        <div v-if="selectedItem.includes('Health Insurance')" class="flex w-full justify-between text-gray-5 font-[400] px-8">
           <div class="w-1/2">
             <div class="w-full flex justify-between">
               <div class="w-full">MemberID:</div>
@@ -165,39 +166,62 @@ tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
         @click="handleSelectedItem('Patient\'s current tasks')"
         class="text-gray-3 font-[500] w-full border-b border-[#E1E0E6] py-5 cursor-pointer flex flex-col"
       >
-        <div class="flex w-full justify-between">
+        <div class="flex w-full justify-between px-8">
           <div>Patient's current tasks</div>
           <img :class="[selectedItem.includes('Patient\'s current tasks') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
         </div>
-        <div v-if="selectedItem.includes('Patient\'s current tasks')" class="flex w-full justify-between text-gray-5 font-[400]">
-          <div>{{ patientData?.patientCurrentTasks }}</div>
-          {{ tasksStore.taskForPatient }}
+        <div v-if="selectedItem.includes('Patient\'s current tasks')" class="flex w-full justify-between text-gray-5 font-[400] flex-col mt-4 px-8">
+          <div v-for="(task, idx) in tasksStore.taskForPatient" class="flex w-full justify-between bg-honeydew-bg5 p-4 my-2 rounded-md items-center shadow-sm">
+            <div>
+              {{ task.taskComments }}
+            </div>
+            <div class="flex">
+              <div
+                class="px-4 py-1 rounded-[24px] shadow-sm"
+                :class="[
+                  task?.taskPriority === 'low'
+                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
+                    : task?.taskPriority === 'medium'
+                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
+                    : task?.taskPriority === 'high'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : task?.taskPriority === 'High'
+                    ? 'bg-[#FFF7E5] text-[#996600]'
+                    : '',
+                ]"
+              >
+                {{ task?.taskPriority }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div>iPledge details</div>
-      <!-- Patient Pregnancy Status -->
-      <div class="mt-[24px] mb-[16px] text-gray-3 font-[500]">{patientCanOrCannotGetPregnant}</div>
-      <!-- Service Details -->
-      <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
-        <div>REMS number</div>
-        <div>{remsNumber}</div>
-      </div>
-      <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
-        <div>Date of enrollment</div>
-        <div>{patientDateOfEnrollment}</div>
-      </div>
-      <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
-        <div>Last confirmation date</div>
-        <div>{patientLastConfirmationDate}</div>
-      </div>
-      <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
-        <div>Next confirmation date</div>
-        <div>{patientNextConfirmationDate}</div>
-      </div>
-      <div class="text-[12px] h-[40px] w-1/4 flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple uppercase cursor-pointer">
-        <div class="mr-[6px]"></div>
-        pause or stop
+      <div class="px-8 my-4">
+        <div>iPledge details</div>
+        <!-- Patient Pregnancy Status -->
+        <div class="mt-[24px] mb-[16px] text-gray-3 font-[500]">{patientCanOrCannotGetPregnant}</div>
+        <!-- Service Details -->
+        <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
+          <div>REMS number</div>
+          <div>{remsNumber}</div>
+        </div>
+        <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
+          <div>Date of enrollment</div>
+          <div>{patientDateOfEnrollment}</div>
+        </div>
+        <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
+          <div>Last confirmation date</div>
+          <div>{patientLastConfirmationDate}</div>
+        </div>
+        <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
+          <div>Next confirmation date</div>
+          <div>{patientNextConfirmationDate}</div>
+        </div>
+        <div class="text-[12px] h-[40px] w-1/4 flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple uppercase cursor-pointer">
+          <div class="mr-[6px]"></div>
+          pause or stop
+        </div>
       </div>
     </div>
 
@@ -219,6 +243,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
         Details
       </div>
     </div>
+
     <!-- Details list -->
     <div v-if="toDoListOrDetailsSelected === 'Details'" class="py-6 px-8 flex flex-col gap-y-4">
       <!-- Fan tabs -->

@@ -112,7 +112,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 
       <!-- Right Side (Treatment history & @photo-uploaded="isPhotoUploaded = true") -->
       <div class="md:w-1/2 rounded-[8px] flex flex-col">
-        <div class="bg-white flex px-8 gap-x-6">
+        <div class="bg-white flex px-8 gap-x-6 shadow-sm">
           <div
             @click="treatmentHistoryOrDocumentsSelected = 'Treatment History'"
             class="py-6 cursor-pointer"
