@@ -24,7 +24,6 @@ const profileStore = useProfileStore()
 
 const user = ref()
 const isMobile = ref(false)
-const isModalOpen = ref(true)
 
 async function getUser() {
   try {

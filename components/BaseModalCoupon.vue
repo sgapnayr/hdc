@@ -59,21 +59,23 @@ function handleSubmit() {
                   <img @click="landingPageStore.handleFirstVisitCouponInvisible()" :src="XIcon" alt="X Icon" class="text-black scale-90 cursor-pointer" />
                 </div>
                 <div class="px-4 text-center">
-                  <h1 class="text-center font-bold text-3xl text-gray-3">Unlock 10% off and learn more!</h1>
+                  <h1 class="text-center font-bold md:text-3xl text-gray-3">Unlock 10% off and learn more!</h1>
                   <p class="text-gray-3 mt-2 text-xs">Everyone deserves to be happy in their skin!</p>
-                  <input class="bg-transparent border border-[#E1E0E6] rounded-[3px] mt-4 p-2 w-full" placeholder="First name" type="text" />
-                  <input class="bg-transparent border border-[#E1E0E6] rounded-[3px] mt-4 p-2 w-full" placeholder="Last name" type="text" />
+                  <input class="bg-transparent border border-[#E1E0E6] rounded-[3px] mt-2 md:mt-4 p-1 md:p-2 w-full" placeholder="First name" type="text" />
+                  <input class="bg-transparent border border-[#E1E0E6] rounded-[3px] mt-2 md:mt-4 p-1 md:p-2 w-full" placeholder="Last name" type="text" />
                   <div class="relative">
                     <input
                       v-model="customerEmail"
                       :class="[isError ? 'border-red' : 'border-[#E1E0E6]']"
-                      class="bg-transparent border rounded-[3px] mt-4 p-2 w-full"
+                      class="bg-transparent border rounded-[3px] mt-2 md:mt-4 p-1 md:p-2 w-full"
                       placeholder="Email"
                       type="text"
                     />
                     <p v-if="isError" class="text-red mt-2 text-[8px] -bottom-3 absolute">Need this field to unlock offer.</p>
                   </div>
-                  <button @click="handleSubmit" class="bg-[#167551] text-[14px] w-full text-white p-2 mt-4 font-semibold rounded-[4px]">Unlock Offer</button>
+                  <button @click="handleSubmit" class="bg-[#167551] text-[10px] md:text-[14px] w-full text-white p-2 mt-2 md:mt-4 font-semibold rounded-[4px]">
+                    Unlock Offer
+                  </button>
                   <p class="text-gray-3 mt-2 text-[8px]">By signing up, you agree to receive email marketing</p>
                 </div>
               </div>

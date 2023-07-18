@@ -80,7 +80,7 @@ async function signOut() {
   </div>
   <div
     v-if="isMenuOpen"
-    class="bg-white flex justify-start flex-col w-full gap-y-12 px-5 mt-[24px] transition uppercase"
+    class="bg-white flex justify-start flex-col w-full gap-y-12 px-5 mt-[104px] transition uppercase"
     :class="[isMenuOpen ? 'h-screen' : 'h-0']"
   >
     <NuxtLink v-for="(link, idx) in linkData" :key="idx" :to="link.route" :class="[currentRoute === link.route ? 'text-honeydew-purple' : '']">
