@@ -23,6 +23,17 @@ function startTimer() {
   setInterval(updateTimer, 1000)
 }
 
+function getColorScheme() {
+  const days = Math.floor(elapsedTime.value / (1000 * 60 * 60 * 24))
+  if (days >= 10) {
+    return 'bg-[#FFF7E5] text-[#996600]'
+  } else if (days >= 5) {
+    return 'bg-[#F0F5FE] text-[#5E83D4]'
+  } else {
+    return 'bg-[#EEEBFC] text-honeydew-purple'
+  }
+}
+
 // INITIALIZATION *************************************************************
 onMounted(() => {
   startTimer()
@@ -31,7 +42,7 @@ onMounted(() => {
 
 <template>
   <div
-    :class="[!elapsedTime ? 'px-8 bg-[#EEEBFC] text-honeydew-purple animate-pulse' : 'bg-[#EEEBFC] text-honeydew-purple']"
+    :class="[!elapsedTime ? 'px-8 bg-[#EEEBFC] text-honeydew-purple animate-pulse' : getColorScheme()]"
     class="py-1 px-3 rounded-[80px] flex items-center text-[10px] shadow-sm"
   >
     <span v-if="!elapsedTime"> Loading...</span>

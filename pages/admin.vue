@@ -355,7 +355,7 @@ fetchPatients()
               <div
                 @mouseenter="showNoMedicalMessage = true"
                 @mouseleave="showNoMedicalMessage = false"
-                v-if="patient.patientMedicaBackground"
+                v-if="patient?.patientMedicaBackground"
                 class="text-[10px] bg-[#D35F84] text-white shadow-md w-4 h-4 flex justify-center items-center font-bold rounded-[80px]"
               >
                 <div v-if="showNoMedicalMessage && hoveredIdx === idx" class="absolute bg-[#403E48] text-white rounded-md -top-2 font-semibold px-2 py-1">
