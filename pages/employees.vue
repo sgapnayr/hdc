@@ -8,7 +8,7 @@ import ReportIcon from '@/assets/icons/report-icon.svg'
 import OptionsIcon from '@/assets/icons/options-icon.svg'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { getEmployees, createEmployee, getPatients } from '@/lib/endpoints'
+import { getEmployees, createEmployee, getPatients, getEmployee, updateEmployee } from '@/lib/endpoints'
 import { Employees, Employee } from '@/types/employee-types'
 import { Patient, Patients } from '@/types/patient-types'
 import { useEmployeeStore } from '~/stores/employees'
@@ -51,7 +51,7 @@ interface TableHeaderCategory {
 }
 
 // STATE **********************************************************************
-const tabSelected = ref<'Providers' | 'Admin' | 'Enrollment Coordinators'>('Providers')
+const tabSelected = ref<'Providers' | 'Admin' | 'Enrollment Coordinators' | 'Other'>('Providers')
 const selectedChip = ref<Chip>({ text: 'Active', amount: 10 })
 const selectedEmployeeInput = ref<Employee>()
 const employeesList = ref<Employees>()
@@ -63,8 +63,14 @@ const newEmployeeLastName = ref()
 const newEmployeeEmail = ref()
 const newEmployeePhoneNumber = ref()
 const newEmployeeType = ref<'Provider' | 'Admin' | string>('Provider')
-const newEmployeeLicense = ref()
 const employeeMenuOpen = ref(false)
+
+const updateEmployeeFirstName = ref()
+const updateEmployeeLastName = ref()
+const updateEmployeeEmail = ref()
+const updateEmployeePhoneNumber = ref()
+const updateEmployeeType = ref<'Provider' | 'Admin' | string>('Provider')
+const updateEmployeeMenuOpen = ref(false)
 
 // MEMBER DATA ****************************************************************
 const categoryChips: CategoryChips[] = [
@@ -101,6 +107,10 @@ const tableHeaderCategories: TableHeaderCategory[] = [
     group: 'Enrollment Coordinators',
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
+  {
+    group: 'Other',
+    categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
+  },
 ]
 
 // COMPUTED METHODS ****************************************************************
@@ -121,6 +131,8 @@ const filterByEmployeeType = computed(() => {
     return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('provider'))
   } else if (tabSelected.value === 'Admin') {
     return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('admin'))
+  } else if (tabSelected.value === 'Other') {
+    return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('other'))
   } else {
     return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('coordinator'))
   }
@@ -154,6 +166,23 @@ async function handleCreateEmployee() {
     '12345'
   )
   employeeStore.getAllEmployeesGraphQL()
+}
+
+async function handleUpdateEmployee(employeeId: string) {
+  console.log('UPDATING')
+  await updateEmployee(
+    updateEmployeeFirstName.value,
+    updateEmployeeLastName.value,
+    updateEmployeeEmail.value,
+    updateEmployeePhoneNumber.value,
+    updateEmployeeType.value,
+    employeeId
+  )
+  employeeStore.getAllEmployeesGraphQL()
+}
+
+async function handleArchiveEmployee(employeeId: string) {
+  console.log(employeeId)
 }
 
 getPatientsInit()
@@ -324,7 +353,7 @@ employeeStore.getAllEmployeesGraphQL()
                 </div>
                 <div class="w-full border-b mt-[24px] border-[#F2F4F7]"></div>
               </template>
-              <template #button-text> Save Updates </template>
+              <template #button-text> Create Employee </template>
             </BaseModal>
           </div>
         </div>
@@ -355,6 +384,13 @@ employeeStore.getAllEmployeesGraphQL()
             @click="tabSelected = 'Admin'"
           >
             Admin
+          </div>
+          <div
+            :class="[tabSelected === 'Other' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
+            class="h-full py-4 cursor-pointer"
+            @click="tabSelected = 'Other'"
+          >
+            Other
           </div>
         </div>
         <!-- Search -->
@@ -416,7 +452,112 @@ employeeStore.getAllEmployeesGraphQL()
             <div>
               {{ employee.phone }}
             </div>
-            <div></div>
+            <div class="w-full flex justify-end items-center gap-x-2">
+              <BaseModal @action-click="handleArchiveEmployee(employee.employeeId)">
+                <template #header> Confirm Archive Employee </template>
+                <template #button>
+                  <img :src="ReportIcon" alt="Report Icon" class="cursor-pointer transition active:scale-90" />
+                </template>
+                <template #content>
+                  <div class="text-[16px] font-normal p-4 w-full max-w-[490px]">
+                    Are you sure you want to archive this employee?
+                    <div class="flex flex-col my-4 gap-y-2">
+                      <span v-if="employee.firstName" class="font-normal text-[14px] opacity-50">Name: {{ employee.firstName + ' ' + employee.lastName }}</span>
+                      <span class="font-normal text-[14px] opacity-50">Email: {{ employee.email }}</span>
+                      <span class="font-normal text-[14px] opacity-50">Role: {{ employee.role }}</span>
+                      <span class="font-normal text-[14px] opacity-50">Employee ID: {{ employee.employeeId }}</span>
+                    </div>
+                  </div>
+                </template>
+                <template #button-text> Confirm</template>
+              </BaseModal>
+              <!-- New Team Member -->
+              <BaseModal @action-click="handleUpdateEmployee(employee?.employeeId)">
+                <template #header>
+                  <h1>Update Employee</h1>
+                </template>
+
+                <template #button>
+                  <img :src="OptionsIcon" alt="Options" class="cursor-pointer transition active:scale-90" />
+                </template>
+
+                <template #content>
+                  <div>
+                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Employee Type</h2>
+                    <div :class="[updateEmployeeMenuOpen ? 'z-40' : 'z-0']">
+                      <div
+                        class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+                        :class="[updateEmployeeMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
+                        placeholder="Search by patient's name"
+                        type="text"
+                        @click="updateEmployeeMenuOpen = !updateEmployeeMenuOpen"
+                      >
+                        <div class="px-4 py-1 rounded-[24px]">
+                          {{ newEmployeeType }}
+                        </div>
+                        <img :class="[updateEmployeeMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
+                        <div v-if="updateEmployeeMenuOpen">
+                          <div class="absolute left-0 top-12 w-full">
+                            <div
+                              class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
+                              v-for="(employeeType, idx) in ['Provider', 'Coordinator', 'Admin', 'Other']"
+                              :key="idx"
+                              :class="[3 === idx ? 'rounded-b-[28px]' : '']"
+                              @click="updateEmployeeType = employeeType"
+                            >
+                              <div class="px-4 py-1 rounded-[24px]">
+                                {{ employeeType }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex w-full gap-x-6">
+                    <div class="w-full">
+                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">First Name</h2>
+                      <input
+                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                        placeholder="John"
+                        type="text"
+                        v-model="updateEmployeeFirstName"
+                      />
+                    </div>
+                    <div class="w-full">
+                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Last Name</h2>
+                      <input
+                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                        placeholder="Smith"
+                        type="text"
+                        v-model="updateEmployeeLastName"
+                      />
+                    </div>
+                  </div>
+                  <div class="w-full">
+                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Phone Number</h2>
+                    <input
+                      v-maska
+                      :data-maska="['+' + '1' + ' (###) ###-####']"
+                      v-model="updateEmployeePhoneNumber"
+                      class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                      placeholder="+1 (123) 456-7890"
+                    />
+                  </div>
+                  <div class="w-full">
+                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Email</h2>
+                    <input
+                      class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                      placeholder="john@example.com"
+                      type="text"
+                      v-model="updateEmployeeEmail"
+                    />
+                  </div>
+                  <div class="w-full border-b mt-[24px] border-[#F2F4F7]"></div>
+                </template>
+                <template #button-text> Save Updates </template>
+              </BaseModal>
+            </div>
           </div>
         </div>
       </div>
