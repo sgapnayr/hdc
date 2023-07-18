@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 // PROPS **********************************************************************
 const props = defineProps<{
@@ -8,59 +8,39 @@ const props = defineProps<{
 }>()
 
 // STATE ********************************************************************
-const remainingTime = ref('')
-const countDownExpired = ref(false)
+const elapsedTime = ref(0)
 
 // METHODS ********************************************************************
-function countdown(initialTime: string) {
-  const COUNT_DOWN_IN_DAYS = 5
-  const expirationDate = new Date(initialTime)
+function startTimer() {
+  const initialTime = new Date(props.taskAssignedAt).getTime()
 
-  expirationDate.setDate(expirationDate.getDate() + COUNT_DOWN_IN_DAYS)
-  countDownExpired.value = false
-  const targetDate = expirationDate.getTime()
-
-  const updateCountdown = () => {
+  const updateTimer = () => {
     const now = new Date().getTime()
-    const distance = targetDate - now
-
-    if (distance < 0) {
-      remainingTime.value = 'Countdown expired'
-      countDownExpired.value = true
-      return
-    }
-
-    const hours = Math.floor(distance / (1000 * 60 * 60))
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000)
-
-    remainingTime.value = `${hours} hours, ${minutes} minutes, ${seconds} seconds`
+    elapsedTime.value = now - initialTime
   }
 
-  // Update the countdown every second
-  setInterval(updateCountdown, 1000)
+  // Update the timer every second
+  setInterval(updateTimer, 1000)
 }
 
 // INITIALIZATION *************************************************************
 onMounted(() => {
-  countdown(props.taskAssignedAt)
+  startTimer()
 })
 </script>
 
 <template>
   <div
-    :class="[
-      !remainingTime
-        ? 'px-8 bg-[#EEEBFC] text-honeydew-purple animate-pulse'
-        : countDownExpired
-        ? 'text-white bg-honeydew-green animate-pulse'
-        : 'bg-[#EEEBFC] text-honeydew-purple',
-    ]"
+    :class="[!elapsedTime ? 'px-8 bg-[#EEEBFC] text-honeydew-purple animate-pulse' : 'bg-[#EEEBFC] text-honeydew-purple']"
     class="py-1 px-3 rounded-[80px] flex items-center text-[10px] shadow-sm"
   >
-    <span v-if="!remainingTime"> Loading...</span>
+    <span v-if="!elapsedTime"> Loading...</span>
     <span v-else>
-      {{ remainingTime }}
+      {{
+        `${Math.floor(elapsedTime / (1000 * 60 * 60 * 24))} days, ${Math.floor((elapsedTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))} hours, ${Math.floor(
+          (elapsedTime % (1000 * 60 * 60)) / (1000 * 60)
+        )} minutes, ${Math.floor((elapsedTime % (1000 * 60)) / 1000)} seconds`
+      }}
     </span>
   </div>
 </template>

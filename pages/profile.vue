@@ -92,7 +92,7 @@ profileStore.setMyProfile()
       <!-- Upper cards -->
       <div class="flex gap-x-6 lg:flex-row flex-col gap-y-6">
         <!-- Hi, Profile! -->
-        <div class="bg-white w-full rounded-[8px] p-8 flex justify-between">
+        <div class="bg-white w-full rounded-[8px] p-8 flex justify-between shadow-sm">
           <div class="flex flex-col justify-between w-1/2">
             <div class="flex flex-col">
               <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Hi, {{ profileStore.signUpName ? profileStore.signUpName : '...' }}!</h1>
@@ -126,7 +126,7 @@ profileStore.setMyProfile()
           </div>
         </div>
         <!-- You haven't scheduled... -->
-        <div class="bg-white w-full rounded-[8px] p-8 flex justify-between">
+        <div class="bg-white w-full rounded-[8px] p-8 flex justify-between shadow-sm">
           <div class="flex flex-col justify-between w-1/2">
             <div class="flex flex-col">
               <h1 class="text-[24px] font-[500] leading-[40px] text-gray-3">You haven't scheduled your initial visit yet</h1>
@@ -156,7 +156,7 @@ profileStore.setMyProfile()
       <!-- Lower cards -->
       <div class="flex gap-x-6 mt-[24px] md:flex-row flex-col gap-y-6">
         <!-- My treatment plan -->
-        <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col">
+        <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col shadow-sm">
           <img :src="MyTreatmentPlan" alt="My Treatment Plan" class="w-full" />
           <div>
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 mt-[20px]">My treatment plan</h1>
@@ -203,7 +203,7 @@ profileStore.setMyProfile()
         </div>
 
         <!-- View my progress -->
-        <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col">
+        <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col shadow-sm">
           <img :src="ViewMyProgress" alt="View My Progress" class="w-full" />
           <div>
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 flex gap-x-1 mt-[20px]">
@@ -221,7 +221,7 @@ profileStore.setMyProfile()
         </div>
 
         <!-- Buy products -->
-        <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col">
+        <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col shadow-sm">
           <img :src="BuyProducts" alt="My Treatment Plan" class="w-full" />
           <div>
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 mt-[20px]">Buy products</h1>
@@ -313,7 +313,7 @@ profileStore.setMyProfile()
         </div>
 
         <!-- Chat with care team -->
-        <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col">
+        <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col shadow-sm">
           <img :src="ChatWithCareTeam" alt="My Treatment Plan" class="w-full" />
           <div>
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 flex gap-x-1 mt-[20px]">
