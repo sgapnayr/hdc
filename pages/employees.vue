@@ -51,7 +51,7 @@ interface TableHeaderCategory {
 }
 
 // STATE **********************************************************************
-const tabSelected = ref<'Providers' | 'Admin' | 'Enrollment Coordinators' | 'Other'>('Providers')
+const tabSelected = ref<'Providers' | 'Admin' | 'Coordinators' | 'Other'>('Providers')
 const selectedChip = ref<Chip>({ text: 'Active', amount: 10 })
 const selectedEmployeeInput = ref<Employee>()
 const employeesList = ref<Employees>()
@@ -82,7 +82,7 @@ const categoryChips: CategoryChips[] = [
     ],
   },
   {
-    group: 'Enrollment Coordinators',
+    group: 'Coordinators',
     chips: [
       { text: 'Active', amount: 10 },
       { text: 'Archived', amount: 13 },
@@ -104,7 +104,7 @@ const tableHeaderCategories: TableHeaderCategory[] = [
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
   {
-    group: 'Enrollment Coordinators',
+    group: 'Coordinators',
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
   {
@@ -372,11 +372,11 @@ employeeStore.getAllEmployeesGraphQL()
             Providers
           </div>
           <div
-            :class="[tabSelected === 'Enrollment Coordinators' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
+            :class="[tabSelected === 'Coordinators' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
             class="h-full py-4 cursor-pointer"
-            @click="tabSelected = 'Enrollment Coordinators'"
+            @click="tabSelected = 'Coordinators'"
           >
-            Enrollment Coordinators
+            Coordinators
           </div>
           <div
             :class="[tabSelected === 'Admin' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
