@@ -10,6 +10,7 @@ import EmailIcon from '@/assets/icons/email-icon.svg'
 import AlertIcon from '@/assets/icons/alert-icon.svg'
 import NotesImage from '@/assets/images/notes-image.png'
 import { useProfileStore } from '@/stores/profile'
+import { usePatientStore } from '~/stores/patient'
 import { useTasksStore } from '@/stores/task'
 import { BaseInput } from '~/.nuxt/components'
 import { useRoute } from 'vue-router'
@@ -25,10 +26,16 @@ const route = useRoute()
 // STORES *********************************************************************
 const profileStore = useProfileStore()
 const tasksStore = useTasksStore()
+const patientStore = usePatientStore()
 
 // STATE *********************************************************************
 const toDoListOrDetailsSelected = ref<'To do' | 'Details'>('To do')
 const selectedItem = ref<string[]>([])
+const healthInsuranceName = ref()
+const healthInsuranceMemberId = ref()
+const healthInsurancePolicyHolder = ref()
+const healthInsuranceGroupNumber = ref()
+const PATIENT_ID = route.params.patientId as string
 
 // METHODS *********************************************************************
 function handleSelectedItem(selectedItemVal: string) {
@@ -39,7 +46,17 @@ function handleSelectedItem(selectedItemVal: string) {
   }
 }
 
-tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
+function handleUpdateInsurance() {
+  patientStore.updateInsuranceGraphQL(
+    PATIENT_ID,
+    healthInsuranceGroupNumber.value,
+    healthInsuranceMemberId.value,
+    healthInsuranceName.value,
+    healthInsurancePolicyHolder.value
+  )
+}
+
+tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
 </script>
 
 <template>
@@ -56,7 +73,10 @@ tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
           >
             <img :src="PencilIcon" alt="Pencil Icon" />
           </div>
-          <NuxtLink to="/pdf-page" class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
+          <NuxtLink
+            :to="'/pdf-page/' + route.params.patientId"
+            class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer"
+          >
             <img :src="PaperIcon" alt="Paper Icon" />
           </NuxtLink>
         </div>
@@ -98,7 +118,10 @@ tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 
     <!-- Padding Wrapper -->
     <div class="pb-6">
-      <div @click="handleSelectedItem('Shipping Address')" class="text-gray-3 font-[500] w-full border-b border-[#E1E0E6] py-5 cursor-pointer flex flex-col">
+      <div
+        @click="handleSelectedItem('Shipping Address')"
+        class="text-gray-3 font-[500] w-full border-b-[.5px] border-[#E1E0E6] py-5 cursor-pointer flex flex-col"
+      >
         <div class="px-8">
           <div class="flex w-full justify-between">
             <div>Shipping address</div>
@@ -110,24 +133,47 @@ tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
         </div>
       </div>
 
-      <div @click="handleSelectedItem('Health Insurance')" class="text-gray-3 font-[500] w-full border-b border-[#E1E0E6] py-5 cursor-pointer flex flex-col">
+      <div
+        @click="handleSelectedItem('Health Insurance')"
+        class="text-gray-3 font-[500] w-full border-b-[.5px] border-[#E1E0E6] py-5 cursor-pointer flex flex-col"
+      >
         <div class="flex w-full justify-between items-center px-8">
           <div>Health Insurance</div>
           <div class="flex gap-x-2">
-            <BaseModal>
+            <BaseModal @action-click="handleUpdateInsurance">
               <template #header>
                 <div>Payment information</div>
               </template>
               <template #content>
                 <div class="min-w-[380px]">
                   <div class="mb-[10px] px-2 uppercase text-[12px] font-[500] text-[#313337]">Health Plan Name</div>
-                  <input class="rounded-[80px] border border-[#E4E7EC] mb-6 h-[48px] w-full" type="text" placeholder="Enter health plan name" />
+                  <input
+                    class="rounded-[80px] border border-[#E4E7EC] mb-6 h-[48px] w-full"
+                    v-model="healthInsuranceName"
+                    type="text"
+                    placeholder="Enter health plan name"
+                  />
                   <div class="mb-[10px] px-2 uppercase text-[12px] font-[500] text-[#313337]">Member ID</div>
-                  <input class="rounded-[80px] border border-[#E4E7EC] mb-6 h-[48px] w-full" type="text" placeholder="Enter member identification number" />
+                  <input
+                    class="rounded-[80px] border border-[#E4E7EC] mb-6 h-[48px] w-full"
+                    v-model="healthInsuranceMemberId"
+                    type="text"
+                    placeholder="Enter member identification number"
+                  />
                   <div class="mb-[10px] px-2 uppercase text-[12px] font-[500] text-[#313337]">Policy holder name</div>
-                  <input class="rounded-[80px] border border-[#E4E7EC] mb-6 h-[48px] w-full" type="text" placeholder="Enter policy holder name" />
+                  <input
+                    class="rounded-[80px] border border-[#E4E7EC] mb-6 h-[48px] w-full"
+                    v-model="healthInsurancePolicyHolder"
+                    type="text"
+                    placeholder="Enter policy holder name"
+                  />
                   <div class="mb-[10px] px-2 uppercase text-[12px] font-[500] text-[#313337]">Group number</div>
-                  <input class="rounded-[80px] border border-[#E4E7EC] mb-6 h-[48px] w-full" type="text" placeholder="Enter group number" />
+                  <input
+                    class="rounded-[80px] border border-[#E4E7EC] mb-6 h-[48px] w-full"
+                    v-model="healthInsuranceGroupNumber"
+                    type="text"
+                    placeholder="Enter group number"
+                  />
                 </div>
               </template>
               <template #button>
@@ -141,7 +187,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
           </div>
         </div>
         <div v-if="selectedItem.includes('Health Insurance')" class="flex w-full justify-between text-gray-5 font-[400] px-8">
-          <div class="w-1/2">
+          <div class="w-3/4 whitespace-nowrap">
             <div class="w-full flex justify-between">
               <div class="w-full">MemberID:</div>
               <div>{{ patientData?.patientInsuranceMemberID }}</div>
@@ -164,7 +210,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 
       <div
         @click="handleSelectedItem('Patient\'s current tasks')"
-        class="text-gray-3 font-[500] w-full border-b border-[#E1E0E6] py-5 cursor-pointer flex flex-col"
+        class="text-gray-3 font-[500] w-full border-b-[.5px] border-[#E1E0E6] py-5 cursor-pointer flex flex-col"
       >
         <div class="flex w-full justify-between px-8">
           <div>Patient's current tasks</div>
@@ -197,30 +243,38 @@ tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
         </div>
       </div>
 
-      <div class="px-8 my-4">
-        <div>iPledge details</div>
+      <div
+        @click="handleSelectedItem('iPledge details')"
+        class="text-gray-3 font-[500] w-full border-b-[.5px] border-[#E1E0E6] py-5 cursor-pointer flex flex-col"
+      >
+        <div class="flex w-full justify-between px-8">
+          <div>iPledge details</div>
+          <img :class="[selectedItem.includes('iPledge details') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
+        </div>
         <!-- Patient Pregnancy Status -->
-        <div class="mt-[24px] mb-[16px] text-gray-3 font-[500]">{patientCanOrCannotGetPregnant}</div>
-        <!-- Service Details -->
-        <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
-          <div>REMS number</div>
-          <div>{remsNumber}</div>
-        </div>
-        <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
-          <div>Date of enrollment</div>
-          <div>{patientDateOfEnrollment}</div>
-        </div>
-        <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
-          <div>Last confirmation date</div>
-          <div>{patientLastConfirmationDate}</div>
-        </div>
-        <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
-          <div>Next confirmation date</div>
-          <div>{patientNextConfirmationDate}</div>
-        </div>
-        <div class="text-[12px] h-[40px] w-1/4 flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple uppercase cursor-pointer">
-          <div class="mr-[6px]"></div>
-          pause or stop
+        <div v-if="selectedItem.includes('iPledge details')" class="px-8">
+          <div class="mt-[24px] mb-[16px] text-gray-3 font-[500]">{patientCanOrCannotGetPregnant}</div>
+          <!-- Service Details -->
+          <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
+            <div>REMS number</div>
+            <div>{remsNumber}</div>
+          </div>
+          <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
+            <div>Date of enrollment</div>
+            <div>{patientDateOfEnrollment}</div>
+          </div>
+          <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
+            <div>Last confirmation date</div>
+            <div>{patientLastConfirmationDate}</div>
+          </div>
+          <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
+            <div>Next confirmation date</div>
+            <div>{patientNextConfirmationDate}</div>
+          </div>
+          <div class="text-[12px] h-[40px] w-1/4 flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple uppercase cursor-pointer">
+            <div class="mr-[6px]"></div>
+            pause or stop
+          </div>
         </div>
       </div>
     </div>

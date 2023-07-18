@@ -3,7 +3,11 @@
 import { ref } from 'vue'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import HoneydewIcon from '@/assets/icons/honeydew-icon.svg'
+import PhoneIcon from '@/assets/icons/phone-icon.svg'
+import EmailIcon from '@/assets/icons/email-icon.svg'
 import { useProfileStore } from '~/stores/profile'
+import { usePatientStore } from '~/stores/patient'
+import { useRoute } from 'vue-router'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -13,6 +17,7 @@ definePageMeta({
 
 // ROUTER **********************************************************************
 const router = useRouter()
+const route = useRoute()
 const user = useAuthenticator()
 
 onMounted(() => {
@@ -25,6 +30,15 @@ onMounted(() => {
 
 // STORES ********************************************************************
 const profileStore = useProfileStore()
+const patientStore = usePatientStore()
+
+// STATE ********************************************************************
+const patientData = ref()
+
+// INIT ********************************************************************
+patientStore.getPatientFromGraphQL(route.params.patientId as string).then((patient) => {
+  patientData.value = patient
+})
 </script>
 
 <template>
@@ -33,22 +47,30 @@ const profileStore = useProfileStore()
       <img :src="HoneydewIcon" />
       <!-- Patient's Information -->
       <div class="mt-8">
-        <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Patient's Information</h1>
-        <div>{patientName}</div>
-        <div class="flex w-full justify-between">
-          <div class="flex">
-            <div>{patientSex}</div>
-            <div>{patientAge}</div>
-            <div>{patientDOB}</div>
-          </div>
-          <div>
-            <div>{patientPhone}</div>
-            <div>{patientEmail}</div>
-          </div>
+        <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">
+          {{ patientData?.patientName }}
+        </h1>
+        <div class="mt-[8px] w-3/4 flex flex-wrap items-center">
+          <p class="text-[16px] text-gray-5 font-[400]">{{ patientData?.patientSex }}</p>
+          <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
+          <p class="text-[16px] text-gray-5 font-[400]">Age {{ patientData?.patientAge }}</p>
+          <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
+          <p class="text-[16px] text-gray-5 font-[400]">{{ patientData?.patientDOB }}</p>
         </div>
-        <div class="flex">
-          <div>{patientHeight}</div>
-          <div>{patientWeight}</div>
+        <div class="text-[16px] font-[400] mt-[8px] text-gray-5 flex items-center">
+          <div class="text-">H: {{ patientData?.patientHeight }}</div>
+          <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
+          <div class="text-">W: {{ patientData?.patientWeight }}lbs</div>
+        </div>
+        <div class="text-[16px] font-[400] mt-[32px] text-gray-3 flex flex-col items-start gap-y-6">
+          <div class="flex items-center gap-x-[14px]">
+            <img :src="PhoneIcon" alt="Phone Icon" />
+            <div>{{ patientData?.patientPhoneNumber }}</div>
+          </div>
+          <div class="flex items-center gap-x-[14px]">
+            <img :src="EmailIcon" alt="Email Icon" />
+            <div>{{ patientData?.patientEmail }}</div>
+          </div>
         </div>
       </div>
       <!-- Medical background -->

@@ -58,10 +58,8 @@ export const useTasksStore = defineStore('tasks', () => {
   }
 
   async function getAllTasksFromGraphQLByPatient(patientId: string) {
-    console.log('Running')
     try {
       const response = await getAllTasksByPatient(patientId)
-      console.log(response)
       const mappedData = response.tasks.map((task: any) => {
         const frontendTask = {
           taskId: task.taskId,
@@ -75,7 +73,6 @@ export const useTasksStore = defineStore('tasks', () => {
         return frontendTask
       })
       taskForPatient.value = mappedData
-      console.log(taskForPatient.value)
     } catch (error) {
       console.error('Error retrieving employees:', error)
     }

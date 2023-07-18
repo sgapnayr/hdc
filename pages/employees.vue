@@ -11,6 +11,7 @@ import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { getEmployees, createEmployee, getPatients } from '@/lib/endpoints'
 import { Employees, Employee } from '@/types/employee-types'
 import { Patient, Patients } from '@/types/patient-types'
+import { useEmployeeStore } from '~/stores/employees'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -28,6 +29,9 @@ onMounted(() => {
     }
   })
 })
+
+// STORES **********************************************************************
+const employeeStore = useEmployeeStore()
 
 // TYPES **********************************************************************
 interface EmployeeInput {
@@ -63,7 +67,7 @@ interface TableHeaderCategory {
 }
 
 // STATE **********************************************************************
-const tabSelected = ref<'Providers' | 'Care Coordinators' | 'Enrollment Coordinators'>('Providers')
+const tabSelected = ref<'Providers' | 'Admin' | 'Enrollment Coordinators'>('Providers')
 const selectedChip = ref<Chip>({ text: 'Active', amount: 10 })
 const selectedEmployeeInput = ref<Employee>()
 const employeesList = ref<Employees>()
@@ -80,34 +84,22 @@ const categoryChips: CategoryChips[] = [
     ],
   },
   {
-    group: 'Care Coordinators',
-    chips: [
-      { text: 'Active', amount: 1 },
-      { text: 'Archived', amount: 4 },
-    ],
-  },
-  {
     group: 'Enrollment Coordinators',
     chips: [
       { text: 'Active', amount: 10 },
       { text: 'Archived', amount: 13 },
     ],
   },
+  {
+    group: 'Admin',
+    chips: [],
+  },
 ]
 
 const tableHeaderCategories: TableHeaderCategory[] = [
   {
     group: 'Providers',
-    categories: [
-      { text: 'Full name' },
-      { text: 'Timezone' },
-      { text: 'Email' },
-      { text: 'Phone' },
-      { text: 'License Type' },
-      { text: 'License States' },
-      { text: 'NPI' },
-      { text: 'Actions' },
-    ],
+    categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
   {
     group: 'Care Coordinators',
@@ -116,27 +108,6 @@ const tableHeaderCategories: TableHeaderCategory[] = [
   {
     group: 'Enrollment Coordinators',
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
-  },
-]
-
-const testPatients: Patient[] = [
-  {
-    fullName: 'Ryan Pagelion',
-    dateOfBirth: 'Apr 3rd, 1995',
-    acneCategory: 'Mild acne',
-    dateOfService: 'Jun 6, 6:36 pm',
-    nextFollowUp: '',
-    provider: 'Dr. Joel',
-    careCoordinator: 'Mahor Sr.',
-  },
-  {
-    fullName: 'Jessica Smith',
-    dateOfBirth: 'Jan 15th, 1988',
-    acneCategory: 'Severe acne',
-    dateOfService: 'May 20, 10:15 am',
-    nextFollowUp: 'Jun 10, 3:00 pm',
-    provider: 'Dr. Emily',
-    careCoordinator: 'Lisa Thompson',
   },
 ]
 
@@ -169,17 +140,8 @@ async function getPatientsInit() {
 }
 
 getPatientsInit()
-
-async function getEmployeesInit() {
-  try {
-    const response = await getEmployees()
-    employeesList.value = response
-  } catch (error) {
-    console.error('Error retrieving employees:', error)
-  }
-}
-
-getEmployeesInit()
+employeeStore.getAllEmployeesGraphQL()
+createEmployee()
 </script>
 
 <template>
@@ -276,7 +238,7 @@ getEmployeesInit()
       </div>
 
       <!-- Table -->
-      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full mt-[32px] flex-col shadow-sm">
+      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full mt-[32px] flex-col shadow-sm min-w-[1244px]">
         <!-- Tabs -->
         <div class="flex text-[16px] font-[400] gap-x-8">
           <div
@@ -287,24 +249,24 @@ getEmployeesInit()
             Providers
           </div>
           <div
-            :class="[tabSelected === 'Care Coordinators' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
-            class="h-full py-4 cursor-pointer"
-            @click="tabSelected = 'Care Coordinators'"
-          >
-            Care Coordinators
-          </div>
-          <div
             :class="[tabSelected === 'Enrollment Coordinators' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
             class="h-full py-4 cursor-pointer"
             @click="tabSelected = 'Enrollment Coordinators'"
           >
             Enrollment Coordinators
           </div>
+          <div
+            :class="[tabSelected === 'Admin' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
+            class="h-full py-4 cursor-pointer"
+            @click="tabSelected = 'Admin'"
+          >
+            Admin
+          </div>
         </div>
         <!-- Search -->
         <div class="bg-honeydew-bg2 w-full h-[48px] mt-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-start">
           <img class="ml-4 mr-2" :src="SearchIcon" alt="Search Icon" />
-          <input class="bg-honeydew-bg2 outline-none focus:ring-0 w-full" placeholder="Search by patient's name" type="text" />
+          <input class="bg-honeydew-bg2 outline-none focus:ring-0 w-11/12" placeholder="Search by employee's name" type="text" />
         </div>
         <!-- Chips -->
         <div class="mt-[24px]">
@@ -329,7 +291,7 @@ getEmployeesInit()
             <div
               v-for="(tableHeaderCategory, idx) in handleCategoryData"
               :key="idx"
-              :class="[tabSelected === 'Providers' ? 'grid-cols-9' : 'grid-cols-4']"
+              :class="[tabSelected === 'Providers' ? 'grid-cols-4' : 'grid-cols-4']"
               class="grid text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
             >
               <div v-for="(category, jdx) in tableHeaderCategory.categories" :key="jdx" :class="[category.text === 'Full name' ? 'col-span-1' : 'col-span-1']">
@@ -340,55 +302,26 @@ getEmployeesInit()
             </div>
           </div>
           <!-- Table Employees -->
-          {{ employeesList?.employees }}
-          <div
-            v-for="(employee, idx) in employeesList?.employees"
-            :key="idx"
-            :class="[tabSelected === 'Providers' ? 'grid-cols-9' : 'grid-cols-4', idx === testPatients.length - 1 ? 'rounded-b-[16px]' : '']"
-            class="grid text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
-          >
-            <div>
-              {{ employee.firstName }}
-            </div>
-            <div>
-              {{ employee.email }}
-            </div>
-            <div>
-              {{ employee.firstName }}
-            </div>
-
-            <div class="w-full flex justify-end gap-x-3">
-              <img :src="ClockIcon" alt="Clock Icon" class="cursor-pointer" />
-              <img :src="ReportIcon" alt="Reports Icon" class="cursor-pointer" />
-              <img :src="OptionsIcon" alt="Options Icon" class="cursor-pointer" />
-
-              <!-- <BaseModal v-if="tabSelected === 'Inactive Patients'">
-                <template #button>
-                  <img @click="handleSelectedPatient(patient)" class="cursor-pointer" :src="DeleteIcon" alt="Delete Icon" />
-                </template>
-                <template #content>
-                  <div class="flex flex-col p-8">
-                    <div class="text-[24px] font-[500] leading-[32px]">Delete patient?</div>
-                    <div class="mt-[16px] text-[16px] font-[400] flex flex-col">
-                      <div>
-                        Delete
-                        <span class="font-[500]">{{ selectedPatient?.fullName }}</span>
-                        from the system. <br />
-                      </div>
-                      <div>
-                        You will not be able to restore patient's data after <br />
-                        submitting the action.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="p-6 h-[88px] w-full flex justify-end border-t border-honeydew-bg2">
-                    <div class="flex">
-                      <div class="h-[40px] w-[96px] flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple mr-[16px]">Cancel</div>
-                      <div class="h-[40px] w-[96px] flex justify-center items-center rounded-[60px] bg-honeydew-purple text-white">Delete</div>
-                    </div>
-                  </div>
-                </template>
-              </BaseModal> -->
+          <div v-for="(employees, idx) in employeeStore.allEmployees" :key="idx">
+            <div
+              v-for="(employee, jdx) in employees"
+              :key="jdx"
+              :class="[tabSelected === 'Providers' ? 'grid-cols-4' : 'grid-cols-4', jdx === employees.length - 1 ? 'rounded-b-[16px]' : '']"
+              class="grid text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
+            >
+              {{ employee.role }}
+              <div>
+                {{ employee.firstName }}
+              </div>
+              <div>
+                {{ employee.email }}
+              </div>
+              <div>
+                {{ employee.firstName }}
+              </div>
+              <div>
+                {{ employee.employeeId }}
+              </div>
             </div>
           </div>
         </div>

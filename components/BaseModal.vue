@@ -67,11 +67,7 @@ const modalIsOpen = ref<boolean>(false)
 
 function test() {
   emit('action-click')
-  if (props.buttonState) {
-    modalIsOpen.value = true
-  } else {
-    modalIsOpen.value = false
-  }
+  modalIsOpen.value = false
 }
 </script>
 

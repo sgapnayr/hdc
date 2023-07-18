@@ -8,7 +8,8 @@ import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { createTask, getAllTasks } from '@/lib/endpoints'
 import { useTasksStore } from '@/stores/task'
 import { useProfileStore } from '@/stores/profile'
-import { assignTask } from '@/lib/endpoints'
+import { usePatientStore } from '@/stores/patient'
+import { assignTask, getPatient } from '@/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -31,6 +32,7 @@ onMounted(() => {
 // STORES **********************************************************************
 const tasksStore = useTasksStore()
 const profileStore = useProfileStore()
+const patientStore = usePatientStore()
 
 // STATE **********************************************************************
 const selectedAssignedToMeChip = ref({ text: 'All', amount: 10 })
@@ -40,6 +42,9 @@ const taskType = ref<'Submit Prescription' | 'New messages' | 'Send blood slip' 
 const taskTypeMenuOpen = ref<boolean>(false)
 const taskPriority = ref<'Low' | 'Medium' | 'High'>('Medium')
 const taskPriorityMenuOpen = ref<boolean>(false)
+const patientMenuOpen = ref<boolean>(false)
+const selectedPatientIdForNewTask = ref()
+const selectedPatientForNewTask = ref()
 const taskComments = ref<string>()
 const taskName = ref<string>()
 const allTasks = ref()
@@ -189,22 +194,8 @@ async function handleGetAllTasks() {
 function handleSubmitNewTask() {
   addTaskButtonState.value = 'loading'
 
-  const query = {
-    patientId: '068d12b0-226f-11ee-be56-0242ac120002',
-    // assigneeId: profileStore.profileData,
-    // dueDate: '2023-06-10T00:00:00Z',
-    // description: taskComments,
-    // status: 'YOUR_STATUS',
-    priority: taskPriority.value,
-    // type: taskType,
-  }
-
-  const patientId = '5712b020-5784-4b46-b22a-af55fd820621'
-  const priority = 'high'
-  const description = 'New Task'
-
   setTimeout(() => {
-    createTask(patientId, priority, description)
+    createTask(selectedPatientIdForNewTask.value, taskType.value, taskPriority.value, taskComments.value)
     addTaskButtonState.value = 'success'
   }, 750)
 
@@ -248,6 +239,7 @@ async function fetchTasksByAssignee() {
 }
 
 profileStore.setMyProfile()
+patientStore.getPatientsFromGraphQL()
 handleGetAllTasks()
 </script>
 
@@ -261,7 +253,7 @@ handleGetAllTasks()
           <div class="flex">
             <!-- Add New Task Button & Modal -->
             <div class="w-full flex justify-start">
-              <BaseModal :button-state="addTaskButtonState" @action-click="handleSubmitNewTask">
+              <BaseModal @action-click="handleSubmitNewTask">
                 <template #button>
                   <div
                     class="text-[12px] h-[40px] w-[188px] flex justify-center items-center rounded-[60px] mr-[16px] uppercase cursor-pointer bg-[#EEEBFC] text-honeydew-purple"
@@ -278,14 +270,35 @@ handleGetAllTasks()
                 <template #header> Add new task </template>
                 <template #content>
                   <!-- Patient Name Drop Down -->
-                  <div>
-                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Task Name</h2>
-                    <input
-                      class="bg-white w-[518px] h-[48px] mb-[10px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                      placeholder="Task name"
+                  <div :class="[patientMenuOpen ? 'z-40' : 'z-0']">
+                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Patient's Name</h2>
+                    <div
+                      class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+                      :class="[patientMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
+                      placeholder="Search by patient's name"
                       type="text"
-                      v-model="taskComments"
-                    />
+                      @click="patientMenuOpen = !patientMenuOpen"
+                    >
+                      <div class="px-4 py-1 rounded-[24px]">
+                        {{ selectedPatientForNewTask || 'Patient Name' }} <span class="opacity-30 ml-2 text-xs">{{ selectedPatientIdForNewTask || '' }}</span>
+                      </div>
+                      <img :class="[patientMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
+                      <div v-if="patientMenuOpen">
+                        <div class="absolute left-0 top-12 w-full">
+                          <div
+                            class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
+                            v-for="(patient, idx) in patientStore.allPatients"
+                            :key="idx"
+                            :class="[patientStore.allPatients.length - 1 === idx ? 'rounded-b-[28px]' : '']"
+                            @click=";(selectedPatientIdForNewTask = patient.patientId), (selectedPatientForNewTask = patient.patientName)"
+                          >
+                            <div class="px-4 py-1 rounded-[24px]">
+                              {{ patient.patientName }} <span class="opacity-30 ml-2 text-xs">{{ patient.patientId }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <!-- Task Type Drop Down -->
                   <div :class="[taskTypeMenuOpen ? 'z-40' : 'z-0']">
@@ -521,13 +534,13 @@ handleGetAllTasks()
               <div
                 class="px-4 py-1 rounded-[24px] shadow-sm"
                 :class="[
-                  task?.taskPriority === 'low'
+                  task?.taskPriority?.toLowerCase() === 'low'
                     ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                    : task?.taskPriority === 'medium'
+                    : task?.taskPriority?.toLowerCase() === 'medium'
                     ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                    : task?.taskPriority === 'high'
+                    : task?.taskPriority?.toLowerCase() === 'high'
                     ? 'bg-[#FFF7E5] text-[#996600]'
-                    : task?.taskPriority === 'High'
+                    : task?.taskPriority?.toLowerCase() === 'High'
                     ? 'bg-[#FFF7E5] text-[#996600]'
                     : '',
                 ]"
@@ -640,13 +653,13 @@ handleGetAllTasks()
               <div
                 class="px-4 py-1 rounded-[24px] shadow-sm"
                 :class="[
-                  task?.taskPriority === 'low'
+                  task?.taskPriority?.toLowerCase() === 'low'
                     ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                    : task?.taskPriority === 'medium'
+                    : task?.taskPriority?.toLowerCase() === 'medium'
                     ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                    : task?.taskPriority === 'high'
+                    : task?.taskPriority?.toLowerCase() === 'high'
                     ? 'bg-[#FFF7E5] text-[#996600]'
-                    : task?.taskPriority === 'High'
+                    : task?.taskPriority?.toLowerCase() === 'High'
                     ? 'bg-[#FFF7E5] text-[#996600]'
                     : '',
                 ]"
@@ -742,13 +755,13 @@ handleGetAllTasks()
                         <div
                           class="px-4 py-1 rounded-[24px] shadow-sm ml-2"
                           :class="[
-                            task?.taskPriority === 'low'
+                            task?.taskPriority?.toLowerCase() === 'low'
                               ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                              : task?.taskPriority === 'medium'
+                              : task?.taskPriority?.toLowerCase() === 'medium'
                               ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                              : task?.taskPriority === 'high'
+                              : task?.taskPriority?.toLowerCase() === 'high'
                               ? 'bg-[#FFF7E5] text-[#996600]'
-                              : task?.taskPriority === 'High'
+                              : task?.taskPriority?.toLowerCase() === 'High'
                               ? 'bg-[#FFF7E5] text-[#996600]'
                               : '',
                           ]"

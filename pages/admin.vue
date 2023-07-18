@@ -9,7 +9,6 @@ import ArchiveIcon from '@/assets/icons/archive-icon.svg'
 import EyeIcon from '@/assets/icons/eye-icon.svg'
 import ChatIcon from '@/assets/icons/chat-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { getPatients, getPatient } from '@/lib/endpoints'
 import { Patient, Patients } from '@/types/patient-types'
 import { usePatientStore } from '@/stores/patient'
 import { useProfileStore } from '~/stores/profile'
@@ -240,7 +239,7 @@ fetchPatients()
     <BaseWrapper>
       <!-- Summary Top -->
       <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative shadow-sm">
-        <div class="w-full">
+        <div>
           <h1 class="text-[24px] md:text-[32px] font-[500]">
             Hi, {{ profileStore?.profileData?.patientFirstName || '-' }} {{ profileStore?.profileData?.patientLastName || '-' }}!
           </h1>

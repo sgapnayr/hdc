@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getPatients, getMyProfile, getPatient } from '@/lib/endpoints'
+import { getPatients, getPatient, updateInsurance } from '@/lib/endpoints'
 import { Patient, Patients } from '@/types/patient-types'
 import { API, graphqlOperation } from 'aws-amplify'
 import gql from 'graphql-tag'
@@ -299,7 +299,6 @@ export const usePatientStore = defineStore('patient', () => {
 
   // GETTERS ****************************************************************
   async function getPatientsFromGraphQL() {
-    console.log('RUNNING')
     try {
       const response = await getPatients()
       const mappedData: Patients = {
@@ -334,7 +333,6 @@ export const usePatientStore = defineStore('patient', () => {
           return frontendPatient
         }),
       }
-      console.log(mappedData.patients)
       allPatients.value = mappedData.patients
     } catch (error) {
       console.error('Error retrieving patients:', error)
@@ -351,5 +349,15 @@ export const usePatientStore = defineStore('patient', () => {
     return patientDataForAdminPage.find((patient) => patient.patientId === patientId)
   }
 
-  return { allPatients, getPatientFromGraphQL, getPatientsFromGraphQL, patientDataForAdminPage, getPatient }
+  async function updateInsuranceGraphQL(patientId: string, groupNumber: string, memberId: string, insuranceName: string, policyHolderName: string) {
+    console.log('RUNNING ')
+    try {
+      const response = await updateInsurance(patientId, groupNumber, memberId, insuranceName, policyHolderName)
+      console.log(response)
+    } catch (error) {
+      console.error('Error updating insurance:', error)
+    }
+  }
+
+  return { allPatients, getPatientFromGraphQL, getPatientsFromGraphQL, patientDataForAdminPage, getPatient, updateInsuranceGraphQL }
 })
