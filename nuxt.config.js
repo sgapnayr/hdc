@@ -1,5 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  head: {
+    link: [{ rel: 'stylesheet', href: '~/assets/css/fonts.css' }],
+  },
   modules: ['@nuxtjs/tailwindcss', 'nuxt-icon', '@pinia/nuxt', '@vueuse/nuxt'],
   css: ['~/assets/css/main.css'],
   alias: {

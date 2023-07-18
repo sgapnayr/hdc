@@ -41,7 +41,24 @@ module.exports = {
       'gray-4': '#667085',
       'gray-5': '#6C6A7C',
     },
-    extend: {},
+    extend: {
+      fontFamily: {
+        'cera-black': ['Cera Pro Black', 'sans-serif'],
+        'cera-bold-italic': ['Cera Pro Bold Italic', 'sans-serif'],
+        // Define more font families and weights for other fonts as needed
+      },
+      fontWeight: {
+        100: 100,
+        200: 200,
+        300: 300,
+        400: 400,
+        500: 500,
+        600: 600,
+        700: 700,
+        800: 800,
+        900: 900,
+      },
+    },
   },
   plugins: [],
 }

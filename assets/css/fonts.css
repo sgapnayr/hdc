@@ -1,0 +1,101 @@
+/* Cera Pro Black */
+@font-face {
+  font-family: 'Cera Pro Black';
+  font-weight: 900;
+  src: url('~/assets/fonts/Cera Pro Black.otf') format('opentype');
+  /* Add more font formats here if needed */
+}
+
+/* Cera Pro Black Italic */
+@font-face {
+  font-family: 'Cera Pro Black Italic';
+  font-weight: 900;
+  font-style: italic;
+  src: url('~/assets/fonts/Cera Pro Black Italic.otf') format('opentype');
+  /* Add more font formats here if needed */
+}
+
+/* Cera Pro Bold */
+@font-face {
+  font-family: 'Cera Pro Bold';
+  font-weight: 700;
+  src: url('~/assets/fonts/Cera Pro Bold.otf') format('opentype');
+  /* Add more font formats here if needed */
+}
+
+/* Cera Pro Bold Italic */
+@font-face {
+  font-family: 'Cera Pro Bold Italic';
+  font-weight: 700;
+  font-style: italic;
+  src: url('~/assets/fonts/Cera Pro Bold Italic.otf') format('opentype');
+  /* Add more font formats here if needed */
+}
+
+/* Cera Pro Light */
+@font-face {
+  font-family: 'Cera Pro Light';
+  font-weight: 300;
+  src: url('~/assets/fonts/Cera Pro Light.otf') format('opentype');
+  /* Add more font formats here if needed */
+}
+
+/* Cera Pro Light Italic */
+@font-face {
+  font-family: 'Cera Pro Light Italic';
+  font-weight: 300;
+  font-style: italic;
+  src: url('~/assets/fonts/Cera Pro Light Italic.otf') format('opentype');
+  /* Add more font formats here if needed */
+}
+
+/* Cera Pro Medium */
+@font-face {
+  font-family: 'Cera Pro Medium';
+  font-weight: 500;
+  src: url('~/assets/fonts/Cera Pro Medium.otf') format('opentype');
+  /* Add more font formats here if needed */
+}
+
+/* Cera Pro Medium Italic */
+@font-face {
+  font-family: 'Cera Pro Medium Italic';
+  font-weight: 500;
+  font-style: italic;
+  src: url('~/assets/fonts/Cera Pro Medium Italic.otf') format('opentype');
+  /* Add more font formats here if needed */
+}
+
+/* Cera Pro Regular */
+@font-face {
+  font-family: 'Cera Pro Regular';
+  font-weight: 400;
+  src: url('~/assets/fonts/Cera Pro Regular.otf') format('opentype');
+  /* Add more font formats here if needed */
+}
+
+/* Cera Pro Regular Italic */
+@font-face {
+  font-family: 'Cera Pro Regular Italic';
+  font-weight: 400;
+  font-style: italic;
+  src: url('~/assets/fonts/Cera Pro Regular Italic.otf') format('opentype');
+  /* Add more font formats here if needed */
+}
+
+/* Cera Pro Thin */
+@font-face {
+  font-family: 'Cera Pro Thin';
+  font-weight: 100;
+  src: url('~/assets/fonts/Cera Pro Thin.otf') format('opentype');
+  /* Add more font formats here if needed */
+}
+
+/* Cera Pro Thin Italic */
+@font-face {
+  font-family: 'Cera Pro Thin Italic';
+  font-weight: 100;
+  font-style: italic;
+  src: url('~/assets/fonts/Cera Pro Thin Italic.otf') format('opentype');
+  /* Add more font formats here if needed */
+}
