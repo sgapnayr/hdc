@@ -60,7 +60,7 @@ async function signOut() {
 </script>
 
 <template>
-  <div class="h-[80px] flex justify-center items-center w-full bg-white">
+  <div class="h-[80px] flex justify-center items-center w-full bg-white fixed top-0">
     <BaseWrapper>
       <div class="flex justify-between w-full items-center relative">
         <NuxtLink class="flex w-full h-[28px] items-center">

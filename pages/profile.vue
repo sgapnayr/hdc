@@ -90,9 +90,9 @@ profileStore.setMyProfile()
   <div class="flex flex-col py-8">
     <BaseWrapper>
       <!-- Upper cards -->
-      <div class="flex gap-x-6 lg:flex-row flex-col gap-y-6">
+      <div class="flex gap-x-6 lg:flex-row flex-col gap-y-6 lg:min-w-[1244px]">
         <!-- Hi, Profile! -->
-        <div class="bg-white w-full rounded-[8px] p-8 flex justify-between shadow-sm">
+        <div class="bg-white w-full rounded-[16px] p-8 flex justify-between shadow-sm">
           <div class="flex flex-col justify-between w-1/2">
             <div class="flex flex-col">
               <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Hi, {{ profileStore.signUpName ? profileStore.signUpName : '...' }}!</h1>
@@ -116,7 +116,7 @@ profileStore.setMyProfile()
               </div>
             </div>
           </div>
-          <div class="w-[286px] h-[396px] rounded-[8px] px-8 pt-8 bg-honeydew-bg4 relative z-0">
+          <div class="w-[286px] h-[396px] rounded-[16px] px-8 pt-8 bg-honeydew-bg4 relative z-0">
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3">Refer a friend</h1>
             <p class="text-gray-5 mt-[12px] text-[14px]">$25 in-site credit for you and your friend when they sign up using your referral link!</p>
             <div class="mt-[16px] text-honeydew-green text-[12px] font-[700] leading-[24px] w-full flex uppercase">Copy Link</div>
@@ -126,7 +126,7 @@ profileStore.setMyProfile()
           </div>
         </div>
         <!-- You haven't scheduled... -->
-        <div class="bg-white w-full rounded-[8px] p-8 flex justify-between shadow-sm">
+        <div class="bg-white w-full rounded-[16px] p-8 flex justify-between shadow-sm">
           <div class="flex flex-col justify-between w-1/2">
             <div class="flex flex-col">
               <h1 class="text-[24px] font-[500] leading-[40px] text-gray-3">You haven't scheduled your initial visit yet</h1>
@@ -141,7 +141,7 @@ profileStore.setMyProfile()
               </NuxtLink>
             </div>
           </div>
-          <div class="w-[286px] h-[396px] rounded-[8px] px-8 pt-8 bg-honeydew-bg4 relative">
+          <div class="w-[286px] h-[396px] rounded-[16px] px-8 pt-8 bg-honeydew-bg4 relative">
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3">How do follow-ups work?</h1>
             <p class="text-gray-5 mt-[12px] text-[14px]">
               Answer a few key questions and submitting new photos of your skin. Your provider will review your submission and outline next steps.
@@ -154,9 +154,9 @@ profileStore.setMyProfile()
       </div>
 
       <!-- Lower cards -->
-      <div class="flex gap-x-6 mt-[24px] md:flex-row flex-col gap-y-6">
+      <div class="flex gap-x-6 mt-[24px] lg:flex-row flex-col gap-y-6">
         <!-- My treatment plan -->
-        <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col shadow-sm">
+        <div class="w-full flex justify-center items-center bg-white rounded-[16px] p-5 flex-col shadow-sm min-w-[290px]">
           <img :src="MyTreatmentPlan" alt="My Treatment Plan" class="w-full" />
           <div>
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 mt-[20px]">My treatment plan</h1>
@@ -203,7 +203,7 @@ profileStore.setMyProfile()
         </div>
 
         <!-- View my progress -->
-        <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col shadow-sm">
+        <div class="w-full flex justify-center items-center bg-white rounded-[16px] p-5 flex-col shadow-sm min-w-[290px]">
           <img :src="ViewMyProgress" alt="View My Progress" class="w-full" />
           <div>
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 flex gap-x-1 mt-[20px]">
@@ -221,7 +221,7 @@ profileStore.setMyProfile()
         </div>
 
         <!-- Buy products -->
-        <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col shadow-sm">
+        <div class="w-full flex justify-center items-center bg-white rounded-[16px] p-5 flex-col shadow-sm min-w-[290px]">
           <img :src="BuyProducts" alt="My Treatment Plan" class="w-full" />
           <div>
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 mt-[20px]">Buy products</h1>
@@ -313,7 +313,7 @@ profileStore.setMyProfile()
         </div>
 
         <!-- Chat with care team -->
-        <div class="w-full flex justify-center items-center bg-white rounded-[8px] p-5 flex-col shadow-sm">
+        <div class="w-full flex justify-center items-center bg-white rounded-[16px] p-5 flex-col shadow-sm min-w-[290px]">
           <img :src="ChatWithCareTeam" alt="My Treatment Plan" class="w-full" />
           <div>
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 flex gap-x-1 mt-[20px]">

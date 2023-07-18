@@ -6,7 +6,7 @@
   <div class="flex flex-col justify-center items-center w-full">
     <TheSideBar v-if="!isMobile" class="fixed w-[80px] left-0 top-0 z-10 hidden md:flex" />
     <TheNavigationMobileInApp v-if="isMobile" class="flex md:hidden" />
-    <div class="flex w-full justify-end">
+    <div class="flex w-full justify-end mt-[80px] md:mt-auto">
       <div class="min-h-screen element flex justify-center items-start bg-honeydew-bg2 w-full">
         <NuxtPage class="w-full" />
       </div>
