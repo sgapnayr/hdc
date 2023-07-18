@@ -12,6 +12,7 @@ import { getEmployees, createEmployee, getPatients } from '@/lib/endpoints'
 import { Employees, Employee } from '@/types/employee-types'
 import { Patient, Patients } from '@/types/patient-types'
 import { useEmployeeStore } from '~/stores/employees'
+import { vMaska } from 'maska'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -34,23 +35,6 @@ onMounted(() => {
 const employeeStore = useEmployeeStore()
 
 // TYPES **********************************************************************
-interface EmployeeInput {
-  employeeId: string
-  firstName?: String
-  lastName?: String
-  email?: String
-  role?: String
-  phone?: String
-  address?: String
-  timezone?: String
-  licenseType?: String
-  licenseNumber?: String
-  licenseExpirationDate?: String
-  licenseState?: String
-  npi?: String
-  isActive?: Boolean
-}
-
 interface Chip {
   text: string
   amount: number
@@ -73,6 +57,14 @@ const selectedEmployeeInput = ref<Employee>()
 const employeesList = ref<Employees>()
 const patientList = ref<Patients | any>()
 const patientTestId = ref<Patient | undefined>()
+
+const newEmployeeFirstName = ref()
+const newEmployeeLastName = ref()
+const newEmployeeEmail = ref()
+const newEmployeePhoneNumber = ref()
+const newEmployeeType = ref<'Provider' | 'Admin' | string>('Provider')
+const newEmployeeLicense = ref()
+const employeeMenuOpen = ref(false)
 
 // MEMBER DATA ****************************************************************
 const categoryChips: CategoryChips[] = [
@@ -102,7 +94,7 @@ const tableHeaderCategories: TableHeaderCategory[] = [
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
   {
-    group: 'Care Coordinators',
+    group: 'Admin',
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
   {
@@ -112,12 +104,26 @@ const tableHeaderCategories: TableHeaderCategory[] = [
 ]
 
 // COMPUTED METHODS ****************************************************************
+const employeeData = computed(() => {
+  return employeeStore.allEmployees
+})
+
 const handleChipData = computed(() => {
   return categoryChips.filter((chip) => chip.group === tabSelected.value)
 })
 
 const handleCategoryData = computed(() => {
   return tableHeaderCategories.filter((category) => category.group === tabSelected.value)
+})
+
+const filterByEmployeeType = computed(() => {
+  if (tabSelected.value === 'Providers') {
+    return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('provider'))
+  } else if (tabSelected.value === 'Admin') {
+    return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('admin'))
+  } else {
+    return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('coordinator'))
+  }
 })
 
 // METHODS ****************************************************************
@@ -133,15 +139,25 @@ async function getPatientsInit() {
   try {
     const response = await getPatients()
     patientList.value = response
-    patientTestId.value = patientList?.patients[0]?.patientId
   } catch (error) {
     console.error('Error retrieving patient:', error)
   }
 }
 
+async function handleCreateEmployee() {
+  await createEmployee(
+    newEmployeeFirstName.value,
+    newEmployeeLastName.value,
+    newEmployeeEmail.value,
+    newEmployeePhoneNumber.value,
+    newEmployeeType.value,
+    '12345'
+  )
+  employeeStore.getAllEmployeesGraphQL()
+}
+
 getPatientsInit()
 employeeStore.getAllEmployeesGraphQL()
-createEmployee()
 </script>
 
 <template>
@@ -153,7 +169,7 @@ createEmployee()
           <div class="text-[32px] font-[500] text-[#403E48]">Manage Honeydew Team</div>
           <div class="flex">
             <!-- Add Time Off -->
-            <BaseModal>
+            <!-- <BaseModal>
               <template #button>
                 <div
                   class="text-[12px] h-[40px] w-[188px] flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple mr-[16px] uppercase cursor-pointer"
@@ -213,22 +229,100 @@ createEmployee()
                 <div class="w-full border-b mt-[24px] border-[#F2F4F7]"></div>
               </template>
               <template #button-text> Submit & Add Time Off </template>
-            </BaseModal>
+            </BaseModal> -->
 
             <!-- New Team Member -->
-            <BaseModal>
+            <BaseModal @action-click="handleCreateEmployee">
+              <template #header>
+                <h1>Create an Employee</h1>
+              </template>
               <template #button>
                 <div
-                  class="text-[12px] h-[40px] w-[188px] flex justify-center items-center rounded-[60px] bg-honeydew-purple text-white uppercase cursor-pointer"
+                  class="text-[12px] h-[40px] w-[188px] flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple mr-[16px] uppercase cursor-pointer"
                 >
                   <div class="mr-[6px]">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M8 3.5V12.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                      <path d="M12.5 8H3.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                      <path d="M8 3.5V12.5" stroke="#5E39F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                      <path d="M12.5 8H3.5" stroke="#5E39F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                   </div>
                   new team member
                 </div>
+              </template>
+
+              <template #content>
+                <div>
+                  <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Employee Type</h2>
+                  <div :class="[employeeMenuOpen ? 'z-40' : 'z-0']">
+                    <div
+                      class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+                      :class="[employeeMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
+                      placeholder="Search by patient's name"
+                      type="text"
+                      @click="employeeMenuOpen = !employeeMenuOpen"
+                    >
+                      <div class="px-4 py-1 rounded-[24px]">
+                        {{ newEmployeeType }}
+                      </div>
+                      <img :class="[employeeMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
+                      <div v-if="employeeMenuOpen">
+                        <div class="absolute left-0 top-12 w-full">
+                          <div
+                            class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
+                            v-for="(employeeType, idx) in ['Provider', 'Coordinator', 'Admin', 'Other']"
+                            :key="idx"
+                            :class="[3 === idx ? 'rounded-b-[28px]' : '']"
+                            @click="newEmployeeType = employeeType"
+                          >
+                            <div class="px-4 py-1 rounded-[24px]">
+                              {{ employeeType }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex w-full gap-x-6">
+                  <div class="w-full">
+                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">First Name</h2>
+                    <input
+                      class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                      placeholder="John"
+                      type="text"
+                      v-model="newEmployeeFirstName"
+                    />
+                  </div>
+                  <div class="w-full">
+                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Last Name</h2>
+                    <input
+                      class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                      placeholder="Smith"
+                      type="text"
+                      v-model="newEmployeeLastName"
+                    />
+                  </div>
+                </div>
+                <div class="w-full">
+                  <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Phone Number</h2>
+                  <input
+                    v-maska
+                    :data-maska="['+' + '1' + ' (###) ###-####']"
+                    v-model="newEmployeePhoneNumber"
+                    class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                    placeholder="+1 (123) 456-7890"
+                  />
+                </div>
+                <div class="w-full">
+                  <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Email</h2>
+                  <input
+                    class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                    placeholder="john@example.com"
+                    type="text"
+                    v-model="newEmployeeEmail"
+                  />
+                </div>
+                <div class="w-full border-b mt-[24px] border-[#F2F4F7]"></div>
               </template>
               <template #button-text> Save Updates </template>
             </BaseModal>
@@ -284,7 +378,7 @@ createEmployee()
             </div>
           </div>
         </div>
-        <!-- Patients Table -->
+
         <div class="bg-white">
           <!-- Table Header -->
           <div class="mt-[24px]">
@@ -301,28 +395,28 @@ createEmployee()
               </div>
             </div>
           </div>
+
+          <!-- Patients Table -->
+          <BaseLoader v-if="!filterByEmployeeType" />
+
           <!-- Table Employees -->
-          <div v-for="(employees, idx) in employeeStore.allEmployees" :key="idx">
-            <div
-              v-for="(employee, jdx) in employees"
-              :key="jdx"
-              :class="[tabSelected === 'Providers' ? 'grid-cols-4' : 'grid-cols-4', jdx === employees.length - 1 ? 'rounded-b-[16px]' : '']"
-              class="grid text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
-            >
-              {{ employee.role }}
-              <div>
-                {{ employee.firstName }}
-              </div>
-              <div>
-                {{ employee.email }}
-              </div>
-              <div>
-                {{ employee.firstName }}
-              </div>
-              <div>
-                {{ employee.employeeId }}
-              </div>
+          <div
+            v-for="(employee, idx) in filterByEmployeeType"
+            :key="idx"
+            :class="[tabSelected === 'Providers' ? 'grid-cols-4' : 'grid-cols-4', idx === filterByEmployeeType.length - 1 ? 'rounded-b-[16px]' : '']"
+            class="grid text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
+          >
+            <div>
+              {{ employee.firstName }} {{ employee.lastName }}
+              <span class="opacity-30 ml-2 text-xs">{{ employee?.employeeId?.slice(0, 10) + '...' }}</span>
             </div>
+            <div>
+              {{ employee.email }}
+            </div>
+            <div>
+              {{ employee.phone }}
+            </div>
+            <div></div>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ export const useEmployeeStore = defineStore('employees', () => {
 
   async function getAllEmployeesGraphQL() {
     const response = await getEmployees()
-    allEmployees.value = response
+    allEmployees.value = response.employees
   }
 
   return { allEmployees, getAllEmployeesGraphQL }

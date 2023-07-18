@@ -400,17 +400,17 @@ handleGetAllTasks()
                   {{ tasksStore?.assigneeTasks?.length || '-' }}
                 </div>
                 My tasks
-                <div class="top-4 absolute right-4 h-2 w-2 bg-[#AE4768] rounded-full" />
+                <div class="top-4 absolute right-4 h-3 w-3 opacity-50 bg-[#AE4768] rounded-full" />
               </div>
               <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F0F5FE] text-[#4768AE] relative">
                 <div class="text-[32px] font-[500] leading-[40px]">{{ tasksStore?.allTasks?.length || '-' }}</div>
                 Issued
-                <div class="top-4 absolute right-4 h-2 w-2 bg-[#4768AE] rounded-full" />
+                <div class="top-4 absolute right-4 h-3 w-3 opacity-50 bg-[#4768AE] rounded-full" />
               </div>
               <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#F3FAF2] text-[#3A6A34] relative">
                 <div class="text-[32px] font-[500] leading-[40px]">-</div>
                 Completed
-                <div class="top-4 absolute right-4 h-2 w-2 bg-[#3A6A34] rounded-full" />
+                <div class="top-4 absolute right-4 h-3 w-3 opacity-50 bg-[#3A6A34] rounded-full" />
               </div>
             </div>
           </div>
