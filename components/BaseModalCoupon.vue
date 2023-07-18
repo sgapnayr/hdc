@@ -49,11 +49,11 @@ function handleSubmit() {
       class="shadow fixed w-screen z-30 min-h-screen flex justify-center items-start left-0 top-0 bottom-0"
       @click="canClose ? landingPageStore.handleFirstVisitCouponInvisible() : ''"
     >
-      <div class="relative flex justify-center top-24 lg:top-1/5 w-full max-w-[600px] mx-4">
+      <div class="relative flex justify-center top-24 lg:top-1/5 w-full max-w-[600px] mx-4 p-1">
         <transition name="modal">
           <div class="bg-honeydew-bg2 rounded-[4px] shadow-xl flex flex-col" @click.stop>
             <div class="flex items-start">
-              <img class="w-1/3" :src="CouponImage" alt="Coupon Image" />
+              <img class="w-1/3 rounded-l-xl" :src="CouponImage" alt="Coupon Image" />
               <div class="flex flex-col w-full">
                 <div class="w-full justify-end items-end flex p-4">
                   <img @click="landingPageStore.handleFirstVisitCouponInvisible()" :src="XIcon" alt="X Icon" class="text-black scale-90 cursor-pointer" />
