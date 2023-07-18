@@ -42,10 +42,16 @@ async function signIn(username: string, password: string) {
     loginButtonState.value = 'idle'
   }, 1000)
 }
+
+function handleEnterKey(event: KeyboardEvent) {
+  if (event.key === 'Enter') {
+    signIn(username.value, password.value)
+  }
+}
 </script>
 
 <template>
-  <div>
+  <div @keydown.enter="handleEnterKey">
     <BaseWrapper>
       <h1 class="text-[32px] font-[700] leading-[40px] mt-[72px] text-center md:text-start md:mt-[124px] text-gray-3">Welcome back</h1>
       <p class="text-gray-5 mt-[16px] text-center md:text-start">Please enter your details to log in</p>

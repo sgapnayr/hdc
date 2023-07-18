@@ -197,6 +197,7 @@ function handleSubmitNewTask() {
   setTimeout(() => {
     createTask(selectedPatientIdForNewTask.value, taskType.value, taskPriority.value, taskComments.value)
     addTaskButtonState.value = 'success'
+    handleGetAllTasks()
   }, 750)
 
   setTimeout(() => {
@@ -205,7 +206,6 @@ function handleSubmitNewTask() {
     taskPriority.value = 'Low'
     taskComments.value = ''
     addTaskButtonState.value = 'idle'
-    handleGetAllTasks()
   }, 1500)
 }
 
@@ -310,25 +310,8 @@ handleGetAllTasks()
                       type="text"
                       @click="taskTypeMenuOpen = !taskTypeMenuOpen"
                     >
-                      <div
-                        class="px-4 py-1 rounded-[24px]"
-                        :class="[
-                          taskType === 'Submit Prescription'
-                            ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                            : taskType === 'New messages'
-                            ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                            : taskType === 'Send blood slip'
-                            ? 'bg-[#FFF7E5] text-[#996600]'
-                            : taskType === 'New patient'
-                            ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                            : taskType === 'Accutane'
-                            ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                            : taskType === 'Documents needed'
-                            ? 'bg-[#FFF7E5] text-[#996600]'
-                            : '',
-                        ]"
-                      >
-                        {{ taskType || 'Select Task' }}
+                      <div class="flex">
+                        <BaseTaskBadge :taskLabel="taskType" />
                       </div>
                       <img :class="[taskTypeMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
                       <div v-if="taskTypeMenuOpen">
@@ -348,25 +331,8 @@ handleGetAllTasks()
                                 | 'Documents needed'
                             "
                           >
-                            <div
-                              class="px-4 py-1 rounded-[24px]"
-                              :class="[
-                                task.text === 'Submit Prescription'
-                                  ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                                  : task.text === 'New messages'
-                                  ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                                  : task.text === 'Send blood slip'
-                                  ? 'bg-[#FFF7E5] text-[#996600]'
-                                  : task.text === 'New patient'
-                                  ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                                  : task.text === 'Accutane'
-                                  ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                                  : task.text === 'Documents needed'
-                                  ? 'bg-[#FFF7E5] text-[#996600]'
-                                  : '',
-                              ]"
-                            >
-                              {{ task.text }}
+                            <div class="flex">
+                              <BaseTaskBadge :taskLabel="task?.text" />
                             </div>
                           </div>
                         </div>
@@ -383,19 +349,8 @@ handleGetAllTasks()
                       type="text"
                       @click="taskPriorityMenuOpen = !taskPriorityMenuOpen"
                     >
-                      <div
-                        class="px-4 py-1 rounded-[24px]"
-                        :class="[
-                          taskPriority === 'Low'
-                            ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                            : taskPriority === 'Medium'
-                            ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                            : taskPriority === 'High'
-                            ? 'bg-[#FFF7E5] text-[#996600]'
-                            : '',
-                        ]"
-                      >
-                        {{ taskPriority || 'Select Priority' }}
+                      <div class="flex">
+                        <BaseTaskBadge :taskLabel="taskPriority" />
                       </div>
                       <img :class="[taskPriorityMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
                       <div v-if="taskPriorityMenuOpen">
@@ -407,19 +362,8 @@ handleGetAllTasks()
                             :class="[taskPriorities.length - 1 === idx ? 'rounded-b-[28px]' : '']"
                             @click="taskPriority = priority.text"
                           >
-                            <div
-                              class="px-4 py-1 rounded-[24px]"
-                              :class="[
-                                priority.text === 'Low'
-                                  ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                                  : priority.text === 'Medium'
-                                  ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                                  : priority.text === 'High'
-                                  ? 'bg-[#FFF7E5] text-[#996600]'
-                                  : '',
-                              ]"
-                            >
-                              {{ priority.text || 'Low' }}
+                            <div class="flex">
+                              <BaseTaskBadge :taskLabel="priority?.text" />
                             </div>
                           </div>
                         </div>
@@ -531,44 +475,10 @@ handleGetAllTasks()
               {{ task.taskStatus }}
             </div>
             <div class="flex">
-              <div
-                class="px-4 py-1 rounded-[24px] shadow-sm"
-                :class="[
-                  task?.taskPriority?.toLowerCase() === 'low'
-                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                    : task?.taskPriority?.toLowerCase() === 'medium'
-                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                    : task?.taskPriority?.toLowerCase() === 'high'
-                    ? 'bg-[#FFF7E5] text-[#996600]'
-                    : task?.taskPriority?.toLowerCase() === 'High'
-                    ? 'bg-[#FFF7E5] text-[#996600]'
-                    : '',
-                ]"
-              >
-                {{ task?.taskPriority }}
-              </div>
+              <BaseTaskBadge :taskLabel="task?.taskPriority" />
             </div>
             <div class="flex">
-              <div
-                class="px-4 py-1 rounded-[24px] shdow-sm"
-                :class="[
-                  task.taskType === 'Submit Prescription'
-                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                    : task.taskType === 'New messages'
-                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                    : task.taskType === 'Send blood slip'
-                    ? 'bg-[#FFF7E5] text-[#996600]'
-                    : task.taskType === 'New patient'
-                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                    : task.taskType === 'Accutane'
-                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                    : task.taskType === 'Documents needed'
-                    ? 'bg-[#FFF7E5] text-[#996600]'
-                    : 'bg-[#FFF7E5] text-[#996600]',
-                ]"
-              >
-                {{ task.taskType }}
-              </div>
+              <BaseTaskBadge :taskLabel="task?.taskType" />
             </div>
             <div>
               {{ task.taskComments }}
@@ -650,44 +560,10 @@ handleGetAllTasks()
               {{ task.taskStatus }}
             </div>
             <div class="flex">
-              <div
-                class="px-4 py-1 rounded-[24px] shadow-sm"
-                :class="[
-                  task?.taskPriority?.toLowerCase() === 'low'
-                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                    : task?.taskPriority?.toLowerCase() === 'medium'
-                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                    : task?.taskPriority?.toLowerCase() === 'high'
-                    ? 'bg-[#FFF7E5] text-[#996600]'
-                    : task?.taskPriority?.toLowerCase() === 'High'
-                    ? 'bg-[#FFF7E5] text-[#996600]'
-                    : '',
-                ]"
-              >
-                {{ task?.taskPriority }}
-              </div>
+              <BaseTaskBadge :taskLabel="task?.taskPriority" />
             </div>
             <div class="flex">
-              <div
-                class="px-4 py-1 rounded-[24px] shdow-sm"
-                :class="[
-                  task.taskType === 'Submit Prescription'
-                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                    : task.taskType === 'New messages'
-                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                    : task.taskType === 'Send blood slip'
-                    ? 'bg-[#FFF7E5] text-[#996600]'
-                    : task.taskType === 'New patient'
-                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                    : task.taskType === 'Accutane'
-                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                    : task.taskType === 'Documents needed'
-                    ? 'bg-[#FFF7E5] text-[#996600]'
-                    : 'bg-[#FFF7E5] text-[#996600]',
-                ]"
-              >
-                {{ task.taskType }}
-              </div>
+              <BaseTaskBadge :taskLabel="task?.taskType" />
             </div>
             <div class="flex">
               {{ task.taskComments.length > 40 ? task.taskComments.slice(0, 40) + '...' : task.taskComments }}
@@ -728,46 +604,12 @@ handleGetAllTasks()
                       <div v-if="task.taskPriority" class="flex">
                         <span class="font-normal text-[14px] opacity-50 flex items-center">Type:</span>
                         <div class="flex">
-                          <div
-                            class="px-4 py-1 rounded-[24px] shdow-sm"
-                            :class="[
-                              task.taskType === 'Submit Prescription'
-                                ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                                : task.taskType === 'New messages'
-                                ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                                : task.taskType === 'Send blood slip'
-                                ? 'bg-[#FFF7E5] text-[#996600]'
-                                : task.taskType === 'New patient'
-                                ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                                : task.taskType === 'Accutane'
-                                ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                                : task.taskType === 'Documents needed'
-                                ? 'bg-[#FFF7E5] text-[#996600]'
-                                : 'bg-[#FFF7E5] text-[#996600]',
-                            ]"
-                          >
-                            {{ task.taskType }}
-                          </div>
+                          <BaseTaskBadge :taskLabel="task?.taskType" />
                         </div>
                       </div>
                       <div v-if="task.taskPriority" class="flex">
                         <span class="font-normal text-[14px] opacity-50 flex items-center">Priority:</span>
-                        <div
-                          class="px-4 py-1 rounded-[24px] shadow-sm ml-2"
-                          :class="[
-                            task?.taskPriority?.toLowerCase() === 'low'
-                              ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                              : task?.taskPriority?.toLowerCase() === 'medium'
-                              ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                              : task?.taskPriority?.toLowerCase() === 'high'
-                              ? 'bg-[#FFF7E5] text-[#996600]'
-                              : task?.taskPriority?.toLowerCase() === 'High'
-                              ? 'bg-[#FFF7E5] text-[#996600]'
-                              : '',
-                          ]"
-                        >
-                          {{ task?.taskPriority }}
-                        </div>
+                        <BaseTaskBadge :taskLabel="task?.taskPriority" />
                       </div>
                       <span v-if="task.taskComments" class="font-normal text-[14px] opacity-50">Description: {{ task.taskComments }}</span>
                     </div>

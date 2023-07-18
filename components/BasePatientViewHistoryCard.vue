@@ -12,7 +12,6 @@ import NotesImage from '@/assets/images/notes-image.png'
 import { useProfileStore } from '@/stores/profile'
 import { usePatientStore } from '~/stores/patient'
 import { useTasksStore } from '@/stores/task'
-import { BaseInput } from '~/.nuxt/components'
 import { useRoute } from 'vue-router'
 
 // PROPS *********************************************************************
@@ -222,22 +221,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
               {{ task.taskComments }}
             </div>
             <div class="flex">
-              <div
-                class="px-4 py-1 rounded-[24px] shadow-sm"
-                :class="[
-                  task?.taskPriority === 'low'
-                    ? 'bg-[#F0F5FE] text-[#5E83D4]'
-                    : task?.taskPriority === 'medium'
-                    ? 'bg-[#EEF7EE] text-[#3A6A34]'
-                    : task?.taskPriority === 'high'
-                    ? 'bg-[#FFF7E5] text-[#996600]'
-                    : task?.taskPriority === 'High'
-                    ? 'bg-[#FFF7E5] text-[#996600]'
-                    : '',
-                ]"
-              >
-                {{ task?.taskPriority }}
-              </div>
+              <BaseTaskBadge :taskLabel="task.taskPriority" />
             </div>
           </div>
         </div>
