@@ -14,7 +14,10 @@ const { taskLabel } = defineProps(['taskLabel'])
       'bg-[#EEF7EE] text-[#3A6A34]':
         taskLabel.toLowerCase() === 'medium' || taskLabel.toLowerCase() === 'new messages' || taskLabel.toLowerCase() === 'accutane',
       'bg-[#FFF7E5] text-[#996600]':
-        taskLabel.toLowerCase() === 'high' || taskLabel.toLowerCase() === 'send blood slip' || taskLabel.toLowerCase() === 'ents needed',
+        taskLabel.toLowerCase() === 'documents needed' ||
+        taskLabel.toLowerCase() === 'high' ||
+        taskLabel.toLowerCase() === 'send blood slip' ||
+        taskLabel.toLowerCase() === 'ents needed',
     }"
   >
     {{ taskLabel }}
