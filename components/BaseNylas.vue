@@ -1,48 +1,41 @@
 <template>
   <div>
-    <button @click="authorize">Authorize Nylas</button>
-    <div v-if="emails">
-      <h2>Emails</h2>
-      <ul>
-        <li v-for="email in emails" :key="email.id">{{ email.subject }}</li>
-      </ul>
-    </div>
+    <!-- Create a button and give it an ID to reference later -->
+    <button type="button" @click="openScheduleEditor" class="bg-honeydew-purple px-3 p-1 text-white rounded-[80px] cursor-pointer">Open Schedule Editor</button>
   </div>
 </template>
 
 <script>
-import { ref } from '@vue/composition-api'
-import Nylas from 'nylas'
-
 export default {
-  setup() {
-    const emails = ref([])
-
-    const authorize = async () => {
-      try {
-        // Make a request to your backend to get the Nylas access token
-        // Here, we assume the backend endpoint is /nylas/token
-        const response = await fetch('/nylas/token')
-        const data = await response.json()
-
-        // Initialize the Nylas client with the obtained access token
-        Nylas.config({
-          clientId: 'YOUR_NYLAS_CLIENT_ID',
-          accessToken: data.accessToken,
-        })
-
-        // Fetch emails using Nylas client
-        const messages = await Nylas.messages.list({ limit: 10 })
-        emails.value = messages
-      } catch (error) {
-        console.error('Error obtaining Nylas access token', error)
-      }
-    }
-
-    return {
-      emails,
-      authorize,
-    }
+  mounted() {
+    // Load the Nylas Schedule Editor script when the component is mounted
+    const script = document.createElement('script')
+    script.src = 'https://schedule.nylas.com/schedule-editor/v1.0/schedule-editor.js'
+    script.async = true
+    document.head.appendChild(script)
+  },
+  methods: {
+    openScheduleEditor() {
+      // Prompt the Schedule Editor when a user clicks on the button
+      nylas.scheduler.show({
+        auth: {
+          // Account <ACCESS_TOKEN> with active calendar scope
+          // accessToken: process.env.VUE_APP_NYLAS_ACCESS_TOKEN,
+          accessToken: 'cEpzgGK2PLdHkMWFlzGRqtW1y2qCNA',
+        },
+        style: {
+          // Style the Schedule Editor
+          tintColor: '#32325d',
+          backgroundColor: 'white',
+        },
+        defaults: {
+          event: {
+            title: '30-min Meeting with Honeydew',
+            duration: 30,
+          },
+        },
+      })
+    },
   },
 }
 </script>

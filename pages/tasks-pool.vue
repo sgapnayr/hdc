@@ -101,18 +101,18 @@ const numberOfHighPriorityTasks = computed(() => {
 // MEMBER DATA ****************************************************************
 const assignedToMeChips = [
   { text: 'All', amount: numberOfTaskAssignedToMe },
-  { text: 'Low', amount: numberOfLowPriorityTasksAssginedToMe },
-  { text: 'Medium', amount: numberOfMediumPriorityTasksAssginedToMe },
-  { text: 'High', amount: numberOfHighPriorityTasksAssginedToMe },
+  // { text: 'Low', amount: numberOfLowPriorityTasksAssginedToMe },
+  // { text: 'Medium', amount: numberOfMediumPriorityTasksAssginedToMe },
+  // { text: 'High', amount: numberOfHighPriorityTasksAssginedToMe },
 ]
 
 const generalChips = [
   { text: 'All', amount: numberOfTasks },
   { text: 'Assigned', amount: numberOfAssignedTasks },
   { text: 'Unassigned', amount: numberOfUnassignedTasks },
-  { text: 'Low', amount: numberOfLowPriorityTasks },
-  { text: 'Medium', amount: numberOfMediumPriorityTasks },
-  { text: 'High', amount: numberOfHighPriorityTasks },
+  // { text: 'Low', amount: numberOfLowPriorityTasks },
+  // { text: 'Medium', amount: numberOfMediumPriorityTasks },
+  // { text: 'High', amount: numberOfHighPriorityTasks },
 ]
 
 const tableHeaderCategories = [
@@ -411,6 +411,13 @@ handleGetAllTasks()
                 <div class="text-[32px] font-[500] leading-[40px]">-</div>
                 Completed
                 <div class="top-4 absolute right-4 h-3 w-3 opacity-50 bg-[#3A6A34] rounded-full" />
+              </div>
+              <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#f9f6eb] text-[#9a6601] relative">
+                <div class="text-[32px] font-[500] leading-[40px]">
+                  {{ tasksStore?.allTasks?.length || '-' }}
+                </div>
+                Miscelaneous
+                <div class="top-4 absolute right-4 h-3 w-3 opacity-50 bg-[#9a6601] rounded-full" />
               </div>
             </div>
           </div>

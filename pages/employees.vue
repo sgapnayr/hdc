@@ -69,7 +69,7 @@ const updateEmployeeFirstName = ref()
 const updateEmployeeLastName = ref()
 const updateEmployeeEmail = ref()
 const updateEmployeePhoneNumber = ref()
-const updateEmployeeType = ref<'Provider' | 'Admin' | string>('Provider')
+const updateEmployeeType = ref<'Provider' | 'Admin' | string>()
 const updateEmployeeMenuOpen = ref(false)
 
 // MEMBER DATA ****************************************************************
@@ -169,7 +169,8 @@ async function handleCreateEmployee() {
 }
 
 async function handleUpdateEmployee(employeeId: string) {
-  console.log('UPDATING')
+  console.log(employeeId)
+  console.log(updateEmployeeFirstName.value)
   await updateEmployee(
     updateEmployeeFirstName.value,
     updateEmployeeLastName.value,
@@ -182,6 +183,11 @@ async function handleUpdateEmployee(employeeId: string) {
 }
 
 async function handleArchiveEmployee(employeeId: string) {
+  console.log(employeeId)
+}
+
+async function handleGetEmployee(employeeId: string) {
+  console.log(employeeId)
   console.log(employeeId)
 }
 
@@ -451,6 +457,7 @@ employeeStore.getAllEmployeesGraphQL()
             </div>
             <div>
               {{ employee.phone }}
+              {{ employee.isActive }}
             </div>
             <div class="w-full flex justify-end items-center gap-x-2">
               <BaseModal @action-click="handleArchiveEmployee(employee.employeeId)">
@@ -471,14 +478,15 @@ employeeStore.getAllEmployeesGraphQL()
                 </template>
                 <template #button-text> Confirm</template>
               </BaseModal>
-              <!-- New Team Member -->
+
+              <!-- Update Team Member -->
               <BaseModal @action-click="handleUpdateEmployee(employee?.employeeId)">
                 <template #header>
                   <h1>Update Employee</h1>
                 </template>
 
                 <template #button>
-                  <img :src="OptionsIcon" alt="Options" class="cursor-pointer transition active:scale-90" />
+                  <img @click="handleGetEmployee(employee.employeeId)" :src="OptionsIcon" alt="Options" class="cursor-pointer transition active:scale-90" />
                 </template>
 
                 <template #content>
@@ -492,9 +500,7 @@ employeeStore.getAllEmployeesGraphQL()
                         type="text"
                         @click="updateEmployeeMenuOpen = !updateEmployeeMenuOpen"
                       >
-                        <div class="px-4 py-1 rounded-[24px]">
-                          {{ newEmployeeType }}
-                        </div>
+                        <div class="px-4 py-1 rounded-[24px]">{{ updateEmployeeType || employee.role }}</div>
                         <img :class="[updateEmployeeMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
                         <div v-if="updateEmployeeMenuOpen">
                           <div class="absolute left-0 top-12 w-full">
@@ -519,7 +525,7 @@ employeeStore.getAllEmployeesGraphQL()
                       <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">First Name</h2>
                       <input
                         class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                        placeholder="John"
+                        :placeholder="employee.firstName"
                         type="text"
                         v-model="updateEmployeeFirstName"
                       />
@@ -528,7 +534,7 @@ employeeStore.getAllEmployeesGraphQL()
                       <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Last Name</h2>
                       <input
                         class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                        placeholder="Smith"
+                        :placeholder="employee.lastName"
                         type="text"
                         v-model="updateEmployeeLastName"
                       />
@@ -541,14 +547,14 @@ employeeStore.getAllEmployeesGraphQL()
                       :data-maska="['+' + '1' + ' (###) ###-####']"
                       v-model="updateEmployeePhoneNumber"
                       class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                      placeholder="+1 (123) 456-7890"
+                      :placeholder="employee.phone"
                     />
                   </div>
                   <div class="w-full">
                     <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Email</h2>
                     <input
                       class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                      placeholder="john@example.com"
+                      :placeholder="employee.email"
                       type="text"
                       v-model="updateEmployeeEmail"
                     />

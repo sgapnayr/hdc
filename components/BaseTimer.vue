@@ -25,9 +25,9 @@ function startTimer() {
 
 function getColorScheme() {
   const days = Math.floor(elapsedTime.value / (1000 * 60 * 60 * 24))
-  if (days >= 10) {
+  if (days >= 1) {
     return 'bg-[#FFF7E5] text-[#996600]'
-  } else if (days >= 5) {
+  } else if (days >= 3) {
     return 'bg-[#F0F5FE] text-[#5E83D4]'
   } else {
     return 'bg-[#EEEBFC] text-honeydew-purple'

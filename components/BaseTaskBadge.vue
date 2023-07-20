@@ -9,14 +9,12 @@ const { taskLabel } = defineProps(['taskLabel'])
   <div
     class="px-4 py-1 rounded-[24px] shadow-sm"
     :class="{
-      'bg-[#F0F5FE] text-[#5E83D4]': taskLabel.toLowerCase() === 'low' || taskLabel.toLowerCase() === 'new patient',
+      'bg-[#F0F5FE] text-[#5E83D4]':
+        taskLabel.toLowerCase() === 'low' || taskLabel.toLowerCase() === 'new patient' || taskLabel.toLowerCase() === 'submit prescription',
       'bg-[#EEF7EE] text-[#3A6A34]':
         taskLabel.toLowerCase() === 'medium' || taskLabel.toLowerCase() === 'new messages' || taskLabel.toLowerCase() === 'accutane',
       'bg-[#FFF7E5] text-[#996600]':
-        taskLabel.toLowerCase() === 'high' ||
-        taskLabel.toLowerCase() === 'submit prescription' ||
-        taskLabel.toLowerCase() === 'send blood slip' ||
-        taskLabel.toLowerCase() === 'ents needed',
+        taskLabel.toLowerCase() === 'high' || taskLabel.toLowerCase() === 'send blood slip' || taskLabel.toLowerCase() === 'ents needed',
     }"
   >
     {{ taskLabel }}

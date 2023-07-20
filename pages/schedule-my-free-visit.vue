@@ -648,9 +648,11 @@ async function handleAnswerSubmitValidation() {
             :image-URL="FaceRightOutline"
           />
         </div>
-        <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[220px] mt-[32px]"
-          >SUBMIT IMAGES</BaseButton
-        >
+        <a href="https://schedule.nylas.com/ryan-paglione-30min" target="_Blank">
+          <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[220px] mt-[32px]"
+            >Submit & Schedule</BaseButton
+          >
+        </a>
       </div>
 
       <!-- End -->

@@ -226,7 +226,7 @@ profileStore.setMyProfile()
           <div>
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 mt-[20px]">Buy products</h1>
             <p class="text-gray-5 mt-[8px] text-[14px]">Honeydew-vetted products shipped directly to you.</p>
-            <BaseModal @action-click="router.push('/checkout')">
+            <BaseModal @action-click="router.push('/stripe')">
               <template #button>
                 <button
                   class="bg-honeydew-purple h-[40px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap mt-[16px]"
