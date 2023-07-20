@@ -10,14 +10,16 @@ definePageMeta({
   <div class="flex flex-col justify-start items-center h-screen py-8">
     <BaseWrapper>
       <!-- Summary Top -->
-      <div class="w-full md:mb-16 mb-8">
+      <div class="w-full mb-8">
         <div class="flex justify-between w-full">
           <div class="text-[32px] font-[500] text-[#403E48]">Checkout</div>
           <div class="flex"></div>
         </div>
         <div class="text-[16px] font-[400] text-[#403E48]">Edit cart, add a new products, remove products, etc.</div>
       </div>
-      <BaseStripe />
+      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between lg:w-1/2 flex-col mt-[32px] shadow-sm">
+        <BaseStripe />
+      </div>
     </BaseWrapper>
   </div>
 </template>

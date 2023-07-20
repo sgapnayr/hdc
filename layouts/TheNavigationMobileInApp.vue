@@ -60,7 +60,7 @@ async function signOut() {
 </script>
 
 <template>
-  <div class="h-[80px] flex justify-center items-center w-full bg-white fixed top-0">
+  <div class="h-[80px] flex justify-center items-center w-full bg-white">
     <BaseWrapper>
       <div class="flex justify-between w-full items-center relative">
         <NuxtLink class="flex w-full h-[28px] items-center">
@@ -78,11 +78,7 @@ async function signOut() {
       </div>
     </BaseWrapper>
   </div>
-  <div
-    v-if="isMenuOpen"
-    class="bg-white flex justify-start flex-col w-full gap-y-12 px-5 mt-[104px] transition uppercase"
-    :class="[isMenuOpen ? 'h-screen' : 'h-0']"
-  >
+  <div v-if="isMenuOpen" class="bg-white flex justify-start flex-col w-full gap-y-12 px-5 transition uppercase" :class="[isMenuOpen ? 'h-screen' : 'h-0']">
     <NuxtLink v-for="(link, idx) in linkData" :key="idx" :to="link.route" :class="[currentRoute === link.route ? 'text-honeydew-purple' : '']">
       <BaseModal v-if="link.text === 'Help'" :customHeader="true" :customButtons="true">
         <template #button>
