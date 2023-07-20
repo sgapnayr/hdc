@@ -9,12 +9,6 @@ import ViewMyProgress from '@/assets/images/view-my-progress.svg'
 import BuyProducts from '@/assets/images/buy-products.svg'
 import ChatWithCareTeam from '@/assets/images/chat-with-care-team.svg'
 import LockIcon from '@/assets/icons/lock-icon.svg'
-import { formatPennies } from '@/utils/helpers'
-import { useCartStore } from '@/stores/cart'
-import MoisturizerProduct from '@/assets/products/moisturizer-product.svg'
-import BenzoylProduct from '@/assets/products/benzoyl-product.svg'
-import PlusIcon from '@/assets/icons/plus-icon-cart.svg'
-import MinusIcon from '@/assets/icons/minus-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { useProfileStore } from '@/stores/profile'
 import BaseAccutane from '~/components/BaseAccutane.vue'
@@ -47,7 +41,6 @@ interface Treatment {
 }
 
 // STORES **********************************************************************
-const cartStore = useCartStore()
 const profileStore = useProfileStore()
 
 // STATE **********************************************************************
@@ -226,89 +219,12 @@ profileStore.setMyProfile()
           <div>
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 mt-[20px]">Buy products</h1>
             <p class="text-gray-5 mt-[8px] text-[14px]">Honeydew-vetted products shipped directly to you.</p>
-            <BaseModal @action-click="router.push('/stripe')">
-              <template #button>
-                <button
-                  class="bg-honeydew-purple h-[40px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap mt-[16px]"
-                >
-                  Order
-                </button>
-              </template>
-              <template #header>Place an order</template>
-              <template #content>
-                <div class="flex flex-col w-full justify-center items-center gap-x-6">
-                  <div class="flex gap-x-6">
-                    <div>
-                      <div class="bg-white w-[204px] h-[204px] flex justify-center items-center p-9 rounded-t-[8px]">
-                        <img :src="MoisturizerProduct" alt="Moisturizer Product" class="w-full" />
-                      </div>
-                      <div>
-                        <div class="mt-[16px] text-[14px] font-[500]">
-                          {{ cartStore.products[0].productBrand }}
-                        </div>
-                        <div class="mt-[2px] text-[14px] font-[500]">
-                          {{ cartStore.products[0].productName }}
-                        </div>
-                        <div class="text-[20px] font-[700] mt-[20px] flex justify-between items-center w-full">
-                          <div class="flex justify-center items-center">
-                            <button @click="cartStore.removeItemFromCart('1')">
-                              <img :src="MinusIcon" alt="Minus Icon" />
-                            </button>
-                            <div class="mx-2">
-                              {{ cartStore.getTotalQuantityForProductWithId('1') }}
-                            </div>
-                            <button @click="cartStore.addItemToCart('1')">
-                              <img :src="PlusIcon" alt="Plus Icon" />
-                            </button>
-                          </div>
-                          {{
-                            cartStore.getTotalQuantityForProductWithId('1') === 0
-                              ? formatPennies(cartStore.products[0].priceInPennies)
-                              : formatPennies(cartStore.getCartTotalForProductWithId('1'))
-                          }}
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <div class="bg-white w-[204px] h-[204px] flex justify-center items-center p-9 rounded-t-[8px]">
-                        <img :src="BenzoylProduct" alt="Benzoyl Product" class="w-full" />
-                      </div>
-                      <div>
-                        <div class="mt-[16px] text-[14px] font-[500]">
-                          {{ cartStore.products[1].productBrand }}
-                        </div>
-                        <div class="mt-[2px] text-[14px] font-[500]">
-                          {{ cartStore.products[1].productName }}
-                        </div>
-                        <div class="text-[20px] font-[700] mt-[20px] flex justify-between items-center w-full">
-                          <div class="flex justify-center items-center">
-                            <button @click="cartStore.removeItemFromCart('2')">
-                              <img :src="MinusIcon" alt="Minus Icon" />
-                            </button>
-                            <div class="mx-2">
-                              {{ cartStore.getTotalQuantityForProductWithId('2') }}
-                            </div>
-                            <button @click="cartStore.addItemToCart('2')">
-                              <img :src="PlusIcon" alt="Plus Icon" />
-                            </button>
-                          </div>
-                          {{
-                            cartStore.getTotalQuantityForProductWithId('2') === 0
-                              ? formatPennies(cartStore.products[0].priceInPennies)
-                              : formatPennies(cartStore.getCartTotalForProductWithId('2'))
-                          }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="mt-[32px] w-full justify-start text-gray-4">Total (plus tax & shipping): {{ formatPennies(cartStore.getCartTotal()) }}</div>
-                  <div class="mt-[32px]"><BaseCheckBox> Shipping address same as home address {address}. </BaseCheckBox></div>
-                </div>
-              </template>
-              <template #button-text>
-                <div>Continue</div>
-              </template>
-            </BaseModal>
+            <button
+              @click="router.push('/stripe')"
+              class="bg-honeydew-purple cursor-pointer h-[40px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] uppercase whitespace-nowrap mt-[16px]"
+            >
+              Order
+            </button>
           </div>
         </div>
 
