@@ -17,7 +17,7 @@ definePageMeta({
         </div>
         <div class="text-[16px] font-[400] text-[#403E48]">Edit cart, add a new products, remove products, etc.</div>
       </div>
-      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between lg:w-1/2 flex-col mt-[32px] shadow-sm">
+      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between lg:w-3/4 flex-col mt-[32px] shadow-sm">
         <BaseStripe />
       </div>
     </BaseWrapper>

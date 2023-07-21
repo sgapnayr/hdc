@@ -12,6 +12,7 @@ import { getEmployees, createEmployee, getPatients, getEmployee, updateEmployee 
 import { Employees, Employee } from '@/types/employee-types'
 import { Patient, Patients } from '@/types/patient-types'
 import { useEmployeeStore } from '~/stores/employees'
+import { usePatientStore } from '~/stores/patient'
 import { vMaska } from 'maska'
 
 // LAYOUT **********************************************************************
@@ -33,6 +34,7 @@ onMounted(() => {
 
 // STORES **********************************************************************
 const employeeStore = useEmployeeStore()
+const patientStore = usePatientStore()
 
 // TYPES **********************************************************************
 interface Chip {
@@ -71,6 +73,10 @@ const updateEmployeeEmail = ref()
 const updateEmployeePhoneNumber = ref()
 const updateEmployeeType = ref<'Provider' | 'Admin' | string>()
 const updateEmployeeMenuOpen = ref(false)
+
+const patientMenuOpen = ref(false)
+const selectedPatientIdToBecomeNewEmployee = ref()
+const selectedPatientNameForNewEmployee = ref()
 
 // MEMBER DATA ****************************************************************
 const categoryChips: CategoryChips[] = [
@@ -128,7 +134,7 @@ const handleCategoryData = computed(() => {
 
 const filterByEmployeeType = computed(() => {
   if (tabSelected.value === 'Providers') {
-    return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('provider'))
+    return employeeData?.value?.filter((employee: any) => employee?.role?.includes('PROVIDER'))
   } else if (tabSelected.value === 'Admin') {
     return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('admin'))
   } else if (tabSelected.value === 'Other') {
@@ -157,13 +163,14 @@ async function getPatientsInit() {
 }
 
 async function handleCreateEmployee() {
+  console.log('RUNNING')
   await createEmployee(
     newEmployeeFirstName.value,
     newEmployeeLastName.value,
     newEmployeeEmail.value,
     newEmployeePhoneNumber.value,
-    newEmployeeType.value,
-    '12345'
+    'PROVIDER',
+    selectedPatientIdToBecomeNewEmployee.value
   )
   employeeStore.getAllEmployeesGraphQL()
 }
@@ -193,10 +200,12 @@ async function handleGetEmployee(employeeId: string) {
 
 getPatientsInit()
 employeeStore.getAllEmployeesGraphQL()
+patientStore.getPatientsFromGraphQL()
 </script>
 
 <template>
   <div class="w-full py-8">
+    {{ employeeStore.allEmployees }}
     <BaseWrapper>
       <!-- Manage Team Top -->
       <div class="w-full">
@@ -286,6 +295,38 @@ employeeStore.getAllEmployeesGraphQL()
               </template>
 
               <template #content>
+                <!-- Patient Name Drop Down -->
+                <div :class="[patientMenuOpen ? 'z-40' : 'z-0']">
+                  <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Patient's Name</h2>
+                  <div
+                    class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+                    :class="[patientMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
+                    placeholder="Search by patient's name"
+                    type="text"
+                    @click="patientMenuOpen = !patientMenuOpen"
+                  >
+                    <div class="px-4 py-1 rounded-[24px]">
+                      {{ selectedPatientNameForNewEmployee || 'Patient Name' }}
+                      <span class="opacity-30 ml-2 text-xs">{{ selectedPatientIdToBecomeNewEmployee || '' }}</span>
+                    </div>
+                    <img :class="[patientMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
+                    <div v-if="patientMenuOpen">
+                      <div class="absolute left-0 top-12 w-full">
+                        <div
+                          class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
+                          v-for="(patient, idx) in patientStore.allPatients"
+                          :key="idx"
+                          :class="[patientStore.allPatients.length - 1 === idx ? 'rounded-b-[28px]' : '']"
+                          @click=";(selectedPatientIdToBecomeNewEmployee = patient.patientId), (selectedPatientNameForNewEmployee = patient.patientName)"
+                        >
+                          <div class="px-4 py-1 rounded-[24px]">
+                            {{ patient.patientName }} <span class="opacity-30 ml-2 text-xs">{{ patient.patientId }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div>
                   <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Employee Type</h2>
                   <div :class="[employeeMenuOpen ? 'z-40' : 'z-0']">
