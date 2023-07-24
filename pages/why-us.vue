@@ -8,6 +8,7 @@ import Arrow from '@/assets/images/arrow.svg'
 </script>
 
 <template>
+  <BaseChatBot />
   <div class="flex flex-col">
     <div class="bg-[#F7F9FE] pb-8">
       <BaseWrapper>

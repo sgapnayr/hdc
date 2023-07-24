@@ -15,6 +15,7 @@ const membershipSelected = ref('yearly')
 </script>
 
 <template>
+  <BaseChatBot />
   <div class="flex flex-col w-full">
     <BaseWrapper>
       <div class="bg-[#F7F9FE]">

@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { useProfileStore } from '~/stores/profile'
 import { usePatientStore } from '~/stores/patient'
 import { useTasksStore } from '~/stores/task'
+import { useAppointmentsStore } from '~/stores/appointments'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import PlusCircleIcon from '@/assets/icons/plus-circle.svg'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
@@ -33,6 +34,7 @@ onMounted(() => {
 const profileStore = useProfileStore()
 const patientStore = usePatientStore()
 const tasksStore = useTasksStore()
+const appointmentsStore = useAppointmentsStore()
 
 // STATE *********************************************************************
 const treatmentHistoryOrDocumentsSelected = ref<'Treatment History' | 'Documents'>('Treatment History')
@@ -52,10 +54,6 @@ function handleOpen(idx: string) {
     const deleteIdx = isOpen.value.indexOf(idx)
     isOpen.value.splice(deleteIdx, 1)
   }
-}
-
-function handleSelected(selectedVal: string) {
-  isSelected.value = selectedVal
 }
 
 const handleFileSelect = (e: any) => {
@@ -102,6 +100,8 @@ patientStore.getPatientFromGraphQL(route.params.patientId as string).then((patie
   patientData.value = patient
 })
 tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
+
+appointmentsStore.getAllAppointments()
 </script>
 
 <template>

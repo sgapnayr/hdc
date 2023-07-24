@@ -1,0 +1,36 @@
+enum Role {
+  PROVIDER
+  ASSISTANT
+  ADMIN
+  PHYSICIAN
+  SUPER_PHYSICIAN
+  CARE_COORDINATOR
+}
+
+type Employee {
+  firstName: String!
+  lastName: String!
+  email: String!
+  role: Role!
+  phone: String
+  address: String
+  timezone: String
+  licenseType: String
+  licenseNumber: String
+  licenseExpirationDate: String
+  licenseState: String
+  npi: String
+  isActive: Boolean
+  createdAt: String
+}
+
+type Mutation {
+  createEmployee(
+    email: String!
+    firstName: String!
+    lastName: String!
+    phone: String
+    role: Role! # Use the defined Role enum here
+    employeeId: ID!
+  ): Employee
+}

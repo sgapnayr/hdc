@@ -28,6 +28,7 @@
     "@vuelidate/validators": "^2.0.2",
     "@vueuse/nuxt": "^10.1.2",
     "aws-amplify": "^5.2.4",
+    "axios": "^1.4.0",
     "graphql-tag": "^2.12.6",
     "maska": "^2.1.9",
     "nuxt-icon": "^0.4.1",

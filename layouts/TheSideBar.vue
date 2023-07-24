@@ -113,12 +113,19 @@ profileStore.setMyProfile()
       <!-- Patient Icon -->
       <div
         class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition"
-        :class="[route.path === '/profile' || route.path === '/view-history' ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
+        :class="[route.path.includes('/profiles') || route.path === '/view-history' ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
       >
-        <svg @click="router.push('/profile')" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          @click="router.push('/profiles/' + profileStore.profileData.patientId)"
+          width="48"
+          height="48"
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
             class="icon cursor-pointer"
-            :class="[route.path === '/profile' || route.path === '/view-history' ? 'showIcon' : 'icon']"
+            :class="[route.path.includes('/profile') || route.path === '/view-history' ? 'showIcon' : 'icon']"
             d="M24 13C17.9347 13 13 17.9347 13 24C13 30.0653 17.9347 35 24 35C30.0653 35 35 30.0653 35 24C35 17.9347 30.0653 13 24 13ZM21.3441 19.178C22.0142 18.4677 22.9571 18.0769 24 18.0769C25.0429 18.0769 25.9774 18.4704 26.65 19.1843C27.3317 19.9078 27.6633 20.8798 27.585 21.9248C27.4285 24 25.8208 25.6923 24 25.6923C22.1792 25.6923 20.5683 24 20.415 21.9243C20.3372 20.8708 20.6683 19.8956 21.3441 19.178ZM24 33.3077C22.7575 33.3085 21.5274 33.0598 20.3828 32.5763C19.2381 32.0929 18.2023 31.3845 17.3365 30.4932C17.8324 29.7861 18.4641 29.1849 19.1949 28.7247C20.5429 27.8606 22.249 27.3846 24 27.3846C25.751 27.3846 27.4571 27.8606 28.8035 28.7247C29.5349 29.1847 30.1672 29.7859 30.6635 30.4932C29.7978 31.3846 28.7619 32.093 27.6173 32.5765C26.4727 33.06 25.2426 33.3086 24 33.3077Z"
             fill="#A09DB1"
           />

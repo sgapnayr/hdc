@@ -41,6 +41,7 @@ function handelCardSelect(cardHeader: string) {
 </script>
 
 <template>
+  <BaseChatBot />
   <div class="bg-[#F7F9FE]">
     <BaseWrapper>
       <!-- Heading Text -->

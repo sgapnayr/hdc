@@ -79,6 +79,8 @@ function handleSelectingChip(chip: Chip) {
 function handleSelectedPatient(patient: Patient) {
   selectedPatient.value = patient
 }
+
+medicationsStore.getMedicationsFromGraphQL()
 </script>
 
 <template>

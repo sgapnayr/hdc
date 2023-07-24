@@ -77,8 +77,14 @@ const updateEmployeeMenuOpen = ref(false)
 const patientMenuOpen = ref(false)
 const selectedPatientIdToBecomeNewEmployee = ref()
 const selectedPatientNameForNewEmployee = ref()
+const pageSize = ref(10)
+const currentPage = ref(0)
 
 // MEMBER DATA ****************************************************************
+const totalPages = computed(() => {
+  return Math.ceil(employeeStore?.allEmployees?.length / pageSize.value)
+})
+
 const categoryChips: CategoryChips[] = [
   {
     group: 'Providers',
@@ -162,6 +168,15 @@ async function getPatientsInit() {
   }
 }
 
+enum RoleEnum {
+  PROVIDER,
+  ASSISTANT,
+  ADMIN,
+  PHYSICIAN,
+  SUPER_PHYSICIAN,
+  CARE_COORDINATOR,
+}
+
 async function handleCreateEmployee() {
   console.log('RUNNING')
   await createEmployee(
@@ -169,7 +184,7 @@ async function handleCreateEmployee() {
     newEmployeeLastName.value,
     newEmployeeEmail.value,
     newEmployeePhoneNumber.value,
-    'PROVIDER',
+    RoleEnum.PROVIDER,
     selectedPatientIdToBecomeNewEmployee.value
   )
   employeeStore.getAllEmployeesGraphQL()
@@ -204,8 +219,8 @@ patientStore.getPatientsFromGraphQL()
 </script>
 
 <template>
+  {{ totalPages }}
   <div class="w-full py-8">
-    {{ employeeStore.allEmployees }}
     <BaseWrapper>
       <!-- Manage Team Top -->
       <div class="w-full">
@@ -607,6 +622,13 @@ patientStore.getPatientsFromGraphQL()
             </div>
           </div>
         </div>
+        <BasePagination
+          @page-forward="currentPage < totalPages - 1 ? (currentPage += 1) : ''"
+          @page-back="currentPage > 0 ? (currentPage -= 1) : ''"
+          @skip-to="(val) => (currentPage = val)"
+          :total-pages="4"
+          :current-page-props="currentPage"
+        />
       </div>
     </BaseWrapper>
   </div>
