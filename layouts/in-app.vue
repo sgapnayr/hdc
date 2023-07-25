@@ -1,5 +1,5 @@
 <template>
-  <BaseCompletePregnancy v-if="profileStore.isPregnantModalOpen" @close-modal="profileStore.handleModal" />
+  <BaseCompletePregnancy v-if="profileStore.isPregnantModalOpen" @close-modal="profileStore.handlePregnancyModal" />
   <BasePatientDetailsForm v-if="profileStore.isPatientDetailsFormOpen" @close-modal="profileStore.handlePatientDetailsForm" />
   <BaseBloodSlipForm v-if="profileStore.isBloodSlipFormOpen" @close-modal="profileStore.handleBloodSlipForm" />
 

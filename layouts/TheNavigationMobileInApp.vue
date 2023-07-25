@@ -38,7 +38,7 @@ router.beforeEach(() => {
 })
 
 // METHODS *********************************************************************
-function handleModal() {
+function handlePregnancyModal() {
   modalExists.value = true
   setTimeout(() => {
     isModalOpen.value = true

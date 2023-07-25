@@ -6,6 +6,7 @@ import gql from 'graphql-tag'
 
 export const usePatientStore = defineStore('patient', () => {
   const allPatients = ref()
+  const patientData = ref()
 
   // ASK CHESTER FOR THIS OBJECT
   const patientDataForAdminPage: Patient[] = [
@@ -303,31 +304,13 @@ export const usePatientStore = defineStore('patient', () => {
       const response = await getPatients()
       const mappedData: Patients = {
         patients: response?.patients?.map((backendPatient: any) => {
-          const frontendPatient: Patient = {
+          const frontendPatient = {
             patientId: backendPatient.patientId,
-            patientName: '{patientName}', // Not available in the backend response, set as an empty string
-            patientDOB: backendPatient.patientProfile.patientDOB || '{patientDOB}',
-            patientDateOfService: '{patientDateOfService}', // Not available in the backend response, set as an empty string
-            patientNextFollowUp: '{patientNextFollowUp}', // Not available in the backend response, set as an empty string
-            patientProviderAssigned: '{patientProviderAssigned}', // Not available in the backend response, set as an empty string
-            patientCareCoordinatorAssigned: '', // Not available in the backend response, set as an empty string
-            currentPatientStatus: ['New Patient'], // Assuming patientStatus is an enum type or defined elsewhere
-            patientMedicalBackground: backendPatient.patientProfile.patientMedicalBackgroundSkinSurvey || null,
-            patientSex: backendPatient.patientProfile.patientSex || '',
-            patientAge: backendPatient.patientProfile.patientAge || '',
-            patientWeight: backendPatient.patientProfile.patientWeight || '',
-            patientHeight: backendPatient.patientProfile.patientHeight || '',
+            patientName: backendPatient.patientProfile.patientFirstName + ' ' + backendPatient.patientProfile.patientLastName,
+            patientDOB: backendPatient.patientProfile.patientDOB || 'dobFromBackend',
             patientPhoneNumber: backendPatient.patientProfile.patientPhoneNumber || '',
-            patientEmail: backendPatient.patientProfile.patientEmail || '',
-            patientAddress: backendPatient.patientProfile.patientAddress || '',
-            patientCity: '', // Not available in the backend response, set as an empty string
-            patientState: '', // Not available in the backend response, set as an empty string
-            patientZipCode: '', // Not available in the backend response, set as an empty string
-            patientHealthInsurance: backendPatient.patientProfile.healthInsurance || '',
-            patientInsuranceMemberID: 'asdf', // Not available in the backend response, set as an empty string
-            patientInsurancePolicyHolderName: '', // Not available in the backend response, set as an empty string
-            patientInsuranceGroupNumber: '', // Not available in the backend response, set as an empty string
-            patientCurrentTasks: [''], // Not available in the backend response, set as an empty array
+            patientEmail: backendPatient.email || '',
+            currentPatientStatus: ['New Patient'],
           }
 
           return frontendPatient
@@ -342,6 +325,7 @@ export const usePatientStore = defineStore('patient', () => {
   async function getPatientFromGraphQL(patientId: string) {
     try {
       const response = await getPatient(patientId)
+      patientData.value = response
     } catch (error) {
       console.error('Error retrieving patients:', error)
     }
@@ -358,5 +342,5 @@ export const usePatientStore = defineStore('patient', () => {
     }
   }
 
-  return { allPatients, getPatientFromGraphQL, getPatientsFromGraphQL, patientDataForAdminPage, getPatient, updateInsuranceGraphQL }
+  return { allPatients, patientData, getPatientFromGraphQL, getPatientsFromGraphQL, patientDataForAdminPage, getPatient, updateInsuranceGraphQL }
 })

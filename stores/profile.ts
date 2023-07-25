@@ -56,8 +56,6 @@ export const useProfileStore = defineStore('profile', () => {
   const lastStepLetsSeeYourSkin = ref() // Change to image upload
 
   // SETTERS ****************************************************************
-  async function createProfile() {}
-
   async function setMyProfile() {
     try {
       const response = await getMyProfile()
@@ -67,7 +65,7 @@ export const useProfileStore = defineStore('profile', () => {
     }
   }
 
-  function handleModal() {
+  function handlePregnancyModal() {
     isPregnantModalOpen.value = !isPregnantModalOpen.value
   }
 
@@ -172,7 +170,7 @@ export const useProfileStore = defineStore('profile', () => {
     lastStepLetsSeeYourSkin,
     signUpHeight,
     signUpWeight,
-    handleModal,
+    handlePregnancyModal,
     handleBloodSlipForm,
     handlePatientDetailsForm,
   }

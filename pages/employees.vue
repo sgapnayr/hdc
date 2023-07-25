@@ -169,12 +169,12 @@ async function getPatientsInit() {
 }
 
 enum RoleEnum {
-  PROVIDER,
-  ASSISTANT,
-  ADMIN,
-  PHYSICIAN,
-  SUPER_PHYSICIAN,
-  CARE_COORDINATOR,
+  PROVIDER = 'PROVIDER',
+  ASSISTANT = 'ASSISTANT',
+  ADMIN = 'ADMIN',
+  PHYSICIAN = 'PHYSICIAN',
+  SUPER_PHYSICIAN = 'SUPER_PHYSICIAN',
+  CARE_COORDINATOR = 'CARE_COORDINATOR',
 }
 
 async function handleCreateEmployee() {
@@ -188,6 +188,7 @@ async function handleCreateEmployee() {
     selectedPatientIdToBecomeNewEmployee.value
   )
   employeeStore.getAllEmployeesGraphQL()
+  console.log('RUNNING')
 }
 
 async function handleUpdateEmployee(employeeId: string) {
@@ -219,7 +220,6 @@ patientStore.getPatientsFromGraphQL()
 </script>
 
 <template>
-  {{ totalPages }}
   <div class="w-full py-8">
     <BaseWrapper>
       <!-- Manage Team Top -->

@@ -6,7 +6,7 @@ require('dotenv').config()
 
 // ? CONFIGURATION
 const app = express()
-const port = 3000 // You can choose any port number you prefer
+const port = 3000
 Nylas.config({ clientId: process.env.NYLAS_CLIENT_ID, clientSecret: process.env.NYLAS_CLIENT_SECRET })
 
 // * MIDDLEWARE

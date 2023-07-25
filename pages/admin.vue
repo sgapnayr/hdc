@@ -66,6 +66,7 @@ const showAccutaneMessage = ref(false)
 const showNewMessageMessage = ref(false)
 const hoveredIdx = ref()
 const patients = ref()
+const patientData = ref()
 
 const tableHeaderCategories: TableHeaderCategory[] = [
   {
@@ -82,23 +83,22 @@ const tableHeaderCategories: TableHeaderCategory[] = [
   },
 ]
 
-const patientData = patientStore.patientDataForAdminPage
 setTimeout(() => {
   patients.value = patientStore?.allPatients?.patients
 }, 1000)
 
 // COMPUTED METHODS ****************************************************************
 const handleChipData = computed(() => {
-  return categoryChips.filter((chip) => chip.group === tabSelected.value)
+  return categoryChips?.filter((chip) => chip.group === tabSelected.value)
 })
 
 const filterByActiveOrInactive = computed(() => {
   if (tabSelected.value === 'Active Patients') {
     selectedChip.value = { text: 'All', amount: 0 } // Set selected chip to 'All' for Active Patients
-    return patientData.filter((patient) => !patient.currentPatientStatus.includes('Inactive'))
+    return patientStore?.allPatients?.filter((patient: any) => !patient.currentPatientStatus.includes('Inactive'))
   } else {
     selectedChip.value = { text: 'All', amount: 0 } // Set selected chip to 'All' for Inactive Patients
-    return patientData.filter((patient) => patient.currentPatientStatus.includes('Inactive'))
+    return patientStore?.allPatients?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
   }
 })
 
@@ -106,30 +106,30 @@ const filterBySelectedChip = computed(() => {
   if (selectedChip.value.text === 'All') {
     return filterByActiveOrInactive.value
   } else if (selectedChip.value.text === 'New patients') {
-    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('New Patient'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('New Patient'))
   } else if (selectedChip.value.text === 'Follow-up visits') {
-    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Follow Up'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Follow Up'))
   } else if (selectedChip.value.text === 'New messages') {
-    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('New Message'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('New Message'))
   } else if (selectedChip.value.text === 'Accutane') {
-    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Accutane'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Accutane'))
   } else if (selectedChip.value.text === 'Inactive membership') {
-    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Inactive'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
   } else if (selectedChip.value.text === 'No shows') {
-    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('No Shows'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('No Shows'))
   } else if (selectedChip.value.text === 'Cancelled') {
-    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Cancelled'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Cancelled'))
   } else if (selectedChip.value.text === 'Archived') {
-    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Archived'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Archived'))
   } else if (selectedChip.value.text === 'Unscheduled accounts') {
-    return filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Unscheduled'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Unscheduled'))
   }
 
   return [] // Return an empty array if no matching chip is found
 })
 
 const totalPages = computed(() => {
-  return Math.ceil(filterBySelectedChip.value.length / pageSize.value)
+  return Math.ceil(filterBySelectedChip.value?.length / pageSize.value)
 })
 
 const pagesData = computed(() => {
@@ -140,15 +140,15 @@ const pagesData = computed(() => {
 })
 
 const totalNewPatients = computed(() => {
-  return patientStore?.allPatients?.map((patient: any) => patient.currentPatientStatus.includes('New Patient')).length
+  return patientStore?.allPatients?.map((patient: any) => patient.currentPatientStatus.includes('New Patient'))?.length
 })
 
 const totalFollowUps = computed(() => {
-  return patientData.filter((patient) => patient.currentPatientStatus.includes('Follow Up')).length
+  return patientStore?.allPatients?.filter((patient: any) => patient.currentPatientStatus.includes('Follow Up'))?.length
 })
 
 const totalNewMessages = computed(() => {
-  return patientData.filter((patient) => patient.currentPatientStatus.includes('New Message')).length
+  return patientStore?.allPatients?.filter((patient: any) => patient.currentPatientStatus.includes('New Message'))?.length
 })
 
 // METHODS ****************************************************************
@@ -165,49 +165,52 @@ const categoryChips: CategoryChips[] = [
   {
     group: 'Active Patients',
     chips: [
-      { text: 'All', amount: patientData.filter((patient) => !patient.currentPatientStatus.includes('Inactive')).length },
+      { text: 'All', amount: patientStore?.allPatients?.filter((patient: any) => !patient.currentPatientStatus.includes('Inactive'))?.length },
       {
         text: 'New patients',
-        amount: filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('New Patient')).length,
+        amount: filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('New Patient'))?.length,
       },
-      { text: 'Follow-up visits', amount: filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Follow Up')).length },
-      { text: 'New messages', amount: filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('New Message')).length },
-      { text: 'Accutane', amount: filterByActiveOrInactive.value.filter((patient) => patient.currentPatientStatus.includes('Accutane')).length },
+      {
+        text: 'Follow-up visits',
+        amount: filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Follow Up'))?.length,
+      },
+      { text: 'New messages', amount: filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('New Message'))?.length },
+      { text: 'Accutane', amount: filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Accutane'))?.length },
     ],
   },
   {
     group: 'Inactive Patients',
     chips: [
-      { text: 'All', amount: patientData.filter((patient) => patient.currentPatientStatus.includes('Inactive')).length },
+      { text: 'All', amount: patientStore?.allPatients?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))?.length },
       {
         text: 'Inactive membership',
-        amount: patientData
-          .filter((patient) => patient.currentPatientStatus.includes('Inactive'))
-          .filter((patient) => patient.currentPatientStatus.includes('Inactive')).length,
+        amount: patientStore?.allPatients
+          ?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
+          ?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))?.length,
       },
       {
         text: 'No shows',
-        amount: patientData
-          .filter((patient) => patient.currentPatientStatus.includes('Inactive'))
-          .filter((patient) => patient.currentPatientStatus.includes('No Shows')).length,
+        amount: patientStore?.allPatients
+          ?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
+          ?.filter((patient: any) => patient.currentPatientStatus.includes('No Shows'))?.length,
       },
       {
         text: 'Cancelled',
-        amount: patientData
-          .filter((patient) => patient.currentPatientStatus.includes('Inactive'))
-          .filter((patient) => patient.currentPatientStatus.includes('Cancelled')).length,
+        amount: patientStore?.allPatients
+          ?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
+          ?.filter((patient: any) => patient.currentPatientStatus.includes('Cancelled'))?.length,
       },
       {
         text: 'Archived',
-        amount: patientData
-          .filter((patient) => patient.currentPatientStatus.includes('Inactive'))
-          .filter((patient) => patient.currentPatientStatus.includes('Archived')).length,
+        amount: patientStore?.allPatients
+          ?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
+          ?.filter((patient: any) => patient.currentPatientStatus.includes('Archived'))?.length,
       },
       {
         text: 'Unscheduled accounts',
-        amount: patientData
-          .filter((patient) => patient.currentPatientStatus.includes('Inactive'))
-          .filter((patient) => patient.currentPatientStatus.includes('Unscheduled')).length,
+        amount: patientStore?.allPatients
+          ?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
+          ?.filter((patient: any) => patient.currentPatientStatus.includes('Unscheduled'))?.length,
       },
     ],
   },
@@ -225,7 +228,6 @@ watch(
 async function fetchPatients() {
   if (!patientStore?.allPatients) {
     await patientStore.getPatientsFromGraphQL()
-    console.log('FETCHIBNG')
   } else {
     await patientStore.getPatientsFromGraphQL()
   }
@@ -322,12 +324,15 @@ fetchPatients()
             {{ patientList?.patients }}
           </div>
 
+          <!-- Loader -->
+          <BaseLoader v-if="!patientStore?.allPatients" />
+
           <!-- Table Body -->
           <NuxtLink
-            v-for="(patient, idx) in patientData"
+            v-for="(patient, idx) in patientStore?.allPatients"
             :key="idx"
             :class="[
-              idx === patientData.length - 1 ? 'rounded-b-[16px]' : '',
+              idx === patientStore?.allPatients?.length - 1 ? 'rounded-b-[16px]' : '',
               patient.currentPatientStatus.includes('New Patient') ? 'bg-[#FEF0F5]' : '',
               patient.currentPatientStatus.includes('Follow Up') ? 'bg-[#F0F5FE]' : '',
               patient.currentPatientStatus.includes('New Message') ? 'bg-[#F3FAF2]' : '',
@@ -351,7 +356,7 @@ fetchPatients()
               </div>
             </div>
             <div class="col-span-2 flex gap-x-2 items-center">
-              {{ patient.patientName }}
+              {{ patient.patientName }} {{ patient.patientId.slice(0, 10) + '...' }}
               <div
                 @mouseenter="showNoMedicalMessage = true"
                 @mouseleave="showNoMedicalMessage = false"
@@ -401,7 +406,7 @@ fetchPatients()
                     <div class="mt-[16px] text-[16px] font-[400] flex flex-col">
                       <div>
                         Delete
-                        <span class="font-[500]">{{ selectedPatient?.fullName }}</span>
+                        <span class="font-[500]">{{ selectedPatient }}</span>
                         from the system. <br />
                       </div>
                       <div>

@@ -6,6 +6,7 @@ import TheTransitionWrapper from '@/components/TheTransitionWrapper.vue'
 import CouponImage from '@/assets/images/coupon-image.png'
 import XIcon from '@/assets/icons/x-icon.svg'
 import { useLandingPageStore } from '@/stores/landing-page'
+import { addToEmailMarketing } from '~/lib/endpoints'
 
 // STORES **********************************************************************
 const landingPageStore = useLandingPageStore()
@@ -37,8 +38,11 @@ const customerEmail = ref<string>()
 const isError = ref<boolean>(false)
 
 // METHODS ****************************************************************
-function handleSubmit() {
+async function handleSubmit() {
+  console.log('RUNNING')
   if (!customerEmail.value) isError.value = true
+  await addToEmailMarketing(customerEmail.value)
+  console.log('RUNNING')
 }
 </script>
 

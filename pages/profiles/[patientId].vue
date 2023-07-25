@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import LadyWithGift from '@/assets/images/lady-with-gift.svg'
 import DoctorWithClipboard from '@/assets/images/doctor-with-clipboard.svg'
 import MyTreatmentPlan from '@/assets/images/my-treatment-plan.svg'
@@ -11,10 +11,12 @@ import ChatWithCareTeam from '@/assets/images/chat-with-care-team.svg'
 import LockIcon from '@/assets/icons/lock-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { useProfileStore } from '@/stores/profile'
+import { usePatientStore } from '~/stores/patient'
 import { useAppointmentsStore } from '~/stores/appointments'
 import BaseAccutane from '~/components/BaseAccutane.vue'
 import ChevronIcon2 from '@/assets/icons/chevron-down-icon.svg'
 import type { Appointment } from '@/types/appointment-types'
+import AlertIcon from '@/assets/icons/alert-icon.svg'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -24,6 +26,7 @@ definePageMeta({
 
 // ROUTER **********************************************************************
 const router = useRouter()
+const route = useRoute()
 const user = useAuthenticator()
 
 onMounted(() => {
@@ -45,13 +48,15 @@ interface Treatment {
 // STORES **********************************************************************
 const profileStore = useProfileStore()
 const appointmentsStore = useAppointmentsStore()
+const patientStore = usePatientStore()
 
 // STATE **********************************************************************
 const profileData = ref<string>('')
+const isAppointmentMissedState = ref<boolean>(false)
 
 // Computed function to get patient appointments filtered by email
 const getPatientAppointments = computed(() => {
-  const patientEmail = 'ryanpaglionework@gmail.com' // Replace with the patient's email you want to filter
+  const patientEmail = patientStore?.patientData?.email // Replace with the patient's email you want to filter
 
   return appointmentsStore.allAppointments.filter((appointment: any) => {
     const participants = appointment.participants
@@ -94,7 +99,14 @@ const treatments: Treatment[] = [
 ]
 
 // METHODS **********************************************************************
+function isAppointmentMissed(appointmentDate: string) {
+  let today = new Date()
+  let appointment = new Date(appointmentDate)
+  isAppointmentMissedState.value = today.getTime() < appointment.getTime()
+}
+
 profileStore.setMyProfile()
+patientStore.getPatientFromGraphQL(route.params.patientId as string)
 // patientStore.getPatientFromGraphQL(route.params.patientId as string).then((patient) => {
 //   patientData.value = patient
 // })
@@ -105,21 +117,15 @@ function formatDate(unixTimestamp: any) {
   const date = new Date(unixTimestamp * 1000)
   return date.toLocaleString()
 }
+
+const toDoItems = [
+  { text: 'Submit pregnancy test', isComplete: false },
+  { text: 'View Accutane info', isComplete: false },
+]
 </script>
 
 <template>
-  <div>
-    <h2>Patient's Appointments</h2>
-    <ul v-if="getPatientAppointments.length">
-      <li v-for="appointment in getPatientAppointments" :key="appointment?.id">
-        <p><strong>Title:</strong> {{ appointment?.title }}</p>
-        <p><strong>Date:</strong> {{ formatDate(appointment?.when.start_time) }}</p>
-      </li>
-    </ul>
-    <p v-else>No appointments found for the patient.</p>
-  </div>
   <div class="flex flex-col py-8">
-    <BaseNylas />
     <BaseWrapper>
       <!-- Upper cards -->
       <div class="flex gap-x-6 lg:flex-row flex-col gap-y-6 lg:min-w-[1244px]">
@@ -131,20 +137,18 @@ function formatDate(unixTimestamp: any) {
               <p class="text-gray-5 mt-[16px] w-3/4">Welcome to your patient portal</p>
             </div>
             <!-- To do list items -->
-            <div class="flex justify-start items-start flex-col gap-y-4">
-              <div class="flex items-center justify-between w-full">
-                <div class="flex items-center w-full">
-                  <div class="w-5 h-5 bg-honeydew-bg2 border border-[#F2F4F7] rounded-full mr-2"></div>
-                  <div class="w-full opacity-50 cursor-pointer" @click="profileStore.handleModal">Submit pregnancy test</div>
+            <div>
+              <div v-for="(todo, idx) in toDoItems" :key="idx" class="flex justify-start items-start flex-col gap-y-4">
+                <div v-if="!todo.isComplete" class="flex items-center justify-between w-full my-1">
+                  <div class="flex items-center w-full">
+                    <div class="w-5 h-5 bg-honeydew-bg2 border border-[#F2F4F7] rounded-full mr-2"></div>
+                    <div v-if="todo.text === 'Submit pregnancy test'" class="w-full opacity-50 cursor-pointer" @click="profileStore.handlePregnancyModal">
+                      {{ todo.text }}
+                    </div>
+                    <BaseAccutane v-else @accutane-flow-viewed="todo.text === 'View Accutane info' ? (todo.isComplete = true) : ''" />
+                  </div>
+                  <img class="rotate-[270deg]" :src="ChevronIcon2" alt="Chevron Icon 2" />
                 </div>
-                <img class="rotate-[270deg]" :src="ChevronIcon2" alt="Chevron Icon 2" />
-              </div>
-              <div class="flex items-center justify-between w-full">
-                <div class="flex items-center w-full">
-                  <div class="w-5 h-5 bg-honeydew-bg2 border border-[#F2F4F7] rounded-full mr-2"></div>
-                  <BaseAccutane />
-                </div>
-                <img class="rotate-[270deg]" :src="ChevronIcon2" alt="Chevron Icon 2" />
               </div>
             </div>
           </div>
@@ -159,17 +163,60 @@ function formatDate(unixTimestamp: any) {
         </div>
         <!-- You haven't scheduled... -->
         <div class="bg-white w-full rounded-[16px] p-8 flex justify-between shadow-sm">
+          <!-- <div v-if="getPatientAppointments.length !== 0">
+            <h2>Patient's Appointments</h2>
+            <ul v-if="getPatientAppointments.length">
+              <li v-for="(appointment, idx) in getPatientAppointments" :key="appointment?.id" v-show="idx === 0">
+                <p><strong>Title:</strong> {{ appointment?.title }}</p>
+                <p><strong>Date:</strong> {{ formatDate(appointment?.when.start_time) }}</p>
+              </li>
+            </ul>
+            <p v-else>No appointments found for the patient.</p>
+          </div> -->
           <div class="flex flex-col justify-between w-1/2">
             <div class="flex flex-col">
-              <h1 class="text-[24px] font-[500] leading-[40px] text-gray-3">You haven't scheduled your initial visit yet</h1>
-              <p class="text-gray-5 mt-[16px] w-3/4">Complete the sign up process and select a time for your initial visit.</p>
+              <h1 class="text-[24px] font-[500] leading-[40px] text-gray-3 flex">
+                {{ getPatientAppointments.length === 0 ? "You haven't scheduled your initial visit yet" : 'Follow-up visit' }}
+                <img v-if="isAppointmentMissedState" :src="AlertIcon" class="ml-2" alt="Alert Icon" />
+              </h1>
+              <p class="text-gray-5 mt-[16px] w-3/4">
+                {{
+                  isAppointmentMissedState
+                    ? 'Your follow-up was on'
+                    : getPatientAppointments.length === 0
+                    ? 'Complete the sign up process and select a time for your initial visit.'
+                    : 'Your follow-up is on'
+                }}
+              </p>
+              <div v-for="(appointment, idx) in getPatientAppointments" :key="appointment?.id" v-show="idx === 0">
+                <p
+                  v-if="getPatientAppointments.length"
+                  :load="isAppointmentMissed(appointment?.when.start_time)"
+                  :class="{
+                    'text-[#FFAA00]': isAppointmentMissedState,
+                    'text-[#60B257]': !isAppointmentMissedState,
+                  }"
+                  class="mt-[8px] w-3/4"
+                >
+                  {{ formatDate(appointment?.when.start_time) }}
+                </p>
+                <p v-if="isAppointmentMissedState" class="text-gray-5 mt-[8px] w-3/4">Let your care team know how you're doing!</p>
+              </div>
             </div>
             <div>
               <NuxtLink
+                v-if="getPatientAppointments.length === 0"
                 to="/schedule-my-free-visit"
                 class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-[190px]"
               >
                 schedule my free visit
+              </NuxtLink>
+              <NuxtLink
+                v-else
+                to="/schedule-my-free-visit"
+                class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-[190px]"
+              >
+                start visit
               </NuxtLink>
             </div>
           </div>

@@ -8,6 +8,7 @@ import DeleteIcon from '@/assets/icons/delete-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { Patient, Patients } from '@/types/patient-types'
 import { useMedicationStore } from '@/stores/medications'
+import { createMedication } from '~/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -34,27 +35,24 @@ onMounted(() => {
 })
 
 // TYPES **********************************************************************
-interface Chip {
-  text: string
-  amount: number
-}
-
-interface CategoryChips {
-  group: string
-  chips: Chip[]
-}
-
 interface TableHeaderCategory {
   role: string
   categories: { text: string }[]
 }
 
+type TimeSelection = 'Morning' | 'Evening'
+
 // STATE **********************************************************************
 const tabSelected = ref<'Medicine' | 'Treatment Plans'>('Medicine')
-const selectedChip = ref<Chip>({ text: 'All', amount: 10 })
-const selectedPatient = ref<Patient>()
 const patientList = ref<Patients>()
+
 const newMedicationName = ref()
+const newMedicationStrength = ref()
+const newMedicationSize = ref()
+const newMedicationInstructions = ref<TimeSelection[]>([])
+const newMedicationSpecialInstructions = ref()
+const newMedicationRefills = ref()
+const newMedicationRefillExpirationInDays = ref()
 
 // MEMBER DATA ****************************************************************
 const tableHeaderCategories: TableHeaderCategory[] = [
@@ -72,12 +70,32 @@ const tableHeaderCategories: TableHeaderCategory[] = [
 ]
 
 // METHODS ****************************************************************
-function handleSelectingChip(chip: Chip) {
-  selectedChip.value = chip
+async function handleCreateMedicine() {
+  const instructionsString = newMedicationInstructions.value.join(', ')
+
+  await createMedication(
+    newMedicationName.value,
+    newMedicationStrength.value,
+    newMedicationSpecialInstructions.value,
+    newMedicationRefills.value,
+    newMedicationRefillExpirationInDays.value,
+    instructionsString
+  )
+
+  medicationsStore.getMedicationsFromGraphQL()
 }
 
-function handleSelectedPatient(patient: Patient) {
-  selectedPatient.value = patient
+const toggleTime = (time: TimeSelection, isSelected: boolean): void => {
+  if (isSelected) {
+    // If the checkbox is selected, add the time to the array
+    newMedicationInstructions.value.push(time)
+  } else {
+    // If the checkbox is unselected, remove the time from the array
+    const index = newMedicationInstructions.value.indexOf(time)
+    if (index !== -1) {
+      newMedicationInstructions.value.splice(index, 1)
+    }
+  }
 }
 
 medicationsStore.getMedicationsFromGraphQL()
@@ -93,7 +111,7 @@ medicationsStore.getMedicationsFromGraphQL()
           <div class="flex">
             <!-- Create New Buttons -->
             <div v-if="tabSelected === 'Medicine'" class="flex">
-              <BaseModal :custom-header="true">
+              <BaseModal @action-click="handleCreateMedicine" :custom-header="true">
                 <template #button>
                   <div
                     class="text-[12px] h-[40px] flex justify-center items-center rounded-[60px] bg-[#EEEBFC] text-honeydew-purple uppercase cursor-pointer mt-[16px] text-center whitespace-nowrap px-4"
@@ -117,33 +135,37 @@ medicationsStore.getMedicationsFromGraphQL()
                       placeholder="Absorica Micronized"
                     />
                     <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Strength</p>
-                    <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" placeholder="16mg" />
+                    <input
+                      v-model="newMedicationStrength"
+                      class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+                      placeholder="16mg"
+                    />
                     <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Size</p>
                     <input
-                      v-model="newMedicationName"
+                      v-model="newMedicationSize"
                       class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
                       placeholder="60 capsules"
                     />
                     <div class="flex flex-col gap-y-4 my-6">
-                      <BaseCheckBox> Morning</BaseCheckBox>
-                      <BaseCheckBox> Evening</BaseCheckBox>
+                      <BaseCheckBox @checkbox-selected="(val) => toggleTime('Morning', val)"> Morning</BaseCheckBox>
+                      <BaseCheckBox @checkbox-selected="(val) => toggleTime('Evening', val)"> Evening</BaseCheckBox>
                     </div>
                     <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">SPECIAL INSTRUCTIONS</p>
                     <input
-                      v-model="newMedicationName"
+                      v-model="newMedicationSpecialInstructions"
                       class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
                       placeholder="Take one in the morning and one at night"
                     />
                     <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">REFILL COUNT</p>
                     <input
-                      v-model="newMedicationName"
+                      v-model="newMedicationRefills"
                       class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
                       placeholder="Take one in the morning and one at night"
                       type="number"
                     />
                     <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">REFILL EXPIRATION RATE (DAYS)</p>
                     <input
-                      v-model="newMedicationName"
+                      v-model="newMedicationRefillExpirationInDays"
                       class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
                       placeholder="Take one in the morning and one at night"
                       type="number"
@@ -229,7 +251,10 @@ medicationsStore.getMedicationsFromGraphQL()
             :class="[idx === medicationsStore.medicationData.length - 1 ? 'rounded-b-[16px]' : '']"
             class="grid grid-cols-6 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
           >
-            <div class="whitespace-pre-wrap w-1/2">{{ medication.medicationName || '-' }}</div>
+            <div class="whitespace-pre-wrap w-1/2 flex items-center">
+              {{ medication.medicationName || '-' }}
+              <span class="opacity-30 ml-1 text-xs">{{ medication.medicationStrength ? `(${medication.medicationStrength}mg)` : '' }}</span>
+            </div>
             <div class="whitespace-pre-wrap w-1/2">{{ medication.medicationInstructions || '-' }}</div>
             <div class="whitespace-pre-wrap w-1/2">{{ medication.medicationSpecialInstructions || '-' }}</div>
             <div>{{ medication.medicationRefills || '-' }}</div>

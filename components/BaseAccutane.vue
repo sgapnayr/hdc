@@ -11,6 +11,11 @@ import Accutane4 from '@/assets/images/accutane-4.svg'
 import Accutane5 from '@/assets/images/accutane-5.svg'
 import Accutane6 from '@/assets/images/accutane-6.svg'
 
+// EMIT **********************************************************************
+const emit = defineEmits<{
+  (event: 'accutane-flow-viewed'): void
+}>()
+
 // STATE **********************************************************************
 const slideSelected = ref<number>(1)
 
@@ -27,7 +32,7 @@ function handleNext() {
 <template>
   <BaseModal v-if="slideSelected !== 7" :custom-header="true" :custom-buttons="true">
     <template #button>
-      <div class="opacity-50 cursor-pointer">View Accutane flow</div>
+      <div class="opacity-50 cursor-pointer">View Accutane info</div>
     </template>
     <template #content>
       <div class="flex flex-col w-full max-w-[600px]">

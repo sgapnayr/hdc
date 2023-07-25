@@ -12,6 +12,7 @@ export const useMedicationStore = defineStore('medication', () => {
         const frontendMedication = {
           medicationId: medication.medicationId,
           medicationName: medication.name,
+          medicationStrength: medication.strength,
           medicationInstructions: medication.instructions,
           medicationSpecialInstructions: medication.specialInstructions,
           medicationRefills: medication.refills,
@@ -24,57 +25,6 @@ export const useMedicationStore = defineStore('medication', () => {
       console.log(err)
     }
   }
-
-  // const medicationData = [
-  //   {
-  //     medicationId: '1bcb2db6-4e1c-4e5b-8299-57c51538b693',
-  //     medicationName: 'Absorica Micronized, 16mg, 60 capsules',
-  //     medicationInstructions: 'Morning, Evening',
-  //     medicationSpecialInstructions: 'Take one in the morning and one at night',
-  //     medicationRefills: '',
-  //     medicationRefillExpirationInDays: '',
-  //   },
-  //   {
-  //     medicationId: '2568905b-39e0-4811-a3db-1f8f21565b7b',
-  //     medicationName: 'Absorica Micronized, 20mg, 60 capsules',
-  //     medicationInstructions: 'Morning, Evening',
-  //     medicationSpecialInstructions: 'Take one in the morning and one at night',
-  //     medicationRefills: '1',
-  //     medicationRefillExpirationInDays: '45',
-  //   },
-  //   {
-  //     medicationId: 'c24899d6-7315-4183-8d84-fb79a1cc667b',
-  //     medicationName: 'Absorica Micronized, 20mg, 90 capsules',
-  //     medicationInstructions: 'Morning, Evening',
-  //     medicationSpecialInstructions: 'Take one in the morning and one at night',
-  //     medicationRefills: '1',
-  //     medicationRefillExpirationInDays: '45',
-  //   },
-  //   {
-  //     medicationId: '2d67f9b9-9e21-4675-8744-7f9e085f9ff7',
-  //     medicationName: 'Retin-A Micro, 0.06%',
-  //     medicationInstructions: 'Evening',
-  //     medicationSpecialInstructions: 'Apply to face before bed',
-  //     medicationRefills: '1',
-  //     medicationRefillExpirationInDays: '56',
-  //   },
-  //   {
-  //     medicationId: 'b225a5dc-5d6e-4f49-b41c-3fbb3dc08f4d',
-  //     medicationName: 'Spironolactone, 25 mg, 60 capsules',
-  //     medicationInstructions: 'Morning, Evening',
-  //     medicationSpecialInstructions: '',
-  //     medicationRefills: '1',
-  //     medicationRefillExpirationInDays: '42',
-  //   },
-  //   {
-  //     medicationId: '9a9b7d2d-94ed-4c44-a37c-c1db7644b0a1',
-  //     medicationName: 'Zilxi (Minocycline Topical Foam), 1.5%',
-  //     medicationInstructions: 'Morning, Evening',
-  //     medicationSpecialInstructions: 'Take one in the morning and one at night',
-  //     medicationRefills: '1',
-  //     medicationRefillExpirationInDays: '',
-  //   },
-  // ]
 
   const treatmentData = [
     {

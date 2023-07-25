@@ -6,6 +6,7 @@ import { Auth } from 'aws-amplify'
 import { useRouter } from 'vue-router'
 import VerifyEmail from '@/assets/images/verify-email.svg'
 import VerifyEmailSuccess from '@/assets/images/verify-email-success.svg'
+import { updatePatient } from '@/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -165,6 +166,10 @@ async function confirmAccount(username: string, confirmationCode: string) {
       buttonLoadingState.value = 'idle'
       currentQuestionIdx.value = 6
     }, 1000)
+
+    await profileStore.setMyProfile()
+    console.log(profileStore.profileData.patientId)
+    updatePatient(profileStore.profileData.patientId, profileStore.signUpPhoneNumber, profileStore.signUpEmail)
   } catch (error) {
     console.log('Error confirming account:', error)
     buttonLoadingState.value = 'failed'
