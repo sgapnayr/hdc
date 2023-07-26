@@ -323,11 +323,40 @@ export const usePatientStore = defineStore('patient', () => {
   }
 
   async function getPatientFromGraphQL(patientId: string) {
+    console.log(patientId)
     try {
       const response = await getPatient(patientId)
-      patientData.value = response
+
+      if (response?.patientProfile) {
+        const backendPatient = response.patientProfile
+        const subAccounts = response.subAccounts
+        const actionItems = response.actionItems
+
+        const frontendPatient = {
+          patientId: patientId || 'patientId',
+          patientName: backendPatient.patientFirstName + ' ' + backendPatient.patientLastName || 'patientName',
+          patientDOB: backendPatient.patientDOB || 'patientDOB' + patientId.slice(0, 4),
+          patientEmail: backendPatient.patientEmail || 'patientEmail',
+          patientPhoneNumber: backendPatient.patientPhoneNumber || 'patientPhoneNumber',
+          patientHeight: backendPatient.patientHeight || 'patientHeight',
+          userRole: backendPatient.userRole || 'userRole',
+          patientWeight: backendPatient.patientWeight || 'patientWeight',
+          patientSex: backendPatient.patientSex || 'patientSex',
+          patientAge: backendPatient.patientAge || 'patientAge',
+          patientAddress: backendPatient.patientAddress || 'patientAddress',
+          subAccounts: subAccounts.map((subAccount: any) => ({
+            subAccountId: subAccount.subAccountId || 'subAccountId',
+            subAccountName: subAccount.subAccountName || 'subAccountName',
+          })),
+          actionItems: actionItems || 'actionItems',
+        }
+
+        patientData.value = frontendPatient
+      } else {
+        console.error('No patient profile found')
+      }
     } catch (error) {
-      console.error('Error retrieving patients:', error)
+      console.error('Error retrieving patient:', error)
     }
     return patientDataForAdminPage.find((patient) => patient.patientId === patientId)
   }

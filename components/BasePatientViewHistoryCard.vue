@@ -14,11 +14,6 @@ import { usePatientStore } from '~/stores/patient'
 import { useTasksStore } from '@/stores/task'
 import { useRoute } from 'vue-router'
 
-// PROPS *********************************************************************
-defineProps<{
-  patientData: any
-}>()
-
 // ROUTER *********************************************************************
 const route = useRoute()
 
@@ -55,6 +50,7 @@ function handleUpdateInsurance() {
   )
 }
 
+console.log('RUNNING')
 tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
 </script>
 

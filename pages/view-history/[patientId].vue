@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useProfileStore } from '~/stores/profile'
 import { usePatientStore } from '~/stores/patient'
 import { useTasksStore } from '~/stores/task'
@@ -96,9 +96,6 @@ const uploadPhoto = async () => {
   // }
 }
 
-patientStore.getPatientFromGraphQL(route.params.patientId as string).then((patient) => {
-  patientData.value = patient
-})
 tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 
 appointmentsStore.getAllAppointments()
@@ -108,7 +105,7 @@ appointmentsStore.getAllAppointments()
   <BaseWrapper>
     <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
-      <BasePatientViewHistoryCard :patientData="patientData" />
+      <BasePatientViewHistoryCard />
 
       <!-- Right Side (Treatment history & @photo-uploaded="isPhotoUploaded = true") -->
       <div class="md:w-1/2 rounded-[8px] flex flex-col">

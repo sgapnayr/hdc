@@ -64,7 +64,7 @@ const newEmployeeFirstName = ref()
 const newEmployeeLastName = ref()
 const newEmployeeEmail = ref()
 const newEmployeePhoneNumber = ref()
-const newEmployeeType = ref<'Provider' | 'Admin' | string>('Provider')
+const newEmployeeType = ref('Provider')
 const employeeMenuOpen = ref(false)
 
 const updateEmployeeFirstName = ref()
@@ -79,6 +79,7 @@ const selectedPatientIdToBecomeNewEmployee = ref()
 const selectedPatientNameForNewEmployee = ref()
 const pageSize = ref(10)
 const currentPage = ref(0)
+const selectedEmployeeType = ref<number>(0)
 
 // MEMBER DATA ****************************************************************
 const totalPages = computed(() => {
@@ -119,10 +120,6 @@ const tableHeaderCategories: TableHeaderCategory[] = [
     group: 'Coordinators',
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
-  {
-    group: 'Other',
-    categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
-  },
 ]
 
 // COMPUTED METHODS ****************************************************************
@@ -143,8 +140,6 @@ const filterByEmployeeType = computed(() => {
     return employeeData?.value?.filter((employee: any) => employee?.role?.includes('PROVIDER'))
   } else if (tabSelected.value === 'Admin') {
     return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('admin'))
-  } else if (tabSelected.value === 'Other') {
-    return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('other'))
   } else {
     return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('coordinator'))
   }
@@ -168,27 +163,34 @@ async function getPatientsInit() {
   }
 }
 
-enum RoleEnum {
-  PROVIDER = 'PROVIDER',
-  ASSISTANT = 'ASSISTANT',
-  ADMIN = 'ADMIN',
-  PHYSICIAN = 'PHYSICIAN',
-  SUPER_PHYSICIAN = 'SUPER_PHYSICIAN',
-  CARE_COORDINATOR = 'CARE_COORDINATOR',
+enum EmployeeRole {
+  PROVIDER,
+  ASSISTANT,
+  ADMIN,
+  PHYSICIAN,
+  SUPER_PHYSICIAN,
+  CARE_COORDINATOR,
 }
 
+const employeeTypes = [
+  { text: 'Provider', value: EmployeeRole.PROVIDER },
+  { text: 'Assistant', value: EmployeeRole.ASSISTANT },
+  { text: 'Admin', value: EmployeeRole.ADMIN },
+  { text: 'Physician', value: EmployeeRole.PHYSICIAN },
+  { text: 'Super Physician', value: EmployeeRole.SUPER_PHYSICIAN },
+  { text: 'Care Coordinator', value: EmployeeRole.CARE_COORDINATOR },
+]
+
 async function handleCreateEmployee() {
-  console.log('RUNNING')
   await createEmployee(
     newEmployeeFirstName.value,
     newEmployeeLastName.value,
     newEmployeeEmail.value,
     newEmployeePhoneNumber.value,
-    RoleEnum.PROVIDER,
+    EmployeeRole[selectedEmployeeType.value],
     selectedPatientIdToBecomeNewEmployee.value
   )
   employeeStore.getAllEmployeesGraphQL()
-  console.log('RUNNING')
 }
 
 async function handleUpdateEmployee(employeeId: string) {
@@ -199,7 +201,7 @@ async function handleUpdateEmployee(employeeId: string) {
     updateEmployeeLastName.value,
     updateEmployeeEmail.value,
     updateEmployeePhoneNumber.value,
-    updateEmployeeType.value,
+    EmployeeRole[selectedEmployeeType.value],
     employeeId
   )
   employeeStore.getAllEmployeesGraphQL()
@@ -360,13 +362,13 @@ patientStore.getPatientsFromGraphQL()
                         <div class="absolute left-0 top-12 w-full">
                           <div
                             class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
-                            v-for="(employeeType, idx) in ['Provider', 'Coordinator', 'Admin', 'Other']"
+                            v-for="(employeeType, idx) in employeeTypes"
                             :key="idx"
-                            :class="[3 === idx ? 'rounded-b-[28px]' : '']"
-                            @click="newEmployeeType = employeeType"
+                            :class="[employeeTypes.length - 1 === idx ? 'rounded-b-[28px]' : '']"
+                            @click=";(newEmployeeType = employeeType.text), (selectedEmployeeType = idx)"
                           >
                             <div class="px-4 py-1 rounded-[24px]">
-                              {{ employeeType }}
+                              {{ employeeType.text }}
                             </div>
                           </div>
                         </div>
@@ -447,13 +449,6 @@ patientStore.getPatientsFromGraphQL()
           >
             Admin
           </div>
-          <div
-            :class="[tabSelected === 'Other' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
-            class="h-full py-4 cursor-pointer"
-            @click="tabSelected = 'Other'"
-          >
-            Other
-          </div>
         </div>
         <!-- Search -->
         <div class="bg-honeydew-bg2 w-full h-[48px] mt-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-start">
@@ -506,7 +501,7 @@ patientStore.getPatientsFromGraphQL()
           >
             <div>
               {{ employee.firstName }} {{ employee.lastName }}
-              <span class="opacity-30 ml-2 text-xs">{{ employee?.employeeId?.slice(0, 10) + '...' }}</span>
+              <span class="opacity-30 ml-2 text-xs">{{ employee?.employeeId + '...' }}</span>
             </div>
             <div>
               {{ employee.email }}

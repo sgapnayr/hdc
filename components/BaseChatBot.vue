@@ -15,7 +15,7 @@ export default {
     const loadTidioScript = () => {
       // Load the Tidio Chat script when the component is mounted
       const script = document.createElement('script')
-      script.src = '//code.tidio.co/hixfawtjrk9xr2h780n0qi6d48osafrr.js'
+      script.src = '//code.tidio.co/pqcnrrpt0un5fexfcdxzxhwylyczmezu.js'
       script.async = true
       document.head.appendChild(script)
     }
