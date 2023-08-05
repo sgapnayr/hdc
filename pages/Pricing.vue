@@ -77,6 +77,8 @@ const membershipSelected = ref('yearly')
             </div>
           </div>
 
+          <div class="min-h-full bg-[#F2F4F7] h-[480px] w-1 mx-4 hidden md:flex"></div>
+
           <div class="flex flex-col w-full">
             <div class="mt-[24px] text-center">
               <h1 class="text-[24px] font-[700] leading-[40px] text-[#403E48]">Membership includes</h1>
@@ -138,37 +140,38 @@ const membershipSelected = ref('yearly')
             We connect you with highly specialized medical professionals who have a proven track record of trating acne.
           </p>
 
-          <div class="mt-[40px] bg-[#FAF9FF] w-full rounded-[20px] p-6 text-start">
-            <img :src="PillBottle" alt="Pill Bottle" class="mb-6" />
-            <div class="text-[18px] font-[700] leading-[24px]">On medication costs</div>
-            <div class="text-[16px] font-[400] leading-[24px] mt-[8px]">
-              We help you get insurance-covered medications and special discounts. Our customers save as much as $600/year on medication.
+          <div class="flex gap-x-8 md:flex-row flex-col">
+            <div class="mt-[40px] bg-[#FAF9FF] w-full rounded-[20px] p-6 text-start">
+              <img :src="PillBottle" alt="Pill Bottle" class="mb-6" />
+              <div class="text-[18px] font-[700] leading-[24px]">On medication costs</div>
+              <div class="text-[16px] font-[400] leading-[24px] mt-[8px]">
+                We help you get insurance-covered medications and special discounts. Our customers save as much as $600/year on medication.
+              </div>
+            </div>
+
+            <div class="mt-[40px] bg-[#FAF9FF] w-full rounded-[20px] p-6 text-start">
+              <img :src="ClockPurple" alt="Clock Purple" class="mb-6" />
+              <div class="text-[18px] font-[700] leading-[24px]">Your time</div>
+              <div class="text-[16px] font-[400] leading-[24px] mt-[8px]">
+                Honeydew saves you an average of 10 hours/year by eliminating travel and waiting rooms. What's your time worth?
+              </div>
+            </div>
+
+            <div class="mt-[40px] bg-[#FAF9FF] w-full rounded-[20px] p-6 text-start">
+              <img :src="SmilePurple" alt="Smile Purple" class="mb-6" />
+              <div class="text-[18px] font-[700] leading-[24px]">Your skin</div>
+              <div class="text-[16px] font-[400] leading-[24px] mt-[8px]">
+                The average wait time for a dermatologist appointment is over 33 days. Honeydew will get you ongoing, expert care right when you need it.
+              </div>
             </div>
           </div>
-
-          <div class="mt-[40px] bg-[#FAF9FF] w-full rounded-[20px] p-6 text-start">
-            <img :src="ClockPurple" alt="Clock Purple" class="mb-6" />
-            <div class="text-[18px] font-[700] leading-[24px]">Your time</div>
-            <div class="text-[16px] font-[400] leading-[24px] mt-[8px]">
-              Honeydew saves you an average of 10 hours/year by eliminating travel and waiting rooms. What's your time worth?
-            </div>
-          </div>
-
-          <div class="mt-[40px] bg-[#FAF9FF] w-full rounded-[20px] p-6 text-start">
-            <img :src="SmilePurple" alt="Smile Purple" class="mb-6" />
-            <div class="text-[18px] font-[700] leading-[24px]">Your skin</div>
-            <div class="text-[16px] font-[400] leading-[24px] mt-[8px]">
-              The average wait time for a dermatologist appointment is over 33 days. Honeydew will get you ongoing, expert care right when you need it.
-            </div>
-          </div>
-
           <BaseCallToAction
             alt-text="Pricing Guy 1"
             :image-path="PricingGuy1Mobile"
             button-text="TRY IT FOR FREE"
             large-text="Schedule your free consultation today."
+            logo-color="blue"
           />
-          <BaseCurrentlyAvailableIn />
         </div>
       </BaseWrapper>
     </div>
