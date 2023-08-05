@@ -31,78 +31,100 @@ const membershipSelected = ref('yearly')
         </div>
 
         <!-- Memebership Block -->
-        <div class="bg-white rounded-2xl w-full py-6 px-4 flex flex-col mt-[32px]">
-          <div class="flex gap-x-4">
-            <div
-              :class="[
-                membershipSelected === 'yearly' ? 'border border-[#5E39F5] boxShadow outline-[#eeebfc] outline-2 ring-[#eeebfc]' : 'border border-[#F7F9FE]',
-              ]"
-              @click="membershipSelected = 'yearly'"
-              class="bg-[#FBFBFE] p-4 rounded-[16px] flex flex-col justify-center items-center py-8 w-full"
-            >
-              <div class="text-[28px] font-[700] text-[#403E48]">$280.00</div>
-              <div class="text-[14px] font-[400]">YEARLY</div>
+        <div class="bg-white rounded-2xl w-full py-8 px-4 md:px-8 flex flex-col md:flex-row mt-[32px] gap-x-8 md:justify-between">
+          <div class="w-full flex justify-start flex-col">
+            <div class="flex gap-x-4 justify-center">
+              <div
+                :class="[
+                  membershipSelected === 'yearly' ? 'border border-[#5E39F5] boxShadow outline-[#eeebfc] outline-2 ring-[#eeebfc]' : 'border border-[#F7F9FE]',
+                ]"
+                @click="membershipSelected = 'yearly'"
+                class="bg-[#FBFBFE] p-4 rounded-[16px] flex flex-col justify-center items-center py-8 w-full cursor-pointer md:max-w-[217.5px]"
+              >
+                <div class="text-[28px] font-[700] text-[#403E48]">$280.00</div>
+                <div class="text-[14px] font-[400]">YEARLY</div>
+              </div>
+              <div
+                :class="[
+                  membershipSelected === 'monthly' ? 'border border-[#5E39F5] boxShadow outline-[#eeebfc] outline-2 ring-[#eeebfc]' : 'border border-[#F7F9FE]',
+                ]"
+                @click="membershipSelected = 'monthly'"
+                class="bg-[#FBFBFE] p-4 rounded-[16px] flex flex-col justify-center items-center py-8 w-full cursor-pointer md:max-w-[217.5px]"
+              >
+                <div class="text-[28px] font-[700] text-[#403E48]">$34.95</div>
+                <div class="text-[14px] font-[400]">MONTHLY</div>
+                <div class="text-[12px] font-[400]">(3-month min.)</div>
+              </div>
             </div>
-            <div
-              :class="[
-                membershipSelected === 'monthly' ? 'border border-[#5E39F5] boxShadow outline-[#eeebfc] outline-2 ring-[#eeebfc]' : 'border border-[#F7F9FE]',
-              ]"
-              @click="membershipSelected = 'monthly'"
-              class="bg-[#FBFBFE] p-4 rounded-[16px] flex flex-col justify-center items-center py-8 w-full"
-            >
-              <div class="text-[28px] font-[700] text-[#403E48]">$34.95</div>
-              <div class="text-[14px] font-[400]">MONTHLY</div>
-              <div class="text-[12px] font-[400]">(3-month min.)</div>
+
+            <div class="mt-[16px] justify-center w-full flex">
+              <img :src="Save17" alt="Save 17%" />
             </div>
-          </div>
 
-          <div class="mt-[16px] px-2">
-            <img :src="Save17" alt="Save 17%" />
-          </div>
+            <div class="hidden md:flex md:flex-col justify-center items-center">
+              <div class="w-full flex justify-center items-center max-w-[170px]">
+                <NuxtLink
+                  href="/sign-up"
+                  class="flex items-center justify-center gap-[10px] w-full max-w-[380px] h-[56px] px-[32px] py-[15px] flex-shrink-0 rounded-[60px] bg-[#5e39f5] text-white mt-[40px] whitespace-nowrap cursor-pointer transition"
+                >
+                  GET STARTED
+                </NuxtLink>
+              </div>
 
-          <div class="mt-[24px] text-center">
-            <h1 class="text-[24px] font-[700] leading-[40px] text-[#403E48]">Membership includes</h1>
-            <div class="mt-[32px] flex flex-col gap-y-6">
-              <div class="text-[16px] font-[400] leading-[22px] flex gap-x-5">
-                <img :src="CheckmarkCircle" alt="Checkmark Circle" />
-                <p>All Honeydew clinician consultations</p>
-              </div>
-              <div class="text-[16px] font-[400] leading-[22px] flex gap-x-5">
-                <img :src="CheckmarkCircle" alt="Checkmark Circle" />
-                <p>Prescription management</p>
-              </div>
-              <div class="text-[16px] font-[400] leading-[22px] flex gap-x-5">
-                <img :src="CheckmarkCircle" alt="Checkmark Circle" />
-                <p>Progress tracking</p>
-              </div>
-              <div class="text-[16px] font-[400] leading-[22px] flex gap-x-5">
-                <img :src="CheckmarkCircle" alt="Checkmark Circle" />
-                <p class="text-start">Ongoing support from your dedicated care team</p>
-              </div>
+              <p class="mt-[40px] text-[13px] font-[400] text-center text-[#6C6A7C]">
+                Medications are not included in the price of membership. They are prescribed to outside pharmacies and may be covered by insurance.
+              </p>
             </div>
           </div>
 
-          <div class="mt-[32px] text-center">
-            <h1 class="text-[24px] font-[700] leading-[40px] text-[#403E48]">Add-ons</h1>
-            <div class="mt-[32px] flex flex-col gap-y-6">
-              <div class="text-[16px] font-[400] leading-[22px] flex gap-x-5">
-                <img :src="PlusCircle" alt="Plus Circle" />
-                <p class="text-start">$25/month extra for Accutane management, if prescribed</p>
+          <div class="flex flex-col w-full">
+            <div class="mt-[24px] text-center">
+              <h1 class="text-[24px] font-[700] leading-[40px] text-[#403E48]">Membership includes</h1>
+              <div class="mt-[32px] flex flex-col gap-y-6">
+                <div class="text-[16px] font-[400] leading-[22px] flex gap-x-5">
+                  <img :src="CheckmarkCircle" alt="Checkmark Circle" />
+                  <p>All Honeydew clinician consultations</p>
+                </div>
+                <div class="text-[16px] font-[400] leading-[22px] flex gap-x-5">
+                  <img :src="CheckmarkCircle" alt="Checkmark Circle" />
+                  <p>Prescription management</p>
+                </div>
+                <div class="text-[16px] font-[400] leading-[22px] flex gap-x-5">
+                  <img :src="CheckmarkCircle" alt="Checkmark Circle" />
+                  <p>Progress tracking</p>
+                </div>
+                <div class="text-[16px] font-[400] leading-[22px] flex gap-x-5">
+                  <img :src="CheckmarkCircle" alt="Checkmark Circle" />
+                  <p class="text-start">Ongoing support from your dedicated care team</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-[32px] text-center">
+              <h1 class="text-[24px] font-[700] leading-[40px] text-[#403E48]">Add-ons</h1>
+              <div class="mt-[32px] flex flex-col gap-y-6">
+                <div class="text-[16px] font-[400] leading-[22px] flex gap-x-5">
+                  <img :src="PlusCircle" alt="Plus Circle" />
+                  <p class="text-start">$25/month extra for Accutane management, if prescribed</p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="w-full flex justify-center items-center">
-            <div
-              class="flex items-center justify-center gap-[10px] w-full max-w-[380px] h-[56px] px-[32px] py-[15px] flex-shrink-0 rounded-[60px] bg-[#5e39f5] text-white mt-[40px]"
-            >
-              GET STARTED
+          <div class="flex md:hidden flex-col">
+            <div class="w-full flex justify-center items-center">
+              <NuxtLink
+                href="/sign-up"
+                class="flex items-center justify-center gap-[10px] w-full max-w-[380px] h-[56px] px-[32px] py-[15px] flex-shrink-0 rounded-[60px] bg-[#5e39f5] text-white mt-[40px] cursor-pointer transition"
+              >
+                GET STARTED
+              </NuxtLink>
             </div>
-          </div>
 
-          <p class="mt-[40px] text-[13px] font-[400] text-center text-[#6C6A7C]">
-            Medications are not included in the price of membership. They are prescribed to outside pharmacies and may be covered by insurance.
-          </p>
+            <p class="mt-[40px] text-[13px] font-[400] text-center text-[#6C6A7C]">
+              Medications are not included in the price of membership. They are prescribed to outside pharmacies and may be covered by insurance.
+            </p>
+          </div>
         </div>
       </div>
     </BaseWrapper>
@@ -156,5 +178,9 @@ const membershipSelected = ref('yearly')
 <style scoped>
 .boxShadow {
   box-shadow: 1px 1px 10px #eeebfc;
+}
+
+p {
+  color: #403e48;
 }
 </style>

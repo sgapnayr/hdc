@@ -6,14 +6,15 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "lib": ["ESNext", "DOM"],
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./*"]
+      "~/*": ["./*"],
+      "@/*": ["src/*"]
     },
     "types": ["@types/node", "@nuxt/types"]
   },

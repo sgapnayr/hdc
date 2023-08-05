@@ -19,7 +19,7 @@ const route = useRoute()
           <img class="w-[40px] md:w-auto mr-[16px]" :src="HoneydewIcon" alt="Honeydew Icon" />
           <img class="w-[148px] md:w-auto" :src="HoneydewLogo" alt="Honeydew Logo" />
         </NuxtLink>
-        <div class="w-full justify-center gap-x-4 lg:gap-x-[48px] hidden md:flex items-center">
+        <div class="w-full justify-center gap-x-4 lg:gap-x-[48px] hidden md:flex items-center text-[#6C6A7C]">
           <NuxtLink class="transition" :class="[route.path === '/why-us' ? 'text-honeydew-purple' : '']" to="/why-us">WHY US</NuxtLink>
           <NuxtLink class="transition" :class="[route.path === '/pricing' ? 'text-honeydew-purple' : '']" to="/pricing">PRICING</NuxtLink>
           <NuxtLink class="transition" :class="[route.path === '/faq' ? 'text-honeydew-purple' : '']" to="/faq">FAQ</NuxtLink>

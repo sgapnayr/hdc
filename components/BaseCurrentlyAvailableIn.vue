@@ -7,7 +7,7 @@ const landingPageStore = useLandingPageStore()
 </script>
 
 <template>
-  <div class="mt-[24px] text-center text-[#403E48]">
+  <div class="mt-[24px] text-center text-[#403E48] flex flex-col">
     Currently availble in
     <span v-for="(availableLocation, idx) in landingPageStore.honeydewAvailableLocations" :key="idx">{{
       landingPageStore.honeydewAvailableLocations.length > 1 && idx !== landingPageStore.honeydewAvailableLocations.length - 1
