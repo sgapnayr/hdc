@@ -38,8 +38,8 @@ defineProps<{
       </svg>
 
       <h1 class="w-full mt-[32px] text-[32px] font-[700] leading-[40px] text-[#403E48] text-center md:text-start">{{ largeText }}</h1>
-      <BaseCurrentlyAvailableIn class="hidden md:flex grow" />
-      <NuxtLink to="/sign-up" class="w-full flex justify-center items-center md:w-[230px]">
+      <BaseCurrentlyAvailableIn class="hidden md:flex items-center" />
+      <NuxtLink to="/sign-up" class="w-full flex justify-center items-center md:w-[230px] mb-4">
         <div
           class="flex items-center justify-center gap-[10px] w-full max-w-[380px] h-[56px] px-[32px] py-[15px] flex-shrink-0 rounded-[60px] bg-[#5e39f5] text-white mt-[40px]"
         >

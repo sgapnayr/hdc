@@ -15,7 +15,6 @@ const membershipSelected = ref('yearly')
 </script>
 
 <template>
-  <BaseChatBot />
   <div class="flex flex-col w-full">
     <BaseWrapper>
       <div class="bg-[#F7F9FE]">
@@ -26,12 +25,12 @@ const membershipSelected = ref('yearly')
             better.
           </h1>
           <p class="mt-[16px] text-[16px] text-[#6C6A7C] font-[400] leading-[24px]">
-            As a meClockPurplember, you don't have to worry about paying every time you need us.
+            As a Purple Member, you don't have to worry about paying every time you need us.
           </p>
         </div>
 
         <!-- Memebership Block -->
-        <div class="bg-white rounded-2xl w-full py-8 px-4 md:px-8 flex flex-col md:flex-row mt-[32px] gap-x-8 md:justify-between">
+        <div class="bg-white rounded-2xl w-full py-8 px-4 md:px-8 flex flex-col md:flex-row mt-[32px] gap-x-8 md:justify-between shadow-sm">
           <div class="w-full flex justify-start flex-col">
             <div class="flex gap-x-4 justify-center">
               <div
@@ -62,7 +61,7 @@ const membershipSelected = ref('yearly')
             </div>
 
             <div class="hidden md:flex md:flex-col justify-center items-center">
-              <div class="w-full flex justify-center items-center max-w-[170px]">
+              <div class="w-full flex justify-center items-center max-w-[350px]">
                 <NuxtLink
                   href="/sign-up"
                   class="flex items-center justify-center gap-[10px] w-full max-w-[380px] h-[56px] px-[32px] py-[15px] flex-shrink-0 rounded-[60px] bg-[#5e39f5] text-white mt-[40px] whitespace-nowrap cursor-pointer transition"

@@ -1,5 +1,6 @@
 <template>
   <Loading v-if="isLoading" />
+  <BaseChatBot />
   <div v-if="!isLoading || isLoading" :class="isLoading ? 'invisible overflow-hidden' : ''" class="flex flex-col justify-center items-center">
     <div class="hidden md:flex flex-col w-full">
       <TheNavigationDeskop v-if="!isMobile" />
