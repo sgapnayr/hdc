@@ -55,10 +55,10 @@ interface TableHeaderCategory {
 // STATE **********************************************************************
 const tabSelected = ref<'Providers' | 'Admin' | 'Coordinators' | 'Other'>('Providers')
 const selectedChip = ref<Chip>({ text: 'Active', amount: 10 })
-const selectedEmployeeInput = ref<Employee>()
-const employeesList = ref<Employees>()
-const patientList = ref<Patients | any>()
-const patientTestId = ref<Patient | undefined>()
+const selectedEmployeeInput = ref()
+const employeesList = ref()
+const patientList = ref()
+const patientTestId = ref()
 
 const newEmployeeFirstName = ref()
 const newEmployeeLastName = ref()
@@ -150,7 +150,7 @@ function handleSelectingChip(chip: Chip) {
   selectedChip.value = chip
 }
 
-function handleSelectedPatient(employee: Employee) {
+function handleSelectedPatient(employee: any) {
   selectedEmployeeInput.value = employee
 }
 

@@ -39,14 +39,14 @@ import TamMobile from '@/assets/images/tam-mobile.png'
           </p>
           <!-- Cards -->
           <div class="mt-[40px] gap-y-6 flex flex-col relative md:flex-row gap-x-8">
-            <div class="bg-white p-6 rounded-[16px] shadow-sm w-full">
+            <div class="bg-white p-8 rounded-[16px] shadow-sm w-full">
               <div class="text-[#5E39F5] text-[56px] font-[400] leading-[56px]">90%+</div>
               <div class="text-[18px] font-[700] leading-[27px] my-4 text-[#403E48]">See results</div>
               <div class="text-[16px] font-[400] leading-[24px] my-4 text-[#6C6A7C]">
                 We use an evidence-based approach and track progress with photos and patient-reported outcomes.
               </div>
             </div>
-            <div class="bg-white p-6 rounded-[16px] shadow-sm w-full">
+            <div class="bg-white p-8 rounded-[16px] shadow-sm w-full">
               <div class="text-[#5E39F5] text-[56px] font-[400] leading-[56px]">35+</div>
               <div class="text-[18px] font-[700] leading-[27px] my-4 text-[#403E48]">Years of experience</div>
               <div class="text-[16px] font-[400] leading-[24px] my-4 text-[#6C6A7C]">
@@ -54,7 +54,7 @@ import TamMobile from '@/assets/images/tam-mobile.png'
                 it.
               </div>
             </div>
-            <div class="bg-white p-6 rounded-[16px] shadow-sm w-full">
+            <div class="bg-white p-8 rounded-[16px] shadow-sm w-full">
               <div class="text-[#5E39F5] text-[56px] font-[400] leading-[56px]">100k+</div>
               <div class="text-[18px] font-[700] leading-[27px] my-4 text-[#403E48]">Acne cases treated</div>
               <div class="text-[16px] font-[400] leading-[24px] my-4 text-[#6C6A7C]">
