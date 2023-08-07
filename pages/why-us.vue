@@ -25,7 +25,7 @@ import TamMobile from '@/assets/images/tam-mobile.png'
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col w-full">
     <div class="bg-[#F7F9FE] pb-8">
       <BaseWrapper>
         <!-- Heading Text -->
@@ -165,16 +165,17 @@ import TamMobile from '@/assets/images/tam-mobile.png'
         </div>
       </BaseWrapper>
     </div>
-
-    <BaseWrapper class="mt-8">
-      <BaseCallToAction
-        :image-path-desktop="WhyUsLady1Desktop"
-        :image-path="WhyUsLady1"
-        alt-text="Why Us Lady 1"
-        button-text="TRY IT FOR FREE"
-        large-text="Join those who say no to acne."
-        logo-color="green"
-      />
-    </BaseWrapper>
+    <div class="text-center bg-white mt-[48px] py-12 px-6">
+      <BaseWrapper class="mt-8">
+        <BaseCallToAction
+          :image-path-desktop="WhyUsLady1Desktop"
+          :image-path="WhyUsLady1"
+          alt-text="Why Us Lady 1"
+          button-text="TRY IT FOR FREE"
+          large-text="Join those who say no to acne."
+          logo-color="green"
+        />
+      </BaseWrapper>
+    </div>
   </div>
 </template>
