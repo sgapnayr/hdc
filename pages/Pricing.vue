@@ -166,8 +166,10 @@ const membershipSelected = ref('yearly')
             </div>
           </div>
           <BaseCallToAction
+            class="mt-16"
             alt-text="Pricing Guy 1"
             :image-path="PricingGuy1Mobile"
+            :image-path-desktop="PricingGuy1"
             button-text="TRY IT FOR FREE"
             large-text="Schedule your free consultation today."
             logo-color="blue"

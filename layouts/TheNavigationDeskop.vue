@@ -19,13 +19,17 @@ const route = useRoute()
           <img class="w-[40px] md:w-auto mr-[16px]" :src="HoneydewIcon" alt="Honeydew Icon" />
           <img class="w-[148px] md:w-auto" :src="HoneydewLogo" alt="Honeydew Logo" />
         </NuxtLink>
-        <div class="w-full justify-center gap-x-4 lg:gap-x-[48px] hidden md:flex items-center text-[#6C6A7C]">
-          <NuxtLink class="transition" :class="[route.path === '/why-us' ? 'text-honeydew-purple' : '']" to="/why-us">WHY US</NuxtLink>
-          <NuxtLink class="transition" :class="[route.path === '/pricing' ? 'text-honeydew-purple' : '']" to="/pricing">PRICING</NuxtLink>
-          <NuxtLink class="transition" :class="[route.path === '/faq' ? 'text-honeydew-purple' : '']" to="/faq">FAQ</NuxtLink>
+        <div class="w-full justify-center gap-x-6 lg:gap-x-[48px] hidden md:flex items-center text-[#6C6A7C] text-sm">
+          <NuxtLink class="transition hover:text-honeydew-purple" :class="[route.path === '/why-us' ? 'text-honeydew-purple' : '']" to="/why-us"
+            >WHY US</NuxtLink
+          >
+          <NuxtLink class="transition hover:text-honeydew-purple" :class="[route.path === '/pricing' ? 'text-honeydew-purple' : '']" to="/pricing"
+            >PRICING</NuxtLink
+          >
+          <NuxtLink class="transition hover:text-honeydew-purple" :class="[route.path === '/faq' ? 'text-honeydew-purple' : '']" to="/faq">FAQ</NuxtLink>
         </div>
         <div class="flex w-full justify-end items-center">
-          <NuxtLink to="/login" class="hidden md:flex cursor-pointer">LOGIN</NuxtLink>
+          <NuxtLink to="/login" class="hidden md:flex cursor-pointer text-[#6C6A7C] text-sm hover:text-honeydew-purple">LOGIN</NuxtLink>
           <NuxtLink
             to="/sign-up"
             class="bg-honeydew-purple h-[48px] justify-center text-white items-center flex w-[153px] rounded-[60px] ml-6 lg:ml-[40px] font-[500] text-[14px] leading-[24px] cursor-pointer"
