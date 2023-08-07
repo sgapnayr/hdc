@@ -108,7 +108,7 @@ import TamMobile from '@/assets/images/tam-mobile.png'
       <p class="mt-[16px] text-[16px] text-[#6C6A7C] font-[400] leading-[24px] w-full md:text-start">
         We're driven to make a difference in your life everyday.
       </p>
-      <div class="flex flex-wrap gap-x-8 gap-y-8 mt-[80px]">
+      <div class="flex flex-wrap gap-x-8 gap-y-8 mt-[80px] mb-16">
         <BaseEmployeeBio
           :desktop-image="JoelSpitzDesktop"
           :mobile-image="JoelSpitzMobile"
