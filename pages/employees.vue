@@ -390,7 +390,7 @@ patientStore.getPatientsFromGraphQL()
           </div>
           <!-- Search -->
           <div class="bg-honeydew-bg2 w-full h-[48px] mt-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-start">
-            <img class="ml-4 mr-2" :src="SearchIcon" alt="Search Icon" />
+            <img class="ml-4 mr-2 scale-50 md:scale-100" :src="SearchIcon" alt="Search Icon" />
             <input class="bg-honeydew-bg2 outline-none focus:ring-0 w-11/12" placeholder="Search by employee's name" type="text" />
           </div>
           <!-- Chips -->
