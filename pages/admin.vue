@@ -57,8 +57,8 @@ interface TableHeaderCategory {
 // STATE **********************************************************************
 const tabSelected = ref<'Active Patients' | 'Inactive Patients'>('Active Patients')
 const selectedChip = ref<Chip>({ text: 'All', amount: 10 })
-const selectedPatient = ref<Patient>()
-const patientList = ref<Patients>()
+const selectedPatient = ref()
+const patientList = ref()
 const pageSize = ref(7)
 const currentPage = ref(0)
 const showNoMedicalMessage = ref(false)
@@ -156,7 +156,7 @@ function handleSelectingChip(chip: Chip) {
   selectedChip.value = chip
 }
 
-function handleSelectedPatient(patient: Patient) {
+function handleSelectedPatient(patient: any) {
   selectedPatient.value = patient
 }
 
