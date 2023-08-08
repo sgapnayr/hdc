@@ -273,7 +273,7 @@ handleGetAllTasks()
                   <div :class="[patientMenuOpen ? 'z-40' : 'z-0']">
                     <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Patient's Name</h2>
                     <div
-                      class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+                      class="bg-white md:w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
                       :class="[patientMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
                       placeholder="Search by patient's name"
                       type="text"
@@ -304,7 +304,7 @@ handleGetAllTasks()
                   <div :class="[taskTypeMenuOpen ? 'z-40' : 'z-0']">
                     <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Type</h2>
                     <div
-                      class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+                      class="bg-white md:w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
                       :class="[taskTypeMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
                       placeholder="Search by patient's name"
                       type="text"
@@ -343,7 +343,7 @@ handleGetAllTasks()
                   <div :class="[taskPriorityMenuOpen ? 'z-40' : 'z-0']">
                     <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Priority</h2>
                     <div
-                      class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+                      class="bg-white md:w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
                       :class="[taskPriorityMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
                       placeholder="Search by patient's name"
                       type="text"
@@ -374,7 +374,7 @@ handleGetAllTasks()
                   <div>
                     <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Comments</h2>
                     <input
-                      class="bg-white w-[518px] h-[48px] mb-[10px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                      class="bg-white md:w-[518px] h-[48px] mb-[10px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
                       placeholder="Briefly describe the task"
                       type="text"
                       v-model="taskComments"

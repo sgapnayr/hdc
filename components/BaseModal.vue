@@ -78,7 +78,7 @@ function test() {
       class="shadow fixed w-screen z-30 min-h-screen flex justify-center items-start left-0 top-0 bottom-0"
       @click="canClose ? (modalIsOpen = false) : ''"
     >
-      <div class="relative flex justify-center top-24 lg:top-1/5 w-full">
+      <div class="relative flex justify-center top-20 lg:top-1/5 w-full">
         <transition name="modal">
           <div class="bg-white rounded-[8px] shadow-xl" @click.stop>
             <div v-if="!customHeader" class="text-[18px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between p-4 px-6">

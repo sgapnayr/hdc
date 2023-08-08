@@ -132,7 +132,7 @@ medicationsStore.getMedicationsFromGraphQL()
     <BaseWrapper>
       <!-- Manage Team Top -->
       <div class="w-full">
-        <div class="flex justify-between w-full flex-col md:flex-row"> 
+        <div class="flex justify-between w-full flex-col md:flex-row">
           <div class="text-[32px] font-[500] text-[#403E48]">Medications</div>
           <div class="flex mb-4 md:mb-auto">
             <!-- Create New Buttons -->
@@ -152,7 +152,7 @@ medicationsStore.getMedicationsFromGraphQL()
                   </div>
                 </template>
                 <template #content>
-                  <div class="w-[500px] grow">
+                  <div class="md:w-[500px] grow">
                     <div class="mb-4 text-[16px]">Add New Medication</div>
                     <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Name</p>
                     <input
@@ -186,14 +186,14 @@ medicationsStore.getMedicationsFromGraphQL()
                     <input
                       v-model="newMedicationRefills"
                       class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
-                      placeholder="Take one in the morning and one at night"
+                      placeholder="1"
                       type="number"
                     />
                     <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">REFILL EXPIRATION RATE (DAYS)</p>
                     <input
                       v-model="newMedicationRefillExpirationInDays"
                       class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
-                      placeholder="Take one in the morning and one at night"
+                      placeholder="45"
                       type="number"
                     />
                   </div>
