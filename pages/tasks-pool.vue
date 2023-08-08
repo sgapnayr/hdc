@@ -474,7 +474,7 @@ handleGetAllTasks()
               v-for="(task, idx) in assigneePages"
               :key="idx"
               :class="[idx === assigneePages.length - 1 ? 'rounded-b-[16px]' : '']"
-              class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
+              class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative items-center"
             >
               <div class="col-span-2 flex gap-x-2 items-center">
                 {{ task.taskPatienFirstName + ' ' + task.taskPatienLastName }}
@@ -538,7 +538,7 @@ handleGetAllTasks()
               <div
                 v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
                 :key="idx"
-                class="grid grid-cols-7 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
+                class="grid grid-cols-7 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full items-center"
               >
                 <div
                   v-for="(category, jdx) in tableHeaderCategory.categories"
@@ -559,7 +559,7 @@ handleGetAllTasks()
               v-for="(task, idx) in generalPages"
               :key="idx"
               :class="[idx === generalPages.length - 1 ? 'rounded-b-[16px]' : '']"
-              class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
+              class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative items-center"
               @mouseenter="hoveredIdx = idx"
               @mouseleave="hoveredIdx = null"
             >

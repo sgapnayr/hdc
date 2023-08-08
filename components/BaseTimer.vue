@@ -24,10 +24,10 @@ function startTimer() {
 }
 
 function getColorScheme() {
-  const days = Math.floor(elapsedTime.value / (1000 * 60 * 60 * 24))
-  if (days >= 1) {
+  const hours = Math.floor(elapsedTime.value / (1000 * 60 * 60))
+  if (hours >= 24) {
     return 'bg-[#FFF7E5] text-[#996600]'
-  } else if (days >= 3) {
+  } else if (hours >= 72) {
     return 'bg-[#F0F5FE] text-[#5E83D4]'
   } else {
     return 'bg-[#EEEBFC] text-honeydew-purple'
@@ -48,9 +48,9 @@ onMounted(() => {
     <span v-if="!elapsedTime"> Loading...</span>
     <span v-else>
       {{
-        `${Math.floor(elapsedTime / (1000 * 60 * 60 * 24))} days, ${Math.floor((elapsedTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))} hours, ${Math.floor(
-          (elapsedTime % (1000 * 60 * 60)) / (1000 * 60)
-        )} minutes, ${Math.floor((elapsedTime % (1000 * 60)) / 1000)} seconds`
+        `${Math.floor(elapsedTime / (1000 * 60 * 60))} hours, ${Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60))} minutes, ${Math.floor(
+          (elapsedTime % (1000 * 60)) / 1000
+        )} seconds`
       }}
     </span>
   </div>
