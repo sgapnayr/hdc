@@ -132,7 +132,7 @@ medicationsStore.getMedicationsFromGraphQL()
     <BaseWrapper>
       <!-- Manage Team Top -->
       <div class="w-full">
-        <div class="flex justify-between w-full">
+        <div class="flex justify-between w-full flex-col md:flex-row"> 
           <div class="text-[32px] font-[500] text-[#403E48]">Medications</div>
           <div class="flex mb-4 md:mb-auto">
             <!-- Create New Buttons -->

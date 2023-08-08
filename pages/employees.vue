@@ -226,9 +226,9 @@ patientStore.getPatientsFromGraphQL()
     <BaseWrapper>
       <!-- Manage Team Top -->
       <div class="w-full">
-        <div class="flex justify-between w-full gap-x-5">
+        <div class="flex justify-between w-full gap-x-5 flex-col md:flex-row">
           <div class="text-[32px] font-[500] text-[#403E48]">Manage Honeydew Team</div>
-          <div class="flex">
+          <div class="flex my-4">
             <!-- New Team Member -->
             <BaseModal @action-click="handleCreateEmployee">
               <template #header>

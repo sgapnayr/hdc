@@ -248,11 +248,11 @@ handleGetAllTasks()
     <BaseWrapper>
       <!-- Summary Top -->
       <div class="w-full">
-        <div class="flex justify-between w-full gap-x-4">
+        <div class="flex justify-between w-full gap-x-4 flex-col md:flex-row">
           <div class="text-[32px] font-[500] text-[#403E48]">General Tasks Pool</div>
           <div class="flex">
             <!-- Add New Task Button & Modal -->
-            <div class="w-full flex justify-start">
+            <div class="w-full flex justify-start my-4">
               <BaseModal @action-click="handleSubmitNewTask">
                 <template #button>
                   <div
