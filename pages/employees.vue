@@ -253,7 +253,7 @@ patientStore.getPatientsFromGraphQL()
                 <div :class="[patientMenuOpen ? 'z-40' : 'z-0']">
                   <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Patient's Name</h2>
                   <div
-                    class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+                    class="bg-white md:w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
                     :class="[patientMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
                     placeholder="Search by patient's name"
                     type="text"
@@ -285,7 +285,7 @@ patientStore.getPatientsFromGraphQL()
                   <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Employee Type</h2>
                   <div :class="[employeeMenuOpen ? 'z-40' : 'z-0']">
                     <div
-                      class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+                      class="bg-white md:w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
                       :class="[employeeMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
                       placeholder="Search by patient's name"
                       type="text"
