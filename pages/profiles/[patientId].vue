@@ -131,15 +131,15 @@ const toDoItems = [
       <!-- Upper cards -->
       <div class="flex gap-x-6 lg:flex-row flex-col gap-y-6 lg:min-w-[1244px]">
         <!-- Hi, Profile! -->
-        <div class="bg-white w-full rounded-[16px] p-8 flex justify-between shadow-sm">
+        <div class="bg-white w-full rounded-[16px] p-8 flex justify-between shadow-sm flex-col md:flex-row">
           <div class="flex flex-col justify-between w-1/2">
             <div class="flex flex-col">
               <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Hi, {{ profileStore.signUpName ? profileStore.signUpName : '...' }}!</h1>
-              <p class="text-gray-5 mt-[16px] w-3/4">Welcome to your patient portal</p>
+              <p class="text-gray-5 mt-[16px] w-full md:w-3/4">Welcome to your patient portal</p>
             </div>
             <!-- To do list items -->
-            <div>
-              <div v-for="(todo, idx) in toDoItems" :key="idx" class="flex justify-start items-start flex-col gap-y-4">
+            <div class="my-4 md:my-auto w-full">
+              <div v-for="(todo, idx) in toDoItems" :key="idx" class="flex justify-start items-start flex-col gap-y-4 w-full">
                 <div v-if="!todo.isComplete" class="flex items-center justify-between w-full my-1">
                   <div class="flex items-center w-full">
                     <div class="w-5 h-5 bg-honeydew-bg2 border border-[#F2F4F7] rounded-full mr-2"></div>
@@ -153,7 +153,7 @@ const toDoItems = [
               </div>
             </div>
           </div>
-          <div class="w-[286px] h-[396px] rounded-[16px] px-8 pt-8 bg-honeydew-bg4 relative z-0">
+          <div class="md:w-[286px] h-[396px] rounded-[16px] px-8 pt-8 bg-honeydew-bg4 relative z-0">
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3">Refer a friend</h1>
             <p class="text-gray-5 mt-[12px] text-[14px]">$25 in-site credit for you and your friend when they sign up using your referral link!</p>
             <div class="mt-[16px] text-honeydew-green text-[12px] font-[700] leading-[24px] w-full flex uppercase">Copy Link</div>
@@ -163,7 +163,7 @@ const toDoItems = [
           </div>
         </div>
         <!-- You haven't scheduled... -->
-        <div class="bg-white w-full rounded-[16px] p-8 flex justify-between shadow-sm">
+        <div class="bg-white w-full rounded-[16px] p-8 flex justify-between shadow-sm flex-col md:flex-row">
           <!-- <div v-if="getPatientAppointments.length !== 0">
             <h2>Patient's Appointments</h2>
             <ul v-if="getPatientAppointments.length">
@@ -174,7 +174,7 @@ const toDoItems = [
             </ul>
             <p v-else>No appointments found for the patient.</p>
           </div> -->
-          <div class="flex flex-col justify-between w-1/2">
+          <div class="flex flex-col justify-between md:w-1/2">
             <div class="flex flex-col">
               <h1 class="text-[24px] font-[500] leading-[40px] text-gray-3 flex">
                 {{ getPatientAppointments.length === 0 ? "You haven't scheduled your initial visit yet" : 'Follow-up visit' }}
@@ -204,7 +204,7 @@ const toDoItems = [
                 <p v-if="isAppointmentMissedState" class="text-gray-5 mt-[8px] w-3/4">Let your care team know how you're doing!</p>
               </div>
             </div>
-            <div>
+            <div class="my-4">
               <NuxtLink
                 v-if="getPatientAppointments.length === 0"
                 to="/schedule-my-free-visit"
@@ -221,7 +221,7 @@ const toDoItems = [
               </NuxtLink>
             </div>
           </div>
-          <div class="w-[286px] h-[396px] rounded-[16px] px-8 pt-8 bg-honeydew-bg4 relative">
+          <div class="w-full md:w-[286px] h-[396px] rounded-[16px] px-8 pt-8 bg-honeydew-bg4 relative">
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3">How do follow-ups work?</h1>
             <p class="text-gray-5 mt-[12px] text-[14px]">
               Answer a few key questions and submitting new photos of your skin. Your provider will review your submission and outline next steps.
