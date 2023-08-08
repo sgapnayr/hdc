@@ -67,7 +67,7 @@ const getPatientAppointments = computed(() => {
     }
     return false
   })
-}) as Appointment | any
+})
 
 // DUMMY DATA **********************************************************************
 const treatments: Treatment[] = [

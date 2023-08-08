@@ -16,13 +16,11 @@ const router = useRouter()
 
 // INIT *************************************************************
 onMounted(async () => {
-  await profileStore.setMyProfile()
-  const patientId = profileStore.profileData.patientId
+  await profileStore?.setMyProfile()
+  const patientId = profileStore?.profileData?.patientId
   if (patientId) {
-    // Redirect to the profile page
-    router.push(`/profiles/${patientId}`)
+    router?.push(`/profiles/${patientId}`)
   } else {
-    // Handle the case where patientId is not available
     console.error('Patient ID not available.')
   }
 })

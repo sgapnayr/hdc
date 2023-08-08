@@ -96,7 +96,8 @@ function test() {
                 </div>
                 <div
                   @click="test"
-                  class="text-[12px] h-[40px] px-6 flex justify-center items-center rounded-[60px] bg-honeydew-purple text-white uppercase cursor-pointer mt-[32px] whitespace-nowrap"
+                  class="text-[12px] h-[40px] px-6 flex justify-center items-center rounded-[60px] text-white uppercase cursor-pointer mt-[32px] whitespace-nowrap"
+                  :class="buttonState === 'disabled' ? 'bg-honeydew-gray cursor-not-allowed text-gray-1' : 'bg-honeydew-purple'"
                 >
                   <slot name="button-text"> Continue </slot>
                 </div>

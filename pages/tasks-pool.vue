@@ -248,7 +248,7 @@ handleGetAllTasks()
     <BaseWrapper>
       <!-- Summary Top -->
       <div class="w-full">
-        <div class="flex justify-between w-full">
+        <div class="flex justify-between w-full gap-x-4">
           <div class="text-[32px] font-[500] text-[#403E48]">General Tasks Pool</div>
           <div class="flex">
             <!-- Add New Task Button & Modal -->
@@ -394,7 +394,7 @@ handleGetAllTasks()
         <!-- General tasks pool -->
         <div class="bg-white p-8 rounded-[16px] flex justify-between relative mt-[32px] shadow-sm">
           <div class="w-full">
-            <div class="flex gap-x-6">
+            <div class="flex flex-wrap gap-6">
               <div class="flex flex-col w-[180px] h-[136px] justify-center items-center rounded-[16px] bg-[#FEF0F5] text-[#AE4768] relative">
                 <div class="text-[32px] font-[500] leading-[40px]">
                   {{ tasksStore?.assigneeTasks?.length || '-' }}
@@ -425,219 +425,229 @@ handleGetAllTasks()
       </div>
 
       <!-- Table -->
-      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full min-w-[1244px] mt-[32px] flex-col shadow-sm">
-        <div class="flex text-[16px] font-[400] gap-x-8">
-          <div class="h-full py-4 cursor-pointer border-b-2 border-b-honeydew-purple text-honeydew-purple">Assigned to me</div>
-        </div>
-
-        <!-- Chips -->
-        <div class="mt-[24px] flex-wrap flex">
-          <div v-for="(categoryChip, idx) in assignedToMeChips" :key="idx" class="flex flex-wrap" @click="selectedAssignedToMeChip.text = categoryChip.text">
-            <div
-              :class="[selectedAssignedToMeChip?.text === categoryChip.text ? 'bg-[#EEEBFC] text-honeydew-purple' : 'bg-honeydew-bg2']"
-              class="rounded-[20px] p-2 px-4 flex items-center justify-between mr-2 cursor-pointer whitespace-nowrap mb-2"
-              v-if="categoryChip.text"
-            >
-              {{ categoryChip.text }}
-
-              <div class="h-1 w-1 bg-black mx-2 rounded-full"></div>
-              {{ categoryChip.amount }}
-            </div>
+      <div class="table-container">
+        <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full min-w-[1244px] mt-[32px] flex-col shadow-sm">
+          <div class="flex text-[16px] font-[400] gap-x-8">
+            <div class="h-full py-4 cursor-pointer border-b-2 border-b-honeydew-purple text-honeydew-purple">Assigned to me</div>
           </div>
-        </div>
-        <!-- Assigned to me Table -->
-        <div class="bg-white">
-          <!-- Table Header -->
-          <div class="mt-[24px]">
-            <div
-              v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
-              :key="idx"
-              class="grid grid-cols-7 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
-            >
+
+          <!-- Chips -->
+          <div class="mt-[24px] flex-wrap flex">
+            <div v-for="(categoryChip, idx) in assignedToMeChips" :key="idx" class="flex flex-wrap" @click="selectedAssignedToMeChip.text = categoryChip.text">
               <div
-                v-for="(category, jdx) in tableHeaderCategory.categories"
-                :key="jdx"
-                :class="[category.text.includes('Full name') ? 'col-span-2' : 'col-span-1']"
+                :class="[selectedAssignedToMeChip?.text === categoryChip.text ? 'bg-[#EEEBFC] text-honeydew-purple' : 'bg-honeydew-bg2']"
+                class="rounded-[20px] p-2 px-4 flex items-center justify-between mr-2 cursor-pointer whitespace-nowrap mb-2"
+                v-if="categoryChip.text"
               >
-                <div :class="[category.text === 'Actions' ? 'w-full flex justify-end' : '']">
-                  {{ category.text }}
-                </div>
+                {{ categoryChip.text }}
+
+                <div class="h-1 w-1 bg-black mx-2 rounded-full"></div>
+                {{ categoryChip.amount }}
               </div>
             </div>
           </div>
+          <!-- Assigned to me Table -->
+          <div class="bg-white">
+            <!-- Table Header -->
+            <div class="mt-[24px]">
+              <div
+                v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
+                :key="idx"
+                class="grid grid-cols-7 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
+              >
+                <div
+                  v-for="(category, jdx) in tableHeaderCategory.categories"
+                  :key="jdx"
+                  :class="[category.text.includes('Full name') ? 'col-span-2' : 'col-span-1']"
+                >
+                  <div :class="[category.text === 'Actions' ? 'w-full flex justify-end' : '']">
+                    {{ category.text }}
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <!-- Table Body -->
-          <BaseLoader v-if="!assigneePages" />
+            <!-- Table Body -->
+            <BaseLoader v-if="!assigneePages" />
 
-          <NuxtLink
-            v-for="(task, idx) in assigneePages"
-            :key="idx"
-            :class="[idx === assigneePages.length - 1 ? 'rounded-b-[16px]' : '']"
-            class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
-          >
-            <div class="col-span-2 flex gap-x-2 items-center">
-              {{ task.taskPatienFirstName + ' ' + task.taskPatienLastName }}
-            </div>
-            <div>
-              {{ task.taskStatus }}
-            </div>
-            <div class="flex">
-              <BaseTaskBadge :taskLabel="task?.taskPriority" />
-            </div>
-            <div class="flex">
-              <BaseTaskBadge :taskLabel="task?.taskType" />
-            </div>
-            <div>
-              {{ task.taskComments }}
-            </div>
-            <div v-if="task.taskAssignedAt" class="w-full flex justify-end gap-x-3">
-              <BaseTimer :taskAssignedAt="task.taskAssignedAt" :key="task.taskAssignedAt" />
-            </div>
-          </NuxtLink>
+            <NuxtLink
+              v-for="(task, idx) in assigneePages"
+              :key="idx"
+              :class="[idx === assigneePages.length - 1 ? 'rounded-b-[16px]' : '']"
+              class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
+            >
+              <div class="col-span-2 flex gap-x-2 items-center">
+                {{ task.taskPatienFirstName + ' ' + task.taskPatienLastName }}
+              </div>
+              <div>
+                {{ task.taskStatus }}
+              </div>
+              <div class="flex">
+                <BaseTaskBadge :taskLabel="task?.taskPriority" />
+              </div>
+              <div class="flex">
+                <BaseTaskBadge :taskLabel="task?.taskType" />
+              </div>
+              <div>
+                {{ task.taskComments }}
+              </div>
+              <div v-if="task.taskAssignedAt" class="w-full flex justify-end gap-x-3">
+                <BaseTimer :taskAssignedAt="task.taskAssignedAt" :key="task.taskAssignedAt" />
+              </div>
+            </NuxtLink>
 
-          <!-- Pagination -->
-          <BasePagination
-            v-if="totalPagesForAssigneeTable > 1"
-            class="mx-4"
-            @page-forward="assigneeTablecurrentPage < totalPagesForAssigneeTable - 1 ? (assigneeTablecurrentPage += 1) : ''"
-            @page-back="assigneeTablecurrentPage > 0 ? (assigneeTablecurrentPage -= 1) : ''"
-            @skip-to="(val) => (assigneeTablecurrentPage = val)"
-            :currentPageProps="assigneeTablecurrentPage"
-            :totalPages="totalPagesForAssigneeTable"
-          />
+            <!-- Pagination -->
+            <BasePagination
+              v-if="totalPagesForAssigneeTable > 1"
+              class="mx-4"
+              @page-forward="assigneeTablecurrentPage < totalPagesForAssigneeTable - 1 ? (assigneeTablecurrentPage += 1) : ''"
+              @page-back="assigneeTablecurrentPage > 0 ? (assigneeTablecurrentPage -= 1) : ''"
+              @skip-to="(val) => (assigneeTablecurrentPage = val)"
+              :currentPageProps="assigneeTablecurrentPage"
+              :totalPages="totalPagesForAssigneeTable"
+            />
+          </div>
         </div>
       </div>
       <!-- Table -->
-      <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full min-w-[1244px] mt-[32px] flex-col shadow-sm">
-        <!-- Tabs -->
-        <div class="flex text-[16px] font-[400] gap-x-8">
-          <div class="h-full py-4 cursor-pointer border-b-2 border-b-honeydew-purple text-honeydew-purple">General</div>
-        </div>
+      <div class="table-container">
+        <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full min-w-[1244px] mt-[32px] flex-col shadow-sm">
+          <!-- Tabs -->
+          <div class="flex text-[16px] font-[400] gap-x-8">
+            <div class="h-full py-4 cursor-pointer border-b-2 border-b-honeydew-purple text-honeydew-purple">General</div>
+          </div>
 
-        <!-- Chips -->
-        <div class="mt-[24px] flex-wrap flex">
-          <div v-for="(categoryChip, idx) in generalChips" :key="idx" class="flex flex-wrap" @click="selectedGeneralChip.text = categoryChip.text">
-            <div
-              :class="[selectedGeneralChip?.text === categoryChip.text ? 'bg-[#EEEBFC] text-honeydew-purple' : 'bg-honeydew-bg2']"
-              class="rounded-[20px] p-2 px-4 flex items-center justify-between mr-2 cursor-pointer whitespace-nowrap mb-2"
-              v-if="categoryChip.text"
-            >
-              {{ categoryChip.text }}
-              <div class="h-1 w-1 bg-black mx-2 rounded-full"></div>
-              {{ categoryChip.amount }}
+          <!-- Chips -->
+          <div class="mt-[24px] flex-wrap flex">
+            <div v-for="(categoryChip, idx) in generalChips" :key="idx" class="flex flex-wrap" @click="selectedGeneralChip.text = categoryChip.text">
+              <div
+                :class="[selectedGeneralChip?.text === categoryChip.text ? 'bg-[#EEEBFC] text-honeydew-purple' : 'bg-honeydew-bg2']"
+                class="rounded-[20px] p-2 px-4 flex items-center justify-between mr-2 cursor-pointer whitespace-nowrap mb-2"
+                v-if="categoryChip.text"
+              >
+                {{ categoryChip.text }}
+                <div class="h-1 w-1 bg-black mx-2 rounded-full"></div>
+                {{ categoryChip.amount }}
+              </div>
             </div>
           </div>
-        </div>
-        <!-- Patients Table -->
-        <div class="bg-white">
-          <!-- Table Header -->
-          <div class="mt-[24px]">
-            <div
-              v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
-              :key="idx"
-              class="grid grid-cols-7 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
-            >
+          <!-- Table -->
+          <div class="bg-white">
+            <!-- Table Header -->
+            <div class="mt-[24px]">
               <div
-                v-for="(category, jdx) in tableHeaderCategory.categories"
-                :key="jdx"
-                :class="[category.text.includes('Full name') ? 'col-span-2' : 'col-span-1']"
+                v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
+                :key="idx"
+                class="grid grid-cols-7 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
               >
-                <div :class="[category.text === 'Actions' ? 'w-full flex justify-end' : '']">
-                  {{ category.text }}
+                <div
+                  v-for="(category, jdx) in tableHeaderCategory.categories"
+                  :key="jdx"
+                  :class="[category.text.includes('Full name') ? 'col-span-2' : 'col-span-1']"
+                >
+                  <div :class="[category.text === 'Actions' ? 'w-full flex justify-end' : '']">
+                    {{ category.text }}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Table Body -->
-          <BaseLoader v-if="!generalPages" />
+            <!-- Table Body -->
+            <BaseLoader v-if="!generalPages" />
 
-          <NuxtLink
-            v-for="(task, idx) in generalPages"
-            :key="idx"
-            :class="[idx === generalPages.length - 1 ? 'rounded-b-[16px]' : '']"
-            class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
-            @mouseenter="hoveredIdx = idx"
-            @mouseleave="hoveredIdx = null"
-          >
-            <div class="col-span-2 flex gap-x-2 items-center">
-              {{ task.taskPatienFirstName + ' ' + task.taskPatienLastName }}
-            </div>
-            <div>
-              {{ task.taskStatus }}
-            </div>
-            <div class="flex">
-              <BaseTaskBadge :taskLabel="task?.taskPriority" />
-            </div>
-            <div class="flex">
-              <BaseTaskBadge :taskLabel="task?.taskType" />
-            </div>
-            <div class="flex">
-              {{ task.taskComments.length > 40 ? task.taskComments.slice(0, 40) + '...' : task.taskComments }}
-            </div>
-
-            <div v-if="task.taskStatus === 'ASSIGNED'" class="w-full flex justify-end relative">
-              <div
-                v-if="showTaskAssignedMessage && hoveredIdx === idx"
-                class="absolute bg-[#403E48] text-white rounded-md -top-8 font-semibold px-2 py-1 text-[14px]"
-              >
-                This task has already been assigned
+            <NuxtLink
+              v-for="(task, idx) in generalPages"
+              :key="idx"
+              :class="[idx === generalPages.length - 1 ? 'rounded-b-[16px]' : '']"
+              class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
+              @mouseenter="hoveredIdx = idx"
+              @mouseleave="hoveredIdx = null"
+            >
+              <div class="col-span-2 flex gap-x-2 items-center">
+                {{ task.taskPatienFirstName + ' ' + task.taskPatienLastName }}
               </div>
-              <div
-                @mouseenter="showTaskAssignedMessage = true"
-                @mouseleave="showTaskAssignedMessage = false"
-                class="text-[10px] bg-[#D35F84] text-white shadow-md w-4 h-4 items-center font-bold rounded-[80px] justify-center relative text-center"
-              >
-                !
+              <div>
+                {{ task.taskStatus }}
               </div>
-            </div>
+              <div class="flex">
+                <BaseTaskBadge :taskLabel="task?.taskPriority" />
+              </div>
+              <div class="flex">
+                <BaseTaskBadge :taskLabel="task?.taskType" />
+              </div>
+              <div class="flex">
+                {{ task.taskComments.length > 40 ? task.taskComments.slice(0, 40) + '...' : task.taskComments }}
+              </div>
 
-            <div v-if="task.taskStatus !== 'ASSIGNED' && claimTaskButtonState === 'idle'" class="w-full flex justify-end gap-x-3 items-center">
-              <BaseModal :button-state="claimTaskButtonState" @action-click="handleAssignTask(task.taskId)">
-                <template #button>
-                  <img class="cursor-pointer" :src="ClaimIcon" alt="Claim Icon" />
-                </template>
-                <template #header>
-                  <div>Confirmation</div>
-                </template>
-                <template #content>
-                  <div class="text-[16px] font-normal p-4">
-                    Are you sure you want to claim task?
-                    <div class="flex flex-col my-4 gap-y-2">
-                      <span v-if="task.taskPatienFirstName" class="font-normal text-[14px] opacity-50"
-                        >Name: {{ task.taskPatienFirstName + ' ' + task.taskPatienLastName }}</span
-                      >
+              <div v-if="task.taskStatus === 'ASSIGNED'" class="w-full flex justify-end relative">
+                <div
+                  v-if="showTaskAssignedMessage && hoveredIdx === idx"
+                  class="absolute bg-[#403E48] text-white rounded-md -top-8 font-semibold px-2 py-1 text-[14px]"
+                >
+                  This task has already been assigned
+                </div>
+                <div
+                  @mouseenter="showTaskAssignedMessage = true"
+                  @mouseleave="showTaskAssignedMessage = false"
+                  class="text-[10px] bg-[#D35F84] text-white shadow-md w-4 h-4 items-center font-bold rounded-[80px] justify-center relative text-center"
+                >
+                  !
+                </div>
+              </div>
 
-                      <div v-if="task.taskPriority" class="flex">
-                        <span class="font-normal text-[14px] opacity-50 flex items-center">Type:</span>
-                        <div class="flex">
-                          <BaseTaskBadge :taskLabel="task?.taskType" />
+              <div v-if="task.taskStatus !== 'ASSIGNED' && claimTaskButtonState === 'idle'" class="w-full flex justify-end gap-x-3 items-center">
+                <BaseModal :button-state="claimTaskButtonState" @action-click="handleAssignTask(task.taskId)">
+                  <template #button>
+                    <img class="cursor-pointer" :src="ClaimIcon" alt="Claim Icon" />
+                  </template>
+                  <template #header>
+                    <div>Confirmation</div>
+                  </template>
+                  <template #content>
+                    <div class="text-[16px] font-normal p-4">
+                      Are you sure you want to claim task?
+                      <div class="flex flex-col my-4 gap-y-2">
+                        <span v-if="task.taskPatienFirstName" class="font-normal text-[14px] opacity-50"
+                          >Name: {{ task.taskPatienFirstName + ' ' + task.taskPatienLastName }}</span
+                        >
+
+                        <div v-if="task.taskPriority" class="flex">
+                          <span class="font-normal text-[14px] opacity-50 flex items-center">Type:</span>
+                          <div class="flex">
+                            <BaseTaskBadge :taskLabel="task?.taskType" />
+                          </div>
                         </div>
+                        <div v-if="task.taskPriority" class="flex">
+                          <span class="font-normal text-[14px] opacity-50 flex items-center">Priority:</span>
+                          <BaseTaskBadge :taskLabel="task?.taskPriority" />
+                        </div>
+                        <span v-if="task.taskComments" class="font-normal text-[14px] opacity-50">Description: {{ task.taskComments }}</span>
                       </div>
-                      <div v-if="task.taskPriority" class="flex">
-                        <span class="font-normal text-[14px] opacity-50 flex items-center">Priority:</span>
-                        <BaseTaskBadge :taskLabel="task?.taskPriority" />
-                      </div>
-                      <span v-if="task.taskComments" class="font-normal text-[14px] opacity-50">Description: {{ task.taskComments }}</span>
                     </div>
-                  </div>
-                </template>
-              </BaseModal>
-            </div>
-          </NuxtLink>
+                  </template>
+                </BaseModal>
+              </div>
+            </NuxtLink>
 
-          <!-- Pagination -->
-          <BasePagination
-            v-if="totalPagesForGeneralTable > 1"
-            class="mx-4"
-            @page-forward="currentPage < totalPagesForGeneralTable - 1 ? (currentPage += 1) : ''"
-            @page-back="currentPage > 0 ? (currentPage -= 1) : ''"
-            @skip-to="(val) => (currentPage = val)"
-            :currentPageProps="currentPage"
-            :totalPages="totalPagesForGeneralTable"
-          />
+            <!-- Pagination -->
+            <BasePagination
+              v-if="totalPagesForGeneralTable > 1"
+              class="mx-4"
+              @page-forward="currentPage < totalPagesForGeneralTable - 1 ? (currentPage += 1) : ''"
+              @page-back="currentPage > 0 ? (currentPage -= 1) : ''"
+              @skip-to="(val) => (currentPage = val)"
+              :currentPageProps="currentPage"
+              :totalPages="totalPagesForGeneralTable"
+            />
+          </div>
         </div>
       </div>
     </BaseWrapper>
   </div>
 </template>
+
+<style scoped>
+.table-container {
+  overflow-x: auto; /* Enable horizontal scrolling */
+}
+</style>
