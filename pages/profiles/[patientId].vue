@@ -56,17 +56,18 @@ const isAppointmentMissedState = ref<boolean>(false)
 
 // Computed function to get patient appointments filtered by email
 const getPatientAppointments = computed(() => {
-  const patientEmail = patientStore?.patientData?.email // Replace with the patient's email you want to filter
+  return []
+  // const patientEmail = patientStore?.patientData?.email // Replace with the patient's email you want to filter
 
-  return appointmentsStore.allAppointments.filter((appointment: any) => {
-    const participants = appointment.participants
-    for (const participant of participants) {
-      if (participant.email === patientEmail) {
-        return true
-      }
-    }
-    return false
-  })
+  // return appointmentsStore?.allAppointments?.filter((appointment: any) => {
+  //   const participants = appointment.participants
+  //   for (const participant of participants) {
+  //     if (participant.email === patientEmail) {
+  //       return true
+  //     }
+  //   }
+  //   return false
+  // })
 })
 
 // DUMMY DATA **********************************************************************

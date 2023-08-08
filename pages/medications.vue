@@ -9,7 +9,7 @@ import CaretIcon from '@/assets/icons/caret-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { Patient, Patients } from '@/types/patient-types'
 import { useMedicationStore } from '@/stores/medications'
-import { createMedication } from '~/lib/endpoints'
+import { createMedication, createTreatmentPlan } from '~/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -107,6 +107,10 @@ async function handleCreateMedicine() {
   medicationsStore.getMedicationsFromGraphQL()
 }
 
+async function handleCreateTreatmentPlan() {
+  await createTreatmentPlan()
+}
+
 const toggleTime = (time: TimeSelection, isSelected: boolean): void => {
   if (isSelected) {
     // If the checkbox is selected, add the time to the array
@@ -198,7 +202,7 @@ medicationsStore.getMedicationsFromGraphQL()
             </div>
 
             <div v-if="tabSelected === 'Treatment Plans'" class="flex">
-              <BaseModal :custom-header="true">
+              <BaseModal @action-click="handleCreateTreatmentPlan" :custom-header="true">
                 <template #button>
                   <div
                     class="text-[12px] h-[40px] flex justify-center items-center rounded-[60px] bg-[#EEEBFC] text-honeydew-purple uppercase cursor-pointer mt-[16px] text-center whitespace-nowrap px-4"

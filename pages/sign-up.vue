@@ -259,8 +259,8 @@ watch(
         <!-- What Is Your Name Question -->
         <div v-if="currentQuestionIdx === 2">
           <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Great, what is your name?</h1>
-          <p class="mb-[32px] font-[400] text-gray-5">Please, enter your full name</p>
-          <BaseInput v-model="currentSelectedAnswer" type="text" class="w-full" />
+          <p class="mb-[32px] font-[400] text-gray-5 w-full text-start">Please, enter your full name</p>
+          <BaseInput v-model="currentSelectedAnswer" type="text" />
           <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
         </div>
 

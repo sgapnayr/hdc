@@ -60,7 +60,6 @@ export const useProfileStore = defineStore('profile', () => {
     try {
       const response = await getMyProfile()
       profileData.value = response
-      console.log(profileData.value)
     } catch (error) {
       console.error('Error retrieving employees:', error)
     }
