@@ -624,11 +624,11 @@ async function handleAnswerSubmitValidation() {
       </div>
 
       <!-- Last step! Let’s see your skin -->
-      <div v-if="currentQuestionIdx === 17">
+      <div class="text-center w-[390px] md:w-full" v-if="currentQuestionIdx === 17">
         <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Last step! Let's see your skin</h1>
         <p class="mb-[32px] font-[400] text-gray-5">Take or upload photos of your skin from three profiles.</p>
 
-        <div class="flex gap-x-6">
+        <div class="flex gap-x-6 flex-wrap items-center justify-center">
           <BaseImageUpload
             @photo-uploaded="isPhotoUploaded = true"
             buttonText="Left profile"
@@ -648,11 +648,14 @@ async function handleAnswerSubmitValidation() {
             :image-URL="FaceRightOutline"
           />
         </div>
-        <a href="https://schedule.nylas.com/ryan-paglione-30min" target="_Blank">
-          <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[220px] mt-[32px]"
-            >Submit & Schedule</BaseButton
-          >
-        </a>
+
+        <div class="w-full flex justify-center items-center">
+          <a href="https://schedule.nylas.com/ryan-paglione-30min" target="_Blank">
+            <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[290px] mt-[32px] px-8"
+              >Submit & Schedule</BaseButton
+            >
+          </a>
+        </div>
       </div>
 
       <!-- End -->

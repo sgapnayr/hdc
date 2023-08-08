@@ -1,11 +1,8 @@
 <template>
   <div class="flex flex-col justify-center items-center relative">
     <TheNavigationCaptured />
-    <div class="w-full min-h-screen flex justify-center items-start bg-honeydew-bg2">
+    <div class="w-full min-h-screen flex justify-center items-start bg-honeydew-bg2 pb-16">
       <NuxtPage />
-    </div>
-    <div class="fixed bottom-0">
-      <TheFooterApp />
     </div>
   </div>
 </template>
