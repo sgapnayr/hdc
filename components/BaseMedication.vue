@@ -27,9 +27,9 @@ const medicationMenuOpen = ref(false)
     </div>
     <img :class="[medicationMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
     <div v-if="medicationMenuOpen">
-      <div class="absolute left-0 top-12 w-full h-48 overflow-scroll rounded-b-xl no-scrollbars">
+      <div class="absolute left-0 top-12 w-full h-48 overflow-scroll rounded-b-[28px] no-scrollbars">
         <div
-          class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
+          class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer"
           v-for="(medication, idx) in medicationsStore.medicationData"
           :key="idx"
           :class="[medicationsStore.medicationData.length - 1 === idx ? 'rounded-b-[28px]' : '']"
