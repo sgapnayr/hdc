@@ -2,10 +2,9 @@
 // IMPORTS ********************************************************************
 import { ref, computed } from 'vue'
 import BaseWrapper from '~/components/BaseWrapper.vue'
-import PlusIcon from '@/assets/icons/plus-circle.svg'
 import PencilIcon from '@/assets/icons/pencil-icon.svg'
 import DeleteIcon from '@/assets/icons/delete-icon.svg'
-import CaretIcon from '@/assets/icons/caret-icon.svg'
+import PlusIcon from '@/assets/icons/plus-circle.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { Patient, Patients } from '@/types/patient-types'
 import { useMedicationStore } from '@/stores/medications'
@@ -55,7 +54,8 @@ const newMedicationSpecialInstructions = ref()
 const newMedicationRefills = ref()
 const newMedicationRefillExpirationInDays = ref()
 
-const medicationMenuOpen = ref(false)
+const newTreatmentPlanName = ref()
+const treatmentGroups = ref([''])
 
 // MEMBER DATA ****************************************************************
 const tableHeaderCategories: TableHeaderCategory[] = [
@@ -217,43 +217,13 @@ medicationsStore.getMedicationsFromGraphQL()
                   </div>
                 </template>
                 <template #content>
-                  <div class="md:w-[400px]">
-                    <div class="mb-4 text-[16px]">Add New Medication</div>
+                  <div class="md:w-[400px] overflow-scroll no-scrollbars">
+                    <div class="mb-4 text-[16px]">Add New Plan</div>
                     <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Name</p>
-                    <input v-model="newMedicationName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
-                    <div class="mb-[8px] mt-4 flex w-full justify-between items-center">
-                      <p class="px-4 uppercase text-[12px] text-[#403E48]">Groups</p>
-                      <img :src="PlusIcon" alt="Plus Icon" class="opacity-50 px-4 cursor-pointer" />
-                    </div>
-                    <div :class="[medicationMenuOpen ? 'z-40' : 'z-0']">
-                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Patient's Name</h2>
-                      <div
-                        class="bg-white h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
-                        :class="[medicationMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
-                        placeholder="Search by patient's name"
-                        type="text"
-                        @click="medicationMenuOpen = !medicationMenuOpen"
-                      >
-                        <div class="px-4 py-1 rounded-[24px]">
-                          {{ 'Medication Name' }}
-                          <span class="opacity-30 ml-2 text-xs">{{ '' }}</span>
-                        </div>
-                        <img :class="[medicationMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
-                        <div v-if="medicationMenuOpen">
-                          <div class="absolute left-0 top-12 w-full">
-                            <div
-                              class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
-                              v-for="(medication, idx) in medicationsStore.medicationData"
-                              :key="idx"
-                              :class="[medicationsStore.medicationData.length - 1 === idx ? 'rounded-b-[28px]' : '']"
-                            >
-                              <!-- @click=";(selectedPatientIdToBecomeNewEmployee = patient.patientId), (selectedPatientNameForNewEmployee = patient.patientName)" -->
-                              <div class="px-4 py-1 rounded-[24px]">
-                                {{ medication.medicationName }} <span class="opacity-30 ml-2 text-xs">{{ medication.medicationId }}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                    <input v-model="newTreatmentPlanName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
+                    <div class="overflow-scroll h-96 no-scrollbars">
+                      <div v-for="(group, idx) in treatmentGroups" :key="idx">
+                        <BaseTreatmentPlanGroup :idx="idx" @add-group="treatmentGroups.push('')" @remove-group="treatmentGroups.splice(idx, 1)" />
                       </div>
                     </div>
                   </div>
@@ -416,5 +386,15 @@ input {
 
 .table-container {
   overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+.no-scrollbars {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.no-scrollbars::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* Chrome/Safari/Webkit */
 }
 </style>
