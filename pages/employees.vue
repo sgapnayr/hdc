@@ -95,7 +95,21 @@ const categoryChips: CategoryChips[] = [
     ],
   },
   {
-    group: 'Coordinators',
+    group: 'Super Providers',
+    chips: [
+      { text: 'Active', amount: 32 },
+      { text: 'Archived', amount: 10 },
+    ],
+  },
+  {
+    group: 'Care Coordinators',
+    chips: [
+      { text: 'Active', amount: 10 },
+      { text: 'Archived', amount: 13 },
+    ],
+  },
+  {
+    group: 'Enrollment Coordinators',
     chips: [
       { text: 'Active', amount: 10 },
       { text: 'Archived', amount: 13 },
@@ -165,20 +179,18 @@ async function getPatientsInit() {
 
 enum EmployeeRole {
   PROVIDER,
-  ASSISTANT,
-  ADMIN,
-  PHYSICIAN,
   SUPER_PHYSICIAN,
   CARE_COORDINATOR,
+  ENROLLMENT_COORDINATOR,
+  ADMIN,
 }
 
 const employeeTypes = [
   { text: 'Provider', value: EmployeeRole.PROVIDER },
-  { text: 'Assistant', value: EmployeeRole.ASSISTANT },
-  { text: 'Admin', value: EmployeeRole.ADMIN },
-  { text: 'Physician', value: EmployeeRole.PHYSICIAN },
-  { text: 'Super Physician', value: EmployeeRole.SUPER_PHYSICIAN },
+  { text: 'Supervising Physician', value: EmployeeRole.SUPER_PHYSICIAN },
   { text: 'Care Coordinator', value: EmployeeRole.CARE_COORDINATOR },
+  { text: 'Enrollment Coordinator', value: EmployeeRole.ENROLLMENT_COORDINATOR },
+  { text: 'Admin', value: EmployeeRole.ADMIN },
 ]
 
 async function handleCreateEmployee() {
