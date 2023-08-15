@@ -8,7 +8,7 @@ import ReportIcon from '@/assets/icons/report-icon.svg'
 import OptionsIcon from '@/assets/icons/options-icon.svg'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { getEmployees, createEmployee, getPatients, getEmployee, updateEmployee } from '@/lib/endpoints'
+import { getEmployees, createEmployee, getPatients, getEmployee, updateEmployee, searchPatient } from '@/lib/endpoints'
 import type { Employees, Employee } from '@/types/employee-types'
 import type { Patient, Patients } from '@/types/patient-types'
 import { useEmployeeStore } from '~/stores/employees'
@@ -53,7 +53,7 @@ interface TableHeaderCategory {
 }
 
 // STATE **********************************************************************
-const tabSelected = ref<'Providers' | 'Admin' | 'Coordinators' | 'Other'>('Providers')
+const tabSelected = ref<string>('Providers')
 const selectedChip = ref<Chip>({ text: 'Active', amount: 10 })
 const selectedEmployeeInput = ref()
 const employeesList = ref()
@@ -127,11 +127,19 @@ const tableHeaderCategories: TableHeaderCategory[] = [
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
   {
-    group: 'Admin',
+    group: 'Super Providers',
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
   {
-    group: 'Coordinators',
+    group: 'Enrollment Coordinators',
+    categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
+  },
+  {
+    group: 'Care Coordinators',
+    categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
+  },
+  {
+    group: 'Admin',
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
 ]
@@ -377,27 +385,15 @@ patientStore.getPatientsFromGraphQL()
       <div class="table-container">
         <div class="bg-white px-8 pb-8 rounded-[16px] flex justify-between w-full mt-[32px] flex-col shadow-sm min-w-[1244px]">
           <!-- Tabs -->
-          <div class="flex text-[16px] font-[400] gap-x-8">
-            <div
-              :class="[tabSelected === 'Providers' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
-              class="h-full py-4 cursor-pointer"
-              @click="tabSelected = 'Providers'"
-            >
-              Providers
-            </div>
-            <div
-              :class="[tabSelected === 'Coordinators' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
-              class="h-full py-4 cursor-pointer"
-              @click="tabSelected = 'Coordinators'"
-            >
-              Coordinators
-            </div>
-            <div
-              :class="[tabSelected === 'Admin' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
-              class="h-full py-4 cursor-pointer"
-              @click="tabSelected = 'Admin'"
-            >
-              Admin
+          <div class="flex gap-x-4">
+            <div v-for="(tab, idx) in tableHeaderCategories" class="flex text-[16px] font-[400] gap-x-8">
+              <div
+                :class="[tabSelected === tab.group ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : 'border-b-2 border-b-white']"
+                class="h-full py-4 cursor-pointer"
+                @click="tabSelected = tab.group"
+              >
+                {{ tab.group }}
+              </div>
             </div>
           </div>
           <!-- Search -->
