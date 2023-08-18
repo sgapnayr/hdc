@@ -56,9 +56,10 @@ export const useProfileStore = defineStore('profile', () => {
   const lastStepLetsSeeYourSkin = ref() // Change to image upload
 
   // SETTERS ****************************************************************
-  async function setMyProfile() {
+  async function setMyProfile(userId: string) {
     try {
-      const response = await getMyProfile()
+      const response = await getMyProfile(userId)
+      console.log(response)
       profileData.value = response
     } catch (error) {
       console.error('Error retrieving employees:', error)
