@@ -131,10 +131,8 @@ async function updateMedicine(medicationId: string) {
 
 async function handleCreateTreatmentPlan() {
   if (!inputsValid) return
-  console.log("treatment groups: ", treatmentGroups)
-  await createTreatmentPlan(
-    newTreatmentPlanName.value
-  )
+  console.log('treatment groups: ', treatmentGroups)
+  await createTreatmentPlan(newTreatmentPlanName.value)
 }
 
 const toggleTime = (time: TimeSelection, isSelected: boolean): void => {
