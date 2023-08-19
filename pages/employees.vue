@@ -233,7 +233,6 @@ async function handleArchiveEmployee(employeeId: string) {
 
 async function handleGetEmployee(employeeId: string) {
   console.log(employeeId)
-  console.log(employeeId)
 }
 
 getPatientsInit()

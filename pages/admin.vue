@@ -12,11 +12,11 @@ import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { Patient, Patients } from '@/types/patient-types'
 import { usePatientStore } from '@/stores/patient'
 import { useProfileStore } from '~/stores/profile'
+import { getMyProfile } from '~/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
   layout: 'in-app',
-  middleware: ['auth'],
 })
 
 // STORES **********************************************************************
@@ -26,6 +26,7 @@ const profileStore = useProfileStore()
 // ROUTER **********************************************************************
 const user = useAuthenticator()
 
+console.log(user)
 onMounted(() => {
   const unmountWatcher = watchEffect(() => {
     if (user.authStatus !== 'authenticated') {
@@ -232,13 +233,14 @@ async function fetchPatients() {
     await patientStore.getPatientsFromGraphQL()
   }
 }
-
+getMyProfile('01a15135-0d75-41ec-aea4-49c01555a546')
 fetchPatients()
 </script>
 
 <template>
   <div class="w-full py-8">
     <BaseWrapper>
+      {{ user?.user }}
       <!-- Summary Top -->
       <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative shadow-sm">
         <div>
