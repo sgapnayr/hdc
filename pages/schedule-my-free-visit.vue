@@ -650,9 +650,14 @@ async function handleAnswerSubmitValidation() {
         </div>
 
         <div class="w-full flex justify-center items-center">
+          <a>
+            <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="uploadPhoto()" class="w-full max-w-[290px] mt-[32px] px-8"
+              >Submit Photos</BaseButton
+            >
+          </a>
           <a href="https://schedule.nylas.com/ryan-paglione-30min" target="_Blank">
             <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[290px] mt-[32px] px-8"
-              >Submit & Schedule</BaseButton
+              >Schedule Appointment</BaseButton
             >
           </a>
         </div>

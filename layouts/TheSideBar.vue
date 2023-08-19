@@ -38,8 +38,8 @@ async function signOut() {
   }
 }
 
-profileStore.setMyProfile()
-</script>
+await profileStore.setMyProfile()
+</script> 
 
 <template>
   <div class="w-[80px] bg-white flex flex-col items-center h-screen justify-start shadow-md">
@@ -52,6 +52,7 @@ profileStore.setMyProfile()
         class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition flex justify-center items-center text-[#A09DB1] text-[8px]"
         :class="[route.path === '/admin' ? 'bg-[#EEEBFC] text-honeydew-purple' : 'hover:bg-[#EEEBFC]']"
         @click="router.push('/admin')"
+        v-if="profileStore.profileData.userRole != 'patient'"
       >
         <svg class="scale-125" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -70,6 +71,7 @@ profileStore.setMyProfile()
       <div
         class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition"
         :class="[route.path.includes('/view-history') ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
+        v-if="profileStore.profileData.userRole == 'patient'"
       >
         <svg
           @click="router.push('/view-history/' + profileStore.profileData.patientId)"
@@ -95,6 +97,7 @@ profileStore.setMyProfile()
       <div
         class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition"
         :class="[route.path === '/tasks-pool' ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
+        v-if="profileStore.profileData.userRole != 'patient'"
       >
         <svg @click="router.push('/tasks-pool')" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -114,6 +117,7 @@ profileStore.setMyProfile()
       <div
         class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition"
         :class="[route.path.includes('/profiles') || route.path === '/view-history' ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
+        v-if="profileStore.profileData.userRole == 'patient'"
       >
         <svg
           @click="router.push('/profiles/' + profileStore.profileData.patientId)"
@@ -137,6 +141,7 @@ profileStore.setMyProfile()
         class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition flex justify-center items-center text-[#A09DB1]"
         :class="[route.path === '/medications' ? 'bg-[#EEEBFC] text-honeydew-purple' : 'hover:bg-[#EEEBFC]']"
         @click="router.push('/medications')"
+        v-if="profileStore.profileData.userRole != 'patient'"
       >
         DX
       </div>
@@ -180,6 +185,7 @@ profileStore.setMyProfile()
       <div
         class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition"
         :class="[route.path === '/employees' ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
+        v-if="profileStore.profileData.userRole != 'patient'"
       >
         <svg @click="router.push('/employees')" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path

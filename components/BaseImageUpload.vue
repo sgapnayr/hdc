@@ -1,27 +1,31 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
+import { getPresignedUrl } from '~/lib/endpoints'
 
 const previewURL = ref('')
 const dragging = ref(false)
 const photo = ref<File | null>(null)
 
-defineProps<{
-  imageURL?: string
-  describedImage?: string
-  buttonText?: string
-}>()
+const { imageURL, describedImage, buttonText } = defineProps<{
+  imageURL?: string;
+  describedImage?: string;
+  buttonText?: string;
+}>();
+
 
 const emit = defineEmits<{
   (event: 'photo-uploaded', value: void): void
 }>()
 
 const handleFileSelect = (e: Event) => {
+  console.log("Handle file select")
   const target = e.target as HTMLInputElement
   const file = target.files?.[0]
   if (file) {
     photo.value = file
     generatePreview(file)
+    uploadPhoto(file)
   }
 }
 
@@ -35,6 +39,7 @@ const handleDragLeave = () => {
 }
 
 const handleDrop = (e: DragEvent) => {
+  console.log("Handle dragdrop")
   emit('photo-uploaded')
   e.preventDefault()
   dragging.value = false
@@ -42,6 +47,7 @@ const handleDrop = (e: DragEvent) => {
   if (file) {
     photo.value = file
     generatePreview(file)
+    uploadPhoto(file)
   }
 }
 
@@ -53,21 +59,25 @@ const generatePreview = (file: File) => {
   reader.readAsDataURL(file)
 }
 
-const uploadPhoto = async () => {
-  if (photo.value) {
-    const formData = new FormData()
-    formData.append('photo', photo.value)
+const uploadPhoto = async (file: File) => {
+  try {
+    const url = await getPresignedUrl(buttonText, file.type);
 
-    // try {
-    //   const response = await axios.post('/api/upload', formData, {
-    //     headers: { 'Content-Type': 'multipart/form-data' },
-    //   })
-    //   console.log(response.data)
-    // } catch (error) {
-    //   console.error(error)
-    // }
+    // Use the pre-signed URL to upload the file.
+    const uploadResult = await fetch(url, {
+      method: 'PUT',
+      body: file,
+      headers: {
+        'Content-Type': file.type,
+      },
+    });
+
+    console.log('Upload result: ', uploadResult);
+  } catch (error) {
+    console.error('Upload failed:', error);
   }
-}
+};
+
 </script>
 
 <template>

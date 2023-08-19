@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
-import { getMedications } from '~/lib/endpoints'
+import { getMedications, getTreatmentPlans } from '~/lib/endpoints'
 
 export const useMedicationStore = defineStore('medication', () => {
   const medicationData = ref()
+  const treatmentData = ref()
 
   // GETTERS ****************************************************************
   async function getMedicationsFromGraphQL() {
@@ -26,78 +27,13 @@ export const useMedicationStore = defineStore('medication', () => {
     }
   }
 
-  const treatmentData = [
-    {
-      treatmentId: '9a9b7d2d-94ed-4c44-a37c-c1db7644b0a1',
-      treatmentName: 'Mild Acne',
-      treatmentGroups: [
-        {
-          treatmentMedicines: ['Benzoyl Peroxide, 10% Cleanser', 'Sulfur Cleanser (AVAR cleanser), 10/2', 'Sulfur Cleanser (AVAR cleanser), 10/5'],
-        },
-        {
-          treatmentMedicines: [
-            'Aczone, 7.5%, 60 grams',
-            'Benzaclin, 1% clinda/5% BP',
-            'Benzamycin gel, 3% erythromycin / 5% benzoyl peroxide , 46.6 g',
-            'Clindamycin Gel, 1%, 20 grams',
-            'Clindamycin Lotion, 1%',
-            'Clindamycin Pledgets (swab), 1%',
-            'Dapsone Gel, 5%',
-            'Dapsone Gel, 7.5%',
-            'Erythromycin pads, 2%',
-            'Generic duac ( clindamycin 1.2% / benzoyl peroxide 5% ) gel, 30 grams',
-          ],
-        },
-        {
-          treatmentMedicines: [
-            'Adapalene gel, 0.1, 45 g',
-            'Adapalene gel, 0.3, 45 g',
-            'Aklief Cream, .005%, 45g',
-            'Epiduo forte gel, 0.3%/2.5%',
-            'Epiduo gel, 0.1%/2.5%',
-            'Metrocream, 0.75%, 45g',
-            'Retin-A Micro, .04, 20g',
-            'Retin-A Micro, 0.06%',
-            'Retin-A Micro, 0.08%',
-            'Retin-A Micro, 0.1%',
-            'Tazarotene Cream, 0.1%, 30 g',
-            'Tazorac Cream, 0.05%, 30 grams',
-            'Tazorac Cream, 0.1%, 30 grams',
-            'Tretinoin cream, 0.025%, 20 g',
-            'Tretinoin cream, 0.025%, 45 g',
-            'Tretinoin cream, 0.05%, 20 g',
-            'Tretinoin, .1%, 20g',
-            'Tretinoin, .1%, 45g',
-          ],
-        },
-        { treatmentMedicines: ['Moisturizer'] },
-      ],
-    },
-    {
-      treatmentId: '654c3e76-3bc1-4ca2-8e81-835c448e5bb5',
-      treatmentName: 'Onychomycosis',
-      treatmentGroups: [
-        {
-          treatmentMedicines: ['Jublia, 10%, 4ml', 'Jublia, 10%, 8ml', 'Tavaborole, 5%, 10ml'],
-        },
-      ],
-    },
-    {
-      treatmentId: '7ff6f56e-e12e-4f04-9e44-6db1d3bdcabc',
-      treatmentName: 'Tinea Versicolor',
-      treatmentGroups: [
-        {
-          treatmentMedicines: [
-            'Ciclopirox shampoo, 1%, 120mL ',
-            'Fluconazole, 150mg ',
-            'Itraconazole, 100mg ',
-            'Ketoconazole Cream, 2%, 60 grams ',
-            'Ketoconazole shampoo, 2%',
-          ],
-        },
-      ],
-    },
-  ]
+  async function getTreatmentPlansFromGraphQL() {
+    try {
+      const response = await getTreatmentPlans()
+      this.treatmentData = response
+      console.log("treatment plans in store: ", response)
+    }catch(err) {console.log("error getting treatment plans: ", err)}
+  }
 
-  return { medicationData, treatmentData, getMedicationsFromGraphQL }
+  return { medicationData, treatmentData, getMedicationsFromGraphQL, getTreatmentPlansFromGraphQL }
 })

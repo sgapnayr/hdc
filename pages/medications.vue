@@ -130,7 +130,11 @@ async function updateMedicine(medicationId: string) {
 }
 
 async function handleCreateTreatmentPlan() {
-  await createTreatmentPlan()
+  if (!inputsValid) return
+  console.log("treatment groups: ", treatmentGroups)
+  await createTreatmentPlan(
+    newTreatmentPlanName.value
+  )
 }
 
 const toggleTime = (time: TimeSelection, isSelected: boolean): void => {
@@ -147,6 +151,7 @@ const toggleTime = (time: TimeSelection, isSelected: boolean): void => {
 }
 
 medicationsStore.getMedicationsFromGraphQL()
+medicationsStore.getTreatmentPlansFromGraphQL()
 </script>
 
 <template>
@@ -245,7 +250,12 @@ medicationsStore.getMedicationsFromGraphQL()
                     <input v-model="newTreatmentPlanName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
                     <div class="overflow-scroll h-96 no-scrollbars">
                       <div v-for="(group, idx) in treatmentGroups" :key="idx">
-                        <BaseTreatmentPlanGroup :idx="idx" @add-group="treatmentGroups.push('')" @remove-group="treatmentGroups.splice(idx, 1)" />
+                        <BaseTreatmentPlanGroup
+                          @medications-id-arr="(medicationsIdArr) => console.log('MedicatoinsId arrays: ', medicationsIdArr)"
+                          :idx="idx"
+                          @add-group="treatmentGroups.push('')"
+                          @remove-group="treatmentGroups.splice(idx, 1)"
+                        />
                       </div>
                     </div>
                   </div>
@@ -400,7 +410,7 @@ medicationsStore.getMedicationsFromGraphQL()
                   :class="jdx === treatment.treatmentGroups.length - 1 ? '' : 'border-b'"
                 >
                   <div v-for="(medicines, kdx) in group" :key="kdx" class="flex-wrap flex">
-                    <div v-for="(medicine, ldx) in medicines">{{ medicine }} {{ ldx !== medicines.length - 1 ? ' | ' : '' }}</div>
+                    <div v-for="(medicine, ldx) in medicines">{{ medicine.name }} {{ ldx !== medicines.length - 1 ? ' | ' : '' }}</div>
                   </div>
                 </div>
               </div>
