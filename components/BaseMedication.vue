@@ -11,6 +11,16 @@ const medicationsStore = useMedicationStore()
 const selectedMedicationId = ref()
 const selectedMedicationName = ref()
 const medicationMenuOpen = ref(false)
+
+const emit = defineEmits<{
+  (name: 'medication-id', value: string): string
+}>()
+
+function handleSelectedMedicine(medicationId: string, medicationName: string) {
+  selectedMedicationId.value = medicationId
+  selectedMedicationName.value = medicationName
+  emit('medication-id', medicationId)
+}
 </script>
 
 <template>
@@ -33,7 +43,7 @@ const medicationMenuOpen = ref(false)
           v-for="(medication, idx) in medicationsStore.medicationData"
           :key="idx"
           :class="[medicationsStore.medicationData.length - 1 === idx ? 'rounded-b-[28px]' : '']"
-          @click=";(selectedMedicationId = medication.medicationId), (selectedMedicationName = medication.medicationName)"
+          @click="handleSelectedMedicine(medication.medicationId, medication.medicationName)"
         >
           <!-- @click=";(selectedPatientIdToBecomeNewEmployee = patient.patientId), (selectedPatientNameForNewEmployee = patient.patientName)" -->
           <div class="px-4 py-1 rounded-[24px]">

@@ -307,12 +307,11 @@ export const usePatientStore = defineStore('patient', () => {
           const frontendPatient = {
             patientId: backendPatient.patientId,
             patientName: backendPatient.patientProfile.patientFirstName + ' ' + backendPatient.patientProfile.patientLastName,
-            patientDOB: backendPatient.patientProfile.patientDOB || 'dobFromBackend',
+            patientDOB: backendPatient.patientProfile.patientDOB || 'missing',
             patientPhoneNumber: backendPatient.patientProfile.patientPhoneNumber || '',
             patientEmail: backendPatient.email || '',
             currentPatientStatus: ['New Patient'],
           }
-
           return frontendPatient
         }),
       }
@@ -344,10 +343,10 @@ export const usePatientStore = defineStore('patient', () => {
           patientSex: backendPatient.patientSex || 'patientSex',
           patientAge: backendPatient.patientAge || 'patientAge',
           patientAddress: backendPatient.patientAddress || 'patientAddress',
-          subAccounts: subAccounts.map((subAccount: any) => ({
+          subAccounts: subAccounts != null ?  subAccounts.map((subAccount: any) => ({
             subAccountId: subAccount.subAccountId || 'subAccountId',
             subAccountName: subAccount.subAccountName || 'subAccountName',
-          })),
+          })) : [],
           actionItems: actionItems || 'actionItems',
         }
 

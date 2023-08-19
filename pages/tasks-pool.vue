@@ -23,7 +23,7 @@ const user = useAuthenticator()
 
 onMounted(() => {
   watchEffect(() => {
-    if (user.authStatus !== 'authenticated') {
+    if (user.authStatus !== 'authenticated'  || profileStore.profileData.userRole == 'patient') {
       navigateTo('/')
     }
   })
@@ -238,8 +238,8 @@ async function fetchTasksByAssignee() {
   }
 }
 
-profileStore.setMyProfile()
-patientStore.getPatientsFromGraphQL()
+await profileStore.setMyProfile()
+// patientStore.getPatientsFromGraphQL()
 handleGetAllTasks()
 </script>
 
@@ -461,7 +461,7 @@ handleGetAllTasks()
                   :class="[category.text.includes('Full name') ? 'col-span-2' : 'col-span-1']"
                 >
                   <div :class="[category.text === 'Actions' ? 'w-full flex justify-end' : '']">
-                    {{ category.text }}
+                    {{ category.text == 'Actions' ? 'Time' : category.text}}
                   </div>
                 </div>
               </div>
@@ -477,7 +477,7 @@ handleGetAllTasks()
               class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative items-center"
             >
               <div class="col-span-2 flex gap-x-2 items-center">
-                {{ task.taskPatienFirstName + ' ' + task.taskPatienLastName }}
+                {{ task.taskPatientFirstName + ' ' + task.taskPatientLastName }}
               </div>
               <div>
                 {{ task.taskStatus }}
@@ -489,7 +489,7 @@ handleGetAllTasks()
                 <BaseTaskBadge :taskLabel="task?.taskType" />
               </div>
               <div>
-                {{ task.taskComments }}
+                {{ task.taskComments.length > 30 ? task.taskComments.slice(0, 40) + '...' : task.taskComments }}
               </div>
               <div v-if="task.taskAssignedAt" class="w-full flex justify-end gap-x-3">
                 <BaseTimer :taskAssignedAt="task.taskAssignedAt" :key="task.taskAssignedAt" />
@@ -564,7 +564,7 @@ handleGetAllTasks()
               @mouseleave="hoveredIdx = null"
             >
               <div class="col-span-2 flex gap-x-2 items-center">
-                {{ task.taskPatienFirstName + ' ' + task.taskPatienLastName }}
+                {{ task.taskPatientFirstName + ' ' + task.taskPatientLastName }}
               </div>
               <div>
                 {{ task.taskStatus }}

@@ -15,7 +15,7 @@ definePageMeta({
 // ROUTER **********************************************************************
 onMounted(() => {
   watchEffect(() => {
-    if (user.authStatus === 'authenticated') {
+    if (user.authStatus === 'authenticated' ) {
       navigateTo('/admin')
     }
   })

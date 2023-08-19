@@ -15,8 +15,8 @@ export const useTasksStore = defineStore('tasks', () => {
       const mappedData = response.tasks.map((task: any) => {
         const frontendTask = {
           taskId: task.taskId,
-          taskPatienFirstName: task.patientId?.patientProfile?.patientFirstName || '{patientFirstName}', // Use the patientLastName as the patient's name
-          taskPatienLastName: task.patientId?.patientProfile?.patientLastName || '{patientLastName}', // Use the patientLastName as the patient's name
+          taskPatientFirstName: task.patientId?.patientProfile?.patientFirstName || '{patientFirstName}', // Use the patientLastName as the patient's name
+          taskPatientLastName: task.patientId?.patientProfile?.patientLastName || '{patientLastName}', // Use the patientLastName as the patient's name
           taskCareCoordinator: '', // This field is not available in the backend response, set as an empty string
           taskStatus: task.status || '', // Use the status field as the task status
           taskPriority: task.priority || 'low', // This field is not available in the backend response, set as an empty string
@@ -29,7 +29,7 @@ export const useTasksStore = defineStore('tasks', () => {
       })
       allTasks.value = mappedData
     } catch (error) {
-      console.error('Error retrieving employees:', error)
+      console.error('Error retrieving tasks:', error)
     }
   }
 
@@ -39,8 +39,8 @@ export const useTasksStore = defineStore('tasks', () => {
       const mappedData = response.tasks.map((task: any) => {
         const frontendTask = {
           taskId: task.taskId,
-          taskPatienFirstName: task.patientId?.patientProfile?.patientFirstName || '{patientFirstName}', // Use the patientLastName as the patient's name
-          taskPatienLastName: task.patientId?.patientProfile?.patientLastName || '{patientLastName}', // Use the patientLastName as the patient's name
+          taskPatientFirstName: task.patientId?.patientProfile?.patientFirstName || '{patientFirstName}', // Use the patientLastName as the patient's name
+          taskPatientLastName: task.patientId?.patientProfile?.patientLastName || '{patientLastName}', // Use the patientLastName as the patient's name
           taskCareCoordinator: '', // This field is not available in the backend response, set as an empty string
           taskStatus: task.status || '', // Use the status field as the task status
           taskPriority: task.priority || 'low', // This field is not available in the backend response, set as an empty string
