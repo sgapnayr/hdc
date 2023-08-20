@@ -150,11 +150,29 @@ const toggleTime = (time: TimeSelection, isSelected: boolean): void => {
 
 medicationsStore.getMedicationsFromGraphQL()
 medicationsStore.getTreatmentPlansFromGraphQL()
+
+// PAYLOAD FOR CHESTER
+const medArr = ref([])
+
+function getMedicationsArr(medicationObject: { id: number; medicationId: string; jdx: number }) {
+  const { id, medicationId, jdx } = medicationObject
+
+  if (!medArr.value[id]) {
+    medArr.value[id] = []
+  }
+
+  medArr.value[id][jdx] = medicationId
+}
+
+function clearMedicationArr() {
+  medArr.value = []
+}
 </script>
 
 <template>
   <div class="w-full py-8">
     <BaseWrapper>
+      {{ medArr }}
       <!-- Manage Team Top -->
       <div class="w-full">
         <div class="flex justify-between w-full flex-col md:flex-row">
@@ -227,7 +245,7 @@ medicationsStore.getTreatmentPlansFromGraphQL()
             </div>
 
             <div v-if="tabSelected === 'Treatment Plans'" class="flex">
-              <BaseModal @action-click="handleCreateTreatmentPlan" :custom-header="true">
+              <BaseModal @modal-closing="clearMedicationArr" @action-click="handleCreateTreatmentPlan" :custom-header="true">
                 <template #button>
                   <div
                     class="text-[12px] h-[40px] flex justify-center items-center rounded-[60px] bg-[#EEEBFC] text-honeydew-purple uppercase cursor-pointer mt-[16px] text-center whitespace-nowrap px-4"
@@ -249,7 +267,7 @@ medicationsStore.getTreatmentPlansFromGraphQL()
                     <div class="overflow-scroll h-96 no-scrollbars">
                       <div v-for="(group, idx) in treatmentGroups" :key="idx">
                         <BaseTreatmentPlanGroup
-                          @medications-id-arr="(medicationsIdArr) => console.log('MedicatoinsId arrays: ', medicationsIdArr)"
+                          @medications-id-arr="(medicationsIdArr) => getMedicationsArr(medicationsIdArr)"
                           :idx="idx"
                           @add-group="treatmentGroups.push('')"
                           @remove-group="treatmentGroups.splice(idx, 1)"
