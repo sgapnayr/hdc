@@ -10,6 +10,7 @@ import PlusCircleIcon from '@/assets/icons/plus-circle.svg'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { useRouter, useRoute } from 'vue-router'
+import { getMyProfileImages } from '../../lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -96,13 +97,27 @@ const uploadPhoto = async () => {
   // }
 }
 
+const patientImages = ref<any>([])
+
+getMyProfileImages(route.params.patientId as string)
+  .then((res) => (patientImages.value = res))
+  .catch((error) => console.error(error))
+
 tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 
 appointmentsStore.getAllAppointments()
+profileStore.setMyProfile(route.params.patientId as string)
 </script>
 
 <template>
   <BaseWrapper>
+    {{ profileStore.profileData }}
+    <div class="flex bg-red">
+      IMAGES:
+      <div v-for="(image, idx) in patientImages?.images" :key="idx" class="p-2 w-1/2">
+        <img class="object-cover h-48 w-48" :src="image.path" :alt="image.fileName" />
+      </div>
+    </div>
     <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
       <BasePatientViewHistoryCard />

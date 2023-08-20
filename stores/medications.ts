@@ -31,8 +31,10 @@ export const useMedicationStore = defineStore('medication', () => {
     try {
       const response = await getTreatmentPlans()
       this.treatmentData = response
-      console.log("treatment plans in store: ", response)
-    }catch(err) {console.log("error getting treatment plans: ", err)}
+      console.log('treatment plans in store: ', response)
+    } catch (err) {
+      console.log('error getting treatment plans: ', err)
+    }
   }
 
   return { medicationData, treatmentData, getMedicationsFromGraphQL, getTreatmentPlansFromGraphQL }
