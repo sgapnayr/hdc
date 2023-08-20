@@ -131,7 +131,7 @@ async function updateMedicine(medicationId: string) {
 
 async function handleCreateTreatmentPlan() {
   if (!inputsValid) return
-  console.log('treatment groups: ', treatmentGroups)
+  chesterPayload.value = { treatmentGroup: newTreatmentPlanName, medArr } // Just showing the payload
   await createTreatmentPlan(newTreatmentPlanName.value)
 }
 
@@ -153,6 +153,7 @@ medicationsStore.getTreatmentPlansFromGraphQL()
 
 // PAYLOAD FOR CHESTER
 const medArr = ref([])
+const chesterPayload = ref()
 
 function getMedicationsArr(medicationObject: { id: number; medicationId: string; jdx: number }) {
   const { id, medicationId, jdx } = medicationObject
@@ -172,7 +173,17 @@ function clearMedicationArr() {
 <template>
   <div class="w-full py-8">
     <BaseWrapper>
+      <!-- DELETE WHEN DONE -->
+      MEDARR ID:
+      <br />
       {{ medArr }}
+      <br />
+      Chester Payload:
+      <br />
+      {{ chesterPayload }}
+      <br />
+      <!--  -->
+
       <!-- Manage Team Top -->
       <div class="w-full">
         <div class="flex justify-between w-full flex-col md:flex-row">
