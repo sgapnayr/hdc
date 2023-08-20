@@ -50,7 +50,6 @@ function handleUpdateInsurance() {
   )
 }
 
-console.log('RUNNING')
 tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
 </script>
 

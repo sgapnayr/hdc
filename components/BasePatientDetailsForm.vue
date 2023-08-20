@@ -15,7 +15,20 @@ const photo = ref()
 const previewURL = ref()
 const dragging = ref(false)
 const isChecked = ref(false)
+
 const signName = ref()
+
+const updatePatientFullName = ref()
+const updatePatientPhoneNumber = ref()
+const updatePatientEmailAddress = ref()
+const updatePatientCountry = ref()
+const updatePatientPostalCode = ref()
+const updatePatientCity = ref()
+const updatePatientStreetAddress = ref()
+const updatePatientsParentFullName = ref()
+const updatePatientsParentPhoneNumber = ref()
+
+const updateProfileObj = ref()
 
 // STORES ********************************************************************
 const profileStore = useProfileStore()
@@ -47,11 +60,28 @@ const generatePreview = (file: any) => {
   reader.readAsDataURL(file)
 }
 
-const uploadPhoto = async () => {
-  const formData = new FormData()
-  formData.append('photo', photo.value)
-  emit('close-modal')
+const updateProfileChanges = async () => {
+  const updateProfilePayload = {
+    patientFullName: updatePatientFullName.value,
+    patientsPhoneNumber: updatePatientPhoneNumber.value,
+    patientEmailAddress: updatePatientEmailAddress.value,
+    patientCountry: updatePatientCountry.value,
+    patientZipCode: updatePatientPostalCode.value,
+    patientCity: updatePatientCity.value,
+    patientStreetAddress: updatePatientStreetAddress.value,
+    patientsParentFullName: updatePatientsParentFullName.value,
+    patientsParentPhoneNumber: updatePatientsParentPhoneNumber.value,
+  }
 
+  updateProfileObj.value = updateProfilePayload // PAYLOAD FOR C-BISCUIT
+
+  setTimeout(() => {
+    emit('close-modal')
+  }, 1000)
+
+  // NEED PHOTO UPDATES
+  // const formData = new FormData()
+  // formData.append('photo', photo.value)
   // try {
   //   const response = await axios.post('/api/upload', formData, {
   //     headers: { 'Content-Type': 'multipart/form-data' },
@@ -64,175 +94,120 @@ const uploadPhoto = async () => {
 </script>
 
 <template>
-  <!-- Desktop Version -->
-  <div class="fixed w-full hidden md:flex flex-col z-50 bg-[#403E4880] items-end grow min-h-screen">
-    <div class="flex flex-col w-full md:max-w-[800px] bg-honeydew-bg2 grow min-h-screen">
-      <div class="text-[16px] font-[500] leading-[24px] flex gap-x-2 cursor-pointer mb-8 bg-white items-center shadow-sm justify-between">
+  <div class="fixed w-full flex flex-col z-50 lg:flex bg-opacity-50 bg-[#403E4880] items-end grow min-h-screen">
+    <div class="flex flex-col w-full lg:max-w-[800px] bg-honeydew-bg2 grow min-h-screen">
+      <div class="text-sm font-medium leading-[24px] flex gap-x-2 cursor-pointer mb-8 bg-white items-center shadow-sm justify-between">
         <div class="flex items-center">
-          <div @click="emit('close-modal')" class="border-r border-r-[#E1E0E6] p-6 mr-8">
+          <div @click="emit('close-modal')" class="border-r border-[#E1E0E6] p-6 mr-8">
             <img class="rotate-90" :src="ChevronIcon2" alt="Chevron Icon" />
           </div>
-          <div class="flex text-[#403E48] text-[20px]">Edit additional patient's details</div>
+          <div class="flex text-[#403E48] text-lg">Edit additional patient's details</div>
         </div>
         <button
-          @click="uploadPhoto"
-          :disable="!isChecked && !signName"
-          :class="[isChecked && signName ? 'bg-honeydew-purple ' : 'bg-gray-2']"
-          class="w-[150px] rounded-[80px] text-white p-3 text-center cursor-pointer transition active:scale-90 text-[12px]"
+          @click="updateProfileChanges"
+          class="w-[150px] rounded-full text-white p-3 text-center cursor-pointer transition active:scale-90 text-xs mx-6 bg-honeydew-purple"
         >
           SAVE CHANGES
         </button>
       </div>
-      <div class="px-6">
-        <p class="text-[#6C6A7C] text-[16px]">After you save the applied changes the details will be changed for patient as well.</p>
+      <div class="px-6 py-4">
+        <p class="text-[#6C6A7C] text-lg">After you save the applied changes the details will be changed for patient as well.</p>
       </div>
-      <div class="flex flex-col rounded-xl shadow-sm bg-white mt-6 mx-6">
-        <div class="p-6 flex justify-between border-b border-[#F2F4F7]">
-          <div class="mb-3 text-[18px] w-full">Parent's contact information</div>
+      <!-- Make Scroll -->
+      <div class="flex flex-col rounded-xl shadow-sm bg-white mt-6 mx-6 overflow-y-auto scrollable-section">
+        <!-- Patient's information -->
+        <div class="p-6 flex flex-col border-b border-[#F2F4F7]">
+          <div class="mb-3 text-xl w-full">Patient's information</div>
           <div class="w-full">
-            <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Full name</p>
+            <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Full name</p>
             <input
-              v-model="signName"
+              v-model="updatePatientFullName"
               :placeholder="profileStore.signUpName || 'Enter your full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">Phone Number</p>
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Phone Number</p>
             <input
-              v-model="signName"
-              :placeholder="profileStore.signUpName || 'Enter your full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+              v-model="updatePatientPhoneNumber"
+              :placeholder="profileStore.signUpName || 'Enter your phone number'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">Email Address</p>
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Email Address</p>
             <input
-              v-model="signName"
-              :placeholder="profileStore.signUpName || 'Enter your full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+              v-model="updatePatientEmailAddress"
+              :placeholder="profileStore.signUpName || 'Enter your email address'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
           </div>
         </div>
-        <div class="p-6 flex justify-between border-b border-[#F2F4F7]">
-          <div class="mb-3 text-[18px] w-full">Shipping address</div>
+        <!-- Shipping address -->
+        <div class="p-6 flex flex-col border-b border-[#F2F4F7]">
+          <div class="mb-3 text-xl w-full">Shipping address</div>
           <div class="w-full">
-            <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Country</p>
+            <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Country</p>
             <input
-              v-model="signName"
-              :placeholder="profileStore.signUpName || 'Enter your full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+              v-model="updatePatientCountry"
+              :placeholder="profileStore.signUpName || 'Enter your country'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">Postal Code</p>
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Postal Code</p>
             <input
-              v-model="signName"
-              :placeholder="profileStore.signUpName || 'Enter your full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+              v-model="updatePatientPostalCode"
+              :placeholder="profileStore.signUpName || 'Enter your zip code'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">CITY</p>
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">CITY</p>
             <input
-              v-model="signName"
-              :placeholder="profileStore.signUpName || 'Enter your full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+              v-model="updatePatientCity"
+              :placeholder="profileStore.signUpName || 'Enter your city'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">STREET, APT.</p>
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">STREET, APT.</p>
             <input
-              v-model="signName"
-              :placeholder="profileStore.signUpName || 'Enter your full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+              v-model="updatePatientStreetAddress"
+              :placeholder="profileStore.signUpName || 'Enter your street address'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
           </div>
         </div>
-        <div class="p-6 flex justify-between border-b border-[#F2F4F7]">
-          <div class="mb-3 text-[18px] w-full">Parent's contact information</div>
+        <!-- Parent's contact information -->
+        <div class="p-6 flex flex-col border-b border-[#F2F4F7]">
+          <div class="mb-3 text-xl w-full">Parent's contact information</div>
           <div class="w-full">
-            <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Full name</p>
+            <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Full name</p>
             <input
-              v-model="signName"
-              :placeholder="profileStore.signUpName || 'Enter your full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+              v-model="updatePatientsParentFullName"
+              :placeholder="profileStore.signUpName || 'Enter your parent\'s full name'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">Phone Number</p>
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Phone Number</p>
             <input
-              v-model="signName"
-              :placeholder="profileStore.signUpName || 'Enter your full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+              v-model="updatePatientsParentPhoneNumber"
+              :placeholder="profileStore.signUpName || 'Enter your parent\'s phone number'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <p class="mb-[8px] mt-[16px] px-4 uppercase text-[12px] text-[#403E48]">Email Address</p>
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Email Address</p>
             <input
               v-model="signName"
               :placeholder="profileStore.signUpName || 'Enter your full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
           </div>
         </div>
       </div>
+      {{ updateProfileObj }}
       <button
-        @click="uploadPhoto"
-        :disable="!isChecked && !signName"
-        :class="[isChecked && signName ? 'bg-honeydew-purple ' : 'bg-gray-2']"
-        class="w-[150px] rounded-[80px] text-white p-3 text-center cursor-pointer transition active:scale-90 text-[12px] mx-6 mt-6"
+        @click="updateProfileChanges"
+        class="w-[150px] rounded-full text-white p-3 text-center cursor-pointer transition active:scale-90 text-xs mx-6 mt-6 bg-honeydew-purple"
       >
         SAVE CHANGES
       </button>
     </div>
   </div>
-
-  <!-- Mobile Version -->
-  <div class="absolute w-full flex flex-col z-50 bg-[#403E4880] items-end grow min-h-screen md:hidden">
-    <div class="flex flex-col w-full md:max-w-[800px] bg-honeydew-bg2 grow">
-      <div class="bg-white p-5 rounded-xl shadow-sm">
-        <div @click="emit('close-modal')" class="text-honeydew-purple text-[16px] font-[500] leading-[24px] flex gap-x-2 cursor-pointer mb-8">
-          <img :src="ChevronIcon" alt="Chevron Icon" />
-          Back
-        </div>
-        <div class="flex text-[#403E48] text-[18px] mb-[8px]">Complete pregnancy test</div>
-        <p class="text-[#6C6A7C] text-[14px]">After you save the applied changes the details will be changed for patient as well.</p>
-      </div>
-      <div class="bg-[#E2EBFD] mt-2 p-5 flex gap-x-4 rounded-xl shadow-sm items-start">
-        <img :src="BlueIcon" alt="Blue Icon" />
-        <p class="text-[#403E48] text-[14px]">
-          After this test, a pregnancy test will be required every 30 days and must be done at a CLIA-certified lab. We will send you a lab order before your
-          first lab test in 30 days.
-        </p>
-      </div>
-      <div class="bg-white p-5 rounded-xl shadow-sm">
-        <div class="border border-[#F2F4F7] p-3 rounded-xl">
-          <div class="mb-3">1. Upload an image of your pregnancy test</div>
-          <div
-            class="border border-[#F2F4F7] p-10 rounded-xl flex justify-center items-center flex-col"
-            @dragover.prevent="dragging = true"
-            @dragleave="dragging = false"
-            @drop="handleDrop"
-          >
-            <img :src="UploadIcon" alt="Upload Icon" />
-            <label for="fileInput" class="text-center relative cursor-pointer">
-              <p>Choose a photo</p>
-            </label>
-            <input id="fileInput" type="file" @change="handleFileSelect" class="hidden" />
-            <p class="text-[#6C6A7C]">{{ dragging ? 'You can drop it' : 'or drag it here' }}</p>
-            <img v-if="previewURL" class="rounded-xl h-[300px]" :src="previewURL" alt="Photo Preview" />
-          </div>
-          <BaseCheckBox @checkbox-selected="(val) => (isChecked = val)" class="mt-4"
-            >I confirm that this is my own pregnancy test and it was taken today</BaseCheckBox
-          >
-          <div class="mt-4 border-t border-[#F2F4F7] pt-3">
-            <div class="mb-3">2. Type your name to provide an e-signature</div>
-            <input
-              v-model="signName"
-              :placeholder="profileStore.signUpName || 'Enter your full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white p-5 rounded-xl shadow-sm w-full mt-4">
-        <button
-          @click="uploadPhoto"
-          :disable="!isChecked && !signName"
-          :class="[isChecked && signName ? 'bg-honeydew-purple ' : 'bg-gray-2']"
-          class="w-full rounded-[80px] text-white p-4 text-center cursor-pointer transition active:scale-90"
-        >
-          SIGN & SEND
-        </button>
-      </div>
-    </div>
-  </div>
 </template>
+
+<style scoped>
+.scrollable-section {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+</style>

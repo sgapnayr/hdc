@@ -39,7 +39,7 @@ async function signOut() {
 }
 
 await profileStore.setMyProfile()
-</script> 
+</script>
 
 <template>
   <div class="w-[80px] bg-white flex flex-col items-center h-screen justify-start shadow-md">

@@ -23,7 +23,7 @@ const user = useAuthenticator()
 
 onMounted(() => {
   watchEffect(() => {
-    if (user.authStatus !== 'authenticated'  || profileStore.profileData.userRole == 'patient') {
+    if (user.authStatus !== 'authenticated' || profileStore.profileData.userRole == 'patient') {
       navigateTo('/')
     }
   })
@@ -461,7 +461,7 @@ handleGetAllTasks()
                   :class="[category.text.includes('Full name') ? 'col-span-2' : 'col-span-1']"
                 >
                   <div :class="[category.text === 'Actions' ? 'w-full flex justify-end' : '']">
-                    {{ category.text == 'Actions' ? 'Time' : category.text}}
+                    {{ category.text == 'Actions' ? 'Time' : category.text }}
                   </div>
                 </div>
               </div>

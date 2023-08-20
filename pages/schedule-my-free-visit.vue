@@ -21,7 +21,7 @@ const router = useRouter()
 const profileStore = useProfileStore()
 
 // STATE **********************************************************************
-const currentQuestionIdx = ref<number>(17)
+const currentQuestionIdx = ref<number>(0)
 const currentSelectedAnswer = ref<string>()
 const buttonLoadingState = ref<'idle' | 'loading' | 'failed' | 'success' | 'disabled'>('idle')
 const isPhotoUploaded = ref(false)
@@ -238,6 +238,7 @@ async function handleAnswerSubmitValidation() {
   if (currentQuestionIdx.value === 16) {
     profileStore.howOftenDoYouConsumeDairy = currentSelectedAnswer.value as 'Never' | 'A few times a month' | ' A few times a week' | 'A few times a day'
     currentQuestionIdx.value = 17
+    profileStore.saveScheduleVisitData()
     currentSelectedAnswer.value = ''
     return
   }
@@ -245,8 +246,7 @@ async function handleAnswerSubmitValidation() {
   // Image Upload?
   if (currentQuestionIdx.value === 17) {
     profileStore.lastStepLetsSeeYourSkin = currentSelectedAnswer.value
-    currentQuestionIdx.value = 17
-    profileStore.saveScheduleVisitData()
+    currentQuestionIdx.value = 0
     currentSelectedAnswer.value = ''
     router.push('/profile')
     return
@@ -256,6 +256,7 @@ async function handleAnswerSubmitValidation() {
 
 <template>
   <!-- Back Chevron Icon -->
+  {{ profileStore.scheduleVisitDataArr }}
   <div
     @click="
       currentQuestionIdx === 10 && profileStore.sexAssignedAtBirth === 'Male'
@@ -650,7 +651,7 @@ async function handleAnswerSubmitValidation() {
         </div>
 
         <div class="w-full flex justify-center items-center">
-          <a>
+          <a :href="'/view-history' + profileStore.patientData.patientId">
             <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="uploadPhoto()" class="w-full max-w-[290px] mt-[32px] px-8"
               >Submit Photos</BaseButton
             >

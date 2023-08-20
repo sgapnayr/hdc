@@ -29,7 +29,7 @@ const user = useAuthenticator()
 console.log(user)
 onMounted(() => {
   const unmountWatcher = watchEffect(() => {
-    if (user.authStatus !== 'authenticated' ) {
+    if (user.authStatus !== 'authenticated') {
       navigateTo('/')
     }
   })
@@ -226,7 +226,7 @@ watch(
 
 // INIT ****************************************************************
 async function fetchPatients() {
-    await patientStore.getPatientsFromGraphQL()
+  await patientStore.getPatientsFromGraphQL()
 }
 getMyProfile()
 fetchPatients()
@@ -358,7 +358,7 @@ fetchPatients()
                 </div>
               </div>
               <div class="col-span-2 flex gap-x-2 items-center">
-                {{ patient.patientName }} 
+                {{ patient.patientName }}
                 <div
                   @mouseenter="showNoMedicalMessage = true"
                   @mouseleave="showNoMedicalMessage = false"

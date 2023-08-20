@@ -112,12 +112,6 @@ profileStore.setMyProfile(route.params.patientId as string)
 <template>
   <BaseWrapper>
     {{ profileStore.profileData }}
-    <div class="flex bg-red">
-      IMAGES:
-      <div v-for="(image, idx) in patientImages?.images" :key="idx" class="p-2 w-1/2">
-        <img class="object-cover h-48 w-48" :src="image.path" :alt="image.fileName" />
-      </div>
-    </div>
     <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
       <BasePatientViewHistoryCard />
@@ -173,9 +167,11 @@ profileStore.setMyProfile(route.params.patientId as string)
         </div>
 
         <!-- Documents -->
-        <div v-if="treatmentHistoryOrDocumentsSelected === 'Documents'" class="p-8 flex w-full justify-between relative">
-          <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Documents</h1>
-          <img @click="documentModalMenuOpen = !documentModalMenuOpen" class="hover:opacity-50 cursor-pointer" :src="PlusCircleIcon" alt="Plus Circle Icon" />
+        <div v-if="treatmentHistoryOrDocumentsSelected === 'Documents'" class="p-8 flex w-full justify-between relative flex-col">
+          <div class="flex w-full justify-between">
+            <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Documents</h1>
+            <img @click="documentModalMenuOpen = !documentModalMenuOpen" class="hover:opacity-50 cursor-pointer" :src="PlusCircleIcon" alt="Plus Circle Icon" />
+          </div>
           <div class="absolute right-8 mt-10 bg-white p-4 rounded-[12px] border border-[#F2F4F7]" v-if="documentModalMenuOpen">
             <BaseModal>
               <template #header> Upload a document </template>
@@ -203,6 +199,11 @@ profileStore.setMyProfile(route.params.patientId as string)
               <template #button-text> Next </template>
             </BaseModal>
             <div @click="profileStore.handleBloodSlipForm" class="hover:text-honeydew-purple cursor-pointer transition mt-1">Create a form</div>
+          </div>
+          <div class="flex bg-red">
+            <div v-for="(image, idx) in patientImages?.images" :key="idx" class="p-2 w-1/2">
+              <img class="object-cover h-48 w-48" :src="image.path" :alt="image.fileName" />
+            </div>
           </div>
         </div>
       </div>
