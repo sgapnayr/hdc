@@ -131,7 +131,7 @@ async function updateMedicine(medicationId: string) {
 
 async function handleCreateTreatmentPlan() {
   if (!inputsValid) return
-  chesterPayload.value = { treatmentGroup: newTreatmentPlanName, medArr } // Just showing the payload
+  chesterPayload.value = { treatmentGroup: newTreatmentPlanName, medArr } // Just showing the payload // PAYLOAD FOR CHESTER
   await createTreatmentPlan(newTreatmentPlanName.value)
 }
 
@@ -174,13 +174,13 @@ function clearMedicationArr() {
   <div class="w-full py-8">
     <BaseWrapper>
       <!-- DELETE WHEN DONE -->
-      MEDARR ID:
+      2d Medicine Ids Array:
       <br />
       {{ medArr }}
       <br />
       Chester Payload:
       <br />
-      {{ chesterPayload }}
+      {{ !chesterPayload ? '{}' : chesterPayload }}
       <br />
       <!--  -->
 
