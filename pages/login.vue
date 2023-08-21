@@ -4,6 +4,7 @@ import { ref, computed } from 'vue'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { Auth } from 'aws-amplify'
 import { password } from 'iron-webcrypto'
+import { useProfileStore } from '~/stores/profile'
 
 // LAYOUT **********************************************************************
 const user = useAuthenticator()
@@ -15,11 +16,22 @@ definePageMeta({
 // ROUTER **********************************************************************
 onMounted(() => {
   watchEffect(() => {
-    if (user.authStatus === 'authenticated' ) {
+    if (user.authStatus === 'authenticated' && profileStore.profileData.userRole === 'admin') {
       navigateTo('/admin')
+    }
+
+    if (user.authStatus === 'authenticated' && profileStore.profileData.userRole === 'patient') {
+      navigateTo('/profile')
+    }
+
+    if (user.authStatus === 'authenticated' && profileStore.profileData.userRole !== 'patient') {
+      navigateTo('/tasks-pool')
     }
   })
 })
+
+// STORE **********************************************************************
+const profileStore = useProfileStore()
 
 // STATE **********************************************************************
 const username = ref()
@@ -48,6 +60,8 @@ function handleEnterKey(event: KeyboardEvent) {
     signIn(username.value, password.value)
   }
 }
+
+await profileStore.setMyProfile()
 </script>
 
 <template>
