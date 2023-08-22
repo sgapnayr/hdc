@@ -8,6 +8,7 @@ import EmailIcon from '@/assets/icons/email-icon.svg'
 import { useProfileStore } from '~/stores/profile'
 import { usePatientStore } from '~/stores/patient'
 import { useRoute } from 'vue-router'
+import { getMyProfileImages } from '~/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -19,13 +20,16 @@ definePageMeta({
 const router = useRouter()
 const route = useRoute()
 const user = useAuthenticator()
+let userImages = []
 
-onMounted(() => {
+onMounted(async () => {
   watchEffect(() => {
     if (user.authStatus !== 'authenticated') {
       navigateTo('/')
     }
   })
+  userImages = await getMyProfileImages()
+  console.log("user images: ", userImages)
 })
 
 // STORES ********************************************************************
@@ -39,6 +43,9 @@ const patientData = ref()
 patientStore.getPatientFromGraphQL(route.params.patientId as string).then((patient) => {
   patientData.value = patient
 })
+
+
+console.log("UserImages in ")
 </script>
 
 <template>
@@ -99,9 +106,13 @@ patientStore.getPatientFromGraphQL(route.params.patientId as string).then((patie
         <div>{visitDate}</div>
         <div>Photos</div>
         <div class="flex gap-x-4">
-          <div>{leftPhoto}</div>
-          <div>{middlePhoto}</div>
-          <div>{rightPhoto}</div>
+          <ul>
+            {{userImages.value}}
+             <li v-for="(file, index) in userImages" :key="index">
+                <img :src="file.path" alt="File" width="100" height="100">
+                {{ file.fileName }}
+            </li>
+        </ul>
         </div>
       </div>
     </BaseWrapper>
