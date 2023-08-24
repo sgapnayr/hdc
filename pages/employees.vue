@@ -167,6 +167,10 @@ const filterByEmployeeType = computed(() => {
   }
 })
 
+const totalPagesForEmployeeType = computed(() => {
+  return Math.ceil(filterByEmployeeType?.value?.length / pageSize.value)
+})
+
 // METHODS ****************************************************************
 function handleSelectingChip(chip: Chip) {
   selectedChip.value = chip
@@ -568,12 +572,13 @@ patientStore.getPatientsFromGraphQL()
               </div>
             </div>
           </div>
+
           <BasePagination
             @page-forward="currentPage < totalPages - 1 ? (currentPage += 1) : ''"
             @page-back="currentPage > 0 ? (currentPage -= 1) : ''"
             @skip-to="(val) => (currentPage = val)"
-            :total-pages="4"
             :current-page-props="currentPage"
+            :total-pages="totalPagesForEmployeeType"
           />
         </div>
       </div>

@@ -29,7 +29,7 @@ onMounted(async () => {
     }
   })
   userImages = await getMyProfileImages()
-  console.log("user images: ", userImages)
+  console.log('user images: ', userImages)
 })
 
 // STORES ********************************************************************
@@ -44,8 +44,7 @@ patientStore.getPatientFromGraphQL(route.params.patientId as string).then((patie
   patientData.value = patient
 })
 
-
-console.log("UserImages in ")
+console.log('UserImages in ')
 </script>
 
 <template>
@@ -107,12 +106,14 @@ console.log("UserImages in ")
         <div>Photos</div>
         <div class="flex gap-x-4">
           <ul>
-            {{userImages.value}}
-             <li v-for="(file, index) in userImages" :key="index">
-                <img :src="file.path" alt="File" width="100" height="100">
-                {{ file.fileName }}
+            {{
+              userImages.value
+            }}
+            <li v-for="(file, index) in userImages" :key="index">
+              <img :src="file.path" alt="File" width="100" height="100" />
+              {{ file.fileName }}
             </li>
-        </ul>
+          </ul>
         </div>
       </div>
     </BaseWrapper>
