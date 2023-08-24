@@ -127,6 +127,10 @@ const toDoItems = [
 
 <template>
   <div class="flex flex-col py-8">
+    <div class="w-full text-center">
+      Need Update Patient Function: { selfOrOther: {{ profileStore.signUpDescribeYouAnswer }}, name: {{ profileStore.signUpName }}, zipCode:
+      {{ profileStore.signUpZipCode }}, DOB: {{ profileStore.signUpDOB }}, email: {{ profileStore.signUpEmail }} }
+    </div>
     <BaseWrapper>
       <!-- Upper cards -->
       <div class="flex gap-x-6 lg:flex-row flex-col gap-y-6 lg:min-w-[1244px]">
@@ -134,9 +138,12 @@ const toDoItems = [
         <div class="bg-white w-full rounded-[16px] p-8 flex justify-between shadow-sm flex-col md:flex-row">
           <div class="flex flex-col justify-between w-1/2">
             <div class="flex flex-col">
-              <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Hi, {{ profileStore.profileData.patientFirstName ? profileStore.profileData.patientFirstName : '...' }}!</h1>
+              <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">
+                Hi, {{ profileStore.profileData.patientFirstName ? profileStore.profileData.patientFirstName : '...' }}!
+              </h1>
               <p class="text-gray-5 mt-[16px] w-full md:w-3/4">Welcome to your patient portal</p>
             </div>
+            <div class="grow"></div>
             <!-- To do list items -->
             <div class="my-4 md:my-auto w-full">
               <div v-for="(todo, idx) in toDoItems" :key="idx" class="flex justify-start items-start flex-col gap-y-4 w-full">

@@ -35,7 +35,7 @@ const signUpQuestions = [
   { questionText: 'Okay, and what is your Date of Birth?', questionAnswers: [{ text: 'DOB' }] },
   { questionText: "Since you're under 18, we'll need your parent's contact info.", questionAnswers: [{ text: 'Okay' }] },
   { questionText: "Great news! You're eligible for Honeydew!", questionAnswers: [{ text: 'OKAY' }] },
-  { questionText: 'Email', questionAnswers: [{ text: 'Email' }] },
+  // { questionText: 'Email', questionAnswers: [{ text: 'Email' }] },
 ]
 
 // METHODS ********************************************************************
@@ -115,6 +115,7 @@ async function handleAnswerSubmitValidation() {
     profileStore.signUpConfirmationCode = currentSelectedAnswer.value
     await confirmAccount(profileStore.signUpEmail as string, profileStore.signUpConfirmationCode as string)
     currentSelectedAnswer.value = ''
+    currentQuestionIdx.value = 0
     return
   }
 
@@ -125,7 +126,7 @@ async function handleAnswerSubmitValidation() {
     profileStore.creditCardExpiration = thirdCurrentSelectedAnswer.value as string
     profileStore.creditCardCVV = fourthCurrentSelectedAnswer.value as string
     currentQuestionIdx.value = 0
-    router.push('/admin')
+    // router.push('/admin')
     currentSelectedAnswer.value = ''
     secondCurrentSelectedAnswer.value = ''
     thirdCurrentSelectedAnswer.value = ''
@@ -170,6 +171,7 @@ async function confirmAccount(username: string, confirmationCode: string) {
     await profileStore.setMyProfile()
     console.log(profileStore.profileData.patientId)
     updatePatient(profileStore.profileData.patientId, profileStore.signUpPhoneNumber, profileStore.signUpEmail)
+    router.push('/profiles/' + profileStore.profileData.patientId)
   } catch (error) {
     console.log('Error confirming account:', error)
     buttonLoadingState.value = 'failed'

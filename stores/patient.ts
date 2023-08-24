@@ -12,7 +12,7 @@ export const usePatientStore = defineStore('patient', () => {
   async function getPatientsFromGraphQL() {
     try {
       const response = await getPatients()
-      const mappedData: Patients = {
+      const mappedData: any = {
         patients: response?.patients?.map((backendPatient: any) => {
           const frontendPatient = {
             patientId: backendPatient.patientId,

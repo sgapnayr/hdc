@@ -133,7 +133,7 @@ function toggleInputField() {
         v-if="pInputType === 'date'"
         :value="modelValue"
         @blur="emit('blur')"
-        class="ml-4 outline-none bg-none w-[80%] h-9"
+        class="ml-4 outline-none bg-none w-[90%] h-9"
         :type="inputType"
         :placeholder="placeholder"
         @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"

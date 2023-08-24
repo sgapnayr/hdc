@@ -109,15 +109,17 @@ async function handleCreateMedicine() {
 
 async function updateMedicine(medicationId: string) {
   if (!inputsValid) return
+
   const instructionsString = newMedicationInstructions.value.join(', ')
+
   await updateMedication(
     medicationId,
-    newMedicationName.value,
-    newMedicationStrength.value,
-    newMedicationSpecialInstructions.value,
-    newMedicationRefills.value,
-    newMedicationRefillExpirationInDays.value,
-    instructionsString
+    newMedicationName.value
+    // newMedicationStrength.value,
+    // newMedicationSpecialInstructions.value,
+    // newMedicationRefills.value,
+    // newMedicationRefillExpirationInDays.value,
+    // instructionsString
   )
 
   newMedicationName.value = ''
@@ -131,16 +133,14 @@ async function updateMedicine(medicationId: string) {
 
 async function handleCreateTreatmentPlan() {
   if (!inputsValid) return
-  chesterPayload.value = { treatmentGroup: newTreatmentPlanName, medArr } // Just showing the payload // PAYLOAD FOR CHESTER
+  chesterTreatmentGroupPayload.value = { treatmentGroup: newTreatmentPlanName, medArr } // Just showing the payload // PAYLOAD FOR CHESTER TREATMENT GROUP POST
   await createTreatmentPlan(newTreatmentPlanName.value)
 }
 
 const toggleTime = (time: TimeSelection, isSelected: boolean): void => {
   if (isSelected) {
-    // If the checkbox is selected, add the time to the array
     newMedicationInstructions.value.push(time)
   } else {
-    // If the checkbox is unselected, remove the time from the array
     const index = newMedicationInstructions.value.indexOf(time)
     if (index !== -1) {
       newMedicationInstructions.value.splice(index, 1)
@@ -148,12 +148,19 @@ const toggleTime = (time: TimeSelection, isSelected: boolean): void => {
   }
 }
 
+async function handleDeleteMedicine(medicationId: string) {
+  // axios.delete("CHESTER_ENDPOINT/" + medicationId) // Just showing the action // PAYLOAD FOR CHESTER MEDICINE DELETE
+  // or GRAPH_QL delete mutation needs to be configured
+  // SEE deleteMedication endpoint in endpoints.js
+  // await deleteMedication(medicationId)
+}
+
 medicationsStore.getMedicationsFromGraphQL()
 medicationsStore.getTreatmentPlansFromGraphQL()
 
 // PAYLOAD FOR CHESTER
 const medArr = ref([])
-const chesterPayload = ref()
+const chesterTreatmentGroupPayload = ref()
 
 function getMedicationsArr(medicationObject: { id: number; medicationId: string; jdx: number }) {
   const { id, medicationId, jdx } = medicationObject
@@ -180,7 +187,7 @@ function clearMedicationArr() {
       <br />
       Chester Payload:
       <br />
-      {{ !chesterPayload ? '{}' : chesterPayload }}
+      {{ !chesterTreatmentGroupPayload ? '{}' : chesterTreatmentGroupPayload }}
       <br />
       <!--  -->
 
@@ -354,7 +361,6 @@ function clearMedicationArr() {
               <div>{{ medication.medicationRefillExpirationInDays || '-' }}</div>
               <div class="w-full flex justify-end gap-x-3">
                 <BaseModal :button-state="inputsValid ? 'disabled' : ''" @action-click="updateMedicine(medication.medicationId)" :custom-header="true">
-                  console.log((medication)
                   <template #button>
                     <img class="cursor-pointer" :src="PencilIcon" alt="Pencil Icon" />
                   </template>
@@ -365,13 +371,13 @@ function clearMedicationArr() {
                       <input
                         v-model="newMedicationName"
                         class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
-                        placeholder="Absorica Micronized"
+                        :placeholder="medication.medicationName"
                       />
                       <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Strength</p>
                       <input
                         v-model="newMedicationStrength"
                         class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
-                        placeholder="16mg"
+                        :placeholder="medication.medicationStrength"
                       />
                       <div class="flex flex-col gap-y-4 my-6">
                         <BaseCheckBox @checkbox-selected="(val) => toggleTime('Morning', val)"> Morning</BaseCheckBox>
@@ -381,26 +387,26 @@ function clearMedicationArr() {
                       <input
                         v-model="newMedicationSpecialInstructions"
                         class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
-                        placeholder="Take one in the morning and one at night"
+                        :placeholder="medication.medicationSpecialInstructions"
                       />
                       <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">REFILL COUNT</p>
                       <input
                         v-model="newMedicationRefills"
                         class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
-                        placeholder="1"
+                        :placeholder="medication.medicationRefills"
                         type="number"
                       />
                       <p class="mt-4 mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">REFILL EXPIRATION RATE (DAYS)</p>
                       <input
                         v-model="newMedicationRefillExpirationInDays"
                         class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4"
-                        placeholder="45"
+                        :placeholder="medication.newMedicationRefillExpirationInDays"
                         type="number"
                       />
                     </div>
                   </template>
                 </BaseModal>
-                <BaseModal>
+                <BaseModal @action-click="handleDeleteMedicine(medication.medicationId)">
                   <template #button>
                     <img class="cursor-pointer" :src="DeleteIcon" alt="Delete Icon" />
                   </template>
