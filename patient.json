@@ -1,0 +1,23 @@
+{
+  "data": {
+    "getPatients": {
+      "patients": [
+        {
+          "name": null,
+          "patientId": "cdbb7139-f075-40c0-b5af-91d6bcfeee9b",
+          "subAccounts": null
+        },
+        {
+          "name": null,
+          "patientId": "a4eba3f4-795f-4697-94d3-89d8cb435874",
+          "subAccounts": null
+        },
+        {
+          "name": null,
+          "patientId": "c02bda73-a40c-4c0f-80b6-7a6fa1768425",
+          "subAccounts": null
+        }
+      ]
+    }
+  }
+}

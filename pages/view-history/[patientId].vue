@@ -10,7 +10,7 @@ import PlusCircleIcon from '@/assets/icons/plus-circle.svg'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { useRouter, useRoute } from 'vue-router'
-import { getMyProfileImages } from '../../lib/endpoints'
+import { getMyProfileImages, getPatient } from '../../lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -98,9 +98,15 @@ const uploadPhoto = async () => {
 }
 
 const patientImages = ref<any>([])
+const patientProfile = ref()
+const selectedAccount = ref()
 
 getMyProfileImages(route.params.patientId as string)
   .then((res) => (patientImages.value = res))
+  .catch((error) => console.error(error))
+
+getPatient(route.params.patientId as string)
+  .then((res) => (patientProfile.value = res))
   .catch((error) => console.error(error))
 
 tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
@@ -115,7 +121,7 @@ profileStore.setMyProfile(route.params.patientId as string)
     <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
       <div class="flex flex-col md:w-1/2">
-        <BaseTab :tabs="['Test', 'Test 1', 'Test 2']" />
+        <BaseTab @selected-account="(val) => (selectedAccount = val)" :tabs="patientProfile.subAccounts" />
         <BasePatientViewHistoryCard />
       </div>
 
