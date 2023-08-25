@@ -17,8 +17,9 @@ export const useProfileStore = defineStore('profile', () => {
   const signUpDOB = ref<string>()
   const signUpAge = ref<string>()
   const signUpHeight = ref<string>()
-  const signUpWeight = ref<string>()
   const overEighteen = ref<boolean>()
+  const signUpWeight = ref<string>()
+  const signUpGender = ref<string>()
   const signUpEmail = ref<string>()
   const signUpPhoneNumber = ref<string>()
   const signUpPassword = ref<string>()
@@ -144,6 +145,7 @@ export const useProfileStore = defineStore('profile', () => {
     signUpAge,
     overEighteen,
     signUpEmail,
+    signUpGender,
     signUpPassword,
     signUpPhoneNumber,
     signUpAgreement,

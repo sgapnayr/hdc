@@ -54,7 +54,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
 </script>
 
 <template>
-  <div class="bg-white md:w-1/2 rounded-[8px] shadow-sm">
+  <div class="bg-white rounded-b-[8px] rounded-tr-[8px] drop-shadow-sm">
     <!-- Padding Wrapper -->
     <div class="p-8">
       <!-- Patient Photo -->

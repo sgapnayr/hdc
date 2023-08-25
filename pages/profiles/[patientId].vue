@@ -139,7 +139,7 @@ const toDoItems = [
           <div class="flex flex-col justify-between w-1/2">
             <div class="flex flex-col">
               <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">
-                Hi, {{ profileStore.profileData.patientFirstName ? profileStore.profileData.patientFirstName : '...' }}!
+                Hi, {{ profileStore.profileData?.patientFirstName ? profileStore.profileData?.patientFirstName : '...' }}!
               </h1>
               <p class="text-gray-5 mt-[16px] w-full md:w-3/4">Welcome to your patient portal</p>
             </div>

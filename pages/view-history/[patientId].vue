@@ -114,7 +114,10 @@ profileStore.setMyProfile(route.params.patientId as string)
     {{ profileStore.profileData }}
     <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
-      <BasePatientViewHistoryCard />
+      <div class="flex flex-col md:w-1/2">
+        <BaseTab :tabs="['Test', 'Test 1', 'Test 2']" />
+        <BasePatientViewHistoryCard />
+      </div>
 
       <!-- Right Side (Treatment history & @photo-uploaded="isPhotoUploaded = true") -->
       <div class="md:w-1/2 rounded-[8px] flex flex-col">
