@@ -120,8 +120,12 @@ profileStore.setMyProfile(route.params.patientId as string)
     {{ profileStore.profileData }}
     <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
-      <div class="flex flex-col md:w-1/2">
-        <BaseTab @selected-account="(val) => (selectedAccount = val)" :tabs="patientProfile.subAccounts" />
+      <div class="flex flex-col md:w-1/2 relative">
+        <BaseTab
+          class="absolute -top-6"
+          @selected-account="(val) => (selectedAccount = val)"
+          :tabs="patientProfile?.subAccounts || ['Chester', 'Ryan', 'Timmy', 'Tommy']"
+        />
         <BasePatientViewHistoryCard />
       </div>
 

@@ -26,7 +26,7 @@ function handleSelectedTab(tabIdx: number) {
 </script>
 
 <template>
-  <div class="flex w-full">
+  <div class="flex w-full overflow-x-scroll">
     <div
       @click="handleSelectedTab(idx)"
       :class="[idx !== 0 ? 'mx-[1px]' : '', idx === selectedTabIdx ? 'opacity-100' : 'opacity-50']"
