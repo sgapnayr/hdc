@@ -73,6 +73,8 @@ const updateProfileChanges = async () => {
     patientsParentPhoneNumber: updatePatientsParentPhoneNumber.value,
   }
 
+  console.log("DATA TO UPDATE", updateProfilePayload)
+
   updateProfileObj.value = updateProfilePayload // PAYLOAD FOR C-BISCUIT
 
   setTimeout(() => {

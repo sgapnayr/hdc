@@ -133,8 +133,17 @@ async function updateMedicine(medicationId: string) {
 
 async function handleCreateTreatmentPlan() {
   if (!inputsValid) return
-  chesterTreatmentGroupPayload.value = { treatmentGroup: newTreatmentPlanName, medArr } // Just showing the payload // PAYLOAD FOR CHESTER TREATMENT GROUP POST
-  await createTreatmentPlan(newTreatmentPlanName.value)
+  const planName = toRaw(newTreatmentPlanName.value)
+  const groupArray = medArr.value
+  let topArray = []
+  for (let i = 0; i < groupArray.length; i++) {
+    topArray.push({medicationsIds: toRaw(groupArray[i])})
+  }
+  let finalObject = {groups: topArray}
+  finalObject.treatmentName = planName
+  console.log('called to create new treatment plan', finalObject)
+  chesterTreatmentGroupPayload.value = { treatmentGroup: newTreatmentPlanName, medArr }
+  await createTreatmentPlan(finalObject)
 }
 
 const toggleTime = (time: TimeSelection, isSelected: boolean): void => {

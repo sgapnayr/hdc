@@ -40,6 +40,8 @@ export const usePatientStore = defineStore('patient', () => {
         const backendPatient = response.patientProfile
         const subAccounts = response.subAccounts
         const actionItems = response.actionItems
+        const insurance = response.patientProfile.healthInsurance
+        console.log("IN STORE PATIENT INSURANCE")
 
         const frontendPatient = {
           patientId: patientId || 'patientId',
@@ -61,6 +63,7 @@ export const usePatientStore = defineStore('patient', () => {
                 }))
               : [],
           actionItems: actionItems || 'actionItems',
+          insurance: insurance || 'insurance',
         }
 
         patientData.value = frontendPatient
