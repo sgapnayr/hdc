@@ -9,7 +9,8 @@ import { createTask, getAllTasks } from '@/lib/endpoints'
 import { useTasksStore } from '@/stores/task'
 import { useProfileStore } from '@/stores/profile'
 import { usePatientStore } from '@/stores/patient'
-import { assignTask, getPatient } from '@/lib/endpoints'
+import { assignTask, getPatient, searchPatientByName } from '@/lib/endpoints'
+import debounce from 'lodash.debounce'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -36,7 +37,7 @@ const patientStore = usePatientStore()
 
 // STATE **********************************************************************
 const selectedAssignedToMeChip = ref({ text: 'All', amount: 10 })
-const selectedGeneralChip = ref({ text: 'All', amount: 10 })
+const selectedGeneralChip = ref({ text: 'Unassigned', amount: 10 })
 const selectedPatient = ref<{ patientName: string; patientID: string }>()
 const taskType = ref<'Submit Prescription' | 'New messages' | 'Send blood slip' | 'New patient' | 'Accutane' | 'Documents needed'>('New patient')
 const taskTypeMenuOpen = ref<boolean>(false)
@@ -118,7 +119,7 @@ const generalChips = [
 const tableHeaderCategories = [
   {
     role: 'admin', // Change for admin, care coord. etc
-    categories: [{ text: "Patient's Full name" }, { text: 'Status' }, { text: 'Priority' }, { text: 'Task Type' }, { text: 'Comments' }, { text: 'Actions' }],
+    categories: [{ text: "Patient's Full name" }, { text: 'Assigned' }, { text: 'Task Type' }, { text: 'Comments' }, { text: 'Actions' }],
   },
 ]
 
@@ -186,6 +187,21 @@ const assigneePages = computed(() => {
 })
 
 // METHODS ****************************************************************
+const searchPatientName = ref()
+
+const debouncedFetch = debounce(() => {
+  searchPatientByName(searchPatientName.value)
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err))
+}, 300)
+
+watch(
+  () => searchPatientName.value,
+  () => {
+    debouncedFetch()
+  }
+)
+
 async function handleGetAllTasks() {
   fetchTasksByAssignee()
   tasksStore.getAllTasksFromGraphQL()
@@ -239,7 +255,7 @@ async function fetchTasksByAssignee() {
 }
 
 await profileStore.setMyProfile()
-// patientStore.getPatientsFromGraphQL()
+patientStore.getPatientsFromGraphQL()
 handleGetAllTasks()
 </script>
 
@@ -277,7 +293,7 @@ handleGetAllTasks()
                       :class="[patientMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
                       placeholder="Search by patient's name"
                       type="text"
-                      @click="patientMenuOpen = !patientMenuOpen"
+                      @click.stop="patientMenuOpen = !patientMenuOpen"
                     >
                       <div class="px-4 py-1 rounded-[24px]">
                         {{ selectedPatientForNewTask || 'Patient Name' }} <span class="opacity-30 ml-2 text-xs">{{ selectedPatientIdForNewTask || '' }}</span>
@@ -285,6 +301,17 @@ handleGetAllTasks()
                       <img :class="[patientMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
                       <div v-if="patientMenuOpen">
                         <div class="absolute left-0 top-12 w-full">
+                          <div
+                            class="px-2 w-full hover:bg-gray-2 bg-white h-[64px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center cursor-pointer shadow-md"
+                          >
+                            <input
+                              @change="debounce"
+                              v-model="searchPatientName"
+                              placeholder="Search by patient name here..."
+                              @click.stop
+                              class="px-4 w-full hover:bg-gray-2 bg-white h-[36px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center cursor-pointer shadow-md rounded-[80px]"
+                            />
+                          </div>
                           <div
                             class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
                             v-for="(patient, idx) in patientStore.allPatients"
@@ -453,7 +480,7 @@ handleGetAllTasks()
               <div
                 v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
                 :key="idx"
-                class="grid grid-cols-7 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
+                class="grid grid-cols-6 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
               >
                 <div
                   v-for="(category, jdx) in tableHeaderCategory.categories"
@@ -474,17 +501,12 @@ handleGetAllTasks()
               v-for="(task, idx) in assigneePages"
               :key="idx"
               :class="[idx === assigneePages.length - 1 ? 'rounded-b-[16px]' : '']"
-              class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative items-center"
+              class="grid grid-cols-6 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative items-center"
             >
               <div class="col-span-2 flex gap-x-2 items-center">
                 {{ task.taskPatientFirstName + ' ' + task.taskPatientLastName }}
               </div>
-              <div>
-                {{ task.taskStatus }}
-              </div>
-              <div class="flex">
-                <BaseTaskBadge :taskLabel="task?.taskPriority" />
-              </div>
+              <div class="flex">{{ task.taskStatus }}</div>
               <div class="flex">
                 <BaseTaskBadge :taskLabel="task?.taskType" />
               </div>
@@ -538,7 +560,7 @@ handleGetAllTasks()
               <div
                 v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
                 :key="idx"
-                class="grid grid-cols-7 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full items-center"
+                class="grid grid-cols-6 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full items-center"
               >
                 <div
                   v-for="(category, jdx) in tableHeaderCategory.categories"
@@ -559,7 +581,7 @@ handleGetAllTasks()
               v-for="(task, idx) in generalPages"
               :key="idx"
               :class="[idx === generalPages.length - 1 ? 'rounded-b-[16px]' : '']"
-              class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative items-center"
+              class="grid grid-cols-6 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative items-center"
               @mouseenter="hoveredIdx = idx"
               @mouseleave="hoveredIdx = null"
             >
@@ -569,9 +591,7 @@ handleGetAllTasks()
               <div>
                 {{ task.taskStatus }}
               </div>
-              <div class="flex">
-                <BaseTaskBadge :taskLabel="task?.taskPriority" />
-              </div>
+
               <div class="flex">
                 <BaseTaskBadge :taskLabel="task?.taskType" />
               </div>
@@ -649,5 +669,12 @@ handleGetAllTasks()
 <style scoped>
 .table-container {
   overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+input::placeholder,
+input {
+  font-weight: 400;
+  font-size: 16px;
+  text-align: start;
 }
 </style>

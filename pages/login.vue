@@ -45,6 +45,18 @@ async function signIn(username: string, password: string) {
   try {
     await Auth.signIn(username, password)
     loginButtonState.value = 'success'
+
+    if (user.authStatus === 'authenticated' && profileStore.profileData.userRole === 'admin') {
+      navigateTo('/admin')
+    }
+
+    if (user.authStatus === 'authenticated' && profileStore.profileData.userRole === 'patient') {
+      navigateTo('/profile')
+    }
+
+    if (user.authStatus === 'authenticated' && profileStore.profileData.userRole !== 'patient') {
+      navigateTo('/tasks-pool')
+    }
   } catch (error) {
     console.log('Error signing in:', error)
     loginButtonState.value = 'failed'

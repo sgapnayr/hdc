@@ -8,24 +8,25 @@ import { useRoute } from 'vue-router'
 
 export default {
   setup() {
-    const allowedRoutes = ['/', '/pricing', '/faq', '/why-us']
+    const allowedRoutes = ['/', '/pricing', '/why-us']
     const route = useRoute()
     const isMounted = ref(false)
+    const tidioScriptId = 'tidio-chat-script' // A unique identifier for the script element
 
     const loadTidioScript = () => {
-      // Load the Tidio Chat script when the component is mounted
+      if (!allowedRoutes.includes(route.path)) return
+
+      const existingScript = document.getElementById(tidioScriptId)
+      if (existingScript) {
+        existingScript.remove()
+      }
+
+      // Append the Tidio Chat script
       const script = document.createElement('script')
+      script.id = tidioScriptId
       script.src = '//code.tidio.co/pqcnrrpt0un5fexfcdxzxhwylyczmezu.js'
       script.async = true
       document.head.appendChild(script)
-    }
-
-    const remountComponent = () => {
-      isMounted.value = false
-      // Use a timeout to ensure the component is unmounted before re-mounting
-      setTimeout(() => {
-        isMounted.value = true
-      }, 0)
     }
 
     onMounted(() => {
@@ -36,11 +37,8 @@ export default {
     // Watch for route changes
     watch(
       () => route.path,
-      (newPath, oldPath) => {
-        if (allowedRoutes.includes(newPath) && !allowedRoutes.includes(oldPath)) {
-          // Route changed to an allowed route, remount the component
-          remountComponent()
-        }
+      () => {
+        loadTidioScript()
       }
     )
 

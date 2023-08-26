@@ -5,3 +5,10 @@
 * {
   font-family: 'Cera Pro', sans-serif;
 }
+
+input::placeholder,
+input {
+  font-weight: 400;
+  font-size: 16px;
+  text-align: start;
+}
