@@ -2,14 +2,12 @@
 // IMPORTS ********************************************************************
 import { ref, computed } from 'vue'
 import BaseWrapper from '~/components/BaseWrapper.vue'
-import CaretIcon from '@/assets/icons/caret-icon.svg'
 import ClaimIcon from '@/assets/icons/claim-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { createTask, getAllTasks } from '@/lib/endpoints'
 import { useTasksStore } from '@/stores/task'
 import { useProfileStore } from '@/stores/profile'
 import { usePatientStore } from '@/stores/patient'
-import { assignTask, getPatient } from '@/lib/endpoints'
+import { assignTask } from '@/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -36,18 +34,11 @@ const patientStore = usePatientStore()
 
 // STATE **********************************************************************
 const selectedAssignedToMeChip = ref({ text: 'All', amount: 10 })
-const selectedGeneralChip = ref({ text: 'All', amount: 10 })
+const selectedGeneralChip = ref({ text: 'Unassigned', amount: 10 })
 const selectedPatient = ref<{ patientName: string; patientID: string }>()
 const taskType = ref<'Submit Prescription' | 'New messages' | 'Send blood slip' | 'New patient' | 'Accutane' | 'Documents needed'>('New patient')
-const taskTypeMenuOpen = ref<boolean>(false)
 const taskPriority = ref<'Low' | 'Medium' | 'High'>('Medium')
-const taskPriorityMenuOpen = ref<boolean>(false)
-const patientMenuOpen = ref<boolean>(false)
-const selectedPatientIdForNewTask = ref()
-const selectedPatientForNewTask = ref()
 const taskComments = ref<string>()
-const taskName = ref<string>()
-const allTasks = ref()
 const pageSize = ref(3)
 const generalPageSize = ref(10)
 const currentPage = ref(0)
@@ -55,7 +46,6 @@ const assigneeTablecurrentPage = ref(0)
 const showTaskAssignedMessage = ref(false)
 const hoveredIdx = ref()
 const claimTaskButtonState = ref<'idle' | 'loading' | 'success' | 'failed' | 'disabled'>('idle')
-const addTaskButtonState = ref<'idle' | 'loading' | 'success' | 'failed' | 'disabled'>('idle')
 
 // DATA ****************************************************************
 const numberOfTaskAssignedToMe = computed(() => {
@@ -118,20 +108,9 @@ const generalChips = [
 const tableHeaderCategories = [
   {
     role: 'admin', // Change for admin, care coord. etc
-    categories: [{ text: "Patient's Full name" }, { text: 'Status' }, { text: 'Priority' }, { text: 'Task Type' }, { text: 'Comments' }, { text: 'Actions' }],
+    categories: [{ text: "Patient's Full name" }, { text: 'Assigned' }, { text: 'Task Type' }, { text: 'Comments' }, { text: 'Actions' }],
   },
 ]
-
-const taskTypes = [
-  { text: 'Submit Prescription' },
-  { text: 'New messages' },
-  { text: 'Send blood slip' },
-  { text: 'New patient' },
-  { text: 'Accutane' },
-  { text: 'Documents needed' },
-]
-
-const taskPriorities = [{ text: 'Low' as 'Low' }, { text: 'Medium' as 'Medium' }, { text: 'High' as 'High' }]
 
 // COMPUTED METHODS ****************************************************************
 
@@ -191,24 +170,6 @@ async function handleGetAllTasks() {
   tasksStore.getAllTasksFromGraphQL()
 }
 
-function handleSubmitNewTask() {
-  addTaskButtonState.value = 'loading'
-
-  setTimeout(() => {
-    createTask(selectedPatientIdForNewTask.value, taskType.value, taskPriority.value, taskComments.value)
-    addTaskButtonState.value = 'success'
-    handleGetAllTasks()
-  }, 750)
-
-  setTimeout(() => {
-    selectedPatient.value = { patientName: '', patientID: '' }
-    taskType.value = 'New patient'
-    taskPriority.value = 'Low'
-    taskComments.value = ''
-    addTaskButtonState.value = 'idle'
-  }, 1500)
-}
-
 async function handleAssignTask(taskId: string) {
   claimTaskButtonState.value = 'loading'
 
@@ -239,7 +200,7 @@ async function fetchTasksByAssignee() {
 }
 
 await profileStore.setMyProfile()
-// patientStore.getPatientsFromGraphQL()
+patientStore.getPatientsFromGraphQL()
 handleGetAllTasks()
 </script>
 
@@ -253,137 +214,7 @@ handleGetAllTasks()
           <div class="flex">
             <!-- Add New Task Button & Modal -->
             <div class="w-full flex justify-start my-4">
-              <BaseModal @action-click="handleSubmitNewTask">
-                <template #button>
-                  <div
-                    class="text-[12px] h-[40px] w-[188px] flex justify-center items-center rounded-[60px] mr-[16px] uppercase cursor-pointer bg-[#EEEBFC] text-honeydew-purple"
-                  >
-                    <div class="mr-[6px]">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8 3.5V12.5" stroke="#5E39F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M12.5 8H3.5" stroke="#5E39F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                    </div>
-                    Add new task
-                  </div>
-                </template>
-                <template #header> Add new task </template>
-                <template #content>
-                  <!-- Patient Name Drop Down -->
-                  <div :class="[patientMenuOpen ? 'z-40' : 'z-0']">
-                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Patient's Name</h2>
-                    <div
-                      class="bg-white md:w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
-                      :class="[patientMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
-                      placeholder="Search by patient's name"
-                      type="text"
-                      @click="patientMenuOpen = !patientMenuOpen"
-                    >
-                      <div class="px-4 py-1 rounded-[24px]">
-                        {{ selectedPatientForNewTask || 'Patient Name' }} <span class="opacity-30 ml-2 text-xs">{{ selectedPatientIdForNewTask || '' }}</span>
-                      </div>
-                      <img :class="[patientMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
-                      <div v-if="patientMenuOpen">
-                        <div class="absolute left-0 top-12 w-full">
-                          <div
-                            class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
-                            v-for="(patient, idx) in patientStore.allPatients"
-                            :key="idx"
-                            :class="[patientStore.allPatients.length - 1 === idx ? 'rounded-b-[28px]' : '']"
-                            @click=";(selectedPatientIdForNewTask = patient.patientId), (selectedPatientForNewTask = patient.patientName)"
-                          >
-                            <div class="px-4 py-1 rounded-[24px]">
-                              {{ patient.patientName }} <span class="opacity-30 ml-2 text-xs">{{ patient.patientId }}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Task Type Drop Down -->
-                  <div :class="[taskTypeMenuOpen ? 'z-40' : 'z-0']">
-                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Type</h2>
-                    <div
-                      class="bg-white md:w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
-                      :class="[taskTypeMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
-                      placeholder="Search by patient's name"
-                      type="text"
-                      @click="taskTypeMenuOpen = !taskTypeMenuOpen"
-                    >
-                      <div class="flex">
-                        <BaseTaskBadge :taskLabel="taskType" />
-                      </div>
-                      <img :class="[taskTypeMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
-                      <div v-if="taskTypeMenuOpen">
-                        <div class="absolute left-0 top-12 w-full">
-                          <div
-                            class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
-                            v-for="(task, idx) in taskTypes"
-                            :key="idx"
-                            :class="[taskTypes.length - 1 === idx ? 'rounded-b-[28px]' : '']"
-                            @click="
-                              taskType = task.text as
-                                | 'Submit Prescription'
-                                | 'New messages'
-                                | 'Send blood slip'
-                                | 'New patient'
-                                | 'Accutane'
-                                | 'Documents needed'
-                            "
-                          >
-                            <div class="flex">
-                              <BaseTaskBadge :taskLabel="task?.text" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Priority Drop Down -->
-                  <div :class="[taskPriorityMenuOpen ? 'z-40' : 'z-0']">
-                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Priority</h2>
-                    <div
-                      class="bg-white md:w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
-                      :class="[taskPriorityMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
-                      placeholder="Search by patient's name"
-                      type="text"
-                      @click="taskPriorityMenuOpen = !taskPriorityMenuOpen"
-                    >
-                      <div class="flex">
-                        <BaseTaskBadge :taskLabel="taskPriority" />
-                      </div>
-                      <img :class="[taskPriorityMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
-                      <div v-if="taskPriorityMenuOpen">
-                        <div class="absolute left-0 top-12 w-full">
-                          <div
-                            class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
-                            v-for="(priority, idx) in taskPriorities"
-                            :key="idx"
-                            :class="[taskPriorities.length - 1 === idx ? 'rounded-b-[28px]' : '']"
-                            @click="taskPriority = priority.text"
-                          >
-                            <div class="flex">
-                              <BaseTaskBadge :taskLabel="priority?.text" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Comments</h2>
-                    <input
-                      class="bg-white md:w-[518px] h-[48px] mb-[10px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                      placeholder="Briefly describe the task"
-                      type="text"
-                      v-model="taskComments"
-                    />
-                  </div>
-                  <div class="w-full border-b mt-[24px] border-[#F2F4F7]"></div>
-                </template>
-                <template #button-text @click="handleSubmitNewTask"> Submit New Task </template>
-              </BaseModal>
+              <BaseAddTaskButton />
             </div>
           </div>
         </div>
@@ -453,7 +284,7 @@ handleGetAllTasks()
               <div
                 v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
                 :key="idx"
-                class="grid grid-cols-7 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
+                class="grid grid-cols-6 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full"
               >
                 <div
                   v-for="(category, jdx) in tableHeaderCategory.categories"
@@ -474,17 +305,12 @@ handleGetAllTasks()
               v-for="(task, idx) in assigneePages"
               :key="idx"
               :class="[idx === assigneePages.length - 1 ? 'rounded-b-[16px]' : '']"
-              class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative items-center"
+              class="grid grid-cols-6 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative items-center"
             >
               <div class="col-span-2 flex gap-x-2 items-center">
                 {{ task.taskPatientFirstName + ' ' + task.taskPatientLastName }}
               </div>
-              <div>
-                {{ task.taskStatus }}
-              </div>
-              <div class="flex">
-                <BaseTaskBadge :taskLabel="task?.taskPriority" />
-              </div>
+              <div class="flex">{{ task.taskStatus }}</div>
               <div class="flex">
                 <BaseTaskBadge :taskLabel="task?.taskType" />
               </div>
@@ -538,7 +364,7 @@ handleGetAllTasks()
               <div
                 v-for="(tableHeaderCategory, idx) in tableHeaderCategories"
                 :key="idx"
-                class="grid grid-cols-7 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full items-center"
+                class="grid grid-cols-6 text-[12px] px-[24px] py-[16px] border rounded-t-[16px] border-honeydew-bg2 font-[500] text-gray-5 uppercase w-full items-center"
               >
                 <div
                   v-for="(category, jdx) in tableHeaderCategory.categories"
@@ -559,7 +385,7 @@ handleGetAllTasks()
               v-for="(task, idx) in generalPages"
               :key="idx"
               :class="[idx === generalPages.length - 1 ? 'rounded-b-[16px]' : '']"
-              class="grid grid-cols-7 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative items-center"
+              class="grid grid-cols-6 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative items-center"
               @mouseenter="hoveredIdx = idx"
               @mouseleave="hoveredIdx = null"
             >
@@ -569,9 +395,7 @@ handleGetAllTasks()
               <div>
                 {{ task.taskStatus }}
               </div>
-              <div class="flex">
-                <BaseTaskBadge :taskLabel="task?.taskPriority" />
-              </div>
+
               <div class="flex">
                 <BaseTaskBadge :taskLabel="task?.taskType" />
               </div>
@@ -649,5 +473,12 @@ handleGetAllTasks()
 <style scoped>
 .table-container {
   overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+input::placeholder,
+input {
+  font-weight: 400;
+  font-size: 16px;
+  text-align: start;
 }
 </style>

@@ -118,6 +118,11 @@ profileStore.setMyProfile(route.params.patientId as string)
 <template>
   <BaseWrapper>
     {{ patientStore.patientData }}
+    <div class="w-full">
+      <div class="flex justify-end w-full gap-x-4 flex-col md:flex-row">
+        <BaseAddTaskButton />
+      </div>
+    </div>
     <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
       <div class="flex flex-col md:w-1/2 relative">
