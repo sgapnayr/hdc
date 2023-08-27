@@ -63,18 +63,25 @@ function handleSubmitNewTask() {
 }
 
 // DEBOUNCE *************************************************************
+const patientList = ref([])
+const patientsToShow = ref([])
+
 const debouncedFetch = debounce(() => {
   searchPatientByName(searchPatientName.value)
-    .then((res) => console.log(res))
+    .then((res) => {
+      patientList.value = res.patients
+      patientsToShow.value = patientList.value
+    })
     .catch((err) => console.log(err))
-}, 300)
+}, 200)
 
-watch(
-  () => searchPatientName.value,
-  () => {
+watch(searchPatientName, (newValue) => {
+  if (newValue === '') {
+    patientsToShow.value = patientStore.allPatients
+  } else {
     debouncedFetch()
   }
-)
+})
 
 // INITIALIZATION *************************************************************
 async function fetchTasksByAssignee() {
@@ -135,13 +142,13 @@ async function fetchTasksByAssignee() {
                 </div>
                 <div
                   class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
-                  v-for="(patient, idx) in patientStore.allPatients"
+                  v-for="(patient, idx) in patientsToShow"
                   :key="idx"
-                  :class="[patientStore.allPatients.length - 1 === idx ? 'rounded-b-[28px]' : '']"
+                  :class="[patientsToShow.length - 1 === idx ? 'rounded-b-[28px]' : '']"
                   @click=";(selectedPatientIdForNewTask = patient.patientId), (selectedPatientForNewTask = patient.patientName)"
                 >
                   <div class="px-4 py-1 rounded-[24px]">
-                    {{ patient.patientName }} <span class="opacity-30 ml-2 text-xs">{{ patient.patientId }}</span>
+                    {{ patient.patientName || patient.name }} <span class="opacity-30 ml-2 text-xs">{{ patient.patientId }}</span>
                   </div>
                 </div>
               </div>
