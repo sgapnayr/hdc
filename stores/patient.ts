@@ -41,7 +41,7 @@ export const usePatientStore = defineStore('patient', () => {
         const subAccounts = response.subAccounts
         const actionItems = response.actionItems
         const insurance = response.patientProfile.healthInsurance
-        console.log("IN STORE PATIENT INSURANCE")
+        console.log('IN STORE PATIENT INSURANCE')
 
         const frontendPatient = {
           patientId: patientId || 'patientId',
@@ -52,8 +52,8 @@ export const usePatientStore = defineStore('patient', () => {
           patientHeight: backendPatient.patientHeight || 'patientHeight',
           userRole: backendPatient.userRole || 'userRole',
           patientWeight: backendPatient.patientWeight || 'patientWeight',
-          patientSex: backendPatient.patientSex || 'patientSex',
-          patientAge: backendPatient.patientAge || 'patientAge',
+          patientSex: backendPatient?.patientSex || 'patientSex',
+          patientAge: backendPatient?.patientAge || 'patientAge',
           patientAddress: backendPatient.patientAddress || 'patientAddress',
           subAccounts:
             subAccounts != null

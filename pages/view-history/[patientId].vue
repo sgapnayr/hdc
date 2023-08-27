@@ -129,7 +129,7 @@ profileStore.setMyProfile(route.params.patientId as string)
         <BaseTab
           class="absolute -top-6"
           @selected-account="(val) => (selectedAccount = val)"
-          :tabs="patientStore.patientData.subAccounts || ['Chester', 'Ryan', 'Tommy']"
+          :tabs="patientStore?.patientData?.subAccounts || ['Chester', 'Ryan', 'Tommy']"
         />
         <BasePatientViewHistoryCard />
       </div>

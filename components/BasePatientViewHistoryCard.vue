@@ -81,7 +81,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
         {{ profileStore.profileData?.patientFirstName }} {{ profileStore.profileData?.patientLastName }}
       </h1>
       <div class="mt-[8px] w-3/4 flex flex-wrap items-center">
-        <p class="text-[16px] text-gray-5 font-[400]">{{ patientStore.patientData.patientSex }}</p>
+        <p class="text-[16px] text-gray-5 font-[400]">{{ patientStore?.patientData?.patientSex }}</p>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
         <p class="text-[16px] text-gray-5 font-[400]">Date of Birth {{ patientStore.patientData?.patientDOB }}</p>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
@@ -122,7 +122,10 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
             <img :class="[selectedItem.includes('Shipping Address') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
           </div>
           <div v-if="selectedItem.includes('Shipping Address')" class="flex w-full justify-between text-gray-5 font-[400]">
-            <div>{{ patientStore.patientData?.patientAddress }} {{ patientStore.patientData?.patientCity }} {{ patientData?.patientState }} {{ patientData?.patientZipCode }}</div>
+            <div>
+              {{ patientStore.patientData?.patientAddress }} {{ patientStore.patientData?.patientCity }} {{ patientData?.patientState }}
+              {{ patientData?.patientZipCode }}
+            </div>
           </div>
         </div>
       </div>
@@ -184,7 +187,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
           <div class="w-3/4 whitespace-nowrap">
             <div class="w-full flex justify-between">
               <div class="w-full">MemberID:</div>
-              <div>{{patientStore.patientData.insurance.healthInsuranceMemberID}}</div>
+              <div>{{ patientStore.patientData.insurance.healthInsuranceMemberID }}</div>
             </div>
             <div class="w-full flex justify-between">
               <div class="w-full">Health Insurance:</div>
