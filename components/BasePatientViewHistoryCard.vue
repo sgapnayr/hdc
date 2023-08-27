@@ -78,28 +78,28 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
 
       <!-- Patient Info -->
       <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">
-        {{ patientData?.patientName }}
+        {{ profileStore.profileData?.patientFirstName }} {{ profileStore.profileData?.patientLastName }}
       </h1>
       <div class="mt-[8px] w-3/4 flex flex-wrap items-center">
-        <p class="text-[16px] text-gray-5 font-[400]">{{ patientData?.patientSex }}</p>
+        <p class="text-[16px] text-gray-5 font-[400]">{{ patientStore.patientData.patientSex }}</p>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-        <p class="text-[16px] text-gray-5 font-[400]">Age {{ patientData?.patientAge }}</p>
+        <p class="text-[16px] text-gray-5 font-[400]">Date of Birth {{ patientStore.patientData?.patientDOB }}</p>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
         <p class="text-[16px] text-gray-5 font-[400]">{{ patientData?.patientDOB }}</p>
       </div>
       <div class="text-[16px] font-[400] mt-[8px] text-gray-5 flex items-center">
-        <div class="text-">H: {{ patientData?.patientHeight }}</div>
+        <div class="text-">Height: {{ patientStore.patientData?.patientHeight }}</div>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-        <div class="text-">W: {{ patientData?.patientWeight }}lbs</div>
+        <div class="text-">Weight: {{ patientStore.patientData?.patientWeight }}lbs</div>
       </div>
       <div class="text-[16px] font-[400] mt-[32px] text-gray-3 flex flex-col items-start gap-y-6">
         <div class="flex items-center gap-x-[14px]">
           <img :src="PhoneIcon" alt="Phone Icon" />
-          <div>{{ patientData?.patientPhoneNumber }}</div>
+          <div>{{ patientStore.patientData?.patientPhoneNumber }}</div>
         </div>
         <div class="flex items-center gap-x-[14px]">
           <img :src="EmailIcon" alt="Email Icon" />
-          <div>{{ patientData?.patientEmail }}</div>
+          <div>{{ patientStore.patientData?.patientEmail }}</div>
         </div>
       </div>
     </div>
@@ -122,7 +122,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
             <img :class="[selectedItem.includes('Shipping Address') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
           </div>
           <div v-if="selectedItem.includes('Shipping Address')" class="flex w-full justify-between text-gray-5 font-[400]">
-            <div>{{ patientData?.patientAddress }} {{ patientData?.patientCity }} {{ patientData?.patientState }} {{ patientData?.patientZipCode }}</div>
+            <div>{{ patientStore.patientData?.patientAddress }} {{ patientStore.patientData?.patientCity }} {{ patientData?.patientState }} {{ patientData?.patientZipCode }}</div>
           </div>
         </div>
       </div>
@@ -184,19 +184,19 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
           <div class="w-3/4 whitespace-nowrap">
             <div class="w-full flex justify-between">
               <div class="w-full">MemberID:</div>
-              <div>{{ patientData?.patientInsuranceMemberID }}</div>
+              <div>{{patientStore.patientData.insurance.healthInsuranceMemberID}}</div>
             </div>
             <div class="w-full flex justify-between">
               <div class="w-full">Health Insurance:</div>
-              {{ patientData?.patientHealthInsurance }}
+              {{ patientStore.patientData?.insurance.healthInsuranceName }}
             </div>
             <div class="w-full flex justify-between whitespace-nowrap">
               <div class="w-full">Policy Holder:</div>
-              {{ patientData?.patientInsurancePolicyHolderName }}
+              {{ patientStore.patientData?.insurance.healthInsurancePolicyHolderName }}
             </div>
             <div class="w-full flex justify-between">
               <div class="w-full">Group Number:</div>
-              {{ patientData?.patientInsuranceGroupNumber }}
+              {{ patientStore.patientData?.insurance.healthInsuranceGroupNumber }}
             </div>
           </div>
         </div>

@@ -117,7 +117,7 @@ profileStore.setMyProfile(route.params.patientId as string)
 
 <template>
   <BaseWrapper>
-    {{ profileStore.profileData }}
+    {{ patientStore.patientData }}
     <div class="w-full">
       <div class="flex justify-end w-full gap-x-4 flex-col md:flex-row">
         <BaseAddTaskButton />
@@ -129,7 +129,7 @@ profileStore.setMyProfile(route.params.patientId as string)
         <BaseTab
           class="absolute -top-6"
           @selected-account="(val) => (selectedAccount = val)"
-          :tabs="patientProfile?.subAccounts || ['Chester', 'Ryan', 'Timmy', 'Tommy']"
+          :tabs="patientStore.patientData.subAccounts || ['Chester', 'Ryan', 'Tommy']"
         />
         <BasePatientViewHistoryCard />
       </div>
