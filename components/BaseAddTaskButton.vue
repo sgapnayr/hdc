@@ -20,10 +20,10 @@ const selectedPatientIdForNewTask = ref()
 const selectedPatientForNewTask = ref()
 const taskType = ref<string>('New patient')
 const taskTypeMenuOpen = ref<boolean>(false)
-const taskPriority = ref<'Low' | 'Medium' | 'High'>('Medium')
+const assignTaskTo = ref<'Low' | 'Medium' | 'High'>('Medium')
 const taskComments = ref<string>()
 const customTaskType = ref<string>()
-// const taskPriorityMenuOpen = ref<boolean>(false)
+const employeeMenuOpen = ref<boolean>(false)
 const patientMenuOpen = ref<boolean>(false)
 const searchPatientName = ref()
 
@@ -71,7 +71,7 @@ function handleSubmitNewTask() {
   setTimeout(() => {
     selectedPatient.value = { patientName: '', patientID: '' }
     taskType.value = 'New patient'
-    taskPriority.value = 'Low'
+    assignTaskTo.value = 'Low'
     taskComments.value = ''
     addTaskButtonState.value = 'idle'
   }, 1500)
@@ -226,37 +226,37 @@ async function fetchTasksByAssignee() {
             </div>
           </div>
         </div>
-        <!-- Priority Drop Down -->
-        <!-- <div :class="[taskPriorityMenuOpen ? 'z-40' : 'z-0']">
-          <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Priority</h2>
+        <!-- Employee Drop Down -->
+        <div :class="[employeeMenuOpen ? 'z-40' : 'z-0']">
+          <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Employee</h2>
           <div
             class="bg-white md:w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
-            :class="[taskPriorityMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
+            :class="[employeeMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
             placeholder="Search by patient's name"
             type="text"
-            @click="taskPriorityMenuOpen = !taskPriorityMenuOpen"
+            @click="employeeMenuOpen = !employeeMenuOpen"
           >
-            <div class="flex">
-              <BaseTaskBadge :taskLabel="taskPriority" />
+            <div class="flex px-4">
+              {{ assignTaskTo }}
             </div>
-            <img :class="[taskPriorityMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
-            <div v-if="taskPriorityMenuOpen">
+            <img :class="[employeeMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
+            <div v-if="employeeMenuOpen">
               <div class="absolute left-0 top-12 w-full">
                 <div
                   class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
                   v-for="(priority, idx) in taskPriorities"
                   :key="idx"
                   :class="[taskPriorities.length - 1 === idx ? 'rounded-b-[28px]' : '']"
-                  @click="taskPriority = priority.text"
+                  @click="assignTaskTo = priority.text"
                 >
-                  <div class="flex">
-                    <BaseTaskBadge :taskLabel="priority?.text" />
+                  <div class="flex px-4">
+                    {{ priority?.text }}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
 
         <div>
           <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Comments</h2>

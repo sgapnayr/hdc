@@ -213,7 +213,7 @@ handleGetAllTasks()
           <div class="text-[32px] font-[500] text-[#403E48]">General Tasks Pool</div>
           <div class="flex">
             <!-- Add New Task Button & Modal -->
-            <div class="w-full flex justify-start my-4">
+            <div class="w-full flex justify-start my-4 md:my-auto">
               <BaseAddTaskButton />
             </div>
           </div>
@@ -312,7 +312,7 @@ handleGetAllTasks()
               </div>
               <div class="flex">{{ task.taskStatus }}</div>
               <div class="flex">
-                <BaseTaskBadge :taskLabel="task?.taskType" />
+                {{ task?.taskType }}
               </div>
               <div>
                 {{ task.taskComments.length > 30 ? task.taskComments.slice(0, 40) + '...' : task.taskComments }}
@@ -397,7 +397,7 @@ handleGetAllTasks()
               </div>
 
               <div class="flex">
-                <BaseTaskBadge :taskLabel="task?.taskType" />
+                {{ task?.taskType }}
               </div>
               <div class="flex">
                 {{ task.taskComments.length > 40 ? task.taskComments.slice(0, 40) + '...' : task.taskComments }}
