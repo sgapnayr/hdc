@@ -1,10 +1,11 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
 import { ref } from 'vue'
-import { createTask, searchPatientByName } from '@/lib/endpoints'
+import { createTask, searchPatientByName, assignTask } from '@/lib/endpoints'
 import { useTasksStore } from '@/stores/task'
 import { useProfileStore } from '@/stores/profile'
 import { usePatientStore } from '@/stores/patient'
+import { useEmployeeStore } from '~/stores/employees'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import debounce from 'lodash.debounce'
 
@@ -12,6 +13,7 @@ import debounce from 'lodash.debounce'
 const tasksStore = useTasksStore()
 const profileStore = useProfileStore()
 const patientStore = usePatientStore()
+const employeeStore = useEmployeeStore()
 
 // STATE **********************************************************************
 const selectedPatient = ref<{ patientName: string; patientID: string }>()
@@ -20,7 +22,7 @@ const selectedPatientIdForNewTask = ref()
 const selectedPatientForNewTask = ref()
 const taskType = ref<string>('New patient')
 const taskTypeMenuOpen = ref<boolean>(false)
-const assignTaskTo = ref<'Low' | 'Medium' | 'High'>('Medium')
+const assignTaskTo = ref<string>('Task Pool')
 const taskComments = ref<string>()
 const customTaskType = ref<string>()
 const employeeMenuOpen = ref<boolean>(false)
@@ -63,7 +65,7 @@ function handleSubmitNewTask() {
   addTaskButtonState.value = 'loading'
 
   setTimeout(() => {
-    createTask(selectedPatientIdForNewTask.value, taskType.value, 'Low', taskComments.value)
+    createTask(selectedPatientIdForNewTask.value, taskType.value, taskComments.value)
     addTaskButtonState.value = 'success'
     handleGetAllTasks()
   }, 750)
@@ -121,6 +123,16 @@ async function fetchTasksByAssignee() {
     await tasksStore.getAllTasksFromGraphQLByAssignee(profileStore?.profileData?.patientId)
   }
 }
+employeeStore.getAllEmployeesGraphQL()
+
+const sortedEmployeeNames = computed(() => {
+  const employeeNames = employeeStore.allEmployees.map((employee) => employee.firstName + ' ' + employee.lastName)
+
+  employeeNames.sort((a, b) => a.localeCompare(b))
+  employeeNames.unshift('Task Pool')
+
+  return employeeNames
+})
 </script>
 
 <template>
@@ -198,7 +210,7 @@ async function fetchTasksByAssignee() {
             </div>
             <img :class="[taskTypeMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
             <div v-if="taskTypeMenuOpen">
-              <div class="absolute left-0 top-12 w-full h-48 overflow-y-scroll no-scrollbars rounded-b-[28px] border border-gray-2">
+              <div class="absolute left-0 top-12 w-full h-64 overflow-y-scroll no-scrollbars rounded-b-[28px] border border-gray-2">
                 <div
                   class="px-2 w-full hover:bg-gray-2 bg-white h-[64px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center cursor-pointer shadow-md"
                 >
@@ -228,7 +240,7 @@ async function fetchTasksByAssignee() {
         </div>
         <!-- Employee Drop Down -->
         <div :class="[employeeMenuOpen ? 'z-40' : 'z-0']">
-          <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Employee</h2>
+          <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Assign To</h2>
           <div
             class="bg-white md:w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
             :class="[employeeMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
@@ -241,17 +253,15 @@ async function fetchTasksByAssignee() {
             </div>
             <img :class="[employeeMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
             <div v-if="employeeMenuOpen">
-              <div class="absolute left-0 top-12 w-full">
+              <div class="absolute left-0 top-12 w-full h-52 overflow-scroll no-scrollbars rounded-b-[28px]">
                 <div
-                  class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
-                  v-for="(priority, idx) in taskPriorities"
+                  class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer"
+                  v-for="(employee, idx) in sortedEmployeeNames"
                   :key="idx"
-                  :class="[taskPriorities.length - 1 === idx ? 'rounded-b-[28px]' : '']"
-                  @click="assignTaskTo = priority.text"
+                  :class="[sortedEmployeeNames.length - 1 === idx ? 'rounded-b-[28px]' : '']"
+                  @click="assignTaskTo = employee"
                 >
-                  <div class="flex px-4">
-                    {{ priority?.text }}
-                  </div>
+                  <div class="flex px-4">{{ employee }}</div>
                 </div>
               </div>
             </div>
