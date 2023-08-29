@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
 import { ref } from 'vue'
-import { createTask, searchPatientByName, assignTask } from '@/lib/endpoints'
+import { createTask, searchPatientByName, assignTaskToEmployee } from '@/lib/endpoints'
 import { useTasksStore } from '@/stores/task'
 import { useProfileStore } from '@/stores/profile'
 import { usePatientStore } from '@/stores/patient'
@@ -22,16 +22,16 @@ const selectedPatientIdForNewTask = ref()
 const selectedPatientForNewTask = ref()
 const taskType = ref<string>('New patient')
 const taskTypeMenuOpen = ref<boolean>(false)
-const assignTaskTo = ref<string>('Task Pool')
+const assignTaskTo = ref<any>('Task Pool')
+const assignTaskToId = ref<string>()
 const taskComments = ref<string>()
 const customTaskType = ref<string>()
 const employeeMenuOpen = ref<boolean>(false)
 const patientMenuOpen = ref<boolean>(false)
 const searchPatientName = ref()
+const taskID = ref()
 
 // MEMBER DATA ****************************************************************
-const taskPriorities = [{ text: 'Low' as 'Low' }, { text: 'Medium' as 'Medium' }, { text: 'High' as 'High' }]
-
 const taskTypes = [
   { text: 'Submit Prescription' },
   { text: 'New messages' },
@@ -61,13 +61,22 @@ async function handleGetAllTasks() {
   tasksStore.getAllTasksFromGraphQL()
 }
 
-function handleSubmitNewTask() {
+async function handleSubmitNewTask() {
   addTaskButtonState.value = 'loading'
 
   setTimeout(() => {
     createTask(selectedPatientIdForNewTask.value, taskType.value, taskComments.value)
-    addTaskButtonState.value = 'success'
-    handleGetAllTasks()
+      .then((res) => {
+        taskID.value = res.taskId
+
+        if (assignTaskTo.value !== 'Task Pool') {
+          assignTaskToEmployee(taskID.value, assignTaskToId.value)
+        }
+
+        addTaskButtonState.value = 'success'
+        handleGetAllTasks()
+      })
+      .catch((err) => console.log(err))
   }, 750)
 
   setTimeout(() => {
@@ -92,6 +101,8 @@ function handleUseTask() {
 const patientList = ref([])
 const patientsToShow = ref([])
 
+patientsToShow.value = patientStore.allPatients
+
 const debouncedFetch = debounce(() => {
   searchPatientByName(searchPatientName.value)
     .then((res) => {
@@ -102,11 +113,7 @@ const debouncedFetch = debounce(() => {
 }, 200)
 
 watch(searchPatientName, (newValue) => {
-  if (newValue === '') {
-    patientsToShow.value = patientStore.allPatients
-  } else {
-    debouncedFetch()
-  }
+  debouncedFetch()
 })
 
 watch(customTaskType, (newValue) => {
@@ -126,10 +133,12 @@ async function fetchTasksByAssignee() {
 employeeStore.getAllEmployeesGraphQL()
 
 const sortedEmployeeNames = computed(() => {
-  const employeeNames = employeeStore.allEmployees.map((employee) => employee.firstName + ' ' + employee.lastName)
+  const employeeNames = employeeStore.allEmployees.map((employee) => {
+    return { name: employee.firstName + ' ' + employee.lastName, employeeId: employee.employeeId }
+  })
 
-  employeeNames.sort((a, b) => a.localeCompare(b))
-  employeeNames.unshift('Task Pool')
+  employeeNames.sort((a, b) => a.name.localeCompare(b.name))
+  employeeNames.unshift({ name: 'Task Pool' })
 
   return employeeNames
 })
@@ -168,20 +177,20 @@ const sortedEmployeeNames = computed(() => {
             </div>
             <img :class="[patientMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
             <div v-if="patientMenuOpen">
-              <div class="absolute left-0 top-12 w-full">
+              <div class="absolute left-0 top-12 w-full h-64 overflow-scroll no-scrollbars border-b-gray-2 rounded-b-[28px]">
                 <div
-                  class="px-2 w-full hover:bg-gray-2 bg-white h-[64px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center cursor-pointer shadow-md"
+                  class="px-2 w-full hover:bg-gray-2 bg-white h-[64px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center cursor-pointer"
                 >
                   <input
                     @change="debounce"
                     v-model="searchPatientName"
                     placeholder="Search by patient name here..."
                     @click.stop
-                    class="px-4 w-full bg-white h-[40px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center cursor-pointer shadow-md rounded-[80px]"
+                    class="px-4 w-full bg-white h-[40px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center cursor-pointer rounded-[80px]"
                   />
                 </div>
                 <div
-                  class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
+                  class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer"
                   v-for="(patient, idx) in patientsToShow"
                   :key="idx"
                   :class="[patientsToShow.length - 1 === idx ? 'rounded-b-[28px]' : '']"
@@ -212,19 +221,19 @@ const sortedEmployeeNames = computed(() => {
             <div v-if="taskTypeMenuOpen">
               <div class="absolute left-0 top-12 w-full h-64 overflow-y-scroll no-scrollbars rounded-b-[28px] border border-gray-2">
                 <div
-                  class="px-2 w-full hover:bg-gray-2 bg-white h-[64px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center cursor-pointer shadow-md"
+                  class="px-2 w-full hover:bg-gray-2 bg-white h-[64px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center cursor-pointer"
                 >
                   <input
                     @change="debounce"
                     v-model="customTaskType"
                     placeholder="Add Custom Task here..."
                     @click.stop
-                    class="px-4 w-full bg-white h-[40px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center cursor-pointer shadow-md rounded-[80px]"
+                    class="px-4 w-full bg-white h-[40px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center cursor-pointer rounded-[80px]"
                   />
                   <div class="text-black mx-2 opacity-20 hover:opacity-50 cursor-pointer text-sm" @click="handleUseTask">Select</div>
                 </div>
                 <div
-                  class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
+                  class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer"
                   v-for="(task, idx) in taskTypes"
                   :key="idx"
                   :class="[taskTypes.length - 1 === idx ? 'rounded-b-[28px]' : '']"
@@ -249,7 +258,7 @@ const sortedEmployeeNames = computed(() => {
             @click="employeeMenuOpen = !employeeMenuOpen"
           >
             <div class="flex px-4">
-              {{ assignTaskTo }}
+              {{ assignTaskTo.name || 'Task Pool' }}
             </div>
             <img :class="[employeeMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
             <div v-if="employeeMenuOpen">
@@ -259,9 +268,9 @@ const sortedEmployeeNames = computed(() => {
                   v-for="(employee, idx) in sortedEmployeeNames"
                   :key="idx"
                   :class="[sortedEmployeeNames.length - 1 === idx ? 'rounded-b-[28px]' : '']"
-                  @click="assignTaskTo = employee"
+                  @click=";(assignTaskTo = employee), (assignTaskToId = employee.employeeId)"
                 >
-                  <div class="flex px-4">{{ employee }}</div>
+                  <div class="flex px-4">{{ employee.name }}</div>
                 </div>
               </div>
             </div>
