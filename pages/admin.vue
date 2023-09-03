@@ -13,6 +13,8 @@ import { Patient, Patients } from '@/types/patient-types'
 import { usePatientStore } from '@/stores/patient'
 import { useProfileStore } from '~/stores/profile'
 import { getMyProfile } from '~/lib/endpoints'
+import { searchPatientByName } from '@/lib/endpoints'
+import debounce from 'lodash.debounce'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -224,6 +226,24 @@ watch(
   }
 )
 
+const patientsToShow = ref([])
+const searchPatientName = ref()
+
+patientsToShow.value = patientStore.allPatients
+
+const debouncedFetch = debounce(() => {
+  searchPatientByName(searchPatientName.value)
+    .then((res) => {
+      patientList.value = res.patients
+      patientsToShow.value = patientList.value
+    })
+    .catch((err) => console.log(err))
+}, 200)
+
+watch(searchPatientName, (newValue) => {
+  debouncedFetch()
+})
+
 // INIT ****************************************************************
 async function fetchPatients() {
   await patientStore.getPatientsFromGraphQL()
@@ -286,7 +306,7 @@ fetchPatients()
           <!-- Search -->
           <div class="bg-honeydew-bg2 w-full h-[48px] mt-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-start">
             <img class="ml-4 mr-2 scale-50 md:scale-100" :src="SearchIcon" alt="Search Icon" />
-            <input class="bg-honeydew-bg2 outline-none focus:ring-0 w-[80%]" placeholder="Search by patient's name" type="text" />
+            <input v-model="searchPatientName" class="bg-honeydew-bg2 outline-none focus:ring-0 w-[80%]" placeholder="Search by patient's name" type="text" />
           </div>
           <!-- Chips -->
           <div class="mt-[24px] flex-wrap">
@@ -331,7 +351,7 @@ fetchPatients()
 
             <!-- Table Body -->
             <NuxtLink
-              v-for="(patient, idx) in patientStore?.allPatients"
+              v-for="(patient, idx) in patientsToShow"
               :key="idx"
               :class="[
                 idx === patientStore?.allPatients?.length - 1 ? 'rounded-b-[16px]' : '',

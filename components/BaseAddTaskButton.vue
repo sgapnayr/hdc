@@ -130,6 +130,7 @@ async function fetchTasksByAssignee() {
     await tasksStore.getAllTasksFromGraphQLByAssignee(profileStore?.profileData?.patientId)
   }
 }
+
 employeeStore.getAllEmployeesGraphQL()
 
 const sortedEmployeeNames = computed(() => {

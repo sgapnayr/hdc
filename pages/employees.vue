@@ -7,6 +7,7 @@ import ClockIcon from '@/assets/icons/clock-icon.svg'
 import ReportIcon from '@/assets/icons/report-icon.svg'
 import OptionsIcon from '@/assets/icons/options-icon.svg'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
+import CalendarIcon from '@/assets/icons/calendar-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { getEmployees, createEmployee, getPatients, getEmployee, updateEmployee, searchPatient } from '@/lib/endpoints'
 import type { Employees, Employee } from '@/types/employee-types'
@@ -14,6 +15,8 @@ import type { Patient, Patients } from '@/types/patient-types'
 import { useEmployeeStore } from '~/stores/employees'
 import { usePatientStore } from '~/stores/patient'
 import { vMaska } from 'maska'
+import { getLastSixMonthsDates } from '~/utils/helpers'
+import jsPDF from 'jspdf'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -80,6 +83,8 @@ const selectedPatientNameForNewEmployee = ref()
 const pageSize = ref(10)
 const currentPage = ref(0)
 const selectedEmployeeType = ref<number>(0)
+
+const selectedDateForReport = ref()
 
 // MEMBER DATA ****************************************************************
 const totalPages = computed(() => {
@@ -239,6 +244,23 @@ async function handleGetEmployee(employeeId: string) {
   console.log(employeeId)
 }
 
+async function handleGeneratePDFReport(date: string) {
+  if (date) {
+    const pdf = new jsPDF()
+
+    pdf.text(`Report for Date: ${date}`, 10, 10)
+
+    const pdfBlob = pdf.output('blob')
+
+    const downloadLink = document.createElement('a')
+    downloadLink.href = URL.createObjectURL(pdfBlob)
+    downloadLink.download = 'report.pdf'
+    downloadLink.click()
+
+    URL.revokeObjectURL(downloadLink.href)
+  }
+}
+
 getPatientsInit()
 employeeStore.getAllEmployeesGraphQL()
 patientStore.getPatientsFromGraphQL()
@@ -246,6 +268,7 @@ patientStore.getPatientsFromGraphQL()
 
 <template>
   <div class="w-full py-8">
+    <BaseInputGroup />
     <BaseWrapper>
       <!-- Manage Team Top -->
       <div class="w-full">
@@ -464,6 +487,19 @@ patientStore.getPatientsFromGraphQL()
                 {{ employee.isActive }}
               </div>
               <div class="w-full flex justify-end items-center gap-x-2">
+                <BaseModal @action-click="() => handleGeneratePDFReport(selectedDateForReport)">
+                  <template #button>
+                    <img :src="CalendarIcon" alt="Calendar Icon" class="cursor-pointer transition active:scale-90" />
+                  </template>
+                  <template #header> Generate Report </template>
+                  <template #content>
+                    <div class="text-[16px] font-normal p-4 w-full max-w-[490px]">
+                      Select Date to Generate Report
+                      <BaseDropDown @selected-option="(option) => (selectedDateForReport = option)" :options="getLastSixMonthsDates()" />
+                    </div>
+                  </template>
+                </BaseModal>
+
                 <BaseModal @action-click="handleArchiveEmployee(employee.employeeId)">
                   <template #header> Confirm Archive Employee </template>
                   <template #button>
