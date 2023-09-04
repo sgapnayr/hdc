@@ -23,6 +23,7 @@ const updatePatientPhoneNumber = ref()
 const updatePatientEmailAddress = ref()
 const updatePatientHeight = ref()
 const updatePatientWeight = ref()
+const updatePatientAge = ref()
 const updatePatientCountry = ref()
 const updatePatientPostalCode = ref()
 const updatePatientCity = ref()
@@ -69,6 +70,7 @@ const updateProfileChanges = async () => {
     patientEmailAddress: updatePatientEmailAddress.value,
     patienHeight: updatePatientHeight.value,
     patienWeight: updatePatientWeight.value,
+    patienAge: updatePatientAge.value,
     patientCountry: updatePatientCountry.value,
     patientZipCode: updatePatientPostalCode.value,
     patientCity: updatePatientCity.value,
@@ -153,6 +155,12 @@ const updateProfileChanges = async () => {
             <input
               v-model="updatePatientWeight"
               :placeholder="profileStore.signUpName || 'Enter your weight in lbs'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
+            />
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Age</p>
+            <input
+              v-model="updatePatientAge"
+              :placeholder="profileStore.signUpName || 'Enter your age'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
           </div>
