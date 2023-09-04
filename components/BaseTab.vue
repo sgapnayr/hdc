@@ -7,6 +7,7 @@ import { getTaskByAssignee } from '~/lib/endpoints'
 const props = defineProps<{
   tabs: any
   patientId: string
+  highlighSubAccount?: string
 }>()
 
 // EMIT **********************************************************************
@@ -30,7 +31,7 @@ function handleSelectedTab(tabIdx: number, tab: any) {
   <div class="flex w-full overflow-x-scroll">
     <div
       @click="handleSelectedTab(idx, tab)"
-      :class="[idx !== 0 ? 'mx-[1px]' : '', idx === selectedTabIdx ? 'opacity-100' : 'opacity-50']"
+      :class="[idx !== 0 ? 'mx-[1px]' : '', tab.subAccountId === highlighSubAccount ? 'opacity-100' : 'opacity-50']"
       class="px-4 py-1 bg-white rounded-t-2xl drop-shadow-sm text-sm cursor-pointer"
       v-for="(tab, idx) in tabs"
     >

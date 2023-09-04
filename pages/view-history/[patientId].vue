@@ -116,12 +116,12 @@ profileStore.setMyProfile(route.params.patientId as string)
 
 function handleSubAccount(selectedSubAccount: string) {
   selectedSubAccountId.value = selectedSubAccount
+  navigateTo('/view-history/' + selectedSubAccount)
 }
 </script>
 
 <template>
   <BaseWrapper>
-    Sub Account: {{ selectedSubAccountId }}
     <div class="w-full">
       <div class="flex justify-end w-full gap-x-4 flex-col md:flex-row">
         <BaseAddTaskButton />
@@ -136,6 +136,7 @@ function handleSubAccount(selectedSubAccount: string) {
           @selected-patient-id="(selectedSubAccount) => handleSubAccount(selectedSubAccount)"
           :tabs="patientStore?.patientData?.subAccounts"
           :patientId="profileStore?.profileData?.patientId"
+          :highlighSubAccount="(route.params.patientId as string)"
         />
         <BasePatientViewHistoryCard />
       </div>
