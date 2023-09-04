@@ -21,6 +21,9 @@ const signName = ref()
 const updatePatientFullName = ref()
 const updatePatientPhoneNumber = ref()
 const updatePatientEmailAddress = ref()
+const updatePatientHeight = ref()
+const updatePatientWeight = ref()
+const updatePatientAge = ref()
 const updatePatientCountry = ref()
 const updatePatientPostalCode = ref()
 const updatePatientCity = ref()
@@ -65,6 +68,9 @@ const updateProfileChanges = async () => {
     patientFullName: updatePatientFullName.value,
     patientsPhoneNumber: updatePatientPhoneNumber.value,
     patientEmailAddress: updatePatientEmailAddress.value,
+    patienHeight: updatePatientHeight.value,
+    patienWeight: updatePatientWeight.value,
+    patienAge: updatePatientAge.value,
     patientCountry: updatePatientCountry.value,
     patientZipCode: updatePatientPostalCode.value,
     patientCity: updatePatientCity.value,
@@ -73,7 +79,7 @@ const updateProfileChanges = async () => {
     patientsParentPhoneNumber: updatePatientsParentPhoneNumber.value,
   }
 
-  console.log("DATA TO UPDATE", updateProfilePayload)
+  console.log('DATA TO UPDATE', updateProfilePayload)
 
   updateProfileObj.value = updateProfilePayload // PAYLOAD FOR C-BISCUIT
 
@@ -137,6 +143,24 @@ const updateProfileChanges = async () => {
             <input
               v-model="updatePatientEmailAddress"
               :placeholder="profileStore.signUpName || 'Enter your email address'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
+            />
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Height</p>
+            <input
+              v-model="updatePatientHeight"
+              :placeholder="profileStore.signUpName || 'Enter your height in inches'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
+            />
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Weight</p>
+            <input
+              v-model="updatePatientWeight"
+              :placeholder="profileStore.signUpName || 'Enter your weight in lbs'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
+            />
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Age</p>
+            <input
+              v-model="updatePatientAge"
+              :placeholder="profileStore.signUpName || 'Enter your age'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
           </div>

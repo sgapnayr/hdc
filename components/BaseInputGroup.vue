@@ -7,8 +7,8 @@ import DeleteIcon from '@/assets/icons/delete-icon.svg'
 
 // PROPS **********************************************************************
 const props = defineProps<{
-  idx: number
-  treatmentGroups: string[]
+  idx?: number
+  treatmentGroups?: string[]
 }>()
 
 // STATE **********************************************************************
