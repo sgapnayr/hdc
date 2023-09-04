@@ -137,9 +137,9 @@ async function handleCreateTreatmentPlan() {
   const groupArray = medArr.value
   let topArray = []
   for (let i = 0; i < groupArray.length; i++) {
-    topArray.push({medicationsIds: toRaw(groupArray[i])})
+    topArray.push({ medicationsIds: toRaw(groupArray[i]) })
   }
-  let finalObject = {groups: topArray}
+  let finalObject = { groups: topArray }
   finalObject.treatmentName = planName
   console.log('called to create new treatment plan', finalObject)
   chesterTreatmentGroupPayload.value = { treatmentGroup: newTreatmentPlanName, medArr }
@@ -290,14 +290,16 @@ function clearMedicationArr() {
                   <div class="md:w-[400px] overflow-scroll no-scrollbars">
                     <div class="mb-4 text-[16px]">Add New Plan</div>
                     <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Name</p>
-                    <input v-model="newTreatmentPlanName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4" />
+                    <input v-model="newTreatmentPlanName" class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-[80px] h-[44px] w-full px-4 mb-4" />
                     <div class="overflow-scroll h-96 no-scrollbars">
+                      <p class="mb-[8px] px-4 uppercase text-[12px] text-[#403E48]">Groups</p>
                       <div v-for="(group, idx) in treatmentGroups" :key="idx">
-                        <BaseTreatmentPlanGroup
-                          @medications-id-arr="(medicationsIdArr) => getMedicationsArr(medicationsIdArr)"
+                        <BaseInputGroup
+                          :treatmentGroups="treatmentGroups"
                           :idx="idx"
                           @add-group="treatmentGroups.push('')"
                           @remove-group="treatmentGroups.splice(idx, 1)"
+                          @medications-id-arr="(medicationsIdArr) => getMedicationsArr(medicationsIdArr)"
                         />
                       </div>
                     </div>
