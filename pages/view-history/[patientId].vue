@@ -99,7 +99,7 @@ const uploadPhoto = async () => {
 
 const patientImages = ref<any>([])
 const patientProfile = ref()
-const selectedAccount = ref()
+const selectedSubAccountId = ref()
 
 getMyProfileImages(route.params.patientId as string)
   .then((res) => (patientImages.value = res))
@@ -113,11 +113,15 @@ tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 
 appointmentsStore.getAllAppointments()
 profileStore.setMyProfile(route.params.patientId as string)
+
+function handleSubAccount(selectedSubAccount: string) {
+  selectedSubAccountId.value = selectedSubAccount
+}
 </script>
 
 <template>
   <BaseWrapper>
-    {{ patientStore.patientData }}
+    Sub Account: {{ selectedSubAccountId }}
     <div class="w-full">
       <div class="flex justify-end w-full gap-x-4 flex-col md:flex-row">
         <BaseAddTaskButton />
@@ -125,11 +129,13 @@ profileStore.setMyProfile(route.params.patientId as string)
     </div>
     <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
+      <!-- v-if="patientStore?.patientData?.subAccounts" -->
       <div class="flex flex-col md:w-1/2 relative">
         <BaseTab
           class="absolute -top-6"
-          @selected-account="(val) => (selectedAccount = val)"
-          :tabs="patientStore?.patientData?.subAccounts || ['Chester', 'Ryan', 'Tommy']"
+          @selected-patient-id="(selectedSubAccount) => handleSubAccount(selectedSubAccount)"
+          :tabs="patientStore?.patientData?.subAccounts"
+          :patientId="profileStore?.profileData?.patientId"
         />
         <BasePatientViewHistoryCard />
       </div>

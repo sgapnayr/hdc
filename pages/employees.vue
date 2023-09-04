@@ -268,7 +268,6 @@ patientStore.getPatientsFromGraphQL()
 
 <template>
   <div class="w-full py-8">
-    <BaseInputGroup />
     <BaseWrapper>
       <!-- Manage Team Top -->
       <div class="w-full">
