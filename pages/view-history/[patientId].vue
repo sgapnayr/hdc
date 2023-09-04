@@ -136,6 +136,7 @@ function handleSubAccount(selectedSubAccount: string) {
           @selected-patient-id="(selectedSubAccount) => handleSubAccount(selectedSubAccount)"
           :tabs="patientStore?.patientData?.subAccounts"
           :patientId="profileStore?.profileData?.patientId"
+          :patientData="profileStore?.profileData"
           :highlighSubAccount="(route.params.patientId as string)"
         />
         <BasePatientViewHistoryCard />

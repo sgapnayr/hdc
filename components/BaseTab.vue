@@ -1,12 +1,13 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { getTaskByAssignee } from '~/lib/endpoints'
 
 // PROPS **********************************************************************
 const props = defineProps<{
   tabs: any
   patientId: string
+  patientData: any
   highlighSubAccount?: string
 }>()
 
@@ -25,10 +26,25 @@ function handleSelectedTab(tabIdx: number, tab: any) {
 
   emit('selected-patient-id', tab?.subAccountId)
 }
+
+function handleMainAccount(mainAccountId: string) {
+  emit('selected-patient-id', mainAccountId)
+}
+
+const mainAccountId = computed(() => {
+  return props?.tabs?.map((tab) => tab.subAccountId.slice(0, tab.subAccountId.length - 2))[0]
+})
 </script>
 
 <template>
   <div class="flex w-full overflow-x-scroll">
+    <div
+      @click="handleMainAccount(mainAccountId)"
+      :class="['mx-[1px]', mainAccountId === highlighSubAccount ? 'opacity-100' : 'opacity-50']"
+      class="px-4 py-1 bg-white rounded-t-2xl drop-shadow-sm text-sm cursor-pointer"
+    >
+      Primary
+    </div>
     <div
       @click="handleSelectedTab(idx, tab)"
       :class="[idx !== 0 ? 'mx-[1px]' : '', tab.subAccountId === highlighSubAccount ? 'opacity-100' : 'opacity-50']"
