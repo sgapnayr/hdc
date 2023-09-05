@@ -80,7 +80,7 @@ function handleCloseModal() {
 
 <template>
   <TheTransitionWrapper>
-    <div v-if="modalIsOpen" class="fixed w-screen z-50 min-h-screen flex justify-center items-start left-0 top-0 bottom-0" @click="handleCloseModal">
+    <div v-if="modalIsOpen" class="shadow fixed w-screen z-50 min-h-screen flex justify-center items-start left-0 top-0 bottom-0" @click="handleCloseModal">
       <div class="relative flex justify-center top-8 lg:top-1/5 w-full">
         <transition name="modal">
           <div class="bg-white rounded-[8px] shadow-xl" @click.stop>
@@ -111,7 +111,7 @@ function handleCloseModal() {
       </div>
     </div>
   </TheTransitionWrapper>
-  <div @click="modalIsOpen = true">
+  <div @click.stop="modalIsOpen = true">
     <slot name="button">
       <BaseButton color-scheme="gray" @click.stop="modalIsOpen = true"> Press For Modal </BaseButton>
     </slot>

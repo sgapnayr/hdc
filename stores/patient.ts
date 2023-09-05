@@ -45,9 +45,9 @@ export const usePatientStore = defineStore('patient', () => {
 
         const frontendPatient = {
           patientId: patientId || 'patientId',
-          patientName: backendPatient.patientFirstName + ' ' + backendPatient.patientLastName, 
-          patientDOB: backendPatient.patientDOB, 
-          patientEmail: backendPatient.patientEmail, 
+          patientName: backendPatient.patientFirstName + ' ' + backendPatient.patientLastName,
+          patientDOB: backendPatient.patientDOB,
+          patientEmail: backendPatient.patientEmail,
           patientPhoneNumber: backendPatient.patientPhoneNumber,
           patientHeight: backendPatient.patientHeight,
           userRole: backendPatient.userRole,
