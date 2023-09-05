@@ -45,16 +45,16 @@ export const usePatientStore = defineStore('patient', () => {
 
         const frontendPatient = {
           patientId: patientId || 'patientId',
-          patientName: backendPatient.patientFirstName + ' ' + backendPatient.patientLastName || 'patientName',
-          patientDOB: backendPatient.patientDOB || 'patientDOB' + patientId.slice(0, 4),
-          patientEmail: backendPatient.patientEmail || 'patientEmail',
-          patientPhoneNumber: backendPatient.patientPhoneNumber || 'patientPhoneNumber',
-          patientHeight: backendPatient.patientHeight || 'patientHeight',
-          userRole: backendPatient.userRole || 'userRole',
-          patientWeight: backendPatient.patientWeight || 'patientWeight',
-          patientSex: backendPatient?.patientSex || 'patientSex',
-          patientAge: backendPatient?.patientAge || 'patientAge',
-          patientAddress: backendPatient.patientAddress || 'patientAddress',
+          patientName: backendPatient.patientFirstName + ' ' + backendPatient.patientLastName, 
+          patientDOB: backendPatient.patientDOB, 
+          patientEmail: backendPatient.patientEmail, 
+          patientPhoneNumber: backendPatient.patientPhoneNumber,
+          patientHeight: backendPatient.patientHeight,
+          userRole: backendPatient.userRole,
+          patientWeight: backendPatient.patientWeight,
+          patientSex: backendPatient?.patientSex,
+          patientAge: backendPatient?.patientAge,
+          patientAddress: backendPatient.patientAddress,
           subAccounts:
             subAccounts != null
               ? subAccounts.map((subAccount: any) => ({

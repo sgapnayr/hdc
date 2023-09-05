@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getMyProfile } from '@/lib/endpoints'
+import { getMyProfile, updateProfile } from '@/lib/endpoints'
 
 export const useProfileStore = defineStore('profile', () => {
   const isPregnantModalOpen = ref(false)
@@ -64,6 +64,15 @@ export const useProfileStore = defineStore('profile', () => {
       profileData.value = response
     } catch (error) {
       console.error('Error retrieving employees:', error)
+    }
+  }
+
+  async function updateProfile() {
+    try {
+      const response = await updateProfile()
+      console.log('update profile in profile store', response)
+    }catch (error) {
+      console.error('Error updating profile', error)
     }
   }
 
@@ -176,5 +185,6 @@ export const useProfileStore = defineStore('profile', () => {
     handlePregnancyModal,
     handleBloodSlipForm,
     handlePatientDetailsForm,
+    updateProfile
   }
 })
