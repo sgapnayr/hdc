@@ -88,7 +88,7 @@ const selectedPatientIdToBecomeNewEmployee = ref()
 const selectedPatientNameForNewEmployee = ref()
 const pageSize = ref(10)
 const currentPage = ref(0)
-let  chipAmount = 0
+const chipAmount = ref<number>(0)
 const selectedEmployeeType = ref<number>(0)
 
 const selectedDateForReport = ref()
@@ -97,41 +97,6 @@ const selectedDateForReport = ref()
 const totalPages = computed(() => {
   return Math.ceil(employeeStore?.allEmployees?.length / pageSize.value)
 })
-
-//TODO: RYAN, FIX THIS TO SHOW THE CORRECT CHIP AMOUNT!
-const categoryChips: CategoryChips[] = [
-  {
-    group: 'Providers',
-    chips: [
-      { text: 'Active', amount: chipAmount }
-    ],
-  },
-  {
-    group: 'Super Providers',
-    chips: [
-      { text: 'Active', amount: 32 },
-      { text: 'Archived', amount: 10 },
-    ],
-  },
-  {
-    group: 'Care Coordinators',
-    chips: [
-      { text: 'Active', amount: 10 },
-      { text: 'Archived', amount: 13 },
-    ],
-  },
-  {
-    group: 'Enrollment Coordinators',
-    chips: [
-      { text: 'Active', amount: 10 },
-      { text: 'Archived', amount: 13 },
-    ],
-  },
-  {
-    group: 'Admin',
-    chips: [],
-  },
-]
 
 const tableHeaderCategories: TableHeaderCategory[] = [
   {
@@ -149,7 +114,7 @@ const tableHeaderCategories: TableHeaderCategory[] = [
   {
     group: 'Super Providers',
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
-  }
+  },
 ]
 
 // COMPUTED METHODS ****************************************************************
@@ -167,10 +132,7 @@ const handleCategoryData = computed(() => {
 
 const filterByEmployeeType = computed(() => {
   if (tabSelected.value === 'Providers') {
-    const myFilteredEmployees = employeeData?.value?.filter((employee: any) => employee?.role?.includes('PROVIDER'))
-    chipAmount = myFilteredEmployees.length
-    console.log("chip amount will be: ", chipAmount)
-    return myFilteredEmployees
+    return employeeData?.value?.filter((employee: any) => employee?.role?.includes('PROVIDER'))
   } else if (tabSelected.value === 'Super Providers') {
     return employeeData?.value?.filter((employee: any) => employee?.role?.includes('SUPER_PHYSICIAN'))
   } else if (tabSelected.value === 'Enrollment Coordinators') {
@@ -210,6 +172,29 @@ enum EmployeeRole {
   ADMIN,
 }
 
+const categoryChips: CategoryChips[] = [
+  {
+    group: 'Providers',
+    chips: [{ text: 'Active', amount: employeeData?.value?.filter((employee: any) => employee?.role?.includes('PROVIDER')).length }],
+  },
+  {
+    group: 'Super Providers',
+    chips: [{ text: 'Active', amount: employeeData?.value?.filter((employee: any) => employee?.role?.includes('SUPER_PHYSICIAN')).length }],
+  },
+  {
+    group: 'Care Coordinators',
+    chips: [{ text: 'Active', amount: employeeData?.value?.filter((employee: any) => employee?.role?.includes('ENROLLMENT_COORDINATOR')).length }],
+  },
+  {
+    group: 'Enrollment Coordinators',
+    chips: [{ text: 'Active', amount: employeeData?.value?.filter((employee: any) => employee?.role?.includes('CARE_COORDINATOR')).length }],
+  },
+  {
+    group: 'Admin',
+    chips: [],
+  },
+]
+
 const employeeTypes = [
   { text: 'Provider', value: EmployeeRole.PROVIDER },
   { text: 'Supervising Physician', value: EmployeeRole.SUPER_PHYSICIAN },
@@ -233,7 +218,7 @@ async function handleCreateEmployee() {
 async function handleUpdateEmployee(employeeId: string) {
   console.log(employeeId)
   console.log(updateEmployeeFirstName.value)
-  console.log("ROLE FOR THE EMPLOYEE: ", EmployeeRole[selectedEmployeeType.value])
+  console.log('ROLE FOR THE EMPLOYEE: ', EmployeeRole[selectedEmployeeType.value])
   await updateEmployee(
     updateEmployeeFirstName.value,
     updateEmployeeLastName.value,
@@ -277,6 +262,7 @@ patientStore.getPatientsFromGraphQL()
 
 <template>
   <div class="w-full py-8">
+    {{ chipAmount }}
     <BaseWrapper>
       <!-- Manage Team Top -->
       <div class="w-full">
@@ -556,10 +542,10 @@ patientStore.getPatientsFromGraphQL()
                             <div class="absolute left-0 top-12 w-full">
                               <div
                                 class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
-                                v-for="(employeeType, idx) in ['Care Coordinator', 'Enrollment Coordinator', 'Provider', 'Supervising Physician',]"
+                                v-for="(employeeType, idx) in ['Care Coordinator', 'Enrollment Coordinator', 'Provider', 'Supervising Physician']"
                                 :key="idx"
                                 :class="[3 === idx ? 'rounded-b-[28px]' : '']"
-                                @click="updateEmployeeType = employeeType, selectedEmployeeType = idx"
+                                @click=";(updateEmployeeType = employeeType), (selectedEmployeeType = idx)"
                               >
                                 <div class="px-4 py-1 rounded-[24px]">
                                   {{ employeeType }}

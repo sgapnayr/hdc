@@ -38,7 +38,7 @@ const tasksStore = useTasksStore()
 const appointmentsStore = useAppointmentsStore()
 
 // STATE *********************************************************************
-const treatmentHistoryOrDocumentsSelected = ref<'Treatment History' | 'Documents'>('Treatment History')
+const treatmentHistoryOrDocumentsSelected = ref<'Treatment History' | 'Documents' | 'Images'>('Treatment History')
 const isOpen = ref<any[]>([])
 const isSelected = ref('Treatment History')
 const documentModalMenuOpen = ref(false)
@@ -129,7 +129,6 @@ function handleSubAccount(selectedSubAccount: string) {
     </div>
     <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
-      <!-- v-if="patientStore?.patientData?.subAccounts" -->
       <div class="flex flex-col md:w-1/2 relative">
         <BaseTab
           class="absolute -top-6"
@@ -158,6 +157,13 @@ function handleSubAccount(selectedSubAccount: string) {
             :class="[treatmentHistoryOrDocumentsSelected === 'Documents' ? 'text-honeydew-purple border-b-2 border-b-honeydew-purple' : '']"
           >
             Documents
+          </div>
+          <div
+            @click="treatmentHistoryOrDocumentsSelected = 'Images'"
+            class="py-6 cursor-pointer"
+            :class="[treatmentHistoryOrDocumentsSelected === 'Images' ? 'text-honeydew-purple border-b-2 border-b-honeydew-purple' : '']"
+          >
+            Images
           </div>
         </div>
 
@@ -225,6 +231,46 @@ function handleSubAccount(selectedSubAccount: string) {
               <template #button-text> Next </template>
             </BaseModal>
             <div @click="profileStore.handleBloodSlipForm" class="hover:text-honeydew-purple cursor-pointer transition mt-1">Create a form</div>
+          </div>
+          <div class="flex bg-red">
+            <div v-for="(image, idx) in patientImages?.images" :key="idx" class="p-2 w-1/2">
+              <img class="object-cover h-48 w-48" :src="image.path" :alt="image.fileName" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Images -->
+        <div v-if="treatmentHistoryOrDocumentsSelected === 'Images'" class="p-8 flex w-full justify-between relative flex-col">
+          <div class="flex w-full justify-between">
+            <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Images</h1>
+            <img @click="documentModalMenuOpen = !documentModalMenuOpen" class="hover:opacity-50 cursor-pointer" :src="PlusCircleIcon" alt="Plus Circle Icon" />
+          </div>
+          <div class="absolute right-8 mt-10 bg-white p-4 rounded-[12px] border border-[#F2F4F7]" v-if="documentModalMenuOpen">
+            <BaseModal>
+              <template #header> Upload an image </template>
+              <template #content>
+                <div class="p-6 mx-6 rounded-xl shadow-sm bg-white mt-6">
+                  <div
+                    class="border border-[#F2F4F7] p-20 rounded-xl flex justify-center items-center flex-col w-[450px]"
+                    @dragover.prevent="dragging = true"
+                    @dragleave="dragging = false"
+                    @drop="handleDrop"
+                  >
+                    <img :src="UploadIcon" alt="Upload Icon" />
+                    <label for="fileInput" class="text-center relative cursor-pointer mt-2">
+                      <p>Choose a photo</p>
+                    </label>
+                    <input id="fileInput" type="file" @change="handleFileSelect" class="hidden" />
+                    <p class="text-[#6C6A7C]">{{ dragging ? 'You can drop it' : 'or drag it here' }}</p>
+                    <img v-if="previewURL" class="rounded-xl h-[320px]" :src="previewURL" alt="Photo Preview" />
+                  </div>
+                </div>
+              </template>
+              <template #button>
+                <div class="hover:text-honeydew-purple cursor-pointer transition">Upload Image</div>
+              </template>
+              <template #button-text> Next </template>
+            </BaseModal>
           </div>
           <div class="flex bg-red">
             <div v-for="(image, idx) in patientImages?.images" :key="idx" class="p-2 w-1/2">
