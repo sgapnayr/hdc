@@ -67,14 +67,20 @@ const newEmployeeFirstName = ref()
 const newEmployeeLastName = ref()
 const newEmployeeEmail = ref()
 const newEmployeePhoneNumber = ref()
-const newEmployeeType = ref('Provider')
+const newEmployeeType = ref()
 const employeeMenuOpen = ref(false)
 
 const updateEmployeeFirstName = ref()
 const updateEmployeeLastName = ref()
 const updateEmployeeEmail = ref()
 const updateEmployeePhoneNumber = ref()
-const updateEmployeeType = ref<'Provider' | 'Admin' | string>()
+const updateEmployeeType = ref()
+const updateEmployeeLicenseNumber = ref()
+const updateEmployeeLicenseExpirationDate = ref()
+const updateEmployeeLicenseState = ref()
+const updateEmployeeLicenseType = ref()
+const updateEmployeeNpi = ref()
+const updateEmployeeAddress = ref()
 const updateEmployeeMenuOpen = ref(false)
 
 const patientMenuOpen = ref(false)
@@ -82,6 +88,7 @@ const selectedPatientIdToBecomeNewEmployee = ref()
 const selectedPatientNameForNewEmployee = ref()
 const pageSize = ref(10)
 const currentPage = ref(0)
+let  chipAmount = 0
 const selectedEmployeeType = ref<number>(0)
 
 const selectedDateForReport = ref()
@@ -91,12 +98,12 @@ const totalPages = computed(() => {
   return Math.ceil(employeeStore?.allEmployees?.length / pageSize.value)
 })
 
+//TODO: RYAN, FIX THIS TO SHOW THE CORRECT CHIP AMOUNT!
 const categoryChips: CategoryChips[] = [
   {
     group: 'Providers',
     chips: [
-      { text: 'Active', amount: 32 },
-      { text: 'Archived', amount: 10 },
+      { text: 'Active', amount: chipAmount }
     ],
   },
   {
@@ -128,14 +135,6 @@ const categoryChips: CategoryChips[] = [
 
 const tableHeaderCategories: TableHeaderCategory[] = [
   {
-    group: 'Providers',
-    categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
-  },
-  {
-    group: 'Super Providers',
-    categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
-  },
-  {
     group: 'Enrollment Coordinators',
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
@@ -144,9 +143,13 @@ const tableHeaderCategories: TableHeaderCategory[] = [
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
   {
-    group: 'Admin',
+    group: 'Providers',
     categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
   },
+  {
+    group: 'Super Providers',
+    categories: [{ text: 'Full name' }, { text: 'Email' }, { text: 'Phone' }, { text: 'Actions' }],
+  }
 ]
 
 // COMPUTED METHODS ****************************************************************
@@ -164,11 +167,16 @@ const handleCategoryData = computed(() => {
 
 const filterByEmployeeType = computed(() => {
   if (tabSelected.value === 'Providers') {
-    return employeeData?.value?.filter((employee: any) => employee?.role?.includes('PROVIDER'))
-  } else if (tabSelected.value === 'Admin') {
-    return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('admin'))
-  } else {
-    return employeeData?.value?.filter((employee: any) => employee?.role?.toLowerCase()?.includes('coordinator'))
+    const myFilteredEmployees = employeeData?.value?.filter((employee: any) => employee?.role?.includes('PROVIDER'))
+    chipAmount = myFilteredEmployees.length
+    console.log("chip amount will be: ", chipAmount)
+    return myFilteredEmployees
+  } else if (tabSelected.value === 'Super Providers') {
+    return employeeData?.value?.filter((employee: any) => employee?.role?.includes('SUPER_PHYSICIAN'))
+  } else if (tabSelected.value === 'Enrollment Coordinators') {
+    return employeeData?.value?.filter((employee: any) => employee?.role?.includes('ENROLLMENT_COORDINATOR'))
+  } else if (tabSelected.value === 'Care Coordinators') {
+    return employeeData?.value?.filter((employee: any) => employee?.role?.includes('CARE_COORDINATOR'))
   }
 })
 
@@ -195,10 +203,10 @@ async function getPatientsInit() {
 }
 
 enum EmployeeRole {
-  PROVIDER,
-  SUPER_PHYSICIAN,
   CARE_COORDINATOR,
   ENROLLMENT_COORDINATOR,
+  PROVIDER,
+  SUPER_PHYSICIAN,
   ADMIN,
 }
 
@@ -225,6 +233,7 @@ async function handleCreateEmployee() {
 async function handleUpdateEmployee(employeeId: string) {
   console.log(employeeId)
   console.log(updateEmployeeFirstName.value)
+  console.log("ROLE FOR THE EMPLOYEE: ", EmployeeRole[selectedEmployeeType.value])
   await updateEmployee(
     updateEmployeeFirstName.value,
     updateEmployeeLastName.value,
@@ -547,10 +556,10 @@ patientStore.getPatientsFromGraphQL()
                             <div class="absolute left-0 top-12 w-full">
                               <div
                                 class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
-                                v-for="(employeeType, idx) in ['Provider', 'Coordinator', 'Admin', 'Other']"
+                                v-for="(employeeType, idx) in ['Care Coordinator', 'Enrollment Coordinator', 'Provider', 'Supervising Physician',]"
                                 :key="idx"
                                 :class="[3 === idx ? 'rounded-b-[28px]' : '']"
-                                @click="updateEmployeeType = employeeType"
+                                @click="updateEmployeeType = employeeType, selectedEmployeeType = idx"
                               >
                                 <div class="px-4 py-1 rounded-[24px]">
                                   {{ employeeType }}
@@ -600,7 +609,62 @@ patientStore.getPatientsFromGraphQL()
                         v-model="updateEmployeeEmail"
                       />
                     </div>
+                    <!-- TODO: RYAN, FIX THIS TO UPDATE ALL NECESSARY FIELDS! IDEALLY WILL ONLY SHOW SOME FIELDS WHEN PROVIDER OR SUPER PROVIDER IS SELECTED -->
                     <div class="w-full border-b mt-[24px] border-[#F2F4F7]"></div>
+                    <div class="w-full">
+                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">License Type</h2>
+                      <input
+                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                        :placeholder="employee.licenseType"
+                        type="text"
+                        v-model="updateEmployeeLicenseType"
+                      />
+                    </div>
+                    <div class="w-full">
+                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">License Number</h2>
+                      <input
+                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                        :placeholder="employee.licenseNumber"
+                        type="text"
+                        v-model="updateEmployeeLicenseNumber"
+                      />
+                    </div>
+                    <div class="w-full">
+                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">License Expiration Date</h2>
+                      <input
+                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                        :placeholder="employee.licenseExpirationDate"
+                        type="text"
+                        v-model="updateEmployeeLicenseExpirationDate"
+                      />
+                    </div>
+                    <div class="w-full">
+                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">License State</h2>
+                      <input
+                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                        :placeholder="employee.licenseState"
+                        type="text"
+                        v-model="updateEmployeeLicenseState"
+                      />
+                    </div>
+                    <!-- <div class="w-full">
+                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">NPI</h2>
+                      <input
+                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                        :placeholder="employee.npi"
+                        type="text"
+                        v-model="updateEmployeeNpi"
+                      />
+                    </div> -->
+                    <!-- <div class="w-full">
+                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Employee Address</h2>
+                      <input
+                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                        :placeholder="employee.address"
+                        type="text"
+                        v-model="updateEmployeeAddress"
+                      />
+                    </div> -->
                   </template>
                   <template #button-text> Save Updates </template>
                 </BaseModal>

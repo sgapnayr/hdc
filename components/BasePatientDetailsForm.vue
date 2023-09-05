@@ -80,6 +80,7 @@ const updateProfileChanges = async () => {
   }
 
   console.log('DATA TO UPDATE', updateProfilePayload)
+  const result = await profileStore.updateProfile(updateProfilePayload)
 
   updateProfileObj.value = updateProfilePayload // PAYLOAD FOR C-BISCUIT
 
