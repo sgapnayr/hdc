@@ -13,6 +13,7 @@ import { useProfileStore } from '@/stores/profile'
 import { usePatientStore } from '~/stores/patient'
 import { useTasksStore } from '@/stores/task'
 import { useRoute } from 'vue-router'
+import { calculateAge, calculateHeightInFeetAndInches } from '../utils/helpers'
 
 // ROUTER *********************************************************************
 const route = useRoute()
@@ -83,19 +84,19 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
       <div class="mt-[8px] w-3/4 flex flex-wrap items-center">
         <p class="text-[16px] text-gray-5 font-[400]">{{ patientStore?.patientData?.patientSex }}</p>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-        <p class="text-[16px] text-gray-5 font-[400]">Date of Birth {{ patientStore.patientData?.patientDOB }}</p>
+        <p class="text-[16px] text-gray-5 font-[400]">{{ patientStore.patientData?.patientDOB }}</p>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-        <p class="text-[16px] text-gray-5 font-[400]">{{ patientData?.patientDOB }}</p>
+        <p class="text-[16px] text-gray-5 font-[400]">{{ calculateAge(patientStore.patientData?.patientDOB) + ' yrs' }}</p>
       </div>
       <div class="text-[16px] font-[400] mt-[8px] text-gray-5 flex items-center">
-        <div class="text-">Height: {{ patientStore.patientData?.patientHeight }}</div>
+        <div class="text-">H: {{ calculateHeightInFeetAndInches(patientStore.patientData?.patientHeight) }}</div>
         <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-        <div class="text-">Weight: {{ patientStore.patientData?.patientWeight }}lbs</div>
+        <div class="text-">W: {{ patientStore.patientData?.patientWeight }}lbs</div>
       </div>
       <div class="text-[16px] font-[400] mt-[32px] text-gray-3 flex flex-col items-start gap-y-6">
         <div class="flex items-center gap-x-[14px]">
           <img :src="PhoneIcon" alt="Phone Icon" />
-          <div>{{ patientStore.patientData?.patientPhoneNumber }}</div>
+          <div>{{ patientStore.patientData?.patientPhoneNumber || 'need to fix' }}</div>
         </div>
         <div class="flex items-center gap-x-[14px]">
           <img :src="EmailIcon" alt="Email Icon" />
@@ -123,8 +124,9 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
           </div>
           <div v-if="selectedItem.includes('Shipping Address')" class="flex w-full justify-between text-gray-5 font-[400]">
             <div>
-              {{ patientStore.patientData?.patientAddress }} {{ patientStore.patientData?.patientCity }} {{ patientData?.patientState }}
-              {{ patientData?.patientZipCode }}
+              {{ patientStore.patientData?.patientAddress }} {{ patientStore.patientData?.patientCity }}
+              <!-- {{ patientData?.patientState }} -->
+              <!-- {{ patientData?.patientZipCode }} -->
             </div>
           </div>
         </div>
@@ -139,7 +141,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
           <div class="flex gap-x-2">
             <BaseModal @action-click="handleUpdateInsurance">
               <template #header>
-                <div>Payment information</div>
+                <div>Insurance information</div>
               </template>
               <template #content>
                 <div class="min-w-[380px]">

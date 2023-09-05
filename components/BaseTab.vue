@@ -37,9 +37,9 @@ const mainAccountId = computed(() => {
 </script>
 
 <template>
-  <div v-if="tabs" class="flex w-full overflow-x-scroll">
+  <div class="flex w-full overflow-x-scroll">
     <div
-      @click="handleMainAccount(mainAccountId)"
+      @click="props?.tabs?.map((tab) => tab.subAccountId).length > 0 ? handleMainAccount(mainAccountId) : ''"
       :class="['mx-[1px]', mainAccountId === highlighSubAccount ? 'opacity-100' : 'opacity-50']"
       class="px-4 py-1 bg-white rounded-t-2xl drop-shadow-sm text-sm cursor-pointer"
     >

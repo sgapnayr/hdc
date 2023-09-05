@@ -7,6 +7,7 @@ import BackChevronIcon from '@/assets/icons/back-chevron-icon.svg'
 import FaceFrontOutline from '@/assets/images/face-front-outline.svg'
 import FaceLeftOutline from '@/assets/images/face-left-outline.svg'
 import FaceRightOutline from '@/assets/images/face-right-outline.svg'
+import { getPresignedUrl } from '~/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -21,7 +22,7 @@ const router = useRouter()
 const profileStore = useProfileStore()
 
 // STATE **********************************************************************
-const currentQuestionIdx = ref<number>(17)
+const currentQuestionIdx = ref<number>(0)
 const currentSelectedAnswer = ref<string>()
 const buttonLoadingState = ref<'idle' | 'loading' | 'failed' | 'success' | 'disabled'>('idle')
 const isPhotoUploaded = ref(false)
@@ -85,6 +86,25 @@ const signUpQuestions = [
 // METHODS ********************************************************************
 function handleSelectedQuestion(selectedAnswer: string) {
   currentSelectedAnswer.value = selectedAnswer
+}
+
+const uploadPhoto = async (file: File) => {
+  try {
+    const url = await getPresignedUrl(buttonText, file.type)
+
+    // Use the pre-signed URL to upload the file.
+    const uploadResult = await fetch(url, {
+      method: 'PUT',
+      body: file,
+      headers: {
+        'Content-Type': file.type,
+      },
+    })
+
+    console.log('Upload result: ', uploadResult)
+  } catch (error) {
+    console.error('Upload failed:', error)
+  }
 }
 
 // VALIDATION ********************************************************************
@@ -237,9 +257,10 @@ async function handleAnswerSubmitValidation() {
   // How often do you consume dairy?
   if (currentQuestionIdx.value === 16) {
     profileStore.howOftenDoYouConsumeDairy = currentSelectedAnswer.value as 'Never' | 'A few times a month' | ' A few times a week' | 'A few times a day'
-    currentQuestionIdx.value = 17
     profileStore.saveScheduleVisitData()
+    currentQuestionIdx.value = 17
     currentSelectedAnswer.value = ''
+    router.push('/profile')
     return
   }
 
@@ -247,6 +268,7 @@ async function handleAnswerSubmitValidation() {
   if (currentQuestionIdx.value === 17) {
     profileStore.lastStepLetsSeeYourSkin = currentSelectedAnswer.value
     currentQuestionIdx.value = 0
+    profileStore.saveScheduleVisitData()
     currentSelectedAnswer.value = ''
     router.push('/profile')
     return
@@ -256,7 +278,6 @@ async function handleAnswerSubmitValidation() {
 
 <template>
   <!-- Back Chevron Icon -->
-  {{ profileStore.scheduleVisitDataArr }}
   <div
     @click="
       currentQuestionIdx === 10 && profileStore.sexAssignedAtBirth === 'Male'
@@ -630,7 +651,7 @@ async function handleAnswerSubmitValidation() {
         <p class="mb-[32px] font-[400] text-gray-5">Take or upload photos of your skin from three profiles.</p>
 
         <div class="flex gap-x-6 flex-wrap items-center justify-center">
-          <BaseImageUpload
+          <!-- <BaseImageUpload
             @photo-uploaded="isPhotoUploaded = true"
             buttonText="Left profile"
             describedImage="The left side of your face"
@@ -647,20 +668,20 @@ async function handleAnswerSubmitValidation() {
             buttonText="Right profile"
             describedImage="The right side of your face"
             :image-URL="FaceRightOutline"
-          />
+          /> -->
         </div>
 
         <div class="w-full flex justify-center items-center">
-          <a :href="'/view-history' + profileStore.patientData.patientId">
-            <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="uploadPhoto()" class="w-full max-w-[290px] mt-[32px] px-8"
+          <!-- <a :href="'/view-history' + profileStore.patientData.patientId">
+            <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="uploadPhoto" class="w-full max-w-[290px] mt-[32px] px-8"
               >Submit Photos</BaseButton
             >
-          </a>
-          <a href="https://schedule.nylas.com/ryan-paglione-30min" target="_Blank">
+          </a> -->
+          <!-- <a href="https://schedule.nylas.com/ryan-paglione-30min" target="_Blank">
             <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[290px] mt-[32px] px-8"
               >Schedule Appointment</BaseButton
             >
-          </a>
+          </a> -->
         </div>
       </div>
 

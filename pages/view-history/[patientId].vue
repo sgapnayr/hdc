@@ -172,9 +172,16 @@ function handleSubAccount(selectedSubAccount: string) {
           <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Medical background</h1>
           <div>
             <div v-for="(medicalItem, jdx) in profileStore.scheduleVisitDataArr">
-              <div :class="[profileStore.sexAssignedAtBirth === 'Female' ? '' : 'hidden']" class="my-[32px] w-full" :key="jdx">
+              <div
+                :class="[medicalItem.medicalTitle === 'Cycle & Menstruation' && patientStore?.patientData?.patientSex === 'Male' ? 'hidden' : '']"
+                class="my-[32px] w-full"
+                :key="jdx"
+              >
                 <div @click="handleOpen(medicalItem.medicalTitle)" class="flex justify-start cursor-pointer text-[18px] font-[500] mb-[16px]">
-                  <div class="transition flex justify-center items-center mr-[12px]" :class="[isOpen.includes(medicalItem.medicalTitle) ? '' : '-rotate-90']">
+                  <div
+                    class="transition flex justify-center items-center mr-[12px] z-0"
+                    :class="[isOpen.includes(medicalItem.medicalTitle) ? '' : '-rotate-90']"
+                  >
                     <img :src="CaretIcon" alt="Caret Icon" />
                   </div>
                   {{ medicalItem.medicalTitle }}
@@ -194,7 +201,7 @@ function handleSubAccount(selectedSubAccount: string) {
                 </div>
               </div>
             </div>
-            <div>{notesComponent}</div>
+            <!-- <div>{notesComponent}</div> -->
           </div>
         </div>
 

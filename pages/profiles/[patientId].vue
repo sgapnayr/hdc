@@ -127,10 +127,6 @@ const toDoItems = [
 
 <template>
   <div class="flex flex-col py-8">
-    <div class="w-full text-center">
-      Need Update Patient Function: { selfOrOther: {{ profileStore.signUpDescribeYouAnswer }}, name: {{ profileStore.signUpName }}, zipCode:
-      {{ profileStore.signUpZipCode }}, DOB: {{ profileStore.signUpDOB }}, email: {{ profileStore.signUpEmail }} }
-    </div>
     <BaseWrapper>
       <!-- Upper cards -->
       <div class="flex gap-x-6 lg:flex-row flex-col gap-y-6 lg:min-w-[1244px]">
@@ -147,7 +143,11 @@ const toDoItems = [
             <!-- To do list items -->
             <div class="my-4 md:my-auto w-full">
               <div v-for="(todo, idx) in toDoItems" :key="idx" class="flex justify-start items-start flex-col gap-y-4 w-full">
-                <div v-if="!todo.isComplete" class="flex items-center justify-between w-full my-1">
+                <div
+                  v-if="!todo.isComplete"
+                  :class="todo.text === 'Submit pregnancy test' && patientStore?.patientData?.patientSex === 'Male' ? 'hidden' : ''"
+                  class="flex items-center justify-between w-full my-1"
+                >
                   <div class="flex items-center w-full">
                     <div class="w-5 h-5 bg-honeydew-bg2 border border-[#F2F4F7] rounded-full mr-2"></div>
                     <div v-if="todo.text === 'Submit pregnancy test'" class="w-full opacity-50 cursor-pointer" @click="profileStore.handlePregnancyModal">

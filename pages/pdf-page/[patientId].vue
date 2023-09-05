@@ -9,6 +9,7 @@ import { useProfileStore } from '~/stores/profile'
 import { usePatientStore } from '~/stores/patient'
 import { useRoute } from 'vue-router'
 import { getMyProfileImages } from '~/lib/endpoints'
+import { calculateAge, calculateHeightInFeetAndInches } from '../../utils/helpers'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -52,38 +53,40 @@ console.log('UserImages in ')
     <BaseWrapper>
       <img :src="HoneydewIcon" />
       <!-- Patient's Information -->
-      <div class="mt-8">
-        <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">
-          {{ patientData?.patientName }}
-        </h1>
-        <div class="mt-[8px] w-3/4 flex flex-wrap items-center">
-          <p class="text-[16px] text-gray-5 font-[400]">{{ patientData?.patientSex }}</p>
-          <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-          <p class="text-[16px] text-gray-5 font-[400]">Age {{ patientData?.patientAge }}</p>
-          <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-          <p class="text-[16px] text-gray-5 font-[400]">{{ patientData?.patientDOB }}</p>
+      <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">
+        {{ profileStore.profileData?.patientFirstName }} {{ profileStore.profileData?.patientLastName }}
+      </h1>
+      <div class="mt-[8px] w-3/4 flex flex-wrap items-center">
+        <p class="text-[16px] text-gray-5 font-[400]">{{ patientStore?.patientData?.patientSex }}</p>
+        <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
+        <p class="text-[16px] text-gray-5 font-[400]">{{ patientStore.patientData?.patientDOB }}</p>
+        <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
+        <p class="text-[16px] text-gray-5 font-[400]">{{ calculateAge(patientStore.patientData?.patientDOB) + ' yrs' }}</p>
+      </div>
+      <div class="text-[16px] font-[400] mt-[8px] text-gray-5 flex items-center">
+        <div class="text-">H: {{ calculateHeightInFeetAndInches(patientStore.patientData?.patientHeight) }}</div>
+        <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
+        <div class="text-">W: {{ patientStore.patientData?.patientWeight }}lbs</div>
+      </div>
+      <div class="text-[16px] font-[400] mt-[32px] text-gray-3 flex flex-col items-start gap-y-6">
+        <div class="flex items-center gap-x-[14px]">
+          <img :src="PhoneIcon" alt="Phone Icon" />
+          <div>{{ patientStore.patientData?.patientPhoneNumber || 'need to fix' }}</div>
         </div>
-        <div class="text-[16px] font-[400] mt-[8px] text-gray-5 flex items-center">
-          <div class="text-">H: {{ patientData?.patientHeight }}</div>
-          <div class="mx-2 h-1 w-1 flex justify-center items-center bg-gray-5 p-[1px] rounded-full"></div>
-          <div class="text-">W: {{ patientData?.patientWeight }}lbs</div>
-        </div>
-        <div class="text-[16px] font-[400] mt-[32px] text-gray-3 flex flex-col items-start gap-y-6">
-          <div class="flex items-center gap-x-[14px]">
-            <img :src="PhoneIcon" alt="Phone Icon" />
-            <div>{{ patientData?.patientPhoneNumber }}</div>
-          </div>
-          <div class="flex items-center gap-x-[14px]">
-            <img :src="EmailIcon" alt="Email Icon" />
-            <div>{{ patientData?.patientEmail }}</div>
-          </div>
+        <div class="flex items-center gap-x-[14px]">
+          <img :src="EmailIcon" alt="Email Icon" />
+          <div>{{ patientStore.patientData?.patientEmail }}</div>
         </div>
       </div>
       <!-- Medical background -->
       <div class="mt-8">
         <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Medical background</h1>
         <div v-for="(medicalItem, jdx) in profileStore.scheduleVisitDataArr">
-          <div :class="[profileStore.sexAssignedAtBirth === 'Female' ? '' : 'hidden']" class="my-[32px] w-full" :key="jdx">
+          <div
+            :class="[medicalItem.medicalTitle === 'Cycle & Menstruation' && patientStore?.patientData?.patientSex === 'Male' ? 'hidden' : '']"
+            class="my-[32px] w-full"
+            :key="jdx"
+          >
             <div class="flex justify-start cursor-pointer text-[18px] font-[500] mb-[16px]">
               {{ medicalItem.medicalTitle }}
             </div>
@@ -107,7 +110,7 @@ console.log('UserImages in ')
         <div class="flex gap-x-4">
           <ul>
             {{
-              userImages.value
+              userImages
             }}
             <li v-for="(file, index) in userImages" :key="index">
               <img :src="file.path" alt="File" width="100" height="100" />

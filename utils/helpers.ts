@@ -18,3 +18,40 @@ export function getLastSixMonthsDates() {
 
   return lastSixMonthsDates.reverse()
 }
+
+export function calculateAge(birthDate: string): number | null {
+  const birthDateObj = new Date(birthDate)
+  const today = new Date()
+
+  // Check if the birthdate is valid
+  if (isNaN(birthDateObj.getTime())) {
+    return null // Invalid date
+  }
+
+  // Calculate the age
+  const age = today.getFullYear() - birthDateObj.getFullYear()
+
+  // Check if the birthday has already occurred this year
+  if (today.getMonth() < birthDateObj.getMonth() || (today.getMonth() === birthDateObj.getMonth() && today.getDate() < birthDateObj.getDate())) {
+    return age - 1
+  }
+
+  return age
+}
+
+export function calculateHeightInFeetAndInches(heightInInches: string): string | null {
+  const heightInInchesNumber = parseInt(heightInInches, 10)
+
+  // Check if the input is a valid number
+  if (isNaN(heightInInchesNumber) || heightInInchesNumber < 0) {
+    return null // Invalid input
+  }
+
+  const feet = Math.floor(heightInInchesNumber / 12)
+  const inches = heightInInchesNumber % 12
+
+  // Construct the height string in the format "X'Y""
+  const heightString = `${feet}'${inches}"`
+
+  return heightString
+}

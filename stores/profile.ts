@@ -71,7 +71,7 @@ export const useProfileStore = defineStore('profile', () => {
     try {
       const response = await updateProfile()
       console.log('update profile in profile store', response)
-    }catch (error) {
+    } catch (error) {
       console.error('Error updating profile', error)
     }
   }
@@ -185,6 +185,6 @@ export const useProfileStore = defineStore('profile', () => {
     handlePregnancyModal,
     handleBloodSlipForm,
     handlePatientDetailsForm,
-    updateProfile
+    updateProfile,
   }
 })

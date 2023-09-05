@@ -6,11 +6,20 @@ import ChevronIcon2 from '@/assets/icons/chevron-down-icon.svg'
 import BlueIcon from '@/assets/icons/blue-icon.svg'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
 import { useProfileStore } from '~/stores/profile'
+import { usePatientStore } from '~/stores/patient'
+import { updatePatient } from '../lib/endpoints'
+import { useRoute } from 'vue-router'
 
 // EMITS ****************************************************************
 const emit = defineEmits(['close-modal'])
 
+// STORES ********************************************************************
+const profileStore = useProfileStore()
+const patientStore = usePatientStore()
+
 // MEMBER DATA ****************************************************************
+const route = useRoute()
+
 const photo = ref()
 const previewURL = ref()
 const dragging = ref(false)
@@ -18,23 +27,21 @@ const isChecked = ref(false)
 
 const signName = ref()
 
-const updatePatientFullName = ref()
+const updatePatientFirstName = ref(profileStore.profileData?.patientFirstName)
+const updatePatientLastName = ref(profileStore.profileData?.patientLastName)
 const updatePatientPhoneNumber = ref()
-const updatePatientEmailAddress = ref()
-const updatePatientHeight = ref()
-const updatePatientWeight = ref()
-const updatePatientAge = ref()
+const updatePatientEmailAddress = ref(patientStore.patientData?.patientEmail)
+const updatePatientHeight = ref(patientStore.patientData?.patientHeight)
+const updatePatientWeight = ref(patientStore.patientData?.patientWeight)
+const updatePatientAddress = ref(patientStore.patientData?.patientAddress)
 const updatePatientCountry = ref()
 const updatePatientPostalCode = ref()
 const updatePatientCity = ref()
 const updatePatientStreetAddress = ref()
 const updatePatientsParentFullName = ref()
 const updatePatientsParentPhoneNumber = ref()
-
-const updateProfileObj = ref()
-
-// STORES ********************************************************************
-const profileStore = useProfileStore()
+const updatePatientDOB = ref(patientStore.patientData?.patientDOB)
+const updatePatientSex = ref(patientStore?.patientData?.patientSex)
 
 // METHODS ********************************************************************
 const handleFileSelect = (e: any) => {
@@ -64,29 +71,21 @@ const generatePreview = (file: any) => {
 }
 
 const updateProfileChanges = async () => {
-  const updateProfilePayload = {
-    patientFullName: updatePatientFullName.value,
-    patientsPhoneNumber: updatePatientPhoneNumber.value,
-    patientEmailAddress: updatePatientEmailAddress.value,
-    patienHeight: updatePatientHeight.value,
-    patienWeight: updatePatientWeight.value,
-    patienAge: updatePatientAge.value,
-    patientCountry: updatePatientCountry.value,
-    patientZipCode: updatePatientPostalCode.value,
-    patientCity: updatePatientCity.value,
-    patientStreetAddress: updatePatientStreetAddress.value,
-    patientsParentFullName: updatePatientsParentFullName.value,
-    patientsParentPhoneNumber: updatePatientsParentPhoneNumber.value,
-  }
-
-  console.log('DATA TO UPDATE', updateProfilePayload)
-  const result = await profileStore.updateProfile(updateProfilePayload)
-
-  updateProfileObj.value = updateProfilePayload // PAYLOAD FOR C-BISCUIT
+  updatePatient(
+    route.params.patientId,
+    updatePatientFirstName.value,
+    updatePatientLastName.value,
+    updatePatientWeight.value,
+    updatePatientHeight.value,
+    updatePatientEmailAddress.value,
+    updatePatientDOB.value,
+    updatePatientSex.value,
+    updatePatientAddress.value
+  )
 
   setTimeout(() => {
     emit('close-modal')
-  }, 1000)
+  }, 100)
 
   // NEED PHOTO UPDATES
   // const formData = new FormData()
@@ -103,14 +102,14 @@ const updateProfileChanges = async () => {
 </script>
 
 <template>
-  <div class="fixed w-full flex flex-col z-50 lg:flex bg-opacity-50 bg-[#403E4880] items-end grow min-h-screen">
-    <div class="flex flex-col w-full lg:max-w-[800px] bg-honeydew-bg2 grow min-h-screen">
-      <div class="text-sm font-medium leading-[24px] flex gap-x-2 cursor-pointer mb-8 bg-white items-center shadow-sm justify-between">
+  <div @click="emit('close-modal')" class="fixed w-full flex flex-col z-50 lg:flex bg-opacity-50 bg-[#403E4880] items-end grow min-h-screen">
+    <div @click.stop class="flex flex-col w-full lg:max-w-[800px] bg-honeydew-bg2 grow min-h-screen shadow-2xl">
+      <div @click.stop class="text-sm font-medium leading-[24px] flex gap-x-2 cursor-pointer mb-8 bg-white items-center shadow-sm justify-between">
         <div class="flex items-center">
           <div @click="emit('close-modal')" class="border-r border-[#E1E0E6] p-6 mr-8">
             <img class="rotate-90" :src="ChevronIcon2" alt="Chevron Icon" />
           </div>
-          <div class="flex text-[#403E48] text-lg">Edit additional patient's details</div>
+          <div class="flex text-[#403E48] text-lg">Edit patient's details</div>
         </div>
         <button
           @click="updateProfileChanges"
@@ -128,9 +127,15 @@ const updateProfileChanges = async () => {
         <div class="p-6 flex flex-col border-b border-[#F2F4F7]">
           <div class="mb-3 text-xl w-full">Patient's information</div>
           <div class="w-full">
-            <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Full name</p>
+            <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">First name</p>
             <input
-              v-model="updatePatientFullName"
+              v-model="updatePatientFirstName"
+              :placeholder="profileStore.signUpName || 'Enter your full name'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
+            />
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Last name</p>
+            <input
+              v-model="updatePatientLastName"
               :placeholder="profileStore.signUpName || 'Enter your full name'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
@@ -158,9 +163,15 @@ const updateProfileChanges = async () => {
               :placeholder="profileStore.signUpName || 'Enter your weight in lbs'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Age</p>
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Date of Birth</p>
             <input
-              v-model="updatePatientAge"
+              v-model="updatePatientDOB"
+              :placeholder="profileStore.signUpName || 'Enter your age'"
+              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
+            />
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Sex</p>
+            <input
+              v-model="updatePatientSex"
               :placeholder="profileStore.signUpName || 'Enter your age'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
@@ -170,13 +181,13 @@ const updateProfileChanges = async () => {
         <div class="p-6 flex flex-col border-b border-[#F2F4F7]">
           <div class="mb-3 text-xl w-full">Shipping address</div>
           <div class="w-full">
-            <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Country</p>
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Address</p>
             <input
-              v-model="updatePatientCountry"
-              :placeholder="profileStore.signUpName || 'Enter your country'"
+              v-model="updatePatientAddress"
+              :placeholder="profileStore.signUpName || '123 Main St. City, ST, 12345'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Postal Code</p>
+            <!-- <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Postal Code</p>
             <input
               v-model="updatePatientPostalCode"
               :placeholder="profileStore.signUpName || 'Enter your zip code'"
@@ -193,11 +204,11 @@ const updateProfileChanges = async () => {
               v-model="updatePatientStreetAddress"
               :placeholder="profileStore.signUpName || 'Enter your street address'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
-            />
+            /> -->
           </div>
         </div>
         <!-- Parent's contact information -->
-        <div class="p-6 flex flex-col border-b border-[#F2F4F7]">
+        <!-- <div class="p-6 flex flex-col border-b border-[#F2F4F7]">
           <div class="mb-3 text-xl w-full">Parent's contact information</div>
           <div class="w-full">
             <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Full name</p>
@@ -219,9 +230,8 @@ const updateProfileChanges = async () => {
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
           </div>
-        </div>
+        </div> -->
       </div>
-      {{ updateProfileObj }}
       <button
         @click="updateProfileChanges"
         class="w-[150px] rounded-full text-white p-3 text-center cursor-pointer transition active:scale-90 text-xs mx-6 mt-6 bg-honeydew-purple"
