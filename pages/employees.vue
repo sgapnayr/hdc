@@ -88,7 +88,6 @@ const selectedPatientIdToBecomeNewEmployee = ref()
 const selectedPatientNameForNewEmployee = ref()
 const pageSize = ref(10)
 const currentPage = ref(0)
-const chipAmount = ref<number>(0)
 const selectedEmployeeType = ref<number>(0)
 
 const selectedDateForReport = ref()
@@ -151,10 +150,6 @@ function handleSelectingChip(chip: Chip) {
   selectedChip.value = chip
 }
 
-function handleSelectedPatient(employee: any) {
-  selectedEmployeeInput.value = employee
-}
-
 async function getPatientsInit() {
   try {
     const response = await getPatients()
@@ -182,11 +177,11 @@ const categoryChips: CategoryChips[] = [
     chips: [{ text: 'Active', amount: employeeData?.value?.filter((employee: any) => employee?.role?.includes('SUPER_PHYSICIAN')).length }],
   },
   {
-    group: 'Care Coordinators',
+    group: 'Enrollment Coordinators',
     chips: [{ text: 'Active', amount: employeeData?.value?.filter((employee: any) => employee?.role?.includes('ENROLLMENT_COORDINATOR')).length }],
   },
   {
-    group: 'Enrollment Coordinators',
+    group: 'Care Coordinators',
     chips: [{ text: 'Active', amount: employeeData?.value?.filter((employee: any) => employee?.role?.includes('CARE_COORDINATOR')).length }],
   },
   {
@@ -262,7 +257,6 @@ patientStore.getPatientsFromGraphQL()
 
 <template>
   <div class="w-full py-8">
-    {{ chipAmount }}
     <BaseWrapper>
       <!-- Manage Team Top -->
       <div class="w-full">
@@ -526,114 +520,118 @@ patientStore.getPatientsFromGraphQL()
                   </template>
 
                   <template #content>
-                    <div>
-                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Employee Type</h2>
-                      <div :class="[updateEmployeeMenuOpen ? 'z-40' : 'z-0']">
-                        <div
-                          class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
-                          :class="[updateEmployeeMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
-                          placeholder="Search by patient's name"
-                          type="text"
-                          @click="updateEmployeeMenuOpen = !updateEmployeeMenuOpen"
-                        >
-                          <div class="px-4 py-1 rounded-[24px]">{{ updateEmployeeType || employee.role }}</div>
-                          <img :class="[updateEmployeeMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
-                          <div v-if="updateEmployeeMenuOpen">
-                            <div class="absolute left-0 top-12 w-full">
-                              <div
-                                class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
-                                v-for="(employeeType, idx) in ['Care Coordinator', 'Enrollment Coordinator', 'Provider', 'Supervising Physician']"
-                                :key="idx"
-                                :class="[3 === idx ? 'rounded-b-[28px]' : '']"
-                                @click=";(updateEmployeeType = employeeType), (selectedEmployeeType = idx)"
-                              >
-                                <div class="px-4 py-1 rounded-[24px]">
-                                  {{ employeeType }}
+                    <div class="flex flex-col h-96 overflow-scroll no-scrollbars">
+                      <div>
+                        <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Employee Type</h2>
+                        <div :class="[updateEmployeeMenuOpen ? 'z-40' : 'z-0']">
+                          <div
+                            class="bg-white w-[518px] h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+                            :class="[updateEmployeeMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
+                            placeholder="Search by patient's name"
+                            type="text"
+                            @click="updateEmployeeMenuOpen = !updateEmployeeMenuOpen"
+                          >
+                            <div class="px-4 py-1 rounded-[24px]">{{ updateEmployeeType || employee.role }}</div>
+                            <img :class="[updateEmployeeMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
+                            <div v-if="updateEmployeeMenuOpen">
+                              <div class="absolute left-0 top-12 w-full">
+                                <div
+                                  class="w-full hover:bg-gray-2 bg-white h-[48px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer shadow-md"
+                                  v-for="(employeeType, idx) in ['Care Coordinator', 'Enrollment Coordinator', 'Provider', 'Supervising Physician']"
+                                  :key="idx"
+                                  :class="[3 === idx ? 'rounded-b-[28px]' : '']"
+                                  @click=";(updateEmployeeType = employeeType), (selectedEmployeeType = idx)"
+                                >
+                                  <div class="px-4 py-1 rounded-[24px]">
+                                    {{ employeeType }}
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="flex w-full gap-x-6">
+                      <div class="flex w-full gap-x-6">
+                        <div class="w-full">
+                          <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">First Name</h2>
+                          <input
+                            class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                            :placeholder="employee.firstName"
+                            type="text"
+                            v-model="updateEmployeeFirstName"
+                          />
+                        </div>
+                        <div class="w-full">
+                          <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Last Name</h2>
+                          <input
+                            class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                            :placeholder="employee.lastName"
+                            type="text"
+                            v-model="updateEmployeeLastName"
+                          />
+                        </div>
+                      </div>
                       <div class="w-full">
-                        <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">First Name</h2>
+                        <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Phone Number</h2>
                         <input
+                          v-maska
+                          :data-maska="['+' + '1' + ' (###) ###-####']"
+                          v-model="updateEmployeePhoneNumber"
                           class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                          :placeholder="employee.firstName"
-                          type="text"
-                          v-model="updateEmployeeFirstName"
+                          :placeholder="employee.phone"
                         />
                       </div>
                       <div class="w-full">
-                        <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Last Name</h2>
+                        <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Email</h2>
                         <input
                           class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                          :placeholder="employee.lastName"
+                          :placeholder="employee.email"
                           type="text"
-                          v-model="updateEmployeeLastName"
+                          v-model="updateEmployeeEmail"
                         />
                       </div>
-                    </div>
-                    <div class="w-full">
-                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Phone Number</h2>
-                      <input
-                        v-maska
-                        :data-maska="['+' + '1' + ' (###) ###-####']"
-                        v-model="updateEmployeePhoneNumber"
-                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                        :placeholder="employee.phone"
-                      />
-                    </div>
-                    <div class="w-full">
-                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Email</h2>
-                      <input
-                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                        :placeholder="employee.email"
-                        type="text"
-                        v-model="updateEmployeeEmail"
-                      />
-                    </div>
-                    <!-- TODO: RYAN, FIX THIS TO UPDATE ALL NECESSARY FIELDS! IDEALLY WILL ONLY SHOW SOME FIELDS WHEN PROVIDER OR SUPER PROVIDER IS SELECTED -->
-                    <div class="w-full border-b mt-[24px] border-[#F2F4F7]"></div>
-                    <div class="w-full">
-                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">License Type</h2>
-                      <input
-                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                        :placeholder="employee.licenseType"
-                        type="text"
-                        v-model="updateEmployeeLicenseType"
-                      />
-                    </div>
-                    <div class="w-full">
-                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">License Number</h2>
-                      <input
-                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                        :placeholder="employee.licenseNumber"
-                        type="text"
-                        v-model="updateEmployeeLicenseNumber"
-                      />
-                    </div>
-                    <div class="w-full">
-                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">License Expiration Date</h2>
-                      <input
-                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                        :placeholder="employee.licenseExpirationDate"
-                        type="text"
-                        v-model="updateEmployeeLicenseExpirationDate"
-                      />
-                    </div>
-                    <div class="w-full">
-                      <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">License State</h2>
-                      <input
-                        class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
-                        :placeholder="employee.licenseState"
-                        type="text"
-                        v-model="updateEmployeeLicenseState"
-                      />
-                    </div>
-                    <!-- <div class="w-full">
+                      <div
+                        v-if="updateEmployeeType === 'Provider' || updateEmployeeType === 'Super Physician' || updateEmployeeType === 'Super Provider'"
+                        class="flex flex-col"
+                      >
+                        <div class="w-full border-b mt-[24px] border-[#F2F4F7]"></div>
+                        <div class="w-full">
+                          <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">License Type</h2>
+                          <input
+                            class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                            :placeholder="employee.licenseType"
+                            type="text"
+                            v-model="updateEmployeeLicenseType"
+                          />
+                        </div>
+                        <div class="w-full">
+                          <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">License Number</h2>
+                          <input
+                            class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                            :placeholder="employee.licenseNumber"
+                            type="text"
+                            v-model="updateEmployeeLicenseNumber"
+                          />
+                        </div>
+                        <div class="w-full">
+                          <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">License Expiration Date</h2>
+                          <input
+                            class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                            :placeholder="employee.licenseExpirationDate"
+                            type="text"
+                            v-model="updateEmployeeLicenseExpirationDate"
+                          />
+                        </div>
+                        <div class="w-full">
+                          <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">License State</h2>
+                          <input
+                            class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
+                            :placeholder="employee.licenseState"
+                            type="text"
+                            v-model="updateEmployeeLicenseState"
+                          />
+                        </div>
+                        <!-- <div class="w-full">
                       <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">NPI</h2>
                       <input
                         class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
@@ -642,7 +640,7 @@ patientStore.getPatientsFromGraphQL()
                         v-model="updateEmployeeNpi"
                       />
                     </div> -->
-                    <!-- <div class="w-full">
+                        <!-- <div class="w-full">
                       <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">Employee Address</h2>
                       <input
                         class="bg-white w-full h-[48px] mb-[24px] rounded-[80px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-4"
@@ -651,6 +649,8 @@ patientStore.getPatientsFromGraphQL()
                         v-model="updateEmployeeAddress"
                       />
                     </div> -->
+                      </div>
+                    </div>
                   </template>
                   <template #button-text> Save Updates </template>
                 </BaseModal>

@@ -48,9 +48,9 @@ onMounted(() => {
     <span v-if="!elapsedTime"> Loading...</span>
     <span v-else>
       {{
-        `${Math.floor(elapsedTime / (1000 * 60 * 60))} hh, ${Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60))} mm, ${Math.floor(
+        `${Math.floor(elapsedTime / (1000 * 60 * 60))} h, ${Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60))} m, ${Math.floor(
           (elapsedTime % (1000 * 60)) / 1000
-        )} ss`
+        )} s`
       }}
     </span>
   </div>
