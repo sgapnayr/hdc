@@ -274,7 +274,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
       >
         To do
         <div class="bg-[#EFEBFE] w-[24px] h-[24px] rounded-full flex justify-center items-center text-honeydew-purple ml-[8px]">
-          {{ tasksStore.taskForPatient.length }}
+          {{ tasksStore?.taskForPatient?.length }}
         </div>
       </div>
       <div
@@ -288,7 +288,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
 
     <!-- To do -->
     <div v-if="toDoListOrDetailsSelected === 'To do'" class="py-6 px-8 flex flex-col gap-y-4 justify-center items-center text-center">
-      <div v-if="tasksStore.taskForPatient.length === 0" class="w-full flex flex-col">
+      <div v-if="tasksStore?.taskForPatient?.length === 0" class="w-full flex flex-col">
         <div class="flex w-full justify-center mb-4">
           <div class="p-4 bg-[#f8f7fe] rounded-full flex justify-center items-center">
             <div class="p-4 bg-[#efeafd] rounded-full flex justify-center items-center">
