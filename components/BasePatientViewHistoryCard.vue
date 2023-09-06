@@ -9,6 +9,7 @@ import PhoneIcon from '@/assets/icons/phone-icon.svg'
 import EmailIcon from '@/assets/icons/email-icon.svg'
 import AlertIcon from '@/assets/icons/alert-icon.svg'
 import NotesImage from '@/assets/images/notes-image.png'
+import SearchIcon from '@/assets/icons/search-icon-dark.svg'
 import { useProfileStore } from '@/stores/profile'
 import { usePatientStore } from '~/stores/patient'
 import { useTasksStore } from '@/stores/task'
@@ -27,10 +28,10 @@ const patientStore = usePatientStore()
 const toDoListOrDetailsSelected = ref<'To do' | 'Details'>('To do')
 const selectedItem = ref<string[]>([])
 
-const healthInsuranceName = ref(patientStore.patientData?.insurance.healthInsuranceName)
-const healthInsuranceMemberId = ref(patientStore.patientData.insurance.healthInsuranceMemberID)
-const healthInsurancePolicyHolder = ref(patientStore.patientData?.insurance.healthInsurancePolicyHolderName)
-const healthInsuranceGroupNumber = ref(patientStore.patientData?.insurance.healthInsuranceGroupNumber)
+const healthInsuranceName = ref(patientStore.patientData?.insurance?.healthInsuranceName)
+const healthInsuranceMemberId = ref(patientStore.patientData?.insurance?.healthInsuranceMemberID)
+const healthInsurancePolicyHolder = ref(patientStore.patientData?.insurance?.healthInsurancePolicyHolderName)
+const healthInsuranceGroupNumber = ref(patientStore.patientData?.insurance?.healthInsuranceGroupNumber)
 const PATIENT_ID = route.params.patientId as string
 
 // METHODS *********************************************************************
@@ -187,7 +188,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
           </div>
         </div>
         <div v-if="selectedItem.includes('Health Insurance')" class="flex w-full justify-between text-gray-5 font-[400] px-8">
-          <div class="w-3/4 whitespace-nowrap">
+          <div class="w-full whitespace-nowrap">
             <div class="w-full flex justify-between">
               <div class="w-full">MemberID:</div>
               <div>{{ patientStore.patientData.insurance.healthInsuranceMemberID }}</div>
@@ -222,7 +223,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
               {{ task.taskComments }}
             </div>
             <div class="flex">
-              <BaseTaskBadge :taskLabel="task.taskPriority" />
+              {{ task.taskType }}
             </div>
           </div>
         </div>
@@ -272,7 +273,9 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
         :class="[toDoListOrDetailsSelected === 'To do' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : '']"
       >
         To do
-        <div class="bg-[#EFEBFE] w-[24px] h-[24px] rounded-full flex justify-center items-center text-honeydew-purple ml-[8px]">3</div>
+        <div class="bg-[#EFEBFE] w-[24px] h-[24px] rounded-full flex justify-center items-center text-honeydew-purple ml-[8px]">
+          {{ tasksStore.taskForPatient.length }}
+        </div>
       </div>
       <div
         @click="toDoListOrDetailsSelected = 'Details'"
@@ -280,6 +283,33 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
         :class="[toDoListOrDetailsSelected === 'Details' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : '']"
       >
         Details
+      </div>
+    </div>
+
+    <!-- To do -->
+    <div v-if="toDoListOrDetailsSelected === 'To do'" class="py-6 px-8 flex flex-col gap-y-4 justify-center items-center text-center">
+      <div v-if="tasksStore.taskForPatient.length === 0" class="w-full flex flex-col">
+        <div class="flex w-full justify-center mb-4">
+          <div class="p-4 bg-[#f8f7fe] rounded-full flex justify-center items-center">
+            <div class="p-4 bg-[#efeafd] rounded-full flex justify-center items-center">
+              <img :src="SearchIcon" alt="Search Icon" />
+            </div>
+          </div>
+        </div>
+
+        <div class="text-[#403d47]">No tasks</div>
+        <p class="text-[#6C6A7C] text-[14px]">Great job! You have completed all tasks for this patient.</p>
+      </div>
+
+      <div v-else class="w-full flex flex-col">
+        <div v-for="(task, idx) in tasksStore.taskForPatient" class="flex w-full justify-between p-4 bg-[#f8f7fe] my-2 rounded-md items-center shadow-sm">
+          <div>
+            {{ task.taskComments }}
+          </div>
+          <div class="flex opacity-50 text-sm">
+            {{ task.taskType }}
+          </div>
+        </div>
       </div>
     </div>
 

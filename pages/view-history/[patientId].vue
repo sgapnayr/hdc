@@ -8,6 +8,7 @@ import { useAppointmentsStore } from '~/stores/appointments'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import PlusCircleIcon from '@/assets/icons/plus-circle.svg'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
+import SendButton from '@/assets/icons/send-button.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { useRouter, useRoute } from 'vue-router'
 import { getMyProfileImages, getPatient } from '../../lib/endpoints'
@@ -38,7 +39,7 @@ const tasksStore = useTasksStore()
 const appointmentsStore = useAppointmentsStore()
 
 // STATE *********************************************************************
-const treatmentHistoryOrDocumentsSelected = ref<'Treatment History' | 'Documents' | 'Images'>('Treatment History')
+const treatmentHistoryOrDocumentsSelected = ref<string>('Treatment History')
 const isOpen = ref<any[]>([])
 const isSelected = ref('Treatment History')
 const documentModalMenuOpen = ref(false)
@@ -122,14 +123,14 @@ function handleSubAccount(selectedSubAccount: string) {
 
 <template>
   <BaseWrapper>
-    <div class="w-full">
-      <div class="flex justify-end w-full gap-x-4 flex-col md:flex-row">
+    <div class="flex justify-end w-full gap-x-4 flex-row -mb-8 mt-4">
+      <div>
         <BaseAddTaskButton />
       </div>
     </div>
-    <div class="flex py-8 gap-x-6 flex-col md:flex-row">
+    <div class="flex py-8 pb-24 gap-x-6 flex-col lg:flex-row">
       <!-- Left Side -->
-      <div class="flex flex-col md:w-1/2 relative z-10">
+      <div class="flex flex-col lg:w-1/2 relative z-10">
         <BaseTab
           class="absolute -top-6"
           @selected-patient-id="(selectedSubAccount) => handleSubAccount(selectedSubAccount)"
@@ -142,11 +143,11 @@ function handleSubAccount(selectedSubAccount: string) {
       </div>
 
       <!-- Right Side (Treatment history & @photo-uploaded="isPhotoUploaded = true") -->
-      <div class="md:w-1/2 rounded-[8px] flex flex-col z-0">
+      <div class="lg:w-1/2 rounded-[8px] flex flex-col z-0 mt-4 lg:mt-0">
         <div class="bg-white flex px-8 gap-x-6 shadow-sm">
           <div
             @click="treatmentHistoryOrDocumentsSelected = 'Treatment History'"
-            class="py-6 cursor-pointer"
+            class="py-6 cursor-pointer whitespace-nowrap"
             :class="[treatmentHistoryOrDocumentsSelected === 'Treatment History' ? 'text-honeydew-purple border-b-2 border-b-honeydew-purple' : '']"
           >
             Treatment History
@@ -164,6 +165,13 @@ function handleSubAccount(selectedSubAccount: string) {
             :class="[treatmentHistoryOrDocumentsSelected === 'Images' ? 'text-honeydew-purple border-b-2 border-b-honeydew-purple' : '']"
           >
             Images
+          </div>
+          <div
+            @click="treatmentHistoryOrDocumentsSelected = 'Notes'"
+            class="py-6 cursor-pointer"
+            :class="[treatmentHistoryOrDocumentsSelected === 'Notes' ? 'text-honeydew-purple border-b-2 border-b-honeydew-purple' : '']"
+          >
+            Notes
           </div>
         </div>
 
@@ -286,6 +294,23 @@ function handleSubAccount(selectedSubAccount: string) {
             <div v-for="(image, idx) in patientImages?.images" :key="idx" class="p-2 w-1/2">
               <img class="object-cover h-48 w-48" :src="image.path" :alt="image.fileName" />
             </div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div v-if="treatmentHistoryOrDocumentsSelected === 'Notes'" class="p-8 flex w-full justify-between relative flex-col">
+          <div class="flex w-full justify-between mb-4">
+            <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Notes</h1>
+          </div>
+          <div class="flex items-center w-1/2 my-4">
+            <div class="bg-white flex px-2 pr-3 py-2 rounded-md w-full justify-between shadow-sm">
+              <input class="bg-white w-full text-start outline-none focus:outline-none focus:ring-0" placeholder="Input Note Here" type="text" />
+              <img class="cursor-pointer hover:opacity-50 transition active:scale-90" :src="SendButton" alt="Send Button" />
+            </div>
+          </div>
+          <div class="bg-[#f0f5fe] w-1/2 p-4 rounded-2xl text-[14px] text-[#403E48]">
+            <div>{noteContent}</div>
+            <div class="text-[#6C6A7C] mt-4 text-xs">{noteMadeByThisPerson} on {noteCreatedOnThisDate}</div>
           </div>
         </div>
       </div>
