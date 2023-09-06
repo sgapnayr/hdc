@@ -129,7 +129,7 @@ function handleSubAccount(selectedSubAccount: string) {
     </div>
     <div class="flex py-8 gap-x-6 flex-col md:flex-row">
       <!-- Left Side -->
-      <div class="flex flex-col md:w-1/2 relative">
+      <div class="flex flex-col md:w-1/2 relative z-10">
         <BaseTab
           class="absolute -top-6"
           @selected-patient-id="(selectedSubAccount) => handleSubAccount(selectedSubAccount)"
@@ -142,7 +142,7 @@ function handleSubAccount(selectedSubAccount: string) {
       </div>
 
       <!-- Right Side (Treatment history & @photo-uploaded="isPhotoUploaded = true") -->
-      <div class="md:w-1/2 rounded-[8px] flex flex-col">
+      <div class="md:w-1/2 rounded-[8px] flex flex-col z-0">
         <div class="bg-white flex px-8 gap-x-6 shadow-sm">
           <div
             @click="treatmentHistoryOrDocumentsSelected = 'Treatment History'"

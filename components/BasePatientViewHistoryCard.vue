@@ -26,10 +26,11 @@ const patientStore = usePatientStore()
 // STATE *********************************************************************
 const toDoListOrDetailsSelected = ref<'To do' | 'Details'>('To do')
 const selectedItem = ref<string[]>([])
-const healthInsuranceName = ref()
-const healthInsuranceMemberId = ref()
-const healthInsurancePolicyHolder = ref()
-const healthInsuranceGroupNumber = ref()
+
+const healthInsuranceName = ref(patientStore.patientData?.insurance.healthInsuranceName)
+const healthInsuranceMemberId = ref(patientStore.patientData.insurance.healthInsuranceMemberID)
+const healthInsurancePolicyHolder = ref(patientStore.patientData?.insurance.healthInsurancePolicyHolderName)
+const healthInsuranceGroupNumber = ref(patientStore.patientData?.insurance.healthInsuranceGroupNumber)
 const PATIENT_ID = route.params.patientId as string
 
 // METHODS *********************************************************************
@@ -139,7 +140,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
         <div class="flex w-full justify-between items-center px-8">
           <div>Health Insurance</div>
           <div class="flex gap-x-2">
-            <BaseModal @action-click="handleUpdateInsurance">
+            <BaseModal :no-shadow="true" @action-click="handleUpdateInsurance">
               <template #header>
                 <div>Insurance information</div>
               </template>
