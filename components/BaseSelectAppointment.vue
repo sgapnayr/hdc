@@ -17,9 +17,14 @@ const initialVisitProvidersToChooseFrom = [
     providerBio: 'Princeton / Columbia College of Physicians and Surgeons',
     providerImage: JoelSpitzDesktop,
   },
-
   {
     providerName: 'David Futoran',
+    providerUrl: 'https://schedule.nylas.com/david-futoran-inital-consultation',
+    providerBio: 'Princeton / Columbia College of Physicians and Surgeons',
+    providerImage: DavidDesktop,
+  },
+  {
+    providerName: 'Next Available',
     providerUrl: 'https://schedule.nylas.com/david-futoran-inital-consultation',
     providerBio: 'Princeton / Columbia College of Physicians and Surgeons',
     providerImage: DavidDesktop,
@@ -33,9 +38,14 @@ const followUpVisitProvidersToChooseFrom = [
     providerBio: 'Princeton / Columbia College of Physicians and Surgeons',
     providerImage: JoelSpitzDesktop,
   },
-
   {
     providerName: 'David Futoran',
+    providerUrl: 'https://schedule.nylas.com/david-futoran-follow-up',
+    providerBio: 'Princeton / Columbia College of Physicians and Surgeons',
+    providerImage: DavidDesktop,
+  },
+  {
+    providerName: 'Next Available',
     providerUrl: 'https://schedule.nylas.com/david-futoran-follow-up',
     providerBio: 'Princeton / Columbia College of Physicians and Surgeons',
     providerImage: DavidDesktop,
@@ -52,7 +62,8 @@ const followUpVisitProvidersToChooseFrom = [
       v-for="(provider, idx) in initialVisitProvidersToChooseFrom"
       class="flex flex-col text-start md:w-[296px] w-full hover:bg-honeydew-bg7 p-10 rounded-2xl transition"
     >
-      <img class="flex rounded-xl w-[270px]" :src="provider.providerImage" alt="Employee Image" />
+      <img v-if="provider.providerName === 'Next Available'" class="flex rounded-xl w-[270px] invisible" :src="provider.providerImage" alt="Employee Image" />
+      <img v-else class="flex rounded-xl w-[270px]" :src="provider.providerImage" alt="Employee Image" />
       <h2 class="text-[24px] mt-[24px] text-[#403E48]">{{ provider.providerName }}</h2>
       <p class="text-honeydew-purple text-[16px]">{{ provider.providerName }}</p>
       <p class="text-[#6C6A7C] text-[16px] w-1/2">{{ provider.providerBio }}</p>
@@ -65,7 +76,8 @@ const followUpVisitProvidersToChooseFrom = [
       v-for="(provider, idx) in followUpVisitProvidersToChooseFrom"
       class="flex flex-col text-start md:w-[296px] w-full hover:bg-honeydew-bg7 p-10 rounded-2xl transition"
     >
-      <img class="flex rounded-xl w-[270px]" :src="provider.providerImage" alt="Employee Image" />
+      <img v-if="provider.providerName === 'NextAvailable'" class="flex rounded-xl w-[270px] invisible" :src="provider.providerImage" alt="Employee Image" />
+      <img v-else class="flex rounded-xl w-[270px]" :src="provider.providerImage" alt="Employee Image" />
       <h2 class="text-[24px] mt-[24px] text-[#403E48]">{{ provider.providerName }}</h2>
       <p class="text-honeydew-purple text-[16px]">{{ provider.providerName }}</p>
       <p class="text-[#6C6A7C] text-[16px] w-1/2">{{ provider.providerBio }}</p>
