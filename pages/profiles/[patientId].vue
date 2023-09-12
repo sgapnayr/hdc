@@ -127,8 +127,6 @@ const toDoItems = [
 
 <template>
   <div class="flex flex-col py-8">
-    <!-- <BaseSelectAppointment /> -->
-    <BaseNylas />
     <BaseWrapper>
       <!-- Upper cards -->
       <div class="flex gap-x-6 lg:flex-row flex-col gap-y-6 lg:min-w-[1244px]">
@@ -213,13 +211,19 @@ const toDoItems = [
                 <p v-if="isAppointmentMissedState" class="text-gray-5 mt-[8px] w-3/4">Let your care team know how you're doing!</p>
               </div>
             </div>
-            <div class="my-4">
+            <div class="my-4 flex flex-col gap-y-4">
+              <NuxtLink
+                to="/schedule-with-provider"
+                class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-[190px]"
+              >
+                schedule my Initial visit
+              </NuxtLink>
               <NuxtLink
                 v-if="getPatientAppointments.length === 0"
                 to="/schedule-my-free-visit"
                 class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-[190px]"
               >
-                schedule my free visit
+                Medical Background
               </NuxtLink>
               <NuxtLink
                 v-else
