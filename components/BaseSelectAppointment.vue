@@ -76,7 +76,7 @@ const followUpVisitProvidersToChooseFrom = [
       v-for="(provider, idx) in followUpVisitProvidersToChooseFrom"
       class="flex flex-col text-start md:w-[296px] w-full hover:bg-honeydew-bg7 p-10 rounded-2xl transition"
     >
-      <img v-if="provider.providerName === 'NextAvailable'" class="flex rounded-xl w-[270px] invisible" :src="provider.providerImage" alt="Employee Image" />
+      <img v-if="provider.providerName === 'Next Available'" class="flex rounded-xl w-[270px] invisible" :src="provider.providerImage" alt="Employee Image" />
       <img v-else class="flex rounded-xl w-[270px]" :src="provider.providerImage" alt="Employee Image" />
       <h2 class="text-[24px] mt-[24px] text-[#403E48]">{{ provider.providerName }}</h2>
       <p class="text-honeydew-purple text-[16px]">{{ provider.providerName }}</p>

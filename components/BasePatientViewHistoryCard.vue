@@ -316,7 +316,7 @@ patientStore.getPatient(route.params.patientId as string)
         </div>
       </div>
       <NuxtLink
-        to="/schedule-with-provider"
+        to="/schedule-with-provider-follow-up"
         class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap mt-4 mx-8"
       >
         schedule my follow-up visit
