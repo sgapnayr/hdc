@@ -4,8 +4,10 @@ import { ref } from 'vue'
 import JoelSpitzDesktop from '@/assets/images/joel-spitz-desktop.png'
 import DavidDesktop from '@/assets/images/david-desktop.png'
 
-// STATE ********************************************************************
-const visitType = ref<'Initial-visit' | 'Follow-up'>('Initial-visit')
+// PROPS ********************************************************************
+defineProps<{
+  visitType?: 'Initial-visit' | 'Follow-up'
+}>()
 
 // METHODS ********************************************************************
 const initialVisitProvidersToChooseFrom = [
@@ -45,7 +47,11 @@ const followUpVisitProvidersToChooseFrom = [
 
 <template>
   <div v-if="visitType === 'Initial-visit'" class="flex flex-wrap">
-    <NuxtLink :to="provider.providerUrl" v-for="(provider, idx) in initialVisitProvidersToChooseFrom" class="flex flex-col text-start md:w-[296px] w-full">
+    <NuxtLink
+      :to="provider.providerUrl"
+      v-for="(provider, idx) in initialVisitProvidersToChooseFrom"
+      class="flex flex-col text-start md:w-[296px] w-full hover:bg-honeydew-bg7 p-10 rounded-2xl transition"
+    >
       <img class="flex rounded-xl w-[270px]" :src="provider.providerImage" alt="Employee Image" />
       <h2 class="text-[24px] mt-[24px] text-[#403E48]">{{ provider.providerName }}</h2>
       <p class="text-honeydew-purple text-[16px]">{{ provider.providerName }}</p>
@@ -54,7 +60,11 @@ const followUpVisitProvidersToChooseFrom = [
   </div>
 
   <div v-if="visitType === 'Follow-up'" class="flex flex-wrap">
-    <NuxtLink :to="provider.providerUrl" v-for="(provider, idx) in followUpVisitProvidersToChooseFrom" class="flex flex-col text-start md:w-[296px] w-full">
+    <NuxtLink
+      :to="provider.providerUrl"
+      v-for="(provider, idx) in followUpVisitProvidersToChooseFrom"
+      class="flex flex-col text-start md:w-[296px] w-full hover:bg-honeydew-bg7 p-10 rounded-2xl transition"
+    >
       <img class="flex rounded-xl w-[270px]" :src="provider.providerImage" alt="Employee Image" />
       <h2 class="text-[24px] mt-[24px] text-[#403E48]">{{ provider.providerName }}</h2>
       <p class="text-honeydew-purple text-[16px]">{{ provider.providerName }}</p>

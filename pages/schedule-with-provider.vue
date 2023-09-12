@@ -1,7 +1,5 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
-import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 
 // LAYOUT **********************************************************************
@@ -10,8 +8,6 @@ definePageMeta({
   middleware: ['auth'],
 })
 
-const router = useRouter()
-const route = useRoute()
 const user = useAuthenticator()
 
 onMounted(() => {
@@ -25,6 +21,6 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col py-8">
-    <BaseWrapper> <BaseSelectAppointment /> </BaseWrapper>
+    <BaseWrapper> <BaseSelectAppointment visit-type="Initial-visit" /> </BaseWrapper>
   </div>
 </template>
