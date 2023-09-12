@@ -5,6 +5,7 @@ export const useProfileStore = defineStore('profile', () => {
   const isPregnantModalOpen = ref(false)
   const isBloodSlipFormOpen = ref(false)
   const isPatientDetailsFormOpen = ref(false)
+  const isVisitFormOpen = ref(false)
 
   const profileData = ref()
   const isPatientMember = ref(false)
@@ -86,6 +87,10 @@ export const useProfileStore = defineStore('profile', () => {
 
   function handlePatientDetailsForm() {
     isPatientDetailsFormOpen.value = !isPatientDetailsFormOpen.value
+  }
+
+  function handleVisitForm() {
+    isVisitFormOpen.value = !isVisitFormOpen.value
   }
 
   // Schedule Visit Flow
@@ -186,5 +191,7 @@ export const useProfileStore = defineStore('profile', () => {
     handleBloodSlipForm,
     handlePatientDetailsForm,
     updateProfile,
+    isVisitFormOpen,
+    handleVisitForm,
   }
 })

@@ -8,7 +8,6 @@ import { useAppointmentsStore } from '~/stores/appointments'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import PlusCircleIcon from '@/assets/icons/plus-circle.svg'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
-import SendButton from '@/assets/icons/send-button.svg'
 import { useRoute } from 'vue-router'
 import { getPatient } from '../../lib/endpoints'
 
@@ -95,6 +94,7 @@ getPatient(route.params.patientId as string)
 tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 
 appointmentsStore.getAllAppointments()
+profileStore.setMyProfile()
 profileStore.setMyProfile(route.params.patientId as string)
 
 function handleSubAccount(selectedSubAccount: string) {
@@ -221,24 +221,13 @@ function handleSubAccount(selectedSubAccount: string) {
         </div>
 
         <div class="px-8 flex gap-x-8">
-          <div>
+          <div class="w-2/3">
             <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Patient Images</h1>
             <BasePatientImages />
           </div>
-          <div class="flex flex-col">
-            <div class="flex w-full justify-between mb-4">
-              <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Notes</h1>
-            </div>
-            <div class="flex items-center w-full my-4">
-              <div class="bg-white flex px-2 pr-3 py-2 rounded-md w-full justify-between shadow-sm">
-                <input class="bg-white w-full text-start outline-none focus:outline-none focus:ring-0" placeholder="Input Note Here" type="text" />
-                <img class="cursor-pointer hover:opacity-50 transition active:scale-90" :src="SendButton" alt="Send Button" />
-              </div>
-            </div>
-            <div class="bg-[#f0f5fe] w-full p-4 rounded-2xl text-[14px] text-[#403E48]">
-              <div>{noteContent}</div>
-              <div class="text-[#6C6A7C] mt-4 text-xs">{noteMadeByThisPerson} on {noteCreatedOnThisDate}</div>
-            </div>
+          <div class="flex flex-col w-1/3">
+            <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Notes</h1>
+            <BaseNotes />
           </div>
         </div>
       </div>

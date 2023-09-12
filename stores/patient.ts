@@ -67,6 +67,7 @@ export const usePatientStore = defineStore('patient', () => {
         }
 
         patientData.value = frontendPatient
+        console.log(frontendPatient, 'FRONTEND PATIENT')
       } else {
         console.error('No patient profile found')
       }

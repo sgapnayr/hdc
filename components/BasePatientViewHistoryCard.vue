@@ -15,6 +15,7 @@ import { usePatientStore } from '~/stores/patient'
 import { useTasksStore } from '@/stores/task'
 import { useRoute } from 'vue-router'
 import { calculateAge, calculateHeightInFeetAndInches } from '../utils/helpers'
+import { useAuthenticator } from '@aws-amplify/ui-vue'
 
 // ROUTER *********************************************************************
 const route = useRoute()
@@ -23,6 +24,8 @@ const route = useRoute()
 const profileStore = useProfileStore()
 const tasksStore = useTasksStore()
 const patientStore = usePatientStore()
+
+const auth = useAuthenticator()
 
 // STATE *********************************************************************
 const toDoListOrDetailsSelected = ref<'To do' | 'Care Team'>('To do')
@@ -54,6 +57,7 @@ function handleUpdateInsurance() {
 }
 
 tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
+patientStore.getPatient(route.params.patientId as string)
 </script>
 
 <template>
@@ -102,7 +106,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
         </div>
         <div class="flex items-center gap-x-[14px]">
           <img :src="EmailIcon" alt="Email Icon" />
-          <div>{{ patientStore.patientData?.patientEmail }}</div>
+          <div>{{ auth?.user?.signInUserSession?.idToken?.payload?.email }}</div>
         </div>
       </div>
     </div>

@@ -22,14 +22,20 @@ const photo = ref()
 const previewURL = ref()
 const dragging = ref(false)
 
-const feet = ref()
-const inches = ref()
+const feetVal = computed(() => {
+  return Math.floor(patientStore?.patientData?.patientHeight / 12)
+})
+
+const inchesVal = computed(() => {
+  return patientStore?.patientData?.patientHeight % 12
+})
+
+const feet = ref(feetVal.value)
+const inches = ref(inchesVal.value)
 
 const updatePatientFirstName = ref(profileStore.profileData?.patientFirstName)
 const updatePatientLastName = ref(profileStore.profileData?.patientLastName)
 const updatePatientPhoneNumber = ref()
-const updatePatientEmailAddress = ref(patientStore.patientData?.patientEmail)
-const updatePatientHeight = ref(patientStore.patientData?.patientHeight)
 const updatePatientWeight = ref(patientStore.patientData?.patientWeight)
 const updatePatientAddress = ref(patientStore.patientData?.patientAddress)
 const updatePatientDOB = ref(patientStore.patientData?.patientDOB)
@@ -83,18 +89,6 @@ const updateProfileChanges = async () => {
   setTimeout(() => {
     emit('close-modal')
   }, 100)
-
-  // NEED PHOTO UPDATES
-  // const formData = new FormData()
-  // formData.append('photo', photo.value)
-  // try {
-  //   const response = await axios.post('/api/upload', formData, {
-  //     headers: { 'Content-Type': 'multipart/form-data' },
-  //   })
-  //   console.log(response.data)
-  // } catch (error) {
-  //   console.error(error)
-  // }
 }
 </script>
 
@@ -144,31 +138,24 @@ const updateProfileChanges = async () => {
               :placeholder="profileStore.signUpName || 'Enter your phone number'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <!-- <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Email Address</p>
-            <input
-              v-model="updatePatientEmailAddress"
-              :placeholder="profileStore.signUpName || 'Enter your email address'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
-            /> -->
-            <p class="mt-4 px-4 uppercase text-sm text-[#403E48]">HEIGHT</p>
-            <div class="flex gap-x-5">
-              <div class="flex items-center">
-                <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Feet</p>
+            <div class="flex gap-x-5 mt-4">
+              <div class="flex flex-col">
+                <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Height (Feet)</p>
                 <input
                   v-maska
                   :data-maska="['#']"
                   v-model="feet"
-                  :placeholder="profileStore.signUpName || 'Enter your height in feet'"
+                  :placeholder="profileStore.signUpName || '5'"
                   class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
                 />
               </div>
-              <div class="flex items-center">
-                <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Inches</p>
+              <div class="flex flex-col">
+                <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Height (Inches)</p>
                 <input
                   v-maska
                   :data-maska="['##']"
                   v-model="inches"
-                  :placeholder="profileStore.signUpName || 'Enter your height in inches'"
+                  :placeholder="profileStore.signUpName || '8'"
                   class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
                 />
               </div>

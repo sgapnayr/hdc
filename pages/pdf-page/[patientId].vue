@@ -37,6 +37,8 @@ onMounted(async () => {
 const profileStore = useProfileStore()
 const patientStore = usePatientStore()
 
+const auth = useAuthenticator()
+
 // STATE ********************************************************************
 const patientData = ref()
 
@@ -75,7 +77,7 @@ console.log('UserImages in ')
         </div>
         <div class="flex items-center gap-x-[14px]">
           <img :src="EmailIcon" alt="Email Icon" />
-          <div>{{ patientStore.patientData?.patientEmail }}</div>
+          <div>{{ auth?.user?.signInUserSession?.idToken?.payload?.email }}</div>
         </div>
       </div>
       <!-- Medical background -->
@@ -104,7 +106,7 @@ console.log('UserImages in ')
 
       <!-- Visit details -->
       <div class="mt-8">
-        <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Visit details</h1>
+        <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Patient Images</h1>
         <BasePatientImages />
       </div>
     </BaseWrapper>
