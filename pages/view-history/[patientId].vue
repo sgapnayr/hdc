@@ -200,7 +200,7 @@ function handleSubAccount(selectedSubAccount: string) {
                 <div
                   v-for="(itemDesc, kdx) in medicalItem.content"
                   :key="kdx"
-                  :class="[isOpen.includes(medicalItem.medicalTitle) ? '' : 'hidden']"
+                  :class="[!isOpen.includes(medicalItem.medicalTitle) ? '' : 'hidden']"
                   class="flex w-full justify-between mb-[16px] pl-8"
                 >
                   <div class="w-1/2 text-gray-5 font-[400]">
@@ -317,3 +317,4 @@ function handleSubAccount(selectedSubAccount: string) {
     </div>
   </BaseWrapper>
 </template>
+``

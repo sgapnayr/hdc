@@ -127,6 +127,8 @@ const toDoItems = [
 
 <template>
   <div class="flex flex-col py-8">
+    <!-- <BaseSelectAppointment /> -->
+    <BaseNylas />
     <BaseWrapper>
       <!-- Upper cards -->
       <div class="flex gap-x-6 lg:flex-row flex-col gap-y-6 lg:min-w-[1244px]">

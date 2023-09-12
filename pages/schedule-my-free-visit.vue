@@ -22,7 +22,7 @@ const router = useRouter()
 const profileStore = useProfileStore()
 
 // STATE **********************************************************************
-const currentQuestionIdx = ref<number>(0)
+const currentQuestionIdx = ref<number>(17)
 const currentSelectedAnswer = ref<string>()
 const buttonLoadingState = ref<'idle' | 'loading' | 'failed' | 'success' | 'disabled'>('idle')
 const isPhotoUploaded = ref(false)
@@ -643,6 +643,11 @@ async function handleAnswerSubmitValidation() {
           </div>
         </div>
         <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
+        <a href="https://schedule.nylas.com/ryan-paglione-30min" target="_Blank">
+          <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[290px] mt-[32px] px-8"
+            >Schedule Appointment</BaseButton
+          >
+        </a>
       </div>
 
       <!-- Last step! Let’s see your skin -->
@@ -651,7 +656,7 @@ async function handleAnswerSubmitValidation() {
         <p class="mb-[32px] font-[400] text-gray-5">Take or upload photos of your skin from three profiles.</p>
 
         <div class="flex gap-x-6 flex-wrap items-center justify-center">
-          <!-- <BaseImageUpload
+          <BaseImageUpload
             @photo-uploaded="isPhotoUploaded = true"
             buttonText="Left profile"
             describedImage="The left side of your face"
@@ -668,7 +673,7 @@ async function handleAnswerSubmitValidation() {
             buttonText="Right profile"
             describedImage="The right side of your face"
             :image-URL="FaceRightOutline"
-          /> -->
+          />
         </div>
 
         <div class="w-full flex justify-center items-center">
@@ -677,11 +682,12 @@ async function handleAnswerSubmitValidation() {
               >Submit Photos</BaseButton
             >
           </a> -->
-          <!-- <a href="https://schedule.nylas.com/ryan-paglione-30min" target="_Blank">
+          <BaseNylas />
+          <a href="https://schedule.nylas.com/ryan-paglione-30min" target="_Blank">
             <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[290px] mt-[32px] px-8"
               >Schedule Appointment</BaseButton
             >
-          </a> -->
+          </a>
         </div>
       </div>
 
