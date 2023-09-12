@@ -16,6 +16,8 @@ import { useTasksStore } from '@/stores/task'
 import { useRoute } from 'vue-router'
 import { calculateAge, calculateHeightInFeetAndInches } from '../utils/helpers'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 
 // ROUTER *********************************************************************
 const route = useRoute()
@@ -37,6 +39,9 @@ const healthInsurancePolicyHolder = ref(patientStore.patientData?.insurance?.hea
 const healthInsuranceGroupNumber = ref(patientStore.patientData?.insurance?.healthInsuranceGroupNumber)
 const PATIENT_ID = route.params.patientId as string
 
+const patientLastConfirmationDate = ref('')
+const patientNextConfirmationDate = ref('')
+
 // METHODS *********************************************************************
 function handleSelectedItem(selectedItemVal: string) {
   if (selectedItem.value.includes(selectedItemVal)) {
@@ -55,6 +60,14 @@ function handleUpdateInsurance() {
     healthInsurancePolicyHolder.value
   )
 }
+
+watch(patientLastConfirmationDate, (newDate) => {
+  if (newDate) {
+    const nextDate = new Date(newDate)
+    nextDate.setDate(nextDate.getDate() + 30)
+    patientNextConfirmationDate.value = nextDate.toISOString().split('T')[0]
+  }
+})
 
 tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
 patientStore.getPatient(route.params.patientId as string)
@@ -233,16 +246,37 @@ patientStore.getPatient(route.params.patientId as string)
         </div>
       </div>
 
-      <div
-        @click="handleSelectedItem('iPledge details')"
-        class="text-gray-3 font-[500] w-full border-b-[.5px] border-[#E1E0E6] py-5 cursor-pointer flex flex-col"
-      >
+      <div class="text-gray-3 font-[500] w-full border-b-[.5px] border-[#E1E0E6] py-5 cursor-pointer flex flex-col">
         <div class="flex w-full justify-between px-8">
           <div>iPledge details</div>
-          <img :class="[selectedItem.includes('iPledge details') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
+          <div class="flex gap-x-2">
+            <BaseModal :no-shadow="true" @action-click="handleUpdateInsurance">
+              <template #header>
+                <div>iPledge Details</div>
+              </template>
+              <template #content>
+                <div class="min-w-[380px]">
+                  <div class="mb-[10px] px-2 uppercase text-[12px] font-[500] text-[#313337]">REMS Number</div>
+                  <input
+                    class="rounded-[80px] border border-[#E4E7EC] h-[48px] w-full"
+                    v-model="healthInsuranceName"
+                    type="text"
+                    placeholder="Enter REMS Number"
+                  />
+                </div>
+              </template>
+              <template #button>
+                <div class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
+                  <img :src="PencilIcon" alt="Pencil Icon" />
+                </div>
+              </template>
+              <template #button-text> Submit </template>
+            </BaseModal>
+            <img :class="[!selectedItem.includes('iPledge details') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" class="opacity-0" />
+          </div>
         </div>
         <!-- Patient Pregnancy Status -->
-        <div v-if="selectedItem.includes('iPledge details')" class="px-8">
+        <div v-if="!selectedItem.includes('iPledge details')" class="px-8">
           <div class="mt-[24px] mb-[16px] text-gray-3 font-[500]">{patientCanOrCannotGetPregnant}</div>
           <!-- Service Details -->
           <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
@@ -255,13 +289,18 @@ patientStore.getPatient(route.params.patientId as string)
           </div>
           <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
             <div>Last confirmation date</div>
-            <div>{patientLastConfirmationDate}</div>
+            <div class="w-1/2 flex">
+              <VueDatePicker v-model="patientLastConfirmationDate" auto-apply :close-on-auto-apply="false" :hide-navigation="['time']" />
+            </div>
           </div>
           <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
             <div>Next confirmation date</div>
-            <div>{patientNextConfirmationDate}</div>
+            <div>{{ patientNextConfirmationDate }}</div>
           </div>
-          <div class="text-[12px] h-[40px] w-1/4 flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple uppercase cursor-pointer">
+          <!-- v-if="profileStore?.profileData?.userRole != 'patient'" -->
+          <div
+            class="text-[12px] h-[40px] w-1/3 flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple uppercase cursor-pointer whitespace-nowrap"
+          >
             <div class="mr-[6px]"></div>
             pause or stop
           </div>
