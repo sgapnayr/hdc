@@ -27,14 +27,6 @@ definePageMeta({
 // ROUTER **********************************************************************
 const user = useAuthenticator()
 
-onMounted(() => {
-  watchEffect(() => {
-    if (user.authStatus !== 'authenticated') {
-      navigateTo('/')
-    }
-  })
-})
-
 // STORES **********************************************************************
 const employeeStore = useEmployeeStore()
 const patientStore = usePatientStore()

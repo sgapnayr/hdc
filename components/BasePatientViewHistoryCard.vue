@@ -25,7 +25,7 @@ const tasksStore = useTasksStore()
 const patientStore = usePatientStore()
 
 // STATE *********************************************************************
-const toDoListOrDetailsSelected = ref<'To do' | 'Details'>('To do')
+const toDoListOrDetailsSelected = ref<'To do' | 'Care Team'>('To do')
 const selectedItem = ref<string[]>([])
 
 const healthInsuranceName = ref(patientStore.patientData?.insurance?.healthInsuranceName)
@@ -263,6 +263,12 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
           </div>
         </div>
       </div>
+      <NuxtLink
+        to="/schedule-with-provider"
+        class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap mt-4 mx-8"
+      >
+        schedule my follow-up visit
+      </NuxtLink>
     </div>
 
     <!-- To Do & Details list -->
@@ -278,11 +284,11 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
         </div>
       </div>
       <div
-        @click="toDoListOrDetailsSelected = 'Details'"
+        @click="toDoListOrDetailsSelected = 'Care Team'"
         class="flex cursor-pointer py-4"
-        :class="[toDoListOrDetailsSelected === 'Details' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : '']"
+        :class="[toDoListOrDetailsSelected === 'Care Team' ? 'border-b-2 border-b-honeydew-purple text-honeydew-purple' : '']"
       >
-        Details
+        Care Team
       </div>
     </div>
 
@@ -314,7 +320,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
     </div>
 
     <!-- Details list -->
-    <div v-if="toDoListOrDetailsSelected === 'Details'" class="py-6 px-8 flex flex-col gap-y-4">
+    <div v-if="toDoListOrDetailsSelected === 'Care Team'" class="py-6 px-8 flex flex-col gap-y-4">
       <!-- Fan tabs -->
       <div class="p-4 bg-[#FCFCFD] rounded-[12px] border border-[#F2F4F7] flex justify-between cursor-pointer boxShadow">
         <div>Parent's contact information</div>

@@ -24,14 +24,6 @@ const router = useRouter()
 const route = useRoute()
 const user = useAuthenticator()
 
-onMounted(() => {
-  watchEffect(() => {
-    if (user.authStatus !== 'authenticated') {
-      navigateTo('/')
-    }
-  })
-})
-
 // STORE **********************************************************************
 const profileStore = useProfileStore()
 const patientStore = usePatientStore()

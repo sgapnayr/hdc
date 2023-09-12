@@ -29,14 +29,6 @@ const router = useRouter()
 const route = useRoute()
 const user = useAuthenticator()
 
-onMounted(() => {
-  watchEffect(() => {
-    if (user.authStatus !== 'authenticated') {
-      navigateTo('/')
-    }
-  })
-})
-
 // TYPES **********************************************************************
 interface Treatment {
   treatmentName: string

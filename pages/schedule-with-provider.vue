@@ -7,16 +7,6 @@ definePageMeta({
   layout: 'in-app',
   middleware: ['auth'],
 })
-
-const user = useAuthenticator()
-
-onMounted(() => {
-  watchEffect(() => {
-    if (user.authStatus !== 'authenticated') {
-      navigateTo('/')
-    }
-  })
-})
 </script>
 
 <template>
