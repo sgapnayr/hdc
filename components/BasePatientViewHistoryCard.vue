@@ -295,7 +295,16 @@ patientStore.getPatient(route.params.patientId as string)
           </div>
           <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
             <div>Next confirmation date</div>
-            <div>{{ patientNextConfirmationDate }}</div>
+            <div class="w-1/2 flex">
+              <VueDatePicker
+                v-model="patientNextConfirmationDate"
+                auto-apply
+                :close-on-auto-apply="false"
+                :hide-navigation="['time']"
+                style="pointer-events: none"
+                @click.stop
+              />
+            </div>
           </div>
           <!-- v-if="profileStore?.profileData?.userRole != 'patient'" -->
           <div
