@@ -26,15 +26,11 @@ function handlePregnancyModal() {
 }
 
 async function signOut() {
-  console.log('SIGN OUT')
   try {
     await Auth.signOut()
     navigateTo('/')
-    // Sign-out successful
-    // You can redirect the user or perform other actions here
   } catch (error) {
     console.log('Error signing out:', error)
-    // Handle sign-out error
   }
 }
 
