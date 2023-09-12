@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useProfileStore } from '~/stores/profile'
 import { usePatientStore } from '~/stores/patient'
 import { useTasksStore } from '~/stores/task'
@@ -9,9 +9,8 @@ import CaretIcon from '@/assets/icons/caret-icon.svg'
 import PlusCircleIcon from '@/assets/icons/plus-circle.svg'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
 import SendButton from '@/assets/icons/send-button.svg'
-import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { useRouter, useRoute } from 'vue-router'
-import { getMyProfileImages, getPatient } from '../../lib/endpoints'
+import { useRoute } from 'vue-router'
+import { getPatient } from '../../lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -20,9 +19,7 @@ definePageMeta({
 })
 
 // ROUTER **********************************************************************
-const router = useRouter()
 const route = useRoute()
-const user = useAuthenticator()
 
 // STORE **********************************************************************
 const profileStore = useProfileStore()
@@ -33,12 +30,10 @@ const appointmentsStore = useAppointmentsStore()
 // STATE *********************************************************************
 const treatmentHistoryOrDocumentsSelected = ref<string>('Treatment History')
 const isOpen = ref<any[]>([])
-const isSelected = ref('Treatment History')
 const documentModalMenuOpen = ref(false)
 const photo = ref()
 const previewURL = ref()
 const dragging = ref(false)
-const patientData = ref()
 
 // METHODS *********************************************************************
 function handleOpen(idx: string) {
@@ -90,13 +85,8 @@ const uploadPhoto = async () => {
   // }
 }
 
-const patientImages = ref<any>([])
 const patientProfile = ref()
 const selectedSubAccountId = ref()
-
-getMyProfileImages(route.params.patientId as string)
-  .then((res) => (patientImages.value = res))
-  .catch((error) => console.error(error))
 
 getPatient(route.params.patientId as string)
   .then((res) => (patientProfile.value = res))
@@ -122,7 +112,7 @@ function handleSubAccount(selectedSubAccount: string) {
     </div>
     <div class="flex py-8 pb-24 gap-x-6 flex-col lg:flex-row">
       <!-- Left Side -->
-      <div class="flex flex-col lg:w-1/2 relative z-10">
+      <div class="flex flex-col lg:w-1/3 relative z-10">
         <BaseTab
           class="absolute -top-6"
           @selected-patient-id="(selectedSubAccount) => handleSubAccount(selectedSubAccount)"
@@ -135,7 +125,7 @@ function handleSubAccount(selectedSubAccount: string) {
       </div>
 
       <!-- Right Side (Treatment history & @photo-uploaded="isPhotoUploaded = true") -->
-      <div class="lg:w-1/2 rounded-[8px] flex flex-col z-0 mt-4 lg:mt-0">
+      <div class="lg:w-2/3 rounded-[8px] flex flex-col z-0 mt-4 lg:mt-0">
         <div class="bg-white flex px-8 gap-x-6 shadow-sm">
           <div
             @click="treatmentHistoryOrDocumentsSelected = 'Treatment History'"
@@ -150,20 +140,6 @@ function handleSubAccount(selectedSubAccount: string) {
             :class="[treatmentHistoryOrDocumentsSelected === 'Documents' ? 'text-honeydew-purple border-b-2 border-b-honeydew-purple' : '']"
           >
             Documents
-          </div>
-          <div
-            @click="treatmentHistoryOrDocumentsSelected = 'Images'"
-            class="py-6 cursor-pointer"
-            :class="[treatmentHistoryOrDocumentsSelected === 'Images' ? 'text-honeydew-purple border-b-2 border-b-honeydew-purple' : '']"
-          >
-            Images
-          </div>
-          <div
-            @click="treatmentHistoryOrDocumentsSelected = 'Notes'"
-            class="py-6 cursor-pointer"
-            :class="[treatmentHistoryOrDocumentsSelected === 'Notes' ? 'text-honeydew-purple border-b-2 border-b-honeydew-purple' : '']"
-          >
-            Notes
           </div>
         </div>
 
@@ -183,7 +159,7 @@ function handleSubAccount(selectedSubAccount: string) {
                 <div @click="handleOpen(medicalItem.medicalTitle)" class="flex justify-start cursor-pointer text-[18px] font-[500] mb-[16px]">
                   <div
                     class="transition flex justify-center items-center mr-[12px] z-0"
-                    :class="[isOpen.includes(medicalItem.medicalTitle) ? '' : '-rotate-90']"
+                    :class="[!isOpen.includes(medicalItem.medicalTitle) ? '' : '-rotate-90']"
                   >
                     <img :src="CaretIcon" alt="Caret Icon" />
                   </div>
@@ -242,67 +218,27 @@ function handleSubAccount(selectedSubAccount: string) {
             </BaseModal>
             <div @click="profileStore.handleBloodSlipForm" class="hover:text-honeydew-purple cursor-pointer transition mt-1">Create a form</div>
           </div>
-          <div class="flex bg-red">
-            <div v-for="(image, idx) in patientImages?.images" :key="idx" class="p-2 w-1/2">
-              <img class="object-cover h-48 w-48" :src="image.path" :alt="image.fileName" />
-            </div>
-          </div>
         </div>
 
-        <!-- Images -->
-        <div v-if="treatmentHistoryOrDocumentsSelected === 'Images'" class="p-8 flex w-full justify-between relative flex-col">
-          <div class="flex w-full justify-between">
-            <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Images</h1>
-            <img @click="documentModalMenuOpen = !documentModalMenuOpen" class="hover:opacity-50 cursor-pointer" :src="PlusCircleIcon" alt="Plus Circle Icon" />
+        <div class="px-8 flex gap-x-8">
+          <div>
+            <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Patient Images</h1>
+            <BasePatientImages />
           </div>
-          <div class="absolute right-8 mt-10 bg-white p-4 rounded-[12px] border border-[#F2F4F7]" v-if="documentModalMenuOpen">
-            <BaseModal>
-              <template #header> Upload an image </template>
-              <template #content>
-                <div class="p-6 mx-6 rounded-xl shadow-sm bg-white mt-6">
-                  <div
-                    class="border border-[#F2F4F7] p-20 rounded-xl flex justify-center items-center flex-col w-[450px]"
-                    @dragover.prevent="dragging = true"
-                    @dragleave="dragging = false"
-                    @drop="handleDrop"
-                  >
-                    <img :src="UploadIcon" alt="Upload Icon" />
-                    <label for="fileInput" class="text-center relative cursor-pointer mt-2">
-                      <p>Choose a photo</p>
-                    </label>
-                    <input id="fileInput" type="file" @change="handleFileSelect" class="hidden" />
-                    <p class="text-[#6C6A7C]">{{ dragging ? 'You can drop it' : 'or drag it here' }}</p>
-                    <img v-if="previewURL" class="rounded-xl h-[320px]" :src="previewURL" alt="Photo Preview" />
-                  </div>
-                </div>
-              </template>
-              <template #button>
-                <div class="hover:text-honeydew-purple cursor-pointer transition">Upload Image</div>
-              </template>
-              <template #button-text> Next </template>
-            </BaseModal>
-          </div>
-          <div class="flex bg-red">
-            <div v-for="(image, idx) in patientImages?.images" :key="idx" class="p-2 w-1/2">
-              <img class="object-cover h-48 w-48" :src="image.path" :alt="image.fileName" />
+          <div class="flex flex-col">
+            <div class="flex w-full justify-between mb-4">
+              <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Notes</h1>
             </div>
-          </div>
-        </div>
-
-        <!-- Notes -->
-        <div v-if="treatmentHistoryOrDocumentsSelected === 'Notes'" class="p-8 flex w-full justify-between relative flex-col">
-          <div class="flex w-full justify-between mb-4">
-            <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Notes</h1>
-          </div>
-          <div class="flex items-center w-1/2 my-4">
-            <div class="bg-white flex px-2 pr-3 py-2 rounded-md w-full justify-between shadow-sm">
-              <input class="bg-white w-full text-start outline-none focus:outline-none focus:ring-0" placeholder="Input Note Here" type="text" />
-              <img class="cursor-pointer hover:opacity-50 transition active:scale-90" :src="SendButton" alt="Send Button" />
+            <div class="flex items-center w-full my-4">
+              <div class="bg-white flex px-2 pr-3 py-2 rounded-md w-full justify-between shadow-sm">
+                <input class="bg-white w-full text-start outline-none focus:outline-none focus:ring-0" placeholder="Input Note Here" type="text" />
+                <img class="cursor-pointer hover:opacity-50 transition active:scale-90" :src="SendButton" alt="Send Button" />
+              </div>
             </div>
-          </div>
-          <div class="bg-[#f0f5fe] w-1/2 p-4 rounded-2xl text-[14px] text-[#403E48]">
-            <div>{noteContent}</div>
-            <div class="text-[#6C6A7C] mt-4 text-xs">{noteMadeByThisPerson} on {noteCreatedOnThisDate}</div>
+            <div class="bg-[#f0f5fe] w-full p-4 rounded-2xl text-[14px] text-[#403E48]">
+              <div>{noteContent}</div>
+              <div class="text-[#6C6A7C] mt-4 text-xs">{noteMadeByThisPerson} on {noteCreatedOnThisDate}</div>
+            </div>
           </div>
         </div>
       </div>

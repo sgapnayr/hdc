@@ -49,7 +49,7 @@ console.log('UserImages in ')
 </script>
 
 <template>
-  <div class="p-8">
+  <div class="p-8 bg-honeydew-bg2 min-h-screen">
     <BaseWrapper>
       <img :src="HoneydewIcon" />
       <!-- Patient's Information -->
@@ -105,19 +105,7 @@ console.log('UserImages in ')
       <!-- Visit details -->
       <div class="mt-8">
         <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Visit details</h1>
-        <div>{visitDate}</div>
-        <div>Photos</div>
-        <div class="flex gap-x-4">
-          <ul>
-            {{
-              userImages
-            }}
-            <li v-for="(file, index) in userImages" :key="index">
-              <img :src="file.path" alt="File" width="100" height="100" />
-              {{ file.fileName }}
-            </li>
-          </ul>
-        </div>
+        <BasePatientImages />
       </div>
     </BaseWrapper>
   </div>

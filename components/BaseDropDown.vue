@@ -12,6 +12,8 @@ const emit = defineEmits<{
 const props = defineProps<{
   options?: string[]
   titleText?: string
+  customClass?: string
+  placeHolder?: string
 }>()
 
 // STATE **********************************************************************
@@ -27,7 +29,7 @@ function handleSelectedOption(option: string) {
 
 <template>
   <div class="w-[390px]" :class="[isMenuOpen ? 'z-40' : 'z-0']">
-    <h2 class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">{{ titleText || 'Date' }}</h2>
+    <h2 :class="customClass" class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">{{ titleText || 'Date' }}</h2>
     <div
       class="bg-white md:w-full h-[48px] mb-[24px] border border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
       :class="[isMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
@@ -36,7 +38,7 @@ function handleSelectedOption(option: string) {
       @click.stop="isMenuOpen = !isMenuOpen"
     >
       <div class="px-4 py-1 rounded-[24px]">
-        {{ selectedOption || 'Select' }}
+        {{ selectedOption || placeHolder || 'Select' }}
       </div>
       <img :class="[isMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
       <div v-if="isMenuOpen">

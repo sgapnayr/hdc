@@ -1,14 +1,12 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
 import { ref } from 'vue'
-import ChevronIcon from '@/assets/icons/chevron-icon.svg'
 import ChevronIcon2 from '@/assets/icons/chevron-down-icon.svg'
-import BlueIcon from '@/assets/icons/blue-icon.svg'
-import UploadIcon from '@/assets/icons/upload-icon.svg'
 import { useProfileStore } from '~/stores/profile'
 import { usePatientStore } from '~/stores/patient'
 import { updatePatient } from '../lib/endpoints'
 import { useRoute } from 'vue-router'
+import { vMaska } from 'maska'
 
 // EMITS ****************************************************************
 const emit = defineEmits(['close-modal'])
@@ -23,9 +21,9 @@ const route = useRoute()
 const photo = ref()
 const previewURL = ref()
 const dragging = ref(false)
-const isChecked = ref(false)
 
-const signName = ref()
+const feet = ref()
+const inches = ref()
 
 const updatePatientFirstName = ref(profileStore.profileData?.patientFirstName)
 const updatePatientLastName = ref(profileStore.profileData?.patientLastName)
@@ -34,16 +32,14 @@ const updatePatientEmailAddress = ref(patientStore.patientData?.patientEmail)
 const updatePatientHeight = ref(patientStore.patientData?.patientHeight)
 const updatePatientWeight = ref(patientStore.patientData?.patientWeight)
 const updatePatientAddress = ref(patientStore.patientData?.patientAddress)
-const updatePatientCountry = ref()
-const updatePatientPostalCode = ref()
-const updatePatientCity = ref()
-const updatePatientStreetAddress = ref()
-const updatePatientsParentFullName = ref()
-const updatePatientsParentPhoneNumber = ref()
 const updatePatientDOB = ref(patientStore.patientData?.patientDOB)
 const updatePatientSex = ref(patientStore?.patientData?.patientSex)
 
 // METHODS ********************************************************************
+const computeHeightInInches = computed(() => {
+  return Number(feet.value * 12) + Number(inches.value)
+})
+
 const handleFileSelect = (e: any) => {
   const file = e.target.files[0]
   if (file) {
@@ -76,8 +72,7 @@ const updateProfileChanges = async () => {
     updatePatientFirstName.value,
     updatePatientLastName.value,
     updatePatientWeight.value,
-    updatePatientHeight.value,
-    updatePatientEmailAddress.value,
+    computeHeightInInches.value,
     updatePatientDOB.value,
     updatePatientSex.value,
     updatePatientAddress.value
@@ -144,38 +139,63 @@ const updateProfileChanges = async () => {
             <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Phone Number</p>
             <input
               v-model="updatePatientPhoneNumber"
+              v-maska
+              :data-maska="['+' + '1' + ' (###) ###-####']"
               :placeholder="profileStore.signUpName || 'Enter your phone number'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Email Address</p>
+            <!-- <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Email Address</p>
             <input
               v-model="updatePatientEmailAddress"
               :placeholder="profileStore.signUpName || 'Enter your email address'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
-            />
-            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Height</p>
+            /> -->
+            <p class="mt-4 px-4 uppercase text-sm text-[#403E48]">HEIGHT</p>
+            <div class="flex gap-x-5">
+              <div class="flex items-center">
+                <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Feet</p>
+                <input
+                  v-maska
+                  :data-maska="['#']"
+                  v-model="feet"
+                  :placeholder="profileStore.signUpName || 'Enter your height in feet'"
+                  class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
+                />
+              </div>
+              <div class="flex items-center">
+                <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Inches</p>
+                <input
+                  v-maska
+                  :data-maska="['##']"
+                  v-model="inches"
+                  :placeholder="profileStore.signUpName || 'Enter your height in inches'"
+                  class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
+                />
+              </div>
+            </div>
+
+            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Weight (in lbs)</p>
             <input
-              v-model="updatePatientHeight"
-              :placeholder="profileStore.signUpName || 'Enter your height in inches'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
-            />
-            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Weight</p>
-            <input
+              v-maska
+              :data-maska="['###']"
               v-model="updatePatientWeight"
               :placeholder="profileStore.signUpName || 'Enter your weight in lbs'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
             <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Date of Birth</p>
             <input
+              v-maska
+              :data-maska="['##/##/####']"
               v-model="updatePatientDOB"
-              :placeholder="profileStore.signUpName || 'Enter your age'"
+              :placeholder="profileStore.signUpName || 'Enter your DOB'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Sex Assigned at Birth</p>
-            <input
-              v-model="updatePatientSex"
-              :placeholder="profileStore.signUpName || 'Enter your age'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
+            <BaseDropDown
+              :placeHolder="patientStore?.patientData?.patientSex"
+              @selected-option="(val) => (updatePatientSex = val)"
+              custom-class="px-4 text-sm mt-2"
+              title-text="Sex Assigned at Birth"
+              :options="['Male', 'Female']"
             />
           </div>
         </div>
@@ -189,54 +209,12 @@ const updateProfileChanges = async () => {
               :placeholder="profileStore.signUpName || '123 Main St. City, ST, 12345'"
               class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
             />
-            <!-- <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Postal Code</p>
-            <input
-              v-model="updatePatientPostalCode"
-              :placeholder="profileStore.signUpName || 'Enter your zip code'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
-            />
-            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">CITY</p>
-            <input
-              v-model="updatePatientCity"
-              :placeholder="profileStore.signUpName || 'Enter your city'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
-            />
-            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">STREET, APT.</p>
-            <input
-              v-model="updatePatientStreetAddress"
-              :placeholder="profileStore.signUpName || 'Enter your street address'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
-            /> -->
           </div>
         </div>
-        <!-- Parent's contact information -->
-        <!-- <div class="p-6 flex flex-col border-b border-[#F2F4F7]">
-          <div class="mb-3 text-xl w-full">Parent's contact information</div>
-          <div class="w-full">
-            <p class="mb-2 px-4 uppercase text-sm text-[#403E48]">Full name</p>
-            <input
-              v-model="updatePatientsParentFullName"
-              :placeholder="profileStore.signUpName || 'Enter your parent\'s full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
-            />
-            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Phone Number</p>
-            <input
-              v-model="updatePatientsParentPhoneNumber"
-              :placeholder="profileStore.signUpName || 'Enter your parent\'s phone number'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
-            />
-            <p class="mb-2 mt-4 px-4 uppercase text-sm text-[#403E48]">Email Address</p>
-            <input
-              v-model="signName"
-              :placeholder="profileStore.signUpName || 'Enter your full name'"
-              class="border border-[#E1E0E6] bg-[#F9F9FA] rounded-full h-[44px] w-full px-4"
-            />
-          </div>
-        </div> -->
       </div>
       <button
         @click="updateProfileChanges"
-        class="w-[150px] rounded-full text-white p-3 text-center cursor-pointer transition active:scale-90 text-xs mx-6 mt-6 bg-honeydew-purple"
+        class="w-[150px] rounded-full text-white p-3 text-center cursor-pointer transition text-xs mx-6 mt-6 bg-honeydew-purple"
       >
         SAVE CHANGES
       </button>
