@@ -35,7 +35,7 @@ const inches = ref(inchesVal.value)
 
 const updatePatientFirstName = ref(profileStore.profileData?.patientFirstName)
 const updatePatientLastName = ref(profileStore.profileData?.patientLastName)
-const updatePatientPhoneNumber = ref()
+const updatePatientPhoneNumber = ref(profileStore.profileData?.patientPhoneNumber)
 const updatePatientWeight = ref(patientStore.patientData?.patientWeight)
 const updatePatientAddress = ref(patientStore.patientData?.patientAddress)
 const updatePatientDOB = ref(patientStore.patientData?.patientDOB)
