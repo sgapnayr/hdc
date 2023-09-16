@@ -78,6 +78,7 @@ const updateProfileChanges = async () => {
     updatePatientFirstName.value,
     updatePatientLastName.value,
     updatePatientWeight.value,
+    updatePatientPhoneNumber.value,
     computeHeightInInches.value,
     updatePatientDOB.value,
     updatePatientSex.value,
