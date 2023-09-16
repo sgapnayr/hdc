@@ -61,7 +61,6 @@ export const useProfileStore = defineStore('profile', () => {
   async function setMyProfile(userId?: string) {
     try {
       const response = await getMyProfile(userId)
-      console.log('set profile in profile store', response)
       profileData.value = response
     } catch (error) {
       console.error('Error retrieving employees:', error)

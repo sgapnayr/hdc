@@ -326,6 +326,7 @@ watch(
           </p>
           <BaseInput v-model="currentSelectedAnswer" p-input-type="verify" type="text" class="w-full" />
           <BaseButton :state="buttonLoadingState" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
+          <BaseButton @click="router.push('/profile')" class="w-full mt-[16px]">Skip For Now</BaseButton>
         </div>
 
         <!-- Add Payment Question -->

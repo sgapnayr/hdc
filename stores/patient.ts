@@ -7,6 +7,7 @@ import gql from 'graphql-tag'
 export const usePatientStore = defineStore('patient', () => {
   const allPatients = ref()
   const patientData = ref()
+  const currentPatientId = ref()
 
   // GETTERS ****************************************************************
   async function getPatientsFromGraphQL() {
@@ -41,7 +42,6 @@ export const usePatientStore = defineStore('patient', () => {
         const subAccounts = response.subAccounts
         const actionItems = response.actionItems
         const insurance = response.patientProfile.healthInsurance
-        console.log('IN STORE PATIENT INSURANCE')
 
         const frontendPatient = {
           patientId: patientId || 'patientId',
@@ -67,7 +67,6 @@ export const usePatientStore = defineStore('patient', () => {
         }
 
         patientData.value = frontendPatient
-        console.log(frontendPatient, 'FRONTEND PATIENT')
       } else {
         console.error('No patient profile found')
       }
@@ -77,7 +76,6 @@ export const usePatientStore = defineStore('patient', () => {
   }
 
   async function updateInsuranceGraphQL(patientId: string, groupNumber: string, memberId: string, insuranceName: string, policyHolderName: string) {
-    console.log('RUNNING ')
     try {
       const response = await updateInsurance(patientId, groupNumber, memberId, insuranceName, policyHolderName)
       console.log(response)
@@ -86,5 +84,5 @@ export const usePatientStore = defineStore('patient', () => {
     }
   }
 
-  return { allPatients, patientData, getPatientFromGraphQL, getPatientsFromGraphQL, getPatient, updateInsuranceGraphQL }
+  return { allPatients, patientData, getPatientFromGraphQL, getPatientsFromGraphQL, getPatient, updateInsuranceGraphQL, currentPatientId }
 })

@@ -70,7 +70,10 @@ watch(patientLastConfirmationDate, (newDate) => {
 })
 
 tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
-patientStore.getPatient(route.params.patientId as string)
+
+watch(patientStore.currentPatientId, () => {
+  patientStore.getPatient(patientStore.currentPatientId as string)
+})
 </script>
 
 <template>
@@ -250,37 +253,41 @@ patientStore.getPatient(route.params.patientId as string)
         <div class="flex w-full justify-between px-8">
           <div>iPledge details</div>
           <div class="flex gap-x-2">
-            <BaseModal :no-shadow="true" @action-click="handleUpdateInsurance">
-              <template #header>
-                <div>iPledge Details</div>
-              </template>
-              <template #content>
-                <div class="min-w-[380px]">
-                  <div class="mb-[10px] px-2 uppercase text-[12px] font-[500] text-[#313337]">REMS Number</div>
-                  <input
-                    class="rounded-[80px] border border-[#E4E7EC] h-[48px] w-full"
-                    v-model="healthInsuranceName"
-                    type="text"
-                    placeholder="Enter REMS Number"
-                  />
-                </div>
-              </template>
-              <template #button>
-                <div class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
-                  <img :src="PencilIcon" alt="Pencil Icon" />
-                </div>
-              </template>
-              <template #button-text> Submit </template>
-            </BaseModal>
             <img :class="[!selectedItem.includes('iPledge details') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" class="opacity-0" />
           </div>
         </div>
         <!-- Patient Pregnancy Status -->
-        <div v-if="!selectedItem.includes('iPledge details')" class="px-8">
-          <div class="mt-[24px] mb-[16px] text-gray-3 font-[500]">{patientCanOrCannotGetPregnant}</div>
+        <div v-if="!selectedItem.includes('iPledge details')" class="px-8 pt-[24px]">
+          <div v-if="patientStore?.patientData?.patientSex === 'Female'" class="text-gray-3 font-[500] flex w-full justify-between mb-[32px] text-sm">
+            <div class="text-honeydew-purple">PATIENT CAN GET PREGNANT</div>
+          </div>
           <!-- Service Details -->
           <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
-            <div>REMS number</div>
+            <div class="flex items-center gap-x-2">
+              REMS number
+              <BaseModal :no-shadow="true" @action-click="handleUpdateInsurance">
+                <template #header>
+                  <div>iPledge Details</div>
+                </template>
+                <template #content>
+                  <div class="min-w-[380px]">
+                    <div class="mb-[10px] px-2 uppercase text-[12px] font-[500] text-[#313337]">REMS Number</div>
+                    <input
+                      class="rounded-[80px] border border-[#E4E7EC] h-[48px] w-full"
+                      v-model="healthInsuranceName"
+                      type="text"
+                      placeholder="Enter REMS Number"
+                    />
+                  </div>
+                </template>
+                <template #button>
+                  <div class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
+                    <img :src="PencilIcon" alt="Pencil Icon" />
+                  </div>
+                </template>
+                <template #button-text> Submit </template>
+              </BaseModal>
+            </div>
             <div>{remsNumber}</div>
           </div>
           <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
@@ -290,7 +297,13 @@ patientStore.getPatient(route.params.patientId as string)
           <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
             <div>Last confirmation date</div>
             <div class="w-1/2 flex">
-              <VueDatePicker v-model="patientLastConfirmationDate" auto-apply :close-on-auto-apply="false" :hide-navigation="['time']" />
+              <VueDatePicker
+                :time-picker-inline="false"
+                v-model="patientLastConfirmationDate"
+                auto-apply
+                :close-on-auto-apply="false"
+                :hide-navigation="['time']"
+              />
             </div>
           </div>
           <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
@@ -375,16 +388,10 @@ patientStore.getPatient(route.params.patientId as string)
     <div v-if="toDoListOrDetailsSelected === 'Care Team'" class="py-6 px-8 flex flex-col gap-y-4">
       <!-- Fan tabs -->
       <div class="p-4 bg-[#FCFCFD] rounded-[12px] border border-[#F2F4F7] flex justify-between cursor-pointer boxShadow">
-        <div>Parent's contact information</div>
-        <img :src="ChevronDownIcon" alt="Chevron Down Icon" />
-      </div>
-      <div class="p-4 bg-[#FCFCFD] rounded-[12px] border border-[#F2F4F7] flex justify-between cursor-pointer boxShadow">
-        <div>Shipping address</div>
-        <img :src="ChevronDownIcon" alt="Chevron Down Icon" />
-      </div>
-      <div class="p-4 bg-[#FCFCFD] rounded-[12px] border border-[#F2F4F7] flex justify-between cursor-pointer boxShadow">
-        <div>Health insurance</div>
-        <img :src="ChevronDownIcon" alt="Chevron Down Icon" />
+        <div class="flex gap-x-2 items-center">
+          <div class="w-10 h-10 bg-honeydew-purple2 rounded-full"></div>
+          <div>{provider}</div>
+        </div>
       </div>
     </div>
   </div>

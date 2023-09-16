@@ -84,8 +84,10 @@ const updateProfileChanges = async () => {
     updatePatientAddress.value
   )
 
-  patientStore.getPatientFromGraphQL(route.params.patientId as string)
-  profileStore.setMyProfile(route.params.patientId as string)
+  watch(patientStore?.currentPatientId, () => {
+    patientStore.getPatientFromGraphQL(patientStore?.currentPatientId)
+  })
+
   setTimeout(() => {
     emit('close-modal')
   }, 100)

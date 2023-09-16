@@ -73,15 +73,6 @@ const generatePreview = (file: any) => {
 const uploadPhoto = async () => {
   const formData = new FormData()
   formData.append('photo', photo.value)
-
-  // try {
-  //   const response = await axios.post('/api/upload', formData, {
-  //     headers: { 'Content-Type': 'multipart/form-data' },
-  //   })
-  //   console.log(response.data)
-  // } catch (error) {
-  //   console.error(error)
-  // }
 }
 
 const patientProfile = ref()
@@ -100,6 +91,8 @@ profileStore.setMyProfile(route.params.patientId as string)
 function handleSubAccount(selectedSubAccount: string) {
   selectedSubAccountId.value = selectedSubAccount
   navigateTo('/view-history/' + selectedSubAccount)
+  patientStore.currentPatientId = selectedSubAccount
+  profileStore.setMyProfile(patientStore.currentPatientId as string)
 }
 </script>
 
