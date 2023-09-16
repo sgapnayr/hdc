@@ -78,7 +78,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
     <div class="p-8">
       <!-- Patient Photo -->
       <div class="flex w-full justify-between">
-        <img class="w-[90px]" :src="NotesImage" alt="Notes image" />
+        <img class="w-[90px] h-[70px]" :src="NotesImage" alt="Notes image" />
         <div class="flex gap-x-[12px]">
           <div
             @click="profileStore.handlePatientDetailsForm"
@@ -97,7 +97,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
 
       <!-- Patient Info -->
       <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">
-        {{ profileStore.profileData?.patientFirstName }} {{ profileStore.profileData?.patientLastName }}
+        {{ profileStore.profileData?.patientFirstName || 'Loading...' }} {{ profileStore.profileData?.patientLastName }}
       </h1>
       <div class="mt-[8px] w-3/4 flex flex-wrap items-center">
         <p class="text-[16px] text-gray-5 font-[400]">{{ patientStore?.patientData?.patientSex }}</p>
