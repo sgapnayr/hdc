@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
 import { ref, computed } from 'vue'
-import { getTaskByAssignee } from '~/lib/endpoints'
+import { getPatient, getTaskByAssignee } from '~/lib/endpoints'
+import { usePatientStore } from '../stores/patient'
 
 // PROPS **********************************************************************
 const props = defineProps<{
@@ -17,11 +18,14 @@ const emit = defineEmits<{
 }>()
 
 // STATE **********************************************************************
-const selectedTabIdx = ref(0)
+const selectedTab = ref(0)
+const patientName = ref()
+
+const patientStore = usePatientStore()
 
 // METHOD **********************************************************************
 function handleSelectedTab(tabIdx: number, tab: any) {
-  selectedTabIdx.value = tabIdx
+  selectedTab.value = tabIdx
   const selectedVal = props.tabs[tabIdx]
 
   emit('selected-patient-id', tab?.subAccountId)
@@ -32,15 +36,15 @@ function handleMainAccount(mainAccountId: string) {
 }
 
 const mainAccountId = computed(() => {
-  return props?.tabs?.map((tab) => tab.subAccountId.slice(0, tab.subAccountId.length - 2))[0]
+  return props?.tabs?.map((tab) => tab?.subAccountId?.split('-'))[0]
 })
 </script>
 
 <template>
   <div class="flex w-full overflow-x-scroll">
     <div
-      @click="props?.tabs?.map((tab) => tab.subAccountId).length > 0 ? handleMainAccount(mainAccountId) : ''"
-      :class="['mx-[1px]', mainAccountId === highlighSubAccount ? 'opacity-100' : 'opacity-50']"
+      @click="handleMainAccount(patientStore?.currentPrimaryAccountData?.patientId)"
+      :class="['mx-[1px]', patientStore?.currentPrimaryAccountData?.patientId === highlighSubAccount ? 'opacity-100' : 'opacity-50']"
       class="px-4 py-1 bg-white rounded-t-2xl drop-shadow-sm text-sm cursor-pointer"
     >
       Primary
@@ -49,9 +53,9 @@ const mainAccountId = computed(() => {
       @click="handleSelectedTab(idx, tab)"
       :class="[idx !== 0 ? 'mx-[1px]' : '', tab.subAccountId === highlighSubAccount ? 'opacity-100' : 'opacity-50']"
       class="px-4 py-1 bg-white rounded-t-2xl drop-shadow-sm text-sm cursor-pointer"
-      v-for="(tab, idx) in tabs"
+      v-for="(tab, idx) in patientStore?.currentPrimaryAccountData?.subAccounts"
     >
-      {{ tab?.subAccountName }}
+      {{ tab.subAccountName }}
     </div>
   </div>
 </template>

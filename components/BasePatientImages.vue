@@ -3,6 +3,7 @@
 import { ref } from 'vue'
 import { getMyProfileImages } from '../lib/endpoints'
 import { useProfileStore } from '../stores/profile'
+import { usePatientStore } from '../stores/patient'
 import ChevronIcon from '../assets/icons/chevron-icon.svg'
 
 // LAYOUT **********************************************************************
@@ -13,6 +14,7 @@ definePageMeta({
 
 // STORE **********************************************************************
 const profileStore = useProfileStore()
+const patientStore = usePatientStore()
 
 // ROUTER **********************************************************************
 const route = useRoute()
@@ -22,7 +24,7 @@ const router = useRouter()
 const patientImages = ref()
 
 // INITIALIZATION *************************************************************
-getMyProfileImages(route.params.patientId as string)
+getMyProfileImages(patientStore.currentPatientId || (route.params.patientId as string))
   .then((res) => (patientImages.value = res))
   .catch((error) => console.error(error))
 </script>

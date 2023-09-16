@@ -70,10 +70,6 @@ watch(patientLastConfirmationDate, (newDate) => {
 })
 
 tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
-
-watch(patientStore.currentPatientId, () => {
-  patientStore.getPatient(patientStore.currentPatientId as string)
-})
 </script>
 
 <template>

@@ -70,23 +70,11 @@ const generatePreview = (file: any) => {
   reader.readAsDataURL(file)
 }
 
-const uploadPhoto = async () => {
-  const formData = new FormData()
-  formData.append('photo', photo.value)
-}
-
-const patientProfile = ref()
 const selectedSubAccountId = ref()
-
-getPatient(route.params.patientId as string)
-  .then((res) => (patientProfile.value = res))
-  .catch((error) => console.error(error))
 
 tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 
 appointmentsStore.getAllAppointments()
-profileStore.setMyProfile()
-profileStore.setMyProfile(route.params.patientId as string)
 
 function handleSubAccount(selectedSubAccount: string) {
   selectedSubAccountId.value = selectedSubAccount

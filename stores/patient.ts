@@ -1,13 +1,15 @@
 import { defineStore } from 'pinia'
 import { getPatients, getPatient, updateInsurance } from '@/lib/endpoints'
-import { Patient, Patients } from '@/types/patient-types'
-import { API, graphqlOperation } from 'aws-amplify'
-import gql from 'graphql-tag'
 
 export const usePatientStore = defineStore('patient', () => {
   const allPatients = ref()
   const patientData = ref()
   const currentPatientId = ref()
+  const currentPrimaryAccountData = ref()
+
+  watch(currentPatientId, () => {
+    getPatientFromGraphQL(currentPatientId.value)
+  })
 
   // GETTERS ****************************************************************
   async function getPatientsFromGraphQL() {
@@ -33,7 +35,6 @@ export const usePatientStore = defineStore('patient', () => {
   }
 
   async function getPatientFromGraphQL(patientId: string) {
-    console.log(patientId)
     try {
       const response = await getPatient(patientId)
 
@@ -66,6 +67,10 @@ export const usePatientStore = defineStore('patient', () => {
           insurance: insurance || 'insurance',
         }
 
+        if (!currentPrimaryAccountData.value) {
+          currentPrimaryAccountData.value = frontendPatient
+        }
+
         patientData.value = frontendPatient
       } else {
         console.error('No patient profile found')
@@ -84,5 +89,14 @@ export const usePatientStore = defineStore('patient', () => {
     }
   }
 
-  return { allPatients, patientData, getPatientFromGraphQL, getPatientsFromGraphQL, getPatient, updateInsuranceGraphQL, currentPatientId }
+  return {
+    allPatients,
+    patientData,
+    getPatientFromGraphQL,
+    getPatientsFromGraphQL,
+    getPatient,
+    updateInsuranceGraphQL,
+    currentPatientId,
+    currentPrimaryAccountData,
+  }
 })
