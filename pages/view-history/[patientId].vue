@@ -73,7 +73,6 @@ const generatePreview = (file: any) => {
 const selectedSubAccountId = ref()
 
 tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
-
 appointmentsStore.getAllAppointments()
 
 function handleSubAccount(selectedSubAccount: string) {
@@ -82,6 +81,14 @@ function handleSubAccount(selectedSubAccount: string) {
   patientStore.currentPatientId = selectedSubAccount
   profileStore.setMyProfile(patientStore.currentPatientId as string)
 }
+
+watch(patientStore.currentPatientId, () => {
+  profileStore.setMyProfile(patientStore.currentPatientId as string)
+  patientStore.getPatientFromGraphQL(patientStore.currentPatientId as string)
+})
+
+profileStore.setMyProfile((patientStore.currentPatientId as string) || (route.params.patientId as string))
+patientStore.getPatientFromGraphQL((patientStore.currentPatientId as string) || (route.params.patientId as string))
 </script>
 
 <template>
@@ -215,4 +222,3 @@ function handleSubAccount(selectedSubAccount: string) {
     </div>
   </BaseWrapper>
 </template>
-``

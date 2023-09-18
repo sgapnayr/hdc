@@ -26,6 +26,7 @@ const secondCurrentSelectedAnswer = ref<string>()
 const thirdCurrentSelectedAnswer = ref<string | boolean>()
 const fourthCurrentSelectedAnswer = ref<string | boolean>()
 const buttonLoadingState = ref<'idle' | 'loading' | 'failed' | 'success' | 'disabled'>('idle')
+const isSigningUpChild = ref<boolean>(false)
 
 // SIGN UP QUESTIONS ********************************************************************
 const signUpQuestions = [
@@ -50,7 +51,13 @@ async function handleAnswerSubmitValidation() {
   if (currentQuestionIdx.value === 0) {
     if (!currentSelectedAnswer.value) return
     profileStore.signUpDescribeYouAnswer = currentSelectedAnswer.value
-    currentQuestionIdx.value = 1
+    if (currentSelectedAnswer.value === "I'm signing up myself") {
+      isSigningUpChild.value = false
+      currentQuestionIdx.value = 1
+    } else {
+      isSigningUpChild.value = true
+      currentQuestionIdx.value = 2
+    }
     currentSelectedAnswer.value = ''
     return
   }
@@ -260,7 +267,11 @@ watch(
 
         <!-- What Is Your Name Question -->
         <div v-if="currentQuestionIdx === 2">
-          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Great, what is your name?</h1>
+          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">
+            Great, what is your
+            <span v-if="isSigningUpChild">child's</span>
+            full name?
+          </h1>
           <p class="mb-[32px] font-[400] text-gray-5 w-full text-start">Please, enter your full name</p>
           <BaseInput v-model="currentSelectedAnswer" type="text" />
           <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>

@@ -2,6 +2,15 @@
 // IMPORTS ********************************************************************
 import SendButton from '@/assets/icons/send-button.svg'
 
+// TYPE *************************************************************
+type NoteInput = {
+  text: string
+  type: string
+  patientId: string
+}
+
+// TODO: RYAN CREATE NOTE INPUT
+
 // INITIALIZATION *************************************************************
 </script>
 

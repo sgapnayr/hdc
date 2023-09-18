@@ -100,10 +100,6 @@ function isAppointmentMissed(appointmentDate: string) {
 
 profileStore.setMyProfile()
 patientStore.getPatientFromGraphQL(route.params.patientId as string)
-// patientStore.getPatientFromGraphQL(route.params.patientId as string).then((patient) => {
-//   patientData.value = patient
-// })
-// tasksStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 appointmentsStore.getAllAppointments()
 
 function formatDate(unixTimestamp: any) {

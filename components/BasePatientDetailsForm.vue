@@ -33,9 +33,9 @@ const inchesVal = computed(() => {
 const feet = ref(feetVal.value)
 const inches = ref(inchesVal.value)
 
-const updatePatientFirstName = ref(profileStore.profileData?.patientFirstName)
-const updatePatientLastName = ref(profileStore.profileData?.patientLastName)
-const updatePatientPhoneNumber = ref(profileStore.profileData?.patientPhoneNumber)
+const updatePatientFirstName = ref(patientStore.patientData?.patientFirstName)
+const updatePatientLastName = ref(patientStore.patientData?.patientLastName)
+const updatePatientPhoneNumber = ref(patientStore.patientData?.patientPhoneNumber)
 const updatePatientWeight = ref(patientStore.patientData?.patientWeight)
 const updatePatientAddress = ref(patientStore.patientData?.patientAddress)
 const updatePatientDOB = ref(patientStore.patientData?.patientDOB)
@@ -73,8 +73,8 @@ const generatePreview = (file: any) => {
 }
 
 const updateProfileChanges = async () => {
-  updatePatient(
-    route.params.patientId,
+  await updatePatient(
+    patientStore.currentPatientId || (route.params.patientId as string),
     updatePatientFirstName.value,
     updatePatientLastName.value,
     updatePatientWeight.value,
@@ -84,6 +84,8 @@ const updateProfileChanges = async () => {
     updatePatientSex.value,
     updatePatientAddress.value
   )
+
+  patientStore.getPatientFromGraphQL(patientStore?.currentPatientId || (route.params.patientId as string))
 
   watch(patientStore?.currentPatientId, () => {
     patientStore.getPatientFromGraphQL(patientStore?.currentPatientId)

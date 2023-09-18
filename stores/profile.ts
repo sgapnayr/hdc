@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { getMyProfile, updateProfile } from '@/lib/endpoints'
+import { usePatientStore } from './patient'
 
 export const useProfileStore = defineStore('profile', () => {
   const isPregnantModalOpen = ref(false)
@@ -56,6 +57,12 @@ export const useProfileStore = defineStore('profile', () => {
   const describeYourSleep = ref<'5 hours or less' | 'Between 6 or 7 hours' | '8+ hours'>()
   const howOftenDoYouConsumeDairy = ref<'Never' | 'A few times a month' | ' A few times a week' | 'A few times a day'>()
   const lastStepLetsSeeYourSkin = ref() // Change to image upload
+
+  const patientStore = usePatientStore()
+
+  watch(patientStore.currentPatientId, () => {
+    setMyProfile(patientStore.currentPatientId)
+  })
 
   // SETTERS ****************************************************************
   async function setMyProfile(userId?: string) {

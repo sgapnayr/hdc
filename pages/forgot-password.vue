@@ -7,6 +7,7 @@ import { useProfileStore } from '~/stores/profile'
 import { useRouter } from 'vue-router'
 import VerifyEmail from '@/assets/images/verify-email.svg'
 import VerifyEmailSuccess from '@/assets/images/verify-email-success.svg'
+import { useAuthenticator } from '@aws-amplify/ui-vue'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -15,6 +16,7 @@ definePageMeta({
 
 // ROUTER **********************************************************************
 const router = useRouter()
+const auth = useAuthenticator()
 
 // STORES *********************************************************************
 const profileStore = useProfileStore()
@@ -22,9 +24,9 @@ const profileStore = useProfileStore()
 // STATE ****************************************************************
 const currentQuestionIdx = ref<number>(0)
 const currentSelectedAnswer = ref<string>()
-const secondCurrentSelectedAnswer = ref<string>()
 const thirdCurrentSelectedAnswer = ref<string>()
 const username = ref()
+const secondCurrentSelectedAnswer = ref<string>(username.value)
 const buttonLoadingState = ref<'idle' | 'loading' | 'failed' | 'success' | 'disabled'>('idle')
 
 // METHODS ********************************************************************
@@ -67,6 +69,8 @@ async function forgotPassword(username: string) {
   buttonLoadingState.value = 'loading'
   try {
     await Auth.forgotPassword(username)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
 
     setTimeout(() => {
       buttonLoadingState.value = 'idle'
@@ -115,12 +119,11 @@ async function forgotPassword(username: string) {
             <img v-if="buttonLoadingState !== 'success'" :src="VerifyEmail" alt="Verify Email" />
             <img v-if="buttonLoadingState === 'success'" :src="VerifyEmailSuccess" alt="Verify Email" />
           </div>
-          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Success!</h1>
+          <h1 class="text-[32px] w-full text-center font-[700] leading-[40px] my-[32px]">Success!</h1>
           <p class="mb-[32px] font-[400] text-gray-5">
             We've sent a verification email to {{ username }}. Please, verify your email address <span class="underline">by entering the code</span> sent to
             your email and <span class="underline">setting a new password</span>.
           </p>
-          <BaseInput v-model="currentSelectedAnswer" p-input-type="text" placeholder="Enter your email here..." type="text" class="w-full" />
           <BaseInput
             v-model="secondCurrentSelectedAnswer"
             p-input-type="password"

@@ -2,19 +2,18 @@
 // IMPORTS ********************************************************************
 import { ref, computed } from 'vue'
 import GroupDoctors from '@/assets/images/group-doctors.svg'
-import BaseWrapper from '~/components/BaseWrapper.vue'
 import SearchIcon from '@/assets/icons/search-icon.svg'
 import DeleteIcon from '@/assets/icons/delete-icon.svg'
 import ArchiveIcon from '@/assets/icons/archive-icon.svg'
 import EyeIcon from '@/assets/icons/eye-icon.svg'
 import ChatIcon from '@/assets/icons/chat-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { Patient, Patients } from '@/types/patient-types'
 import { usePatientStore } from '@/stores/patient'
 import { useProfileStore } from '~/stores/profile'
 import { getMyProfile } from '~/lib/endpoints'
 import { searchPatientByName } from '@/lib/endpoints'
 import debounce from 'lodash.debounce'
+import { useRouter } from 'vue-router'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -26,9 +25,9 @@ const patientStore = usePatientStore()
 const profileStore = useProfileStore()
 
 // ROUTER **********************************************************************
+const router = useRouter()
 const user = useAuthenticator()
 
-console.log(user)
 onMounted(() => {
   const unmountWatcher = watchEffect(() => {
     if (user.authStatus !== 'authenticated') {
@@ -60,7 +59,6 @@ interface TableHeaderCategory {
 const tabSelected = ref<'Active Patients' | 'Inactive Patients'>('Active Patients')
 const selectedChip = ref<Chip>({ text: 'All', amount: 10 })
 const selectedPatient = ref()
-const patientList = ref()
 const pageSize = ref(7)
 const currentPage = ref(0)
 const showNoMedicalMessage = ref(false)
@@ -69,6 +67,9 @@ const showNewMessageMessage = ref(false)
 const hoveredIdx = ref()
 const patients = ref()
 const patientData = ref()
+const patientsToShow = ref([])
+const searchPatientName = ref()
+const patientList = ref([])
 
 const tableHeaderCategories: TableHeaderCategory[] = [
   {
@@ -96,11 +97,11 @@ const handleChipData = computed(() => {
 
 const filterByActiveOrInactive = computed(() => {
   if (tabSelected.value === 'Active Patients') {
-    selectedChip.value = { text: 'All', amount: 0 } // Set selected chip to 'All' for Active Patients
-    return patientStore?.allPatients?.filter((patient: any) => !patient.currentPatientStatus.includes('Inactive'))
+    selectedChip.value = { text: 'All', amount: 0 }
+    return patientStore?.allPatients?.filter((patient: any) => !patient?.currentPatientStatus?.includes('Inactive'))
   } else {
-    selectedChip.value = { text: 'All', amount: 0 } // Set selected chip to 'All' for Inactive Patients
-    return patientStore?.allPatients?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
+    selectedChip.value = { text: 'All', amount: 0 }
+    return patientStore?.allPatients?.filter((patient: any) => patient?.currentPatientStatus?.includes('Inactive'))
   }
 })
 
@@ -108,23 +109,23 @@ const filterBySelectedChip = computed(() => {
   if (selectedChip.value.text === 'All') {
     return filterByActiveOrInactive.value
   } else if (selectedChip.value.text === 'New patients') {
-    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('New Patient'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('New Patient'))
   } else if (selectedChip.value.text === 'Follow-up visits') {
-    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Follow Up'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('Follow Up'))
   } else if (selectedChip.value.text === 'New messages') {
-    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('New Message'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('New Message'))
   } else if (selectedChip.value.text === 'Accutane') {
-    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Accutane'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('Accutane'))
   } else if (selectedChip.value.text === 'Inactive membership') {
-    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('Inactive'))
   } else if (selectedChip.value.text === 'No shows') {
-    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('No Shows'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('No Shows'))
   } else if (selectedChip.value.text === 'Cancelled') {
-    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Cancelled'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('Cancelled'))
   } else if (selectedChip.value.text === 'Archived') {
-    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Archived'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('Archived'))
   } else if (selectedChip.value.text === 'Unscheduled accounts') {
-    return filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Unscheduled'))
+    return filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('Unscheduled'))
   }
 
   return [] // Return an empty array if no matching chip is found
@@ -134,23 +135,16 @@ const totalPages = computed(() => {
   return Math.ceil(filterBySelectedChip.value?.length / pageSize.value)
 })
 
-const pagesData = computed(() => {
-  let start = currentPage.value * pageSize.value
-  let end = (currentPage.value + 1) * pageSize.value
-
-  return filterBySelectedChip.value.slice(start, end)
-})
-
 const totalNewPatients = computed(() => {
-  return patientStore?.allPatients?.map((patient: any) => patient.currentPatientStatus.includes('New Patient'))?.length
+  return patientStore?.allPatients?.map((patient: any) => patient?.currentPatientStatus?.includes('New Patient'))?.length
 })
 
 const totalFollowUps = computed(() => {
-  return patientStore?.allPatients?.filter((patient: any) => patient.currentPatientStatus.includes('Follow Up'))?.length
+  return patientStore?.allPatients?.filter((patient: any) => patient?.currentPatientStatus?.includes('Follow Up'))?.length
 })
 
 const totalNewMessages = computed(() => {
-  return patientStore?.allPatients?.filter((patient: any) => patient.currentPatientStatus.includes('New Message'))?.length
+  return patientStore?.allPatients?.filter((patient: any) => patient?.currentPatientStatus?.includes('New Message'))?.length
 })
 
 // METHODS ****************************************************************
@@ -162,57 +156,66 @@ function handleSelectedPatient(patient: any) {
   selectedPatient.value = patient
 }
 
+async function handleRouteChangeWhenClickingPatient(patientId: string) {
+  patientStore.currentPatientId = patientId
+  await patientStore.getPatientFromGraphQL(patientId)
+  router.push(`/view-history/${patientId}`)
+}
+
 // MEMBER DATA ****************************************************************
 const categoryChips: CategoryChips[] = [
   {
     group: 'Active Patients',
     chips: [
-      { text: 'All', amount: patientStore?.allPatients?.filter((patient: any) => !patient.currentPatientStatus.includes('Inactive'))?.length },
+      { text: 'All', amount: patientStore?.allPatients?.filter((patient: any) => !patient?.currentPatientStatus?.includes('Inactive'))?.length },
       {
         text: 'New patients',
-        amount: filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('New Patient'))?.length,
+        amount: filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('New Patient'))?.length,
       },
       {
         text: 'Follow-up visits',
-        amount: filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Follow Up'))?.length,
+        amount: filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('Follow Up'))?.length,
       },
-      { text: 'New messages', amount: filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('New Message'))?.length },
-      { text: 'Accutane', amount: filterByActiveOrInactive.value?.filter((patient: any) => patient.currentPatientStatus.includes('Accutane'))?.length },
+      {
+        text: 'New messages',
+        amount: filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('New Message'))?.length,
+      },
+      { text: 'Accutane', amount: filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('Accutane'))?.length },
     ],
   },
   {
     group: 'Inactive Patients',
     chips: [
-      { text: 'All', amount: patientStore?.allPatients?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))?.length },
+      { text: 'All', amount: patientStore?.allPatients?.filter((patient: any) => patient?.currentPatientStatus?.includes('Inactive'))?.length },
       {
         text: 'Inactive membership',
         amount: patientStore?.allPatients
-          ?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
-          ?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))?.length,
+          ?.filter((patient: any) => patient?.currentPatientStatus?.includes('Inactive'))
+          ?.filter((patient: any) => patient?.currentPatientStatus?.includes('Inactive'))?.length,
       },
       {
         text: 'No shows',
         amount: patientStore?.allPatients
-          ?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
-          ?.filter((patient: any) => patient.currentPatientStatus.includes('No Shows'))?.length,
+          ?.filter((patient: any) => patient?.currentPatientStatus?.includes('Inactive'))
+          ?.filter((patient: any) => patient?.currentPatientStatus?.includes('No Shows'))?.length,
       },
       {
         text: 'Cancelled',
         amount: patientStore?.allPatients
-          ?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
-          ?.filter((patient: any) => patient.currentPatientStatus.includes('Cancelled'))?.length,
+          ?.filter((patient: any) => patient?.currentPatientStatus?.includes('Inactive'))
+          ?.filter((patient: any) => patient?.currentPatientStatus?.includes('Cancelled'))?.length,
       },
       {
         text: 'Archived',
         amount: patientStore?.allPatients
-          ?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
-          ?.filter((patient: any) => patient.currentPatientStatus.includes('Archived'))?.length,
+          ?.filter((patient: any) => patient?.currentPatientStatus?.includes('Inactive'))
+          ?.filter((patient: any) => patient?.currentPatientStatus?.includes('Archived'))?.length,
       },
       {
         text: 'Unscheduled accounts',
         amount: patientStore?.allPatients
-          ?.filter((patient: any) => patient.currentPatientStatus.includes('Inactive'))
-          ?.filter((patient: any) => patient.currentPatientStatus.includes('Unscheduled'))?.length,
+          ?.filter((patient: any) => patient?.currentPatientStatus?.includes('Inactive'))
+          ?.filter((patient: any) => patient?.currentPatientStatus?.includes('Unscheduled'))?.length,
       },
     ],
   },
@@ -225,9 +228,6 @@ watch(
     currentPage.value = 0
   }
 )
-
-const patientsToShow = ref([])
-const searchPatientName = ref()
 
 patientsToShow.value = patientStore.allPatients
 
@@ -250,12 +250,20 @@ async function fetchPatients() {
 }
 getMyProfile()
 fetchPatients()
+
+patientsToShow.value = patientStore?.allPatients
+
+const pagesData = computed(() => {
+  let start = currentPage.value * pageSize.value
+  let end = (currentPage.value + 1) * pageSize.value
+
+  return patientsToShow.value.slice(start, end)
+})
 </script>
 
 <template>
   <div class="w-full py-8">
-    <BaseWrapper>
-      <!-- {{ user?.user }} -->
+    <div class="h-full max-w-[1440px] w-full m-auto">
       <!-- Summary Top -->
       <div class="bg-white p-8 rounded-[16px] flex justify-between w-full relative shadow-sm">
         <div>
@@ -308,6 +316,7 @@ fetchPatients()
             <img class="ml-4 mr-2 scale-50 md:scale-100" :src="SearchIcon" alt="Search Icon" />
             <input v-model="searchPatientName" class="bg-honeydew-bg2 outline-none focus:ring-0 w-[80%]" placeholder="Search by patient's name" type="text" />
           </div>
+
           <!-- Chips -->
           <div class="mt-[24px] flex-wrap">
             <div v-for="(categoryChip, idx) in handleChipData" :key="idx" class="flex flex-wrap">
@@ -343,31 +352,30 @@ fetchPatients()
                   </div>
                 </div>
               </div>
-              {{ patientList?.patients }}
             </div>
 
             <!-- Loader -->
             <BaseLoader v-if="!patientStore?.allPatients" />
 
             <!-- Table Body -->
-            <NuxtLink
-              v-for="(patient, idx) in patientsToShow"
-              :key="idx"
+            <div
+              v-for="(patient, idx) in pagesData"
+              :key="patient.patientId"
               :class="[
                 idx === patientStore?.allPatients?.length - 1 ? 'rounded-b-[16px]' : '',
-                patient.currentPatientStatus.includes('New Patient') ? 'bg-[#FEF0F5]' : '',
-                patient.currentPatientStatus.includes('Follow Up') ? 'bg-[#F0F5FE]' : '',
-                patient.currentPatientStatus.includes('New Message') ? 'bg-[#F3FAF2]' : '',
+                patient?.currentPatientStatus?.includes('New Patient') ? 'bg-[#FEF0F5]' : '',
+                patient?.currentPatientStatus?.includes('Follow Up') ? 'bg-[#F0F5FE]' : '',
+                patient?.currentPatientStatus?.includes('New Message') ? 'bg-[#F3FAF2]' : '',
               ]"
               @mouseenter="hoveredIdx = idx"
               @mouseleave="hoveredIdx = null"
               class="grid grid-cols-8 text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 relative"
-              :to="`/view-history/${patient.patientId}`"
+              @click="handleRouteChangeWhenClickingPatient(patient?.patientId)"
             >
               <div
                 @mouseenter="showNewMessageMessage = true"
                 @mouseleave="showNewMessageMessage = false"
-                v-if="patient.currentPatientStatus.includes('New Message')"
+                v-if="patient?.currentPatientStatus?.includes('New Message')"
                 class="absolute items-center -left-4 top-4 flex justify-center text-[10px]"
               >
                 <div v-if="showNewMessageMessage && hoveredIdx === idx" class="absolute bg-[#403E48] text-white rounded-md -top-8 font-semibold px-2 py-1">
@@ -378,7 +386,7 @@ fetchPatients()
                 </div>
               </div>
               <div class="col-span-2 flex gap-x-2 items-center">
-                {{ patient.patientName }}
+                {{ patient?.patientName }}
                 <div
                   @mouseenter="showNoMedicalMessage = true"
                   @mouseleave="showNoMedicalMessage = false"
@@ -393,7 +401,7 @@ fetchPatients()
                 <div
                   @mouseenter="showAccutaneMessage = true"
                   @mouseleave="showAccutaneMessage = false"
-                  v-if="patient.currentPatientStatus.includes('Accutane')"
+                  v-if="patient?.currentPatientStatus?.includes('Accutane')"
                   class="text-[10px] shadow-md bg-[#ffdc99] px-2 py-[2px] rounded-[80px] flex justify-center items-center"
                 >
                   <div v-if="showAccutaneMessage && hoveredIdx === idx" class="absolute bg-[#403E48] text-white rounded-md -top-2 font-semibold px-2 py-1">
@@ -402,16 +410,16 @@ fetchPatients()
                   Accutane
                 </div>
               </div>
-              <div>{{ patient.patientDOB ? patient.patientDOB : '-' }}</div>
-              <div>{{ patient.patientDateOfService ? patient.patientDateOfService : '-' }}</div>
+              <div>{{ patient?.patientDOB ? patient?.patientDOB : '-' }}</div>
+              <div>{{ patient?.patientDateOfService ? patient?.patientDateOfService : '-' }}</div>
               <div>
-                {{ patient.patientNextFollowUp ? patient.patientNextFollowUp : '-' }}
+                {{ patient?.patientNextFollowUp ? patient?.patientNextFollowUp : '-' }}
               </div>
               <div>
-                {{ patient.patientProviderAssigned ? patient.patientProviderAssigned : '-' }}
+                {{ patient?.patientProviderAssigned ? patient?.patientProviderAssigned : '-' }}
               </div>
               <div>
-                {{ patient.patientCareCoordinatorAssigned ? patient.patientCareCoordinatorAssigned : '-' }}
+                {{ patient?.patientCareCoordinatorAssigned ? patient?.patientCareCoordinatorAssigned : '-' }}
               </div>
 
               <div class="w-full flex justify-end gap-x-3">
@@ -446,7 +454,7 @@ fetchPatients()
                   </template>
                 </BaseModal>
               </div>
-            </NuxtLink>
+            </div>
 
             <!-- Pagination -->
             <BasePagination
@@ -461,7 +469,7 @@ fetchPatients()
           </div>
         </div>
       </div>
-    </BaseWrapper>
+    </div>
   </div>
 </template>
 

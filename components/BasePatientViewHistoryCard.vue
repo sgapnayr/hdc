@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
 import { ref } from 'vue'
-import ChevronIcon from '@/assets/icons/chevron-icon.svg'
 import ChevronDownIcon from '@/assets/icons/chevron-down-icon.svg'
 import PencilIcon from '@/assets/icons/pencil-icon.svg'
 import PaperIcon from '@/assets/icons/paper-icon.svg'
@@ -37,7 +36,7 @@ const healthInsuranceName = ref(patientStore.patientData?.insurance?.healthInsur
 const healthInsuranceMemberId = ref(patientStore.patientData?.insurance?.healthInsuranceMemberID)
 const healthInsurancePolicyHolder = ref(patientStore.patientData?.insurance?.healthInsurancePolicyHolderName)
 const healthInsuranceGroupNumber = ref(patientStore.patientData?.insurance?.healthInsuranceGroupNumber)
-const PATIENT_ID = route.params.patientId as string
+const PATIENT_ID = patientStore?.currentPatientId || (route.params.patientId as string)
 
 const patientLastConfirmationDate = ref('')
 const patientNextConfirmationDate = ref('')
@@ -51,14 +50,15 @@ function handleSelectedItem(selectedItemVal: string) {
   }
 }
 
-function handleUpdateInsurance() {
-  patientStore.updateInsuranceGraphQL(
+async function handleUpdateInsurance() {
+  await patientStore.updateInsuranceGraphQL(
     PATIENT_ID,
     healthInsuranceGroupNumber.value,
     healthInsuranceMemberId.value,
     healthInsuranceName.value,
     healthInsurancePolicyHolder.value
   )
+  patientStore.getPatientFromGraphQL(patientStore?.currentPatientId || (route.params.patientId as string))
 }
 
 watch(patientLastConfirmationDate, (newDate) => {
@@ -70,6 +70,9 @@ watch(patientLastConfirmationDate, (newDate) => {
 })
 
 tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
+watch(patientStore.currentPatientId, () => {
+  patientStore.getPatientFromGraphQL(route.params.patientId as string)
+})
 </script>
 
 <template>
@@ -97,7 +100,7 @@ tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
 
       <!-- Patient Info -->
       <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">
-        {{ profileStore.profileData?.patientFirstName || 'Loading...' }} {{ profileStore.profileData?.patientLastName }}
+        {{ patientStore?.patientData?.patientName || 'Loading...' }}
       </h1>
       <div class="mt-[8px] w-3/4 flex flex-wrap items-center">
         <p class="text-[16px] text-gray-5 font-[400]">{{ patientStore?.patientData?.patientSex }}</p>

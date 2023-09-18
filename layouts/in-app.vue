@@ -1,8 +1,16 @@
 <template>
-  <BaseCompletePregnancy v-if="profileStore.isPregnantModalOpen" @close-modal="profileStore.handlePregnancyModal" />
-  <BasePatientDetailsForm v-if="profileStore.isPatientDetailsFormOpen" @close-modal="profileStore.handlePatientDetailsForm" />
-  <BaseBloodSlipForm v-if="profileStore.isBloodSlipFormOpen" @close-modal="profileStore.handleBloodSlipForm" />
-  <BaseVisitForm v-if="profileStore.isVisitFormOpen" @close-modal="profileStore.handleVisitForm" />
+  <TheTransitionWrapper>
+    <BaseCompletePregnancy v-if="profileStore.isPregnantModalOpen" @close-modal="profileStore.handlePregnancyModal" />
+  </TheTransitionWrapper>
+  <TheTransitionWrapper>
+    <BasePatientDetailsForm v-if="profileStore.isPatientDetailsFormOpen" @close-modal="profileStore.handlePatientDetailsForm" />
+  </TheTransitionWrapper>
+  <TheTransitionWrapper>
+    <BaseBloodSlipForm v-if="profileStore.isBloodSlipFormOpen" @close-modal="profileStore.handleBloodSlipForm" />
+  </TheTransitionWrapper>
+  <TheTransitionWrapper>
+    <BaseVisitForm v-if="profileStore.isVisitFormOpen" @close-modal="profileStore.handleVisitForm" />
+  </TheTransitionWrapper>
 
   <div class="flex flex-col justify-center items-center w-full">
     <TheSideBar v-if="!isMobile" class="fixed w-[80px] left-0 top-0 z-20 hidden md:flex" />

@@ -31,9 +31,9 @@ function handleRemoveTestOrdered(index: number) {
 
 <template>
   <!-- Desktop Version -->
-  <div class="absolute w-full hidden md:flex flex-col z-50 bg-[#403E4880] items-end grow min-h-screen">
-    <div class="flex flex-col w-full md:max-w-[800px] bg-honeydew-bg2 grow min-h-screen overflow-scroll">
-      <div class="text-[16px] font-[500] leading-[24px] flex gap-x-2 cursor-pointer mb-8 bg-white items-center shadow-sm justify-between">
+  <div @click="emit('close-modal')" class="fixed w-full flex flex-col z-50 lg:flex bg-opacity-50 bg-[#403E4880] items-end grow min-h-screen">
+    <div @click.stop class="flex flex-col w-full lg:max-w-[800px] bg-honeydew-bg2 grow min-h-screen shadow-2xl">
+      <div @click.stop class="text-sm font-medium leading-[24px] flex gap-x-2 cursor-pointer mb-8 bg-white items-center shadow-sm justify-between">
         <div class="flex items-center">
           <div @click="emit('close-modal')" class="border-r border-r-[#E1E0E6] p-6 mr-8">
             <img class="rotate-90" :src="ChevronIcon2" alt="Chevron Icon" />

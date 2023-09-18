@@ -134,7 +134,9 @@ async function updateMedicine(medicationId: string) {
 async function handleCreateTreatmentPlan() {
   if (!inputsValid) return
   const planName = toRaw(newTreatmentPlanName.value)
+  console.log(medArr.value)
   const groupArray = medArr.value
+  console.log(groupArray)
   let topArray = []
   for (let i = 0; i < groupArray.length; i++) {
     topArray.push({ medicationsIds: toRaw(groupArray[i]) })
@@ -171,14 +173,18 @@ medicationsStore.getTreatmentPlansFromGraphQL()
 const medArr = ref([])
 const chesterTreatmentGroupPayload = ref()
 
+// TODO: RYAN FIX TO 2D ARR
 function getMedicationsArr(medicationObject: { id: number; medicationId: string; jdx: number }) {
+  console.log(medicationObject)
   const { id, medicationId, jdx } = medicationObject
 
   if (!medArr.value[id]) {
     medArr.value[id] = []
   }
 
-  medArr.value[id][jdx] = medicationId
+  medArr.value.push(medicationId)
+  console.log(medArr.value)
+  console.log(medArr.value[id][jdx])
 }
 
 function clearMedicationArr() {

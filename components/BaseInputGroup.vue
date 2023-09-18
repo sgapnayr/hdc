@@ -40,7 +40,8 @@ const addItem = () => {
   }
 }
 
-const handleAddItem = (option) => {
+const handleAddItem = (option, idx) => {
+  console.log(option)
   items.value.push(option)
   emit('medications-id-arr', option)
   inputText.value = ''
@@ -102,7 +103,7 @@ const filteredList = computed(() => {
       v-for="(medication, idx) in filteredList"
       class="w-full hover:bg-gray-2 bg-white h-[48px] border-[.5px] border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer"
       :class="[filteredList.length - 1 === idx ? 'rounded-b-[28px]' : '']"
-      @click="handleAddItem(medication)"
+      @click="handleAddItem(medication, idx)"
     >
       <div>
         {{ medication.medicationName }}
