@@ -1,18 +1,25 @@
 // Chester
 // TODO: Patient search funciton searches name not patientName or patientFirstName or patientLastName
-// TODO: DOB sending back \ line
+// TODO: DOB sending back \ line in string, I've spliced and mapped it, but just ask if its the best way to do that
 // TODO: Need to add patient status, ie current patient, new patient, etc.
 
 // Ryan
-// TODO: FIX SIGN UP FLOW, CREATE ACCOUNT, REMOVE EXTRA STEPS FOR CHILD
 // TODO: ASSIGN PROVIDER (on schedule appointment button)
 // TODO: MEDICAL BACKGROUND FLOW CLEAN UP AND ADD ENDPOINT
 // TODO: CREATE TREATMENT PLAN PAGE
-// TODO: CLEAN UP ADMIN PAGE
-// TODO: FORGOT PASSWORD
-// TODO: WEB HOOKS V3 https://schedule.nylas.com/schedule-editor/v3.0/schedule-editor.js
 // TODO: GENERATE REPORT MISSED APPOINTMENT BUTTON
 // TODO: TO DO ITEMS FOR PATIENT (todo.iscomplete)
 // TODO: BLOOD SLIP
 // TODO: UPLOAD DOCUMENTS
-// TODO: 2D ARR IN MEDICATIONS
+
+// On call
+// TOUCH UP: ADMIN PAGE
+// TODO: ASK CHESTER FOR AWS-EXPORTS AGAIN FOR FORGOT PASSWORD & SIGN UP DOESNT WORK SOUNDS LIKE A USERS POOL ISSUE
+// TODO: ASK CHESTER HOW TO LINK CHILD ACCOUNT EMAIL TO PARENT EMAIL WHEN SIGNING UP
+// BLOCKED: WEB HOOKS V3 https://schedule.nylas.com/schedule-editor/v3.0/schedule-editor.js
+
+// FIXED
+// ADMIN PAGE SEARCH
+// SIGN UP FLOW
+// PDF PAGE FETCH
+// VIEW HISTORY PAGE PATIENT DATA

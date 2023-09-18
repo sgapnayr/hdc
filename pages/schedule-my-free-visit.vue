@@ -22,7 +22,7 @@ const router = useRouter()
 const profileStore = useProfileStore()
 
 // STATE **********************************************************************
-const currentQuestionIdx = ref<number>(0)
+const currentQuestionIdx = ref<number>(17)
 const currentSelectedAnswer = ref<string>()
 const buttonLoadingState = ref<'idle' | 'loading' | 'failed' | 'success' | 'disabled'>('idle')
 const isPhotoUploaded = ref(false)
@@ -682,7 +682,6 @@ async function handleAnswerSubmitValidation() {
               >Submit Photos</BaseButton
             >
           </a> -->
-          <BaseNylas />
           <a href="https://schedule.nylas.com/ryan-paglione-30min" target="_Blank">
             <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[290px] mt-[32px] px-8"
               >Schedule Appointment</BaseButton

@@ -42,8 +42,13 @@ const auth = useAuthenticator()
 const patientData = ref()
 
 // INIT ********************************************************************
+watch(patientStore.currentPatientId, () => {
+  profileStore.setMyProfile(patientStore.currentPatientId as string)
+  patientStore.getPatientFromGraphQL(patientStore.currentPatientId as string)
+})
 
-console.log('UserImages in ')
+profileStore.setMyProfile((patientStore.currentPatientId as string) || (route.params.patientId as string))
+patientStore.getPatientFromGraphQL((patientStore.currentPatientId as string) || (route.params.patientId as string))
 </script>
 
 <template>
@@ -52,7 +57,7 @@ console.log('UserImages in ')
       <img :src="HoneydewIcon" />
       <!-- Patient's Information -->
       <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">
-        {{ profileStore.profileData?.patientFirstName }} {{ profileStore.profileData?.patientLastName }}
+        {{ patientStore?.patientData?.patientName || 'Loading...' }}
       </h1>
       <div class="mt-[8px] w-3/4 flex flex-wrap items-center">
         <p class="text-[16px] text-gray-5 font-[400]">{{ patientStore?.patientData?.patientSex }}</p>

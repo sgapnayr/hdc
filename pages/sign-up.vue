@@ -6,7 +6,7 @@ import { Auth } from 'aws-amplify'
 import { useRouter } from 'vue-router'
 import VerifyEmail from '@/assets/images/verify-email.svg'
 import VerifyEmailSuccess from '@/assets/images/verify-email-success.svg'
-import { updatePatient } from '@/lib/endpoints'
+import { updatePatientAccountFromSignUpFlow } from '@/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -91,16 +91,10 @@ async function handleAnswerSubmitValidation() {
 
   // Under 18 Validation
   if (currentQuestionIdx.value === 4 && !profileStore.overEighteen) {
-    profileStore.signUpName = currentSelectedAnswer.value
     profileStore.signUpEmail = secondCurrentSelectedAnswer.value
-    profileStore.signUpPassword = thirdCurrentSelectedAnswer.value as string
-    profileStore.signUpPhoneNumber = fourthCurrentSelectedAnswer.value as string
-    signUp(profileStore.signUpEmail as string, profileStore.signUpPassword as string, profileStore.signUpEmail as string)
     currentQuestionIdx.value = 5
+    signUp(profileStore.signUpEmail as string, profileStore.signUpPassword as string | '123', profileStore.signUpEmail as string | 'test@yopmail.com') // TODO: ASK CHESTER HOW TO LINK TO PARENT
     currentSelectedAnswer.value = ''
-    secondCurrentSelectedAnswer.value = ''
-    thirdCurrentSelectedAnswer.value = ''
-    fourthCurrentSelectedAnswer.value = ''
     return
   }
 
@@ -121,6 +115,7 @@ async function handleAnswerSubmitValidation() {
   if (currentQuestionIdx.value === 5) {
     profileStore.signUpConfirmationCode = currentSelectedAnswer.value
     await confirmAccount(profileStore.signUpEmail as string, profileStore.signUpConfirmationCode as string)
+    router.push('/profile')
     currentSelectedAnswer.value = ''
     currentQuestionIdx.value = 0
     return
@@ -176,8 +171,14 @@ async function confirmAccount(username: string, confirmationCode: string) {
     }, 1000)
 
     await profileStore.setMyProfile()
-    console.log(profileStore.profileData.patientId)
-    updatePatient(profileStore.profileData.patientId, profileStore.signUpPhoneNumber, profileStore.signUpEmail)
+    updatePatientAccountFromSignUpFlow(
+      profileStore?.profileData?.patientId,
+      profileStore?.signUpName?.split(' ')[0],
+      profileStore?.signUpNameprofileStore?.signUpName?.split(' ')[1] || profileStore?.signUpName?.split(' ')[0],
+      profileStore?.signUpPhoneNumber,
+      profileStore?.signUpDOB
+    )
+
     router.push('/profiles/' + profileStore.profileData.patientId)
   } catch (error) {
     console.log('Error confirming account:', error)
@@ -222,6 +223,14 @@ watch(
 </script>
 
 <template>
+  {{ profileStore?.profileData?.patientId }}
+  <br />
+  {{ profileStore?.signUpName?.split(' ')[0] + profileStore?.signUpNameprofileStore?.signUpName?.split(' ') || profileStore?.signUpName?.split(' ')[0] }}
+  <br />
+  {{ profileStore?.signUpPhoneNumber + profileStore?.signUpDOB }}
+  <br />
+  {{ profileStore?.signUpEmail }}
+  <br />
   <BaseWrapper>
     <div class="flex flex-col justify-center items-center" v-for="(signUpQuestion, idx) in signUpQuestions" :key="idx">
       <div class="max-w-[390px]" v-if="currentQuestionIdx === idx">
@@ -279,7 +288,11 @@ watch(
 
         <!-- Date Of Birth Question -->
         <div v-if="currentQuestionIdx === 3">
-          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Okay, and what is your Date of Birth?</h1>
+          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">
+            Okay, and what is your
+            <span v-if="isSigningUpChild">child's</span>
+            Date of Birth?
+          </h1>
           <p class="mb-[32px] font-[400] text-gray-5">We cannot provide service without an accurate Date of Birth</p>
           <BaseInput :placeholder="'MM-DD-YYYY'" v-model="currentSelectedAnswer" p-input-type="date" class="w-full" />
           <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
@@ -287,18 +300,17 @@ watch(
 
         <!-- Under 18 Question -->
         <div v-if="currentQuestionIdx === 4 && !profileStore.overEighteen">
-          <h1 class="text-[32px] font-[700] leading-[40px] my-[32px]">Since you're under 18, we'll need your parent's contact info.</h1>
+          <h1 v-if="!isSigningUpChild" class="text-[32px] font-[700] leading-[40px] my-[32px]">
+            Since you're under 18, we'll need your parent's contact info.
+          </h1>
+          <h1 v-if="isSigningUpChild" class="text-[32px] font-[700] leading-[40px] my-[32px]">
+            Since you're signing up as a child account, we'll need your parent's contact info.
+          </h1>
           <p class="mb-[32px] font-[400] text-gray-5">
             Please enter your parent or guardian's contact information below, and have them be present for the initial consultation to provide consent.
           </p>
-          <BaseInput :placeholder="'Full Name'" v-model="currentSelectedAnswer" class="w-full" />
-          <BaseInput :placeholder="'Email address'" v-model="secondCurrentSelectedAnswer" class="w-full" />
-          <!-- <BaseInput :placeholder="'Password'" p-input-type="password" v-model="(thirdCurrentSelectedAnswer as string)" class="w-full" /> -->
-          <!-- <BaseInput :placeholder="'+1 (123) 456-7890'" :p-input-type="'phone-number'" v-model="(fourthCurrentSelectedAnswer as string)" class="w-full" /> -->
-          <BaseButton
-            :state="currentSelectedAnswer && secondCurrentSelectedAnswer && thirdCurrentSelectedAnswer ? 'idle' : 'disabled'"
-            @click="handleAnswerSubmitValidation"
-            class="w-full mt-[16px]"
+          <BaseInput :placeholder="'Email address'" v-model="currentSelectedAnswer" class="w-full" />
+          <BaseButton :state="currentSelectedAnswer?.includes('@') ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]"
             >Continue</BaseButton
           >
         </div>
@@ -313,7 +325,7 @@ watch(
             I agree with Terms of Service, Privacy Policy, and Telehealth Consent
           </BaseCheckBox>
           <BaseButton
-            :state="currentSelectedAnswer && secondCurrentSelectedAnswer && thirdCurrentSelectedAnswer ? 'idle' : 'disabled'"
+            :state="currentSelectedAnswer?.includes('@') && secondCurrentSelectedAnswer && thirdCurrentSelectedAnswer ? 'idle' : 'disabled'"
             @click="handleAnswerSubmitValidation"
             class="w-full mt-[16px]"
             >Continue</BaseButton
@@ -337,7 +349,6 @@ watch(
           </p>
           <BaseInput v-model="currentSelectedAnswer" p-input-type="verify" type="text" class="w-full" />
           <BaseButton :state="buttonLoadingState" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
-          <BaseButton @click="router.push('/profile')" class="w-full mt-[16px]">Skip For Now</BaseButton>
         </div>
 
         <!-- Add Payment Question -->

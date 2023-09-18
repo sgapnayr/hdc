@@ -16,15 +16,15 @@ definePageMeta({
 // ROUTER **********************************************************************
 onMounted(() => {
   watchEffect(() => {
-    if (user.authStatus === 'authenticated' && profileStore.profileData.userRole === 'admin') {
+    if (user.authStatus === 'authenticated' && profileStore?.profileData?.userRole === 'admin') {
       navigateTo('/admin')
     }
 
-    if (user.authStatus === 'authenticated' && profileStore.profileData.userRole === 'patient') {
+    if (user.authStatus === 'authenticated' && profileStore?.profileData?.userRole === 'patient') {
       navigateTo('/profile')
     }
 
-    if (user.authStatus === 'authenticated' && profileStore.profileData.userRole !== 'patient') {
+    if (user.authStatus === 'authenticated' && profileStore?.profileData?.userRole !== 'patient') {
       navigateTo('/tasks-pool')
     }
   })
@@ -46,15 +46,15 @@ async function signIn(username: string, password: string) {
     await Auth.signIn(username, password)
     loginButtonState.value = 'success'
 
-    if (user.authStatus === 'authenticated' && profileStore.profileData.userRole === 'admin') {
+    if (user.authStatus === 'authenticated' && profileStore?.profileData?.userRole === 'admin') {
       navigateTo('/admin')
     }
 
-    if (user.authStatus === 'authenticated' && profileStore.profileData.userRole === 'patient') {
+    if (user.authStatus === 'authenticated' && profileStore?.profileData?.userRole === 'patient') {
       navigateTo('/profile')
     }
 
-    if (user.authStatus === 'authenticated' && profileStore.profileData.userRole !== 'patient') {
+    if (user.authStatus === 'authenticated' && profileStore?.profileData?.userRole !== 'patient') {
       navigateTo('/tasks-pool')
     }
   } catch (error) {

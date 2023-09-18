@@ -64,20 +64,8 @@ const generatePreview = (file: any) => {
   reader.readAsDataURL(file)
 }
 
-const updateProfileChanges = async () => {
-  updatePatient(
-    route.params.patientId,
-    updatePatientFirstName.value,
-    updatePatientLastName.value,
-    updatePatientWeight.value,
-    computeHeightInInches.value,
-    updatePatientDOB.value,
-    updatePatientSex.value,
-    updatePatientAddress.value
-  )
-
-  patientStore.getPatientFromGraphQL(route.params.patientId as string)
-  profileStore.setMyProfile(route.params.patientId as string)
+const handleStartVisit = async () => {
+  navigateTo('/treatment-plan')
   setTimeout(() => {
     emit('close-modal')
   }, 100)
@@ -107,7 +95,7 @@ const updateProfileChanges = async () => {
           <div class="flex text-[#403E48] text-lg">Visit details</div>
         </div>
         <button
-          @click="updateProfileChanges"
+          @click="handleStartVisit"
           class="w-[150px] rounded-full text-white p-3 text-center cursor-pointer transition active:scale-90 text-xs mx-6 bg-honeydew-purple"
         >
           START VISIT

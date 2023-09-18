@@ -24,6 +24,7 @@
     "@aws-amplify/ui-vue": "^3.1.18",
     "@nuxtjs/axios": "^5.13.6",
     "@pinia/nuxt": "^0.4.11",
+    "@popperjs/core": "^2.11.8",
     "@vueform/multiselect": "^2.6.2",
     "@vuelidate/core": "^2.0.2",
     "@vuelidate/validators": "^2.0.2",
@@ -44,8 +45,10 @@
     "stripe": "^12.14.0",
     "tailwind-merge": "^1.14.0",
     "tsc": "^2.0.4",
+    "v-calendar": "^3.0.3",
     "v-mask": "^2.3.0",
     "vue-debounce": "^4.0.0",
-    "vue-tsc": "^1.6.5"
+    "vue-tsc": "^1.6.5",
+    "vuejs3-datepicker": "^1.0.19"
   }
 }

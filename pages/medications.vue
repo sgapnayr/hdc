@@ -160,7 +160,7 @@ const toggleTime = (time: TimeSelection, isSelected: boolean): void => {
 }
 
 async function handleDeleteMedicine(medicationId: string) {
-  // axios.delete("CHESTER_ENDPOINT/" + medicationId) // Just showing the action // PAYLOAD FOR CHESTER MEDICINE DELETE
+  // axios.delete("CHESTER_ENDPOINT/" + medicationId) // PAYLOAD FOR CHESTER MEDICINE DELETE
   // or GRAPH_QL delete mutation needs to be configured
   // SEE deleteMedication endpoint in endpoints.js
   // await deleteMedication(medicationId)
@@ -173,18 +173,16 @@ medicationsStore.getTreatmentPlansFromGraphQL()
 const medArr = ref([])
 const chesterTreatmentGroupPayload = ref()
 
-// TODO: RYAN FIX TO 2D ARR
-function getMedicationsArr(medicationObject: { id: number; medicationId: string; jdx: number }) {
-  console.log(medicationObject)
+function getMedicationsArr(medicationObject: { id: number; medicationId: string; jdx: number }, idx: number) {
   const { id, medicationId, jdx } = medicationObject
 
-  if (!medArr.value[id]) {
-    medArr.value[id] = []
+  if (!medArr.value[idx]) {
+    medArr.value[idx] = []
   }
 
-  medArr.value.push(medicationId)
+  medArr.value[idx].push(medicationId)
+
   console.log(medArr.value)
-  console.log(medArr.value[id][jdx])
 }
 
 function clearMedicationArr() {
@@ -195,17 +193,6 @@ function clearMedicationArr() {
 <template>
   <div class="w-full py-8">
     <BaseWrapper>
-      <!-- DELETE WHEN DONE -->
-      2d Medicine Ids Array:
-      <br />
-      {{ medArr }}
-      <br />
-      Chester Payload:
-      <br />
-      {{ !chesterTreatmentGroupPayload ? '{}' : chesterTreatmentGroupPayload }}
-      <br />
-      <!--  -->
-
       <!-- Manage Team Top -->
       <div class="w-full">
         <div class="flex justify-between w-full flex-col md:flex-row">
@@ -305,7 +292,7 @@ function clearMedicationArr() {
                           :idx="idx"
                           @add-group="treatmentGroups.push('')"
                           @remove-group="treatmentGroups.splice(idx, 1)"
-                          @medications-id-arr="(medicationsIdArr) => getMedicationsArr(medicationsIdArr)"
+                          @medications-id-arr="(medicationsIdArr) => getMedicationsArr(medicationsIdArr, idx)"
                         />
                       </div>
                     </div>

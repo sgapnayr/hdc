@@ -69,6 +69,12 @@ watch(patientLastConfirmationDate, (newDate) => {
   }
 })
 
+function handlePdfPage(selectedSubAccount: string) {
+  navigateTo('/pdf-page/' + selectedSubAccount)
+  patientStore.currentPatientId = selectedSubAccount
+  profileStore.setMyProfile(patientStore.currentPatientId as string)
+}
+
 tasksStore.getAllTasksFromGraphQLByPatient(PATIENT_ID)
 watch(patientStore.currentPatientId, () => {
   patientStore.getPatientFromGraphQL(route.params.patientId as string)
@@ -90,7 +96,7 @@ watch(patientStore.currentPatientId, () => {
             <img :src="PencilIcon" alt="Pencil Icon" />
           </div>
           <NuxtLink
-            :to="'/pdf-page/' + route.params.patientId"
+            @click="handlePdfPage(route.params.patientId as string)"
             class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer"
           >
             <img :src="PaperIcon" alt="Paper Icon" />
