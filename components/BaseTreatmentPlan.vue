@@ -48,7 +48,7 @@ medicationsStore.getTreatmentPlansFromGraphQL()
     </div>
     <div class="flex text-honeydew-purple cursor-pointer hover:opacity-50 transition active:opacity-0">+ ADD TREATMENT</div>
 
-    <div class="my-4 flex w-full gap-x-16">
+    <div class="my-8 flex w-full gap-x-16">
       <div class="w-full">
         <h2 class="text-[24px] font-[500] leading-[40px] text-gray-3">Add message to patient</h2>
         <div class="w-full bg-white my-4 p-6 h-[168px] rounded-2xl shadow-sm">
