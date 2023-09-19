@@ -114,10 +114,12 @@ async function handleAnswerSubmitValidation() {
   // Confirm Email Validation
   if (currentQuestionIdx.value === 5) {
     profileStore.signUpConfirmationCode = currentSelectedAnswer.value
+    window.location.href = 'https://schedule.nylas.com/joel-spitz-initial-consultation-30min'
     await confirmAccount(profileStore.signUpEmail as string, profileStore.signUpConfirmationCode as string)
-    router.push('/profile')
-    currentSelectedAnswer.value = ''
-    currentQuestionIdx.value = 0
+    setTimeout(() => {
+      currentSelectedAnswer.value = ''
+      currentQuestionIdx.value = 0
+    }, 1000)
     return
   }
 
@@ -223,14 +225,14 @@ watch(
 </script>
 
 <template>
-  {{ profileStore?.profileData?.patientId }}
+  <!-- {{ profileStore?.profileData?.patientId }}
   <br />
   {{ profileStore?.signUpName?.split(' ')[0] + profileStore?.signUpNameprofileStore?.signUpName?.split(' ') || profileStore?.signUpName?.split(' ')[0] }}
   <br />
   {{ profileStore?.signUpPhoneNumber + profileStore?.signUpDOB }}
   <br />
   {{ profileStore?.signUpEmail }}
-  <br />
+  <br /> -->
   <BaseWrapper>
     <div class="flex flex-col justify-center items-center" v-for="(signUpQuestion, idx) in signUpQuestions" :key="idx">
       <div class="max-w-[390px]" v-if="currentQuestionIdx === idx">

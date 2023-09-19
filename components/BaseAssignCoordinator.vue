@@ -20,7 +20,7 @@ const isMenuOpen = ref(false)
 
 // COMPUTED *********************************************************************
 const providers = computed(() => {
-  return employeeStore.allEmployees.filter((employee: any) => employee?.role?.includes('PROVIDER')).map((provider) => provider)
+  return employeeStore.allEmployees.filter((employee: any) => employee?.role?.includes('CARE_COORDINATOR')).map((provider) => provider)
 })
 
 const providersId = computed(() => {
@@ -47,7 +47,7 @@ async function handleSelectedProvider(provider: any) {
       <div class="rounded-[24px] whitespace-nowrap flex justify-between w-full">
         <div class="flex gap-x-2 items-center">
           <div class="w-7 h-7 bg-honeydew-purple2 rounded-full"></div>
-          {{ selectedProvider || patientData.patientProvider || 'Select Provider' }}
+          {{ selectedProvider || patientData?.patientCoordinator || 'Select Coordinator' }}
         </div>
         <img :class="[isMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="transition" />
       </div>

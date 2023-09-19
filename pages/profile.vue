@@ -22,6 +22,7 @@ onMounted(async () => {
     router?.push(`/profiles/${patientId}`)
   } else {
     console.error('Patient ID not available.')
+    router?.push(`/`)
   }
 })
 </script>

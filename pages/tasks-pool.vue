@@ -314,8 +314,8 @@ handleGetAllTasks()
               <div class="flex">
                 {{ task?.taskType }}
               </div>
-              <div>
-                {{ task.taskComments.length > 30 ? task.taskComments.slice(0, 40) + '...' : task.taskComments }}
+              <div class="w-1/2 whitespace-pre-wrap">
+                {{ task.taskComments }}
               </div>
               <div v-if="task.taskAssignedAt" class="w-full flex justify-end gap-x-3">
                 <BaseTimer :taskAssignedAt="task.taskAssignedAt" :key="task.taskAssignedAt" />

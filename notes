@@ -3,20 +3,22 @@
 // TODO: DOB sending back \ line in string, I've spliced and mapped it, but just ask if its the best way to do that
 // TODO: Need to add patient status, ie current patient, new patient, etc.
 // TODO: Explain to Ryan who can assign Providers to Patients (getting Not authorized error)
+// TODO: updateMedicalBackgound endpoint (getting Not authorized error)
 
 // Ryan
-// TODO: ASSIGN PROVIDER (on schedule appointment button)
-// TODO: SHOW PROVIDER (on view history page)
 // TODO: MEDICAL BACKGROUND FLOW CLEAN UP AND ADD ENDPOINT
-// TODO: GENERATE REPORT MISSED APPOINTMENT BUTTON
-// TODO: TO DO ITEMS FOR PATIENT (todo.iscomplete)
-// TODO: BLOOD SLIP
 // TODO: UPLOAD DOCUMENTS
-// TODO: Put Calendar at End of Sign Up Flow (step 6 or 7)
+// TODO: BLOOD SLIP
+// TODO: GENERATE REPORT MISSED APPOINTMENT BUTTON
+// TODO: TREATMENT PAGE
+// TODO: DIAGNOSIS CODES COMPONENT
 
 // Team
 // TOUCH UP: ADMIN PAGE
+// TOUCHUP: ASSIGN PROVIDER
 // TODO: ASK CHESTER FOR AWS-EXPORTS AGAIN FOR FORGOT PASSWORD & SIGN UP DOESNT WORK SOUNDS LIKE A USERS POOL ISSUE
-// TODO: ASK CHESTER HOW TO LINK CHILD ACCOUNT EMAIL TO PARENT EMAIL WHEN SIGNING UP
+// TODO: ASK CHESTER HOW DOES LINKING CHILD ACCOUNT EMAIL TO PARENT EMAIL WHEN SIGNING UP WORK
 // BLOCKED: WEB HOOKS V3 https://schedule.nylas.com/schedule-editor/v3.0/schedule-editor.js
 // TOUCH UP: CREATE TREATMENT PLAN PAGE
+// QUESTION: ARE ADMINS ALLOWED TO EDIT USER INFO/UPDATEPATIEN?
+// QUESTION: How do I get todo items? TO DO ITEMS FOR PATIENT (todo.iscomplete) both view history page and profiles page

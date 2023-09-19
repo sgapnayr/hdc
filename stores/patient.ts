@@ -31,6 +31,9 @@ export const usePatientStore = defineStore('patient', () => {
             patientPhoneNumber: backendPatient.patientProfile.patientPhoneNumber || '',
             patientEmail: backendPatient.email || '',
             currentPatientStatus: ['New Patient'],
+            patientProvider: backendPatient.proivder || 'provider',
+            patientCoordinator: backendPatient.coordinator || 'coordinator',
+            patientREMsNumber: backendPatient?.patientREMsNumber || '123',
           }
           return frontendPatient
         }),
@@ -65,6 +68,7 @@ export const usePatientStore = defineStore('patient', () => {
           patientSex: backendPatient?.patientSex,
           patientAge: backendPatient?.patientAge,
           patientAddress: backendPatient.patientAddress,
+          patientREMsNumber: backendPatient?.patientREMsNumber || '123',
           subAccounts:
             subAccounts != null
               ? subAccounts.map((subAccount: any) => ({
@@ -75,6 +79,7 @@ export const usePatientStore = defineStore('patient', () => {
           actionItems: actionItems || 'actionItems',
           insurance: insurance || 'insurance',
           patientProvider: backendPatient.proivder || 'provider',
+          patientCoordinator: backendPatient.coordinator || 'coordinator',
         }
 
         if (!currentPrimaryAccountData.value) {

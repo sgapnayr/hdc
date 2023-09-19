@@ -440,11 +440,9 @@ const pagesData = computed(() => {
                 <div>
                   {{ patient?.patientNextFollowUp ? patient?.patientNextFollowUp : '-' }}
                 </div>
+                <div>{{ patient?.patientProvider }}</div>
                 <div>
-                  {{ patient?.patientProviderAssigned ? patient?.patientProviderAssigned : '-' }}
-                </div>
-                <div>
-                  {{ patient?.patientCareCoordinatorAssigned ? patient?.patientCareCoordinatorAssigned : '-' }}
+                  {{ patient?.patientCoordinator }}
                 </div>
 
                 <div class="w-full flex justify-end gap-x-3">

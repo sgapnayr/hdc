@@ -138,12 +138,18 @@ const toDoItems = [
                 >
                   <div class="flex items-center w-full">
                     <div class="w-5 h-5 bg-honeydew-bg2 border border-[#F2F4F7] rounded-full mr-2"></div>
-                    <div v-if="todo.text === 'Submit pregnancy test'" class="w-full opacity-50 cursor-pointer" @click="profileStore.handlePregnancyModal">
+                    <div
+                      v-if="todo.text === 'Submit pregnancy test' && !todo.isComplete"
+                      class="w-full opacity-50 cursor-pointer"
+                      @click="profileStore.handlePregnancyModal"
+                    >
                       {{ todo.text }}
                     </div>
                     <BaseAccutane v-else @accutane-flow-viewed="todo.text === 'View Accutane info' ? (todo.isComplete = true) : ''" />
+                    <div class="justify-end">
+                      <img v-if="!todo.isComplete" class="rotate-[270deg]" :src="ChevronIcon2" alt="Chevron Icon 2" />
+                    </div>
                   </div>
-                  <img class="rotate-[270deg]" :src="ChevronIcon2" alt="Chevron Icon 2" />
                 </div>
               </div>
             </div>
@@ -201,14 +207,8 @@ const toDoItems = [
             </div>
             <div class="my-4 flex flex-col gap-y-4">
               <NuxtLink
-                to="/schedule-with-provider"
-                class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-[190px]"
-              >
-                schedule my Initial visit
-              </NuxtLink>
-              <NuxtLink
                 v-if="getPatientAppointments.length === 0"
-                to="/schedule-my-free-visit"
+                :to="`/schedule-my-free-visit/${route.params.patientId}`"
                 class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap w-[190px]"
               >
                 Medical Background
@@ -239,7 +239,7 @@ const toDoItems = [
         <!-- My treatment plan -->
         <div class="w-full flex justify-center items-center bg-white rounded-[16px] p-5 flex-col shadow-sm min-w-[290px]">
           <img :src="MyTreatmentPlan" alt="My Treatment Plan" class="w-full" />
-          <div>
+          <div class="w-full">
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 mt-[20px]">My treatment plan</h1>
             <p class="text-gray-5 mt-[8px] text-[14px]">View the latest plan your provider recommended for you.</p>
             <!-- Modal -->
@@ -253,7 +253,7 @@ const toDoItems = [
               </template>
               <template #header>My Treatment Plan</template>
               <template #content>
-                <div>
+                <div class="md:w-[640px]">
                   <p class="text-[14px] font-[400] text-[#667085] mb-[16px]">
                     Your treatment plan was updated on {date} by your care coordinator {care coordinator}
                   </p>

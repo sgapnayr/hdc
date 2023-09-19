@@ -3,6 +3,7 @@
 import { ref } from 'vue'
 import ChevronDownIcon from '@/assets/icons/chevron-down-icon.svg'
 import PencilIcon from '@/assets/icons/pencil-icon.svg'
+import CheckIcon from '@/assets/icons/checkmark-circle.svg'
 import PaperIcon from '@/assets/icons/paper-icon.svg'
 import PhoneIcon from '@/assets/icons/phone-icon.svg'
 import EmailIcon from '@/assets/icons/email-icon.svg'
@@ -41,6 +42,9 @@ const PATIENT_ID = patientStore?.currentPatientId || (route.params.patientId as 
 const patientLastConfirmationDate = ref('')
 const patientNextConfirmationDate = ref('')
 
+const remsNumber = ref(patientStore?.patientData?.patientREMsNumber || '123')
+const isEditing = ref<boolean>(false)
+
 // METHODS *********************************************************************
 function handleSelectedItem(selectedItemVal: string) {
   if (selectedItem.value.includes(selectedItemVal)) {
@@ -59,6 +63,11 @@ async function handleUpdateInsurance() {
     healthInsurancePolicyHolder.value
   )
   patientStore.getPatientFromGraphQL(patientStore?.currentPatientId || (route.params.patientId as string))
+}
+
+function handleUpdateRemsNumber(updatedRemsNumber: string) {
+  isEditing.value = !isEditing.value
+  remsNumber.value = updatedRemsNumber
 }
 
 watch(patientLastConfirmationDate, (newDate) => {
@@ -123,7 +132,7 @@ watch(patientStore.currentPatientId, () => {
       <div class="text-[16px] font-[400] mt-[32px] text-gray-3 flex flex-col items-start gap-y-6">
         <div class="flex items-center gap-x-[14px]">
           <img :src="PhoneIcon" alt="Phone Icon" />
-          <div>{{ patientStore.patientData?.patientPhoneNumber || 'need to fix' }}</div>
+          <div>{{ patientStore.patientData?.patientPhoneNumber || '-' }}</div>
         </div>
         <div class="flex items-center gap-x-[14px]">
           <img :src="EmailIcon" alt="Email Icon" />
@@ -268,32 +277,21 @@ watch(patientStore.currentPatientId, () => {
           </div>
           <!-- Service Details -->
           <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
-            <div class="flex items-center gap-x-2">
-              REMS number
-              <BaseModal :no-shadow="true" @action-click="handleUpdateInsurance">
-                <template #header>
-                  <div>iPledge Details</div>
-                </template>
-                <template #content>
-                  <div class="min-w-[380px]">
-                    <div class="mb-[10px] px-2 uppercase text-[12px] font-[500] text-[#313337]">REMS Number</div>
-                    <input
-                      class="rounded-[80px] border border-[#E4E7EC] h-[48px] w-full"
-                      v-model="healthInsuranceName"
-                      type="text"
-                      placeholder="Enter REMS Number"
-                    />
-                  </div>
-                </template>
-                <template #button>
-                  <div class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
-                    <img :src="PencilIcon" alt="Pencil Icon" />
-                  </div>
-                </template>
-                <template #button-text> Submit </template>
-              </BaseModal>
+            <div class="flex items-center gap-x-2">REMS number</div>
+            <div class="flex justify-end h-10 items-center -mb-4">
+              <div @click="isEditing = !isEditing" class="mx-2" v-if="!isEditing">{{ remsNumber || patientStore?.patientData?.patientREMsNumber }}</div>
+              <input
+                v-if="isEditing"
+                v-model="remsNumber"
+                type="text"
+                class="border h-10 rounded-md mx-2 text-end w-1/2 text-lg border-[#E1E0E6]"
+                :placeholder="patientStore?.patientData?.patientREMsNumber"
+              />
+              <div v-if="!isEditing" class="w-[32px] h-[32px] flex justify-center items-center border border-[#E1E0E6] rounded-[8px] cursor-pointer">
+                <img @click="isEditing = !isEditing" :src="PencilIcon" alt="Pencil Icon" />
+              </div>
+              <img v-if="isEditing" @click="handleUpdateRemsNumber(remsNumber)" :src="CheckIcon" alt="Pencil Icon" />
             </div>
-            <div>{remsNumber}</div>
           </div>
           <div class="flex w-full justify-between mb-[32px] text-gray-5 font-[400]">
             <div>Date of enrollment</div>
@@ -326,7 +324,7 @@ watch(patientStore.currentPatientId, () => {
           </div>
           <!-- v-if="profileStore?.profileData?.userRole != 'patient'" -->
           <div
-            class="text-[12px] h-[40px] w-1/3 flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple uppercase cursor-pointer whitespace-nowrap"
+            class="text-[12px] h-[40px] w-5/12 flex justify-center items-center rounded-[60px] bg-[#EFEBFE] text-honeydew-purple uppercase cursor-pointer whitespace-nowrap"
           >
             <div class="mr-[6px]"></div>
             pause or stop
@@ -392,6 +390,7 @@ watch(patientStore.currentPatientId, () => {
     <!-- Details list -->
     <div v-if="toDoListOrDetailsSelected === 'Care Team'" class="py-6 px-8 flex flex-col gap-y-4">
       <BaseAssignProvider :patientData="patientStore.patientData" :patientId="route?.params?.patientId" />
+      <BaseAssignCoordinator :patientData="patientStore.patientData" :patientId="route?.params?.patientId" />
     </div>
   </div>
 </template>
@@ -410,8 +409,8 @@ watch(patientStore.currentPatientId, () => {
 input::placeholder,
 input {
   font-weight: 400;
-  font-size: 12px;
-  text-align: start;
-  padding: 0 0 0 8px;
+  font-size: 16px;
+  text-align: end;
+  padding: 0 8px 0 8px;
 }
 </style>

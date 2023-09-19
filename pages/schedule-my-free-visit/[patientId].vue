@@ -1,13 +1,15 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
-import { useProfileStore } from '@/stores/profile'
-import { useRouter } from 'vue-router'
-import MedicalBackground from '@/assets/images/medical-background.svg'
-import BackChevronIcon from '@/assets/icons/back-chevron-icon.svg'
-import FaceFrontOutline from '@/assets/images/face-front-outline.svg'
-import FaceLeftOutline from '@/assets/images/face-left-outline.svg'
-import FaceRightOutline from '@/assets/images/face-right-outline.svg'
-import { getPresignedUrl } from '~/lib/endpoints'
+import { ref } from 'vue'
+import { useProfileStore } from '../../stores/profile'
+import { usePatientStore } from '../../stores/patient'
+import { useRouter, useRoute } from 'vue-router'
+import MedicalBackground from '../../assets/images/medical-background.svg'
+import BackChevronIcon from '../../assets/icons/back-chevron-icon.svg'
+import FaceFrontOutline from '../../assets/images/face-front-outline.svg'
+import FaceLeftOutline from '../../assets/images/face-left-outline.svg'
+import FaceRightOutline from '../../assets/images/face-right-outline.svg'
+import { getPresignedUrl, updateAcneCurrentUse, updateAcneSkinDryness, updateAcneSkinSensitivity, updatePatientSexAssignedAtBirth } from '../../lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -17,12 +19,14 @@ definePageMeta({
 
 // ROUTING **********************************************************************
 const router = useRouter()
+const route = useRoute()
 
 // STORE **********************************************************************
 const profileStore = useProfileStore()
+const patientStore = usePatientStore()
 
 // STATE **********************************************************************
-const currentQuestionIdx = ref<number>(17)
+const currentQuestionIdx = ref<number>(0)
 const currentSelectedAnswer = ref<string>()
 const buttonLoadingState = ref<'idle' | 'loading' | 'failed' | 'success' | 'disabled'>('idle')
 const isPhotoUploaded = ref(false)
@@ -121,6 +125,7 @@ async function handleAnswerSubmitValidation() {
   // How long have you had acne
   if (currentQuestionIdx.value === 1) {
     profileStore.howLongHaveYouHadAcne = currentSelectedAnswer.value as "I'm new to acne" | "I've had acne for months" | "I've had acne for years"
+    updateAcneCurrentUse(route.params.patientId, currentSelectedAnswer.value)
     currentQuestionIdx.value = 2
     currentSelectedAnswer.value = ''
     return
@@ -130,6 +135,7 @@ async function handleAnswerSubmitValidation() {
   if (currentQuestionIdx.value === 2) {
     if (!currentSelectedAnswer.value) return
     profileStore.doYouHaveDrySkin = currentSelectedAnswer.value as 'Very dry' | 'Often dry' | 'Combination' | 'Often oily' | 'Very oily'
+    updateAcneSkinDryness(route.params.patientId, currentSelectedAnswer.value)
     currentQuestionIdx.value = 3
     currentSelectedAnswer.value = ''
     return
@@ -138,6 +144,7 @@ async function handleAnswerSubmitValidation() {
   // Do you have sensitive skin?
   if (currentQuestionIdx.value === 3) {
     profileStore.doYouHaveSensitiveSkin = currentSelectedAnswer.value as 'Very sensitive' | 'Somewhat sensitive' | 'Not really'
+    updateAcneSkinSensitivity(route.params.patientId, currentSelectedAnswer.value)
     currentQuestionIdx.value = 4
     currentSelectedAnswer.value = ''
     return
@@ -146,6 +153,7 @@ async function handleAnswerSubmitValidation() {
   // What is your sex assigned at birth?
   if (currentQuestionIdx.value === 4) {
     profileStore.sexAssignedAtBirth = currentSelectedAnswer.value as 'Male' | 'Female'
+    updatePatientSexAssignedAtBirth(route.params.patientId, currentSelectedAnswer.value)
     if (currentSelectedAnswer.value === 'Female') {
       currentQuestionIdx.value = 5
     } else if (currentSelectedAnswer.value === 'Male') {
@@ -260,7 +268,6 @@ async function handleAnswerSubmitValidation() {
     profileStore.saveScheduleVisitData()
     currentQuestionIdx.value = 17
     currentSelectedAnswer.value = ''
-    router.push('/profile')
     return
   }
 
@@ -643,11 +650,6 @@ async function handleAnswerSubmitValidation() {
           </div>
         </div>
         <BaseButton :state="currentSelectedAnswer ? 'idle' : 'disabled'" @click="handleAnswerSubmitValidation" class="w-full mt-[16px]">Continue</BaseButton>
-        <a href="https://schedule.nylas.com/ryan-paglione-30min" target="_Blank">
-          <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[290px] mt-[32px] px-8"
-            >Schedule Appointment</BaseButton
-          >
-        </a>
       </div>
 
       <!-- Last step! Let’s see your skin -->
@@ -675,6 +677,7 @@ async function handleAnswerSubmitValidation() {
             :image-URL="FaceRightOutline"
           />
         </div>
+        <BaseNylas />
 
         <div class="w-full flex justify-center items-center">
           <!-- <a :href="'/view-history' + profileStore.patientData.patientId">
@@ -687,6 +690,7 @@ async function handleAnswerSubmitValidation() {
               >Schedule Appointment</BaseButton
             >
           </a>
+          <a href="/profile">SKip</a>
         </div>
       </div>
 

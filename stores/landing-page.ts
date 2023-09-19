@@ -14,7 +14,7 @@ export const useLandingPageStore = defineStore('landing-page', () => {
 
   function handleFirstVisitCouponVisible() {
     setTimeout(() => {
-      firstVisitCouponVisible.value = true
+      firstVisitCouponVisible.value = false
     }, 4000)
   }
 

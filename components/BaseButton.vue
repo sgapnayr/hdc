@@ -51,12 +51,12 @@ withDefaults(
 
     <!-- Success State -->
     <TheTransitionWrapper>
-      <div v-if="state === 'success'" class="absolute w-full text-white">SUCCESS</div>
+      <div v-if="state === 'success'" class="absolute w-full text-white">Success.</div>
     </TheTransitionWrapper>
 
     <!-- Failure State -->
     <TheTransitionWrapper>
-      <div v-if="state === 'failed'" class="absolute w-full text-white">FAILED</div>
+      <div v-if="state === 'failed'" class="absolute w-full text-white">Try Again.</div>
     </TheTransitionWrapper>
   </button>
 </template>

@@ -136,7 +136,9 @@ patientStore.getPatientFromGraphQL((patientStore.currentPatientId as string) || 
           <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Medical background</h1>
           <div>
             <div v-if="profileStore?.scheduleVisitDataArr?.length === 0">
-              <a href="/schedule-my-free-visit" class="opacity-50 hover:opacity-100 cursor-pointer transition my-2 text-sm">Fill Out Medical Background?</a>
+              <a :href="`/schedule-my-free-visit/${route.params.patientId}`" class="opacity-50 hover:opacity-100 cursor-pointer transition my-2 text-sm"
+                >Fill Out Medical Background?</a
+              >
             </div>
             <div v-for="(medicalItem, jdx) in profileStore.scheduleVisitDataArr">
               <div
