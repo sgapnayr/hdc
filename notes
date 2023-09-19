@@ -2,14 +2,17 @@
 // TODO: Patient search funciton searches name not patientName or patientFirstName or patientLastName
 // TODO: DOB sending back \ line in string, I've spliced and mapped it, but just ask if its the best way to do that
 // TODO: Need to add patient status, ie current patient, new patient, etc.
+// TODO: Explain to Ryan who can assign Providers to Patients (getting Not authorized error)
 
 // Ryan
 // TODO: ASSIGN PROVIDER (on schedule appointment button)
+// TODO: SHOW PROVIDER (on view history page)
 // TODO: MEDICAL BACKGROUND FLOW CLEAN UP AND ADD ENDPOINT
 // TODO: GENERATE REPORT MISSED APPOINTMENT BUTTON
 // TODO: TO DO ITEMS FOR PATIENT (todo.iscomplete)
 // TODO: BLOOD SLIP
 // TODO: UPLOAD DOCUMENTS
+// TODO: Put Calendar at End of Sign Up Flow (step 6 or 7)
 
 // Team
 // TOUCH UP: ADMIN PAGE

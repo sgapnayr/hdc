@@ -379,7 +379,7 @@ watch(patientStore.currentPatientId, () => {
 
       <div v-else class="w-full flex flex-col">
         <div v-for="(task, idx) in tasksStore.taskForPatient" class="flex w-full justify-between p-4 bg-[#f8f7fe] my-2 rounded-md items-center shadow-sm">
-          <div>
+          <div class="w-full text-start">
             {{ task.taskComments }}
           </div>
           <div class="flex opacity-50 text-sm">
@@ -391,13 +391,7 @@ watch(patientStore.currentPatientId, () => {
 
     <!-- Details list -->
     <div v-if="toDoListOrDetailsSelected === 'Care Team'" class="py-6 px-8 flex flex-col gap-y-4">
-      <!-- Fan tabs -->
-      <div class="p-4 bg-[#FCFCFD] rounded-[12px] border border-[#F2F4F7] flex justify-between cursor-pointer boxShadow">
-        <div class="flex gap-x-2 items-center">
-          <div class="w-10 h-10 bg-honeydew-purple2 rounded-full"></div>
-          <div>{provider}</div>
-        </div>
-      </div>
+      <BaseAssignProvider :patientData="patientStore.patientData" :patientId="route?.params?.patientId" />
     </div>
   </div>
 </template>

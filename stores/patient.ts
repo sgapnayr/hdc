@@ -74,6 +74,7 @@ export const usePatientStore = defineStore('patient', () => {
               : [],
           actionItems: actionItems || 'actionItems',
           insurance: insurance || 'insurance',
+          patientProvider: backendPatient.proivder || 'provider',
         }
 
         if (!currentPrimaryAccountData.value) {
