@@ -114,7 +114,7 @@ async function handleAnswerSubmitValidation() {
   // Confirm Email Validation
   if (currentQuestionIdx.value === 5) {
     profileStore.signUpConfirmationCode = currentSelectedAnswer.value
-    window.location.href = 'https://schedule.nylas.com/joel-spitz-initial-consultation-30min'
+    window.location.href = 'https://schedule.nylas.com/init-meeting'
     await confirmAccount(profileStore.signUpEmail as string, profileStore.signUpConfirmationCode as string)
     setTimeout(() => {
       currentSelectedAnswer.value = ''
