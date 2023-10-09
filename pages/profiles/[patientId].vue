@@ -132,7 +132,6 @@ const toDoItems = [
             <div class="my-4 md:my-auto w-full">
               <div v-for="(todo, idx) in toDoItems" :key="idx" class="flex justify-start items-start flex-col gap-y-4 w-full">
                 <div
-                  v-if="!todo.isComplete"
                   :class="todo.text === 'Submit pregnancy test' && patientStore?.patientData?.patientSex === 'Male' ? 'hidden' : ''"
                   class="flex items-center justify-between w-full my-1"
                 >
@@ -146,9 +145,7 @@ const toDoItems = [
                       {{ todo.text }}
                     </div>
                     <BaseAccutane v-else @accutane-flow-viewed="todo.text === 'View Accutane info' ? (todo.isComplete = true) : ''" />
-                    <div class="justify-end">
-                      <img v-if="!todo.isComplete" class="rotate-[270deg]" :src="ChevronIcon2" alt="Chevron Icon 2" />
-                    </div>
+                    <img v-if="!todo.isComplete" class="rotate-[270deg]" :src="ChevronIcon2" alt="Chevron Icon 2" />
                   </div>
                 </div>
               </div>

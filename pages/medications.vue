@@ -134,9 +134,7 @@ async function updateMedicine(medicationId: string) {
 async function handleCreateTreatmentPlan() {
   if (!inputsValid) return
   const planName = toRaw(newTreatmentPlanName.value)
-  console.log(medArr.value)
   const groupArray = medArr.value
-  console.log(groupArray)
   let topArray = []
   for (let i = 0; i < groupArray.length; i++) {
     topArray.push({ medicationsIds: toRaw(groupArray[i]) })
@@ -432,6 +430,7 @@ function clearMedicationArr() {
               {{ patientList?.patients }}
             </div>
             <!-- Table Medicine -->
+            {{ medicationsStore.treatmentData }}
             <div
               v-for="(treatment, idx) in medicationsStore.treatmentData"
               :key="idx"

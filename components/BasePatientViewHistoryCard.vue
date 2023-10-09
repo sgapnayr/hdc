@@ -113,6 +113,8 @@ watch(patientStore.currentPatientId, () => {
         </div>
       </div>
 
+      <BaseDiagnosisCodes />
+
       <!-- Patient Info -->
       <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">
         {{ patientStore?.patientData?.patientName || 'Loading...' }}

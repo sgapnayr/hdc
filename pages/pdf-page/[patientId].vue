@@ -74,7 +74,7 @@ patientStore.getPatientFromGraphQL((patientStore.currentPatientId as string) || 
       <div class="text-[16px] font-[400] mt-[32px] text-gray-3 flex flex-col items-start gap-y-6">
         <div class="flex items-center gap-x-[14px]">
           <img :src="PhoneIcon" alt="Phone Icon" />
-          <div>{{ patientStore.patientData?.patientPhoneNumber || 'need to fix' }}</div>
+          <div>{{ patientStore.patientData?.patientPhoneNumber || '-' }}</div>
         </div>
         <div class="flex items-center gap-x-[14px]">
           <img :src="EmailIcon" alt="Email Icon" />

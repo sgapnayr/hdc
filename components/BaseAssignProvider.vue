@@ -38,7 +38,7 @@ async function handleSelectedProvider(provider: any) {
 <template>
   <div class="flex flex-col">
     <div
-      class="p-4 bg-[#f8f7fe] border border-[#F2F4F7] flex justify-between cursor-pointer boxShadow flex-col hover:bg-[#F2F4F7] active:opacity-0 transition"
+      class="p-4 border border-[#F2F4F7] flex justify-between cursor-pointer boxShadow flex-col hover:bg-[#F2F4F7] active:opacity-0 transition"
       :class="[isMenuOpen ? 'rounded-t-md z-40' : 'rounded-md']"
       placeholder="Search by patient's name"
       type="text"
@@ -46,7 +46,7 @@ async function handleSelectedProvider(provider: any) {
     >
       <div class="rounded-[24px] whitespace-nowrap flex justify-between w-full">
         <div class="flex gap-x-2 items-center">
-          <div class="w-7 h-7 bg-honeydew-purple2 rounded-full"></div>
+          <div class="w-7 h-7 bg-[#f8f7fe] rounded-full"></div>
           {{ selectedProvider || patientData.patientProvider || 'Select Provider' }}
         </div>
         <img :class="[isMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="transition" />
@@ -61,7 +61,7 @@ async function handleSelectedProvider(provider: any) {
         @click="handleSelectedProvider(provider)"
       >
         <div class="flex gap-x-2 items-center">
-          <div class="w-7 h-7 bg-honeydew-purple2 rounded-full"></div>
+          <div class="w-7 h-7 bg-white rounded-full"></div>
           {{ provider.firstName + ' ' + provider.lastName }}
         </div>
       </div>

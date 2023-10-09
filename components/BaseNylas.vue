@@ -21,7 +21,7 @@ export default {
         auth: {
           // Account <ACCESS_TOKEN> with active calendar scope
           // accessToken: process.env.VUE_APP_NYLAS_ACCESS_TOKEN,
-          accessToken: 'cEpzgGK2PLdHkMWFlzGRqtW1y2qCNA',
+          accessToken: '6cP8Q2C1QS8NZPGzKGUoZNlBRvUpq7',
         },
         style: {
           // Style the Schedule Editor

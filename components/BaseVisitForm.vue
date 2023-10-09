@@ -65,7 +65,7 @@ const generatePreview = (file: any) => {
 }
 
 const handleStartVisit = async () => {
-  navigateTo('/treatment-plan')
+  navigateTo('/submit-the-visit/' + route.params.patientId)
   setTimeout(() => {
     emit('close-modal')
   }, 100)

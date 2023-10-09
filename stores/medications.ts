@@ -30,7 +30,8 @@ export const useMedicationStore = defineStore('medication', () => {
   async function getTreatmentPlansFromGraphQL() {
     try {
       const response = await getTreatmentPlans()
-      this.treatmentData = response
+      console.log(response, 'HERE')
+      treatmentData.value = response
     } catch (err) {
       console.log('error getting treatment plans: ', err)
     }
