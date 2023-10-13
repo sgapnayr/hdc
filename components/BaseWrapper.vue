@@ -24,7 +24,7 @@ withDefaults(
 
 <template>
   <div class="w-full mx-0 box-border px-[16px] md:px-[32px]" :style="{ backgroundImage: 'url(' + backgroundImage + ')', backgroundSize }">
-    <div class="h-full max-w-[1440px] w-full m-auto">
+    <div class="h-full max-w-[1440px] w-full m-auto overflow-scroll">
       <slot />
     </div>
   </div>

@@ -232,7 +232,7 @@ const toDoItems = [
       </div>
 
       <!-- Lower cards -->
-      <div class="flex gap-x-6 mt-[24px] lg:flex-row flex-col gap-y-6">
+      <div class="flex gap-x-6 mt-[24px] xl:grid-cols-4 md:grid md:grid-cols-2 flex-col gap-y-6">
         <!-- My treatment plan -->
         <div class="w-full flex justify-center items-center bg-white rounded-[16px] p-5 flex-col shadow-sm min-w-[290px]">
           <img :src="MyTreatmentPlan" alt="My Treatment Plan" class="w-full" />
@@ -283,7 +283,7 @@ const toDoItems = [
         <!-- View my progress -->
         <div class="w-full flex justify-center items-center bg-white rounded-[16px] p-5 flex-col shadow-sm min-w-[290px]">
           <img :src="ViewMyProgress" alt="View My Progress" class="w-full" />
-          <div>
+          <div class="w-full">
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 flex gap-x-1 mt-[20px]">
               View my progress
               <img :src="LockIcon" alt="Lock Icon" />
@@ -301,7 +301,7 @@ const toDoItems = [
         <!-- Buy products -->
         <div class="w-full flex justify-center items-center bg-white rounded-[16px] p-5 flex-col shadow-sm min-w-[290px]">
           <img :src="BuyProducts" alt="My Treatment Plan" class="w-full" />
-          <div>
+          <div class="w-full">
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 mt-[20px]">Buy products</h1>
             <p class="text-gray-5 mt-[8px] text-[14px]">Honeydew-vetted products shipped directly to you.</p>
             <button
@@ -316,7 +316,7 @@ const toDoItems = [
         <!-- Chat with care team -->
         <div class="w-full flex justify-center items-center bg-white rounded-[16px] p-5 flex-col shadow-sm min-w-[290px]">
           <img :src="ChatWithCareTeam" alt="My Treatment Plan" class="w-full" />
-          <div>
+          <div class="w-full">
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 flex gap-x-1 mt-[20px]">
               Chat with care team
               <img :src="LockIcon" alt="Lock Icon" />

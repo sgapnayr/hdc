@@ -4,6 +4,7 @@ import { getMedications, getTreatmentPlans } from '~/lib/endpoints'
 export const useMedicationStore = defineStore('medication', () => {
   const medicationData = ref()
   const treatmentData = ref()
+  const selectedPatientTreatmentPlan = ref()
 
   // GETTERS ****************************************************************
   async function getMedicationsFromGraphQL() {
@@ -30,12 +31,11 @@ export const useMedicationStore = defineStore('medication', () => {
   async function getTreatmentPlansFromGraphQL() {
     try {
       const response = await getTreatmentPlans()
-      console.log(response, 'HERE')
       treatmentData.value = response
     } catch (err) {
       console.log('error getting treatment plans: ', err)
     }
   }
 
-  return { medicationData, treatmentData, getMedicationsFromGraphQL, getTreatmentPlansFromGraphQL }
+  return { medicationData, treatmentData, getMedicationsFromGraphQL, getTreatmentPlansFromGraphQL, selectedPatientTreatmentPlan }
 })

@@ -2,7 +2,9 @@
 // IMPORTS ********************************************************************
 import { ref } from 'vue'
 import { usePatientStore } from '../../stores/patient'
+import { useMedicationStore } from '../../stores/medications'
 import { useRoute } from '~/.nuxt/vue-router'
+import { assignTreatmentPlanToPatient } from '@/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -14,6 +16,7 @@ const route = useRoute()
 
 // STORE **********************************************************************
 const patientStore = usePatientStore()
+const medicationStore = useMedicationStore()
 
 // STATE **********************************************************************
 const tabSelected = ref<string>('Treatment Plan')
@@ -24,6 +27,7 @@ patientStore.getPatientFromGraphQL(route?.params?.patientId as string)
 
 <template>
   <BaseWrapper>
+    {{ medicationStore.selectedPatientTreatmentPlan }}
     <div class="p-8 rounded-[16px] flex justify-between w-full relative flex-col">
       <div class="w-full">
         <div class="flex justify-between w-full flex-col md:flex-row">
@@ -33,7 +37,8 @@ patientStore.getPatientFromGraphQL(route?.params?.patientId as string)
             </div>
           </div>
           <div
-            class="text-[12px] h-[40px] flex justify-center items-center rounded-[60px] text-white bg-honeydew-purple uppercase cursor-pointer mt-[16px] text-center whitespace-nowrap px-6"
+            @click="assignTreatmentPlanToPatient(route?.params?.patientId)"
+            class="text-[12px] h-[40px] flex justify-center items-center rounded-[60px] text-white bg-honeydew-purple uppercase cursor-pointer mt-[16px] text-center whitespace-nowrap px-6 hover:opacity-50 active:opacity-0 transition"
           >
             Submit Visit
           </div>

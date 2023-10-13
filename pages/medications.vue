@@ -430,7 +430,6 @@ function clearMedicationArr() {
               {{ patientList?.patients }}
             </div>
             <!-- Table Medicine -->
-            {{ medicationsStore.treatmentData }}
             <div
               v-for="(treatment, idx) in medicationsStore.treatmentData"
               :key="idx"
