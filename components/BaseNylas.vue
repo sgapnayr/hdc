@@ -16,19 +16,19 @@ export default {
   },
   methods: {
     openScheduleEditor() {
-      const patientIdFromRoute = this.$route.params.patientId;
+      const patientIdFromRoute = this.$route.params.patientId
       // Prompt the Schedule Editor when a user clicks on the button
       nylas.scheduler.show({
         booking: {
           additional_fields: [
             {
-              label: "Existing Customer",
+              label: 'Existing Customer',
               patientId: patientIdFromRoute,
               required: true,
-              type: "text"
-            }
-          ]
-        }
+              type: 'text',
+            },
+          ],
+        },
         auth: {
           // Account <ACCESS_TOKEN> with active calendar scope
           // accessToken: process.env.VUE_APP_NYLAS_ACCESS_TOKEN,
