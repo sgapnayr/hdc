@@ -333,12 +333,11 @@ watch(patientStore.currentPatientId, () => {
           </div>
         </div>
       </div>
-      <NuxtLink
-        to="/schedule-with-provider-follow-up"
-        class="bg-honeydew-purple h-[48px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap mt-4 mx-8"
-      >
-        schedule my follow-up visit
-      </NuxtLink>
+      <a href="https://schedule.nylas.com/init-meeting" target="_Blank">
+        <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[290px] mt-[32px] px-8"
+          >Schedule Appointment</BaseButton
+        >
+      </a>
     </div>
 
     <!-- To Do & Details list -->

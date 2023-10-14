@@ -27,6 +27,7 @@ patientStore.getPatientFromGraphQL(route?.params?.patientId as string)
 
 <template>
   <BaseWrapper>
+    <BaseNylas />
     <div class="p-8 rounded-[16px] flex justify-between w-full relative flex-col no-scrollbars">
       <div class="w-full">
         <div class="flex justify-between w-full flex-col md:flex-row">
