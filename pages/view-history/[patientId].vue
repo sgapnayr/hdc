@@ -9,7 +9,7 @@ import CaretIcon from '@/assets/icons/caret-icon.svg'
 import PlusCircleIcon from '@/assets/icons/plus-circle.svg'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
 import { useRoute } from 'vue-router'
-import { getPatient } from '../../lib/endpoints'
+import { getPatient, getPatientTreatment } from '../../lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -33,6 +33,7 @@ const documentModalMenuOpen = ref(false)
 const photo = ref()
 const previewURL = ref()
 const dragging = ref(false)
+const test = ref()
 
 // METHODS *********************************************************************
 function handleOpen(idx: string) {
@@ -89,10 +90,14 @@ watch(patientStore.currentPatientId, () => {
 
 profileStore.setMyProfile((patientStore.currentPatientId as string) || (route.params.patientId as string))
 patientStore.getPatientFromGraphQL((patientStore.currentPatientId as string) || (route.params.patientId as string))
+
+getPatientTreatment(route?.params?.patientId as string)
 </script>
 
 <template>
   <BaseWrapper>
+    <BaseNylas />
+
     <div class="flex justify-end w-full gap-x-4 flex-row -mb-8 mt-4">
       <div>
         <BaseAddTaskButton />

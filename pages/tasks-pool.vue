@@ -206,7 +206,6 @@ handleGetAllTasks()
 
 <template>
   <div class="w-full py-8">
-    <BaseNylas />
     <BaseWrapper>
       <!-- Summary Top -->
       <div class="w-full">
