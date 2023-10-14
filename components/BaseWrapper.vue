@@ -23,8 +23,8 @@ withDefaults(
 </script>
 
 <template>
-  <div class="w-full mx-0 box-border px-[16px] md:px-[32px]" :style="{ backgroundImage: 'url(' + backgroundImage + ')', backgroundSize }">
-    <div class="h-full max-w-[1440px] w-full m-auto overflow-scroll">
+  <div class="w-full mx-0 box-border px-[16px] md:px-[32px] no-scrollbars" :style="{ backgroundImage: 'url(' + backgroundImage + ')', backgroundSize }">
+    <div class="h-full max-w-[1440px] w-full m-auto overflow-scroll no-scrollbars">
       <slot />
     </div>
   </div>

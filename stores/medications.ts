@@ -5,6 +5,7 @@ export const useMedicationStore = defineStore('medication', () => {
   const medicationData = ref()
   const treatmentData = ref()
   const selectedPatientTreatmentPlan = ref()
+  const selectedTreatmentGroupState = ref()
 
   // GETTERS ****************************************************************
   async function getMedicationsFromGraphQL() {
@@ -37,5 +38,12 @@ export const useMedicationStore = defineStore('medication', () => {
     }
   }
 
-  return { medicationData, treatmentData, getMedicationsFromGraphQL, getTreatmentPlansFromGraphQL, selectedPatientTreatmentPlan }
+  return {
+    medicationData,
+    treatmentData,
+    getMedicationsFromGraphQL,
+    getTreatmentPlansFromGraphQL,
+    selectedPatientTreatmentPlan,
+    selectedTreatmentGroupState,
+  }
 })
