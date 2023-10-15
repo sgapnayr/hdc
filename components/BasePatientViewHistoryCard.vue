@@ -333,7 +333,7 @@ watch(patientStore.currentPatientId, () => {
           </div>
         </div>
       </div>
-      <a href="https://schedule.nylas.com/init-meeting" target="_Blank">
+      <a href="https://schedule.nylas.com/test-account" target="_Blank">
         <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[290px] mt-[32px] px-8"
           >Schedule Appointment</BaseButton
         >

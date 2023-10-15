@@ -27,7 +27,6 @@ patientStore.getPatientFromGraphQL(route?.params?.patientId as string)
 
 <template>
   <BaseWrapper>
-    <BaseNylas />
     <div class="p-8 rounded-[16px] flex justify-between w-full relative flex-col no-scrollbars">
       <div class="w-full">
         <div class="flex justify-between w-full flex-col md:flex-row">
@@ -36,11 +35,16 @@ patientStore.getPatientFromGraphQL(route?.params?.patientId as string)
               Submit {{ patientStore?.patientData?.patientName && patientStore?.patientData?.patientName + "'s" }} visit
             </div>
           </div>
-          <div
-            @click="assignTreatmentPlanToPatient(route?.params?.patientId, medicationStore.selectedPatientTreatmentPlan)"
-            class="text-[12px] h-[40px] flex justify-center items-center rounded-[60px] text-white bg-honeydew-purple uppercase cursor-pointer mt-[16px] text-center whitespace-nowrap px-6 hover:opacity-50 active:opacity-0 transition"
-          >
-            Submit Visit
+          <div class="flex gap-x-4 items-center">
+            <div class="text-[12px] h-[40px] px-4 flex justify-center items-center rounded-[60px] uppercase cursor-pointer bg-[#EEEBFC] text-honeydew-purple">
+              Save Updates
+            </div>
+            <div
+              @click="assignTreatmentPlanToPatient(route?.params?.patientId, medicationStore.selectedPatientTreatmentPlan)"
+              class="text-[12px] h-[40px] flex justify-center items-center rounded-[60px] text-white bg-honeydew-purple uppercase cursor-pointer text-center whitespace-nowrap px-6 hover:opacity-50 active:opacity-0 transition"
+            >
+              Submit Visit
+            </div>
           </div>
         </div>
         <div class="flex text-[16px] font-[400] gap-x-8">

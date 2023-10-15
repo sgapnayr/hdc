@@ -15,6 +15,8 @@ const props = defineProps<{
   titleText?: string
   customClass?: string
   placeHolder?: string
+  noTitle?: boolean
+  customWidth?: string
 }>()
 
 // STATE **********************************************************************
@@ -31,10 +33,12 @@ function handleSelectedOption(option: string) {
 </script>
 
 <template>
-  <div class="w-[390px]" :class="[isMenuOpen ? 'z-40' : 'z-0']">
-    <h2 :class="customClass" class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">{{ titleText || 'Date' }}</h2>
+  <div :class="[customWidth ? `w-[${customWidth}px]` : 'w-[390px]', isMenuOpen ? 'z-40' : 'z-0']">
+    <h2 v-if="!noTitle" :class="customClass" class="text-[12px] font-[500] leading-[40px] text-gray-3 flex w-full justify-between uppercase">
+      {{ titleText || 'Date' }}
+    </h2>
     <div
-      class="bg-white md:w-full h-[48px] mb-[24px] shadow-md outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
+      class="bg-white md:w-full h-[48px] mb-[24px] shadow-sm outline-none focus:ring-0 flex justify-between items-center px-2 relative cursor-pointer"
       :class="[isMenuOpen ? 'rounded-t-[28px] z-40' : 'rounded-[80px]']"
       placeholder="Search by patient's name"
       type="text"

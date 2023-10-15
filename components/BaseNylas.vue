@@ -23,7 +23,7 @@ export default {
           additional_fields: [
             {
               label: 'Existing Customer',
-              patientId: patientIdFromRoute,
+              patientId: patientIdFromRoute.toString(),
               required: true,
               type: 'text',
             },

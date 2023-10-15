@@ -1,4 +1,8 @@
 <script setup lang="ts">
+// TODO: Update Base Select Medicine needs an ID so I can delete the correct one
+// TODO: Update Base Select Medicine need to store proper one in URL params to maintain state
+// TODO: Save Changes needs to be an update endpoint
+
 // IMPORTS ********************************************************************
 import 'v-calendar/style.css'
 import Datepicker from 'vuejs3-datepicker'
@@ -32,6 +36,7 @@ const selectedTreatmentGroupId = computed(() => {
 
 // FUNCTIONS ********************************************************************
 const updateSelectedTreatmentGroup = (val) => {
+  addedTreatments.value = []
   selectedTreatmentGroup.value = val
   router.push({ query: { selectedTreatmentGroup: val } })
 
@@ -40,11 +45,26 @@ const updateSelectedTreatmentGroup = (val) => {
   )[0].treatmentId
 }
 
+const addTreatment = (treatment) => {
+  addedTreatments.value.push({ treatment: treatment, id: Math.random() })
+  updateUrl()
+}
+
+const updateUrl = () => {
+  const addedTreatmentsStr = JSON.stringify(addedTreatments.value)
+  router.push({ query: { ...router.currentRoute.value.query, addedTreatments: addedTreatmentsStr } })
+}
+
+function updatedSpecialInstruction(val: boolean, treatmentId: string) {
+  return val, treatmentId
+}
+
 // STATE ********************************************************************
 const patientCurrentTreatmentPlan = ref()
 const selectedTreatmentGroup = ref(medicationStore?.treatmentData?.map((treatmentGroup) => treatmentGroup.treatmentName)[0])
 const router = useRouter()
 const route = useRoute()
+const addedTreatments = ref([])
 
 // INITIALIZATION *************************************************************
 onMounted(() => {
@@ -57,6 +77,15 @@ onMounted(() => {
   if (route.query.selectedTreatmentGroup) {
     selectedTreatmentGroup.value = route.query.selectedTreatmentGroup as string
   }
+
+  const urlAddedTreatments = route.query.addedTreatments
+  if (urlAddedTreatments) {
+    try {
+      addedTreatments.value = JSON.parse(urlAddedTreatments as string)
+    } catch (error) {
+      console.error('Error parsing addedTreatments from URL', error)
+    }
+  }
 })
 </script>
 
@@ -67,7 +96,7 @@ onMounted(() => {
       <BaseDropDown @selected-option="updateSelectedTreatmentGroup" :options="treatmentNames" titleText="Treatment Plan" />
     </div>
     <div class="table-container">
-      <div class="flex flex-col my-4 rounded-2xl shadow-sm no-scrollbars min-w-[1244px]">
+      <div class="flex flex-col my-4 rounded-2xl shadow-sm no-scrollbars min-w-[1024px]">
         <div class="grid grid-cols-12 bg-[#F2F4F7] p-6">
           <div class="col-span-3">Treatment</div>
           <div class="col-span-2">Instructions</div>
@@ -85,8 +114,16 @@ onMounted(() => {
               <div class="col-span-3">{{ medicine.name }}</div>
               <div class="col-span-2">{{ medicine.instructions }}</div>
               <div class="col-span-3 flex">
-                <BaseCheckBox :isChecked="medicine.specialInstructions.split(',')[0]">AM</BaseCheckBox>
-                <BaseCheckBox :isChecked="medicine.specialInstructions.split(',').length > 1">PM</BaseCheckBox>
+                <BaseCheckBox
+                  @checkbox-selected="(val) => updatedSpecialInstruction(val, treatmentGroup.treatmentId)"
+                  :isChecked="medicine.specialInstructions.split(',')[0]"
+                  >AM</BaseCheckBox
+                >
+                <BaseCheckBox
+                  @checkbox-selected="(val) => updatedSpecialInstruction(val, treatmentGroup.treatmentId)"
+                  :isChecked="medicine.specialInstructions.split(',').length > 1"
+                  >PM</BaseCheckBox
+                >
               </div>
               <div class="col-span-1">{{ medicine.refills }}</div>
               <div class="col-span-2">{{ medicine.refillsExpirationRate }}</div>
@@ -96,9 +133,12 @@ onMounted(() => {
             </div>
           </div>
         </div>
+        <div v-for="(medicine, idx) in addedTreatments" class="w-full grid grid-cols-12 bg-white p-6 border-b border-b-gray-2 items-center">
+          <BaseSelectMedicineDropdown :key="idx" @remove-item="addedTreatments.splice(idx, 1)" :medicineData="medicationStore.medicationData" />
+        </div>
       </div>
     </div>
-    <div class="flex text-honeydew-purple cursor-pointer hover:opacity-50 transition active:opacity-0">+ ADD TREATMENT</div>
+    <div @click="addTreatment('')" class="flex text-honeydew-purple cursor-pointer hover:opacity-50 transition active:opacity-0">+ ADD TREATMENT</div>
 
     <div class="my-8 flex w-full gap-x-16">
       <div class="w-full">

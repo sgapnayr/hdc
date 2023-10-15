@@ -22,12 +22,12 @@ import { ref } from 'vue'
 import CheckIcon from '@/assets/icons/checkmark.svg'
 
 // PROPS ****************************************************************
-defineProps<{
+const props = defineProps<{
   isChecked?: boolean
 }>()
 
 // STATE ****************************************************************
-const isSelected = ref<boolean>(false)
+const isSelected = ref<boolean>(props.isChecked || false)
 
 // EMIT ****************************************************************
 const emit = defineEmits(['checkbox-selected'])
@@ -43,9 +43,9 @@ function handleCheckBox() {
   <div @click.stop="handleCheckBox" class="flex items-center md:items-start text-gray-4 w-full cursor-pointer">
     <div
       class="border border-gray-2 w-6 h-6 rounded-[4px] cursor-pointer text-white flex justify-center items-center"
-      :class="[isSelected || isChecked ? 'bg-honeydew-green' : '']"
+      :class="[isSelected ? 'bg-honeydew-green' : '']"
     >
-      <img v-if="isSelected || isChecked" :src="CheckIcon" alt="Checkmark Icon" class="scale-75" />
+      <img v-if="isSelected" :src="CheckIcon" alt="Checkmark Icon" class="scale-75" />
     </div>
     <div class="ml-[16px]">
       <slot>I agree to terms and conditions.</slot>
