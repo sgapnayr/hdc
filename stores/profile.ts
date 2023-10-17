@@ -52,7 +52,7 @@ export const useProfileStore = defineStore('profile', () => {
   >()
   const whichNonPrescriptionsDoYouUse = ref<string>()
   const areYouTakingOtherMedications = ref<'Yes' | 'No'>()
-  const doYouHaveAnyAllergies = ref<'Yes' | 'No'>()
+  const doYouHaveAnyAllergies = ref<string>('(Need to fill out medical background)')
   const describeYourStressLevel = ref<'Never stressed' | 'Almost never stressed' | 'Sometimes stressed' | 'Fairly stressed' | 'Very stressed'>()
   const describeYourSleep = ref<'5 hours or less' | 'Between 6 or 7 hours' | '8+ hours'>()
   const howOftenDoYouConsumeDairy = ref<'Never' | 'A few times a month' | ' A few times a week' | 'A few times a day'>()
@@ -105,7 +105,7 @@ export const useProfileStore = defineStore('profile', () => {
       {
         medicalTitle: 'Skin Type',
         content: [
-          { name: 'Dryness', value: doYouHaveDrySkin.value },
+          { name: 'Dryness', value: doYouHaveDrySkin.value || 'Value' },
           { name: 'Sensitivity', value: doYouHaveSensitiveSkin.value },
         ],
       },
@@ -132,7 +132,7 @@ export const useProfileStore = defineStore('profile', () => {
         medicalTitle: 'Other Medical History',
         content: [
           { name: 'Other Medications', value: areYouTakingOtherMedications.value },
-          { name: 'Allergies', value: doYouHaveAnyAllergies.value },
+          { name: 'Allergies', value: doYouHaveAnyAllergies.value || 'Potentially... (Need to fill out medical background)' },
         ],
       },
       {
@@ -147,6 +147,8 @@ export const useProfileStore = defineStore('profile', () => {
 
     scheduleVisitDataArr.value.push(...scheduleVisitData)
   }
+
+  saveScheduleVisitData()
 
   // EXPORTS ****************************************************************
   return {

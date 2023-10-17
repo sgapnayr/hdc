@@ -19,16 +19,6 @@ export default {
       const patientIdFromRoute = this.$route.params.patientId
       // Prompt the Schedule Editor when a user clicks on the button
       nylas.scheduler.show({
-        booking: {
-          additional_fields: [
-            {
-              label: 'Existing Customer',
-              patientId: patientIdFromRoute.toString(),
-              required: true,
-              type: 'text',
-            },
-          ],
-        },
         auth: {
           // Account <ACCESS_TOKEN> with active calendar scope
           // accessToken: process.env.VUE_APP_NYLAS_ACCESS_TOKEN,
@@ -38,12 +28,6 @@ export default {
           // Style the Schedule Editor
           tintColor: '#32325d',
           backgroundColor: 'white',
-        },
-        defaults: {
-          event: {
-            title: '30-min Meeting with Honeydew',
-            duration: 30,
-          },
         },
       })
     },

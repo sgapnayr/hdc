@@ -12,6 +12,14 @@ import { useRouter, useRoute } from 'vue-router'
 import DeleteIcon from '../assets/icons/delete-icon.svg'
 import { getPatientTreatmentPlanId } from '@/lib/endpoints'
 
+
+
+
+
+
+
+
+
 // STORES *********************************************************************
 const medicationStore = useMedicationStore()
 

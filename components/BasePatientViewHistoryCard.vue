@@ -113,8 +113,6 @@ watch(patientStore.currentPatientId, () => {
         </div>
       </div>
 
-      <BaseDiagnosisCodes />
-
       <!-- Patient Info -->
       <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3 mt-[32px]">
         {{ patientStore?.patientData?.patientName || 'Loading...' }}
@@ -333,11 +331,13 @@ watch(patientStore.currentPatientId, () => {
           </div>
         </div>
       </div>
-      <a href="https://schedule.nylas.com/test-account" target="_Blank">
-        <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[290px] mt-[32px] px-8"
-          >Schedule Appointment</BaseButton
-        >
-      </a>
+      <div class="flex justify-center items-center">
+        <a href="https://schedule.nylas.com/pags-30min" target="_Blank">
+          <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full max-w-[290px] mt-[32px] px-8"
+            >Schedule Appointment</BaseButton
+          >
+        </a>
+      </div>
     </div>
 
     <!-- To Do & Details list -->

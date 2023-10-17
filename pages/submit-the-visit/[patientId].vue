@@ -20,6 +20,7 @@ const medicationStore = useMedicationStore()
 
 // STATE **********************************************************************
 const tabSelected = ref<string>('Treatment Plan')
+const buttonState = ref('idle')
 
 // INIT **********************************************************************
 patientStore.getPatientFromGraphQL(route?.params?.patientId as string)
