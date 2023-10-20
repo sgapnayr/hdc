@@ -1,5 +1,4 @@
 <template>
-  <BaseNylas />
   <TheTransitionWrapper>
     <BaseCompletePregnancy v-if="profileStore.isPregnantModalOpen" @close-modal="profileStore.handlePregnancyModal" />
   </TheTransitionWrapper>

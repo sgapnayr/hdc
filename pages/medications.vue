@@ -179,7 +179,6 @@ function getMedicationsArr(medicationObject: { id: number; medicationId: string;
   }
 
   medArr.value[idx].push(medicationId)
-
   console.log(medArr.value)
 }
 
@@ -190,7 +189,6 @@ function clearMedicationArr() {
 
 <template>
   <div class="w-full py-8">
-    <BaseNylas />
     <BaseWrapper>
       <!-- Manage Team Top -->
       <div class="w-full">
