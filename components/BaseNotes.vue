@@ -71,14 +71,14 @@ fetchNotes()
   </div>
 
   <!-- Loading State -->
-  <div v-if="loading" class="w-full p-4 rounded-2xl bg-[#f0f5fe] animate-pulse my-2">Loading...</div>
+  <div v-if="loading" class="text-xl w-full p-4 rounded-2xl bg-[#f0f5fe] animate-pulse my-2">Loading...</div>
   <!-- No Notes State -->
   <div v-else-if="!notes?.length" class="text-gray-1 hover:text-black transition cursor-pointer">
     No new notes, write a message to your provider with the text box above.
   </div>
   <!-- Notes -->
   <div v-else v-for="(note, idx) in notes" class="bg-[#f0f5fe] w-full p-4 rounded-2xl text-[14px] text-[#403E48] my-2">
-    <div>{{ note.text }}</div>
-    <div class="text-[#6C6A7C] mt-4 text-xs">Created by {{ patientNames[note.creatorId] }} on {{ note.createdAt }}</div>
+    <div class="text-xl">{{ note.text }}</div>
+    <div class="text-gray-1 mt-4 text-[12px]">Created by {{ patientNames[note.creatorId] }} on {{ note.createdAt }}</div>
   </div>
 </template>

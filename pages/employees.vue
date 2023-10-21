@@ -523,7 +523,6 @@ patientStore.getPatientsFromGraphQL()
               :class="[tabSelected === 'Providers' ? 'grid-cols-4' : 'grid-cols-4', idx === filterByEmployeeType.length - 1 ? 'rounded-b-[16px]' : '']"
               class="grid text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
             >
-              {{ employee.employeeId }}
               <div>{{ employee.firstName }} {{ employee.lastName }}</div>
               <div>
                 {{ employee.email }}
