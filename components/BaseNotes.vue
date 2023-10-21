@@ -17,7 +17,7 @@ type NoteInput = {
 <template>
   <div class="flex items-center w-full my-4">
     <div class="bg-white flex px-2 pr-3 py-2 rounded-md w-full justify-between shadow-sm">
-      <input class="bg-white w-full text-start outline-none focus:outline-none focus:ring-0" placeholder="Input Note Here" type="text" />
+      <input class="bg-white w-full text-start outline-none focus:outline-none focus:ring-0" placeholder="Message your provider here" type="text" />
       <img class="cursor-pointer hover:opacity-50 transition active:scale-90" :src="SendButton" alt="Send Button" />
     </div>
   </div>
