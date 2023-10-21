@@ -215,7 +215,7 @@ getPatientTreatment(route?.params?.patientId as string)
 
         <div class="px-8 flex gap-x-8">
           <div class="w-2/3">
-            <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Patient Images</h1>
+            <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Patient Visits</h1>
             <BasePatientImages />
           </div>
           <div class="flex flex-col w-1/3">

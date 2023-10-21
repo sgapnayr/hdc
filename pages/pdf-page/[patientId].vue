@@ -78,7 +78,7 @@ patientStore.getPatientFromGraphQL((patientStore.currentPatientId as string) || 
         </div>
         <div class="flex items-center gap-x-[14px]">
           <img :src="EmailIcon" alt="Email Icon" />
-          <div>{{ auth?.user?.signInUserSession?.idToken?.payload?.email }}</div>
+          <div>{{ patientStore.patientData?.patientEmail || auth?.user?.signInUserSession?.idToken?.payload?.email }}</div>
         </div>
       </div>
       <!-- Medical background -->
@@ -86,7 +86,7 @@ patientStore.getPatientFromGraphQL((patientStore.currentPatientId as string) || 
 
       <!-- Visit details -->
       <div class="mt-8">
-        <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Patient Images</h1>
+        <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Patient Visits</h1>
         <BasePatientImages />
       </div>
     </BaseWrapper>

@@ -41,7 +41,7 @@ const mainAccountId = computed(() => {
 </script>
 
 <template>
-  <div class="flex w-full overflow-x-scroll">
+  <div v-if="tabs?.length > 0" class="flex w-full overflow-x-scroll">
     {{ patientData?.subAccounts }}
     <div
       @click="handleMainAccount(patientStore?.currentPrimaryAccountData?.patientId)"
@@ -58,5 +58,12 @@ const mainAccountId = computed(() => {
     >
       {{ tab.subAccountName }}
     </div>
+  </div>
+  <div
+    v-else
+    :class="['mx-[1px]', patientStore?.currentPrimaryAccountData?.patientId === highlighSubAccount ? 'opacity-100' : 'opacity-50']"
+    class="px-4 py-1 bg-white rounded-t-2xl drop-shadow-sm text-sm cursor-pointer"
+  >
+    Primary
   </div>
 </template>

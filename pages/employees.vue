@@ -9,7 +9,7 @@ import OptionsIcon from '@/assets/icons/options-icon.svg'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import CalendarIcon from '@/assets/icons/calendar-icon.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { getEmployees, createEmployee, getPatients, getEmployee, updateEmployee, searchPatient } from '@/lib/endpoints'
+import { getEmployees, createEmployee, getPatients, getEmployee, updateEmployee, searchPatient, getProviderPay } from '@/lib/endpoints'
 import type { Employees, Employee } from '@/types/employee-types'
 import type { Patient, Patients } from '@/types/patient-types'
 import { useEmployeeStore } from '~/stores/employees'
@@ -225,20 +225,86 @@ async function handleGetEmployee(employeeId: string) {
   console.log(employeeId)
 }
 
-async function handleGeneratePDFReport(date: string) {
+function formatDateToMonth(date: string): string {
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+  const parts = date.split(' ')
+  const monthName = parts[0]
+
+  const monthNumber = monthNames.indexOf(monthName) + 1
+
+  return monthNumber.toString().padStart(2, '0')
+}
+
+async function handleGeneratePDFReport(providerId: string, date: string) {
   if (date) {
+    const formattedDate = formatDateToMonth(date)
     const pdf = new jsPDF()
 
-    pdf.text(`Report for Date: ${date}`, 10, 10)
+    await getProviderPay(providerId, formattedDate)
+      .then((response) => {
+        const providerPayData = JSON.parse(response)
 
-    const pdfBlob = pdf.output('blob')
+        // Extract values
+        const initialConsults = providerPayData.initialConsults
+        const followUps = providerPayData.followUps
+        const noShows = providerPayData.noShows
+        const total = providerPayData.total
+        const appointments = providerPayData.appointments
 
-    const downloadLink = document.createElement('a')
-    downloadLink.href = URL.createObjectURL(pdfBlob)
-    downloadLink.download = 'report.pdf'
-    downloadLink.click()
+        // Function to center text
+        const centerText = (text: string, y: number, fontSize = 12, bold = false) => {
+          if (bold) {
+            pdf.setFont('helvetica', 'bold')
+          } else {
+            pdf.setFont('helvetica', 'normal')
+          }
+          pdf.setFontSize(fontSize)
+          const textWidth = (pdf.getStringUnitWidth(text) * pdf.internal.getFontSize()) / pdf.internal.scaleFactor
+          const textOffset = (210 - textWidth) / 2 // assuming a standard A4, which is 210mm wide
+          pdf.text(text, textOffset, y)
+        }
 
-    URL.revokeObjectURL(downloadLink.href)
+        // Add centered text
+        centerText(`Honeydew Report`, 30, 20, true) // Bold and larger
+        centerText(`Report for Date: ${date}`, 45)
+        centerText(`Initial Consults: ${initialConsults}`, 55)
+        centerText(`Follow Ups: ${followUps}`, 65)
+        centerText(`No Shows: ${noShows}`, 75)
+        centerText(`Total: $${total}`, 85, 16, true) // Even larger and bold
+
+        // List appointments
+        let yOffset = 105
+        for (const appt of appointments) {
+          // Check if the content fits on the current page or requires a new page
+          if (yOffset + 55 > 297) {
+            // 297mm is the height of an A4 page
+            pdf.addPage()
+            yOffset = 30 // Start lower on the new page
+          }
+
+          // Add a box around each appointment with more padding
+          pdf.rect(10, yOffset - 10, 190, 50) // Increased height for more padding
+
+          // Text within the boxes a bit smaller
+          pdf.setFontSize(10)
+          pdf.text(`Appointment ID: ${appt.appointmentId}`, 15, yOffset)
+          pdf.text(`Service: ${appt.service}`, 15, yOffset + 10)
+          pdf.text(`Start Time: ${new Date(appt.startTime).toLocaleString()}`, 15, yOffset + 20)
+          pdf.text(`End Time: ${new Date(appt.endTime).toLocaleString()}`, 15, yOffset + 30)
+          yOffset += 55 // Adjusted for spacing with boxes
+        }
+
+        // Generate the blob and download.
+        const pdfBlob = pdf.output('blob')
+        const downloadLink = document.createElement('a')
+        downloadLink.href = URL.createObjectURL(pdfBlob)
+        downloadLink.download = `report_${formattedDate}.pdf`
+        downloadLink.click()
+
+        URL.revokeObjectURL(downloadLink.href)
+      })
+      .catch((err) => console.log(err, 'HERE *******'))
   }
 }
 
@@ -455,6 +521,7 @@ patientStore.getPatientsFromGraphQL()
               :class="[tabSelected === 'Providers' ? 'grid-cols-4' : 'grid-cols-4', idx === filterByEmployeeType.length - 1 ? 'rounded-b-[16px]' : '']"
               class="grid text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2"
             >
+              {{ employee.employeeId }}
               <div>{{ employee.firstName }} {{ employee.lastName }}</div>
               <div>
                 {{ employee.email }}
@@ -464,14 +531,13 @@ patientStore.getPatientsFromGraphQL()
                 {{ employee.isActive }}
               </div>
               <div class="w-full flex justify-end items-center gap-x-2">
-                <BaseModal @action-click="() => handleGeneratePDFReport(selectedDateForReport)">
+                <BaseModal @action-click="() => handleGeneratePDFReport(employee.employeeId, selectedDateForReport)">
                   <template #button>
                     <img :src="CalendarIcon" alt="Calendar Icon" class="cursor-pointer transition active:scale-90" />
                   </template>
-                  <template #header> Generate Report </template>
+                  <template #header> Select Date to Generate Report </template>
                   <template #content>
                     <div class="text-[16px] font-normal p-4 w-full max-w-[490px]">
-                      Select Date to Generate Report
                       <BaseDropDown @selected-option="(option) => (selectedDateForReport = option)" :options="getLastSixMonthsDates()" />
                     </div>
                   </template>
