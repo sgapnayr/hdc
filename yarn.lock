@@ -4219,6 +4219,13 @@
   resolved "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.12.tgz"
   integrity sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==
 
+"@types/jspdf@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/@types/jspdf/-/jspdf-2.0.0.tgz"
+  integrity sha512-oonYDXI4GegGaG7FFVtriJ+Yqlh4YR3L3NVDiwCEBVG7sbya19SoGx4MW4kg1MCMRPgkbbFTck8YKJL8PrkDfA==
+  dependencies:
+    jspdf "*"
+
 "@types/lodash@^4.14.165":
   version "4.14.198"
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.198.tgz"
@@ -4235,9 +4242,9 @@
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
 "@types/raf@^3.4.0":
-  version "3.4.0"
-  resolved "https://registry.npmjs.org/@types/raf/-/raf-3.4.0.tgz"
-  integrity sha512-taW5/WYqo36N7V39oYyHP9Ipfd5pNFvGTIQsNGj86xV88YQ7GnI30/yMfKDF7Zgin0m3e+ikX88FvImnK4RjGw==
+  version "3.4.2"
+  resolved "https://registry.npmjs.org/@types/raf/-/raf-3.4.2.tgz"
+  integrity sha512-sM4HyDVlDFl4goOXPF+g9nNHJFZQGot+HgySjM4cRjqXzjdatcEvYrtG4Ia8XumR9T6k8G2tW9B7hnUj51Uf0A==
 
 "@types/resize-observer-browser@^0.1.7":
   version "0.1.7"
@@ -5938,9 +5945,9 @@ core-js-compat@^3.31.0:
     browserslist "^4.21.10"
 
 core-js@^3.6.0, core-js@^3.8.3:
-  version "3.32.1"
-  resolved "https://registry.npmjs.org/core-js/-/core-js-3.32.1.tgz"
-  integrity sha512-lqufgNn9NLnESg5mQeYsxQP5w7wrViSj0jr/kv6ECQiByzQkrn1MKvV0L3acttpDqfQrHLwr2KCMgX5b8X+lyQ==
+  version "3.33.1"
+  resolved "https://registry.npmjs.org/core-js/-/core-js-3.33.1.tgz"
+  integrity sha512-qVSq3s+d4+GsqN0teRCJtM6tdEEXyWxjzbhVrCHmBS5ZTM0FS2MOS0D13dUXAWDUN6a+lHI/N1hF9Ytz6iLl9Q==
 
 core-util-is@~1.0.0:
   version "1.0.3"
@@ -8076,7 +8083,7 @@ JSONStream@^1.3.5:
     jsonparse "^1.2.0"
     through ">=2.2.7 <3"
 
-jspdf@^2.5.1:
+jspdf@*, jspdf@^2.5.1:
   version "2.5.1"
   resolved "https://registry.npmjs.org/jspdf/-/jspdf-2.5.1.tgz"
   integrity sha512-hXObxz7ZqoyhxET78+XR34Xu2qFGrJJ2I2bE5w4SM8eFaFEkW2xcGRVUss360fYelwRSid/jT078kbNvmoW0QA==

@@ -261,41 +261,43 @@ async function handleGeneratePDFReport(providerId: string, date: string) {
           }
           pdf.setFontSize(fontSize)
           const textWidth = (pdf.getStringUnitWidth(text) * pdf.internal.getFontSize()) / pdf.internal.scaleFactor
-          const textOffset = (210 - textWidth) / 2 // assuming a standard A4, which is 210mm wide
+          const textOffset = (210 - textWidth) / 2 // assuming A4
           pdf.text(text, textOffset, y)
         }
 
         // Add centered text
-        centerText(`Honeydew Report`, 30, 20, true) // Bold and larger
-        centerText(`Report for Date: ${date}`, 45)
-        centerText(`Initial Consults: ${initialConsults}`, 55)
-        centerText(`Follow Ups: ${followUps}`, 65)
-        centerText(`No Shows: ${noShows}`, 75)
-        centerText(`Total: $${total}`, 85, 16, true) // Even larger and bold
+        centerText(`Honeydew Report`, 30, 20, true)
+        centerText(`Report for Date: ${date}`, 40)
+        centerText(`Initial Consults: ${initialConsults}`, 50)
+        centerText(`Follow Ups: ${followUps}`, 60)
+        centerText(`No Shows: ${noShows}`, 70)
+        centerText(`Total: $${total}`, 80, 16, true)
+
+        // Word "Appointments" before the list
+        pdf.setFontSize(12)
+        pdf.setTextColor(200, 200, 200) // Setting text color to light gray
+        pdf.text('Appointments:', 10, 100)
+
+        pdf.setTextColor(0, 0, 0) // Resetting the text color to black for subsequent texts
 
         // List appointments
-        let yOffset = 105
+        let yOffset = 115
         for (const appt of appointments) {
-          // Check if the content fits on the current page or requires a new page
           if (yOffset + 55 > 297) {
-            // 297mm is the height of an A4 page
             pdf.addPage()
-            yOffset = 30 // Start lower on the new page
+            yOffset = 30
           }
 
-          // Add a box around each appointment with more padding
-          pdf.rect(10, yOffset - 10, 190, 50) // Increased height for more padding
+          pdf.rect(10, yOffset - 10, 190, 50)
 
-          // Text within the boxes a bit smaller
           pdf.setFontSize(10)
           pdf.text(`Appointment ID: ${appt.appointmentId}`, 15, yOffset)
           pdf.text(`Service: ${appt.service}`, 15, yOffset + 10)
           pdf.text(`Start Time: ${new Date(appt.startTime).toLocaleString()}`, 15, yOffset + 20)
           pdf.text(`End Time: ${new Date(appt.endTime).toLocaleString()}`, 15, yOffset + 30)
-          yOffset += 55 // Adjusted for spacing with boxes
+          yOffset += 55
         }
 
-        // Generate the blob and download.
         const pdfBlob = pdf.output('blob')
         const downloadLink = document.createElement('a')
         downloadLink.href = URL.createObjectURL(pdfBlob)

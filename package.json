@@ -13,6 +13,7 @@
   "devDependencies": {
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/tailwindcss": "^6.7.0",
+    "@types/jspdf": "^2.0.0",
     "@types/node": "^18",
     "autoprefixer": "^10.4.14",
     "nuxt": "^3.5.0",
