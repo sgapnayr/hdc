@@ -9,7 +9,7 @@ import CaretIcon from '@/assets/icons/caret-icon.svg'
 import PlusCircleIcon from '@/assets/icons/plus-circle.svg'
 import UploadIcon from '@/assets/icons/upload-icon.svg'
 import { useRoute } from 'vue-router'
-import { getPatient, getPatientTreatment } from '../../lib/endpoints'
+import { getPatient, getPatientTreatment, getNotes } from '../../lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
