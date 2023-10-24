@@ -38,11 +38,11 @@ await profileStore?.setMyProfile()
 </script>
 
 <template>
-  <div class="w-[80px] bg-white flex flex-col items-center h-screen justify-start shadow-md">
+  <div class="w-[80px] bg-white flex flex-col items-center h-screen justify-start shadow-md -z-0">
     <div>
       <img :src="HoneyDewIcon" alt="Honey Dew Icon" class="mb-[36px] mt-[28px]" />
     </div>
-    <div class="gap-y-[14px] flex flex-col">
+    <div class="gap-y-[14px] flex flex-col z-0">
       <!-- Admin Icon -->
       <div
         class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition flex justify-center items-center text-[#A09DB1] text-[8px]"
@@ -140,6 +140,16 @@ await profileStore?.setMyProfile()
         v-if="profileStore?.profileData?.userRole != 'patient'"
       >
         DX
+      </div>
+
+      <!-- Appointments Icon -->
+      <div
+        class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition flex justify-center items-center text-[#A09DB1] text-xs"
+        :class="[route.path === '/appointments' ? 'bg-[#EEEBFC] text-honeydew-purple' : 'hover:bg-[#EEEBFC]']"
+        @click="router.push('/appointments')"
+        v-if="profileStore?.profileData?.userRole != 'patient'"
+      >
+        APTS
       </div>
 
       <!-- Question Icon -->

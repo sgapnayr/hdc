@@ -96,6 +96,7 @@ getPatientTreatment(route?.params?.patientId as string)
 
 <template>
   <BaseWrapper>
+    {{ appts?.length }}
     <div class="flex justify-end w-full gap-x-4 flex-row -mb-8 mt-4">
       <div>
         <BaseAddTaskButton />
@@ -103,7 +104,7 @@ getPatientTreatment(route?.params?.patientId as string)
     </div>
     <div class="flex py-8 pb-24 gap-x-6 flex-col lg:flex-row">
       <!-- Left Side -->
-      <div class="flex flex-col lg:w-1/3 relative z-10">
+      <div class="flex flex-col lg:w-1/3 relative">
         <BaseTab
           class="absolute -top-6"
           @selected-patient-id="(selectedSubAccount) => handleSubAccount(selectedSubAccount)"
@@ -137,43 +138,48 @@ getPatientTreatment(route?.params?.patientId as string)
         <!-- Treatment History -->
         <div v-if="treatmentHistoryOrDocumentsSelected === 'Treatment History'" class="p-8">
           <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Medical background</h1>
-          <div>
-            <div v-if="profileStore?.scheduleVisitDataArr?.length === 0">
-              <a :href="`/schedule-my-free-visit/${route.params.patientId}`" class="opacity-50 hover:opacity-100 cursor-pointer transition my-2 text-sm"
-                >Fill Out Medical Background?</a
-              >
-            </div>
-            <div v-for="(medicalItem, jdx) in profileStore.scheduleVisitDataArr">
-              <div
-                :class="[medicalItem.medicalTitle === 'Cycle & Menstruation' && patientStore?.patientData?.patientSex === 'Male' ? 'hidden' : '']"
-                class="my-[32px] w-full"
-                :key="jdx"
-              >
-                <div @click="handleOpen(medicalItem.medicalTitle)" class="flex justify-start cursor-pointer text-[18px] font-[500] mb-[16px]">
-                  <div
-                    class="transition flex justify-center items-center mr-[12px] z-0"
-                    :class="[!isOpen.includes(medicalItem.medicalTitle) ? '' : '-rotate-90']"
-                  >
-                    <img :src="CaretIcon" alt="Caret Icon" />
-                  </div>
-                  {{ medicalItem.medicalTitle }}
-                </div>
-                <div
-                  v-for="(itemDesc, kdx) in medicalItem.content"
-                  :key="kdx"
-                  :class="[!isOpen.includes(medicalItem.medicalTitle) ? '' : 'hidden']"
-                  class="flex w-full justify-between mb-[16px] pl-8"
+          <div class="flex gap-x-12">
+            <div class="w-7/12">
+              <div v-if="profileStore?.scheduleVisitDataArr?.length === 0">
+                <a :href="`/schedule-my-free-visit/${route.params.patientId}`" class="opacity-50 hover:opacity-100 cursor-pointer transition my-2 text-sm"
+                  >Fill Out Medical Background?</a
                 >
-                  <div class="w-1/2 text-gray-5 font-[400]">
-                    {{ itemDesc.name }}
+              </div>
+              <div class="w-full" v-for="(medicalItem, jdx) in profileStore.scheduleVisitDataArr">
+                <div
+                  :class="[medicalItem.medicalTitle === 'Cycle & Menstruation' && patientStore?.patientData?.patientSex === 'Male' ? 'hidden' : '']"
+                  class="my-[32px] w-full"
+                  :key="jdx"
+                >
+                  <div @click="handleOpen(medicalItem.medicalTitle)" class="flex justify-start cursor-pointer text-[18px] font-[500] mb-[16px]">
+                    <div
+                      class="transition flex justify-center items-center mr-[12px] z-0"
+                      :class="[!isOpen.includes(medicalItem.medicalTitle) ? '' : '-rotate-90']"
+                    >
+                      <img :src="CaretIcon" alt="Caret Icon" />
+                    </div>
+                    {{ medicalItem.medicalTitle }}
                   </div>
-                  <div class="w-1/2 flex justify-end text-gray-5 font-[400]">
-                    {{ itemDesc.value }}
+                  <div
+                    v-for="(itemDesc, kdx) in medicalItem.content"
+                    :key="kdx"
+                    :class="[!isOpen.includes(medicalItem.medicalTitle) ? '' : 'hidden']"
+                    class="flex w-full justify-between mb-[16px] pl-8"
+                  >
+                    <div class="w-1/2 text-gray-5 font-[400]">
+                      {{ itemDesc.name }}
+                    </div>
+                    <div class="w-1/2 flex justify-end text-gray-5 font-[400]">
+                      {{ itemDesc.value }}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- <div>{notesComponent}</div> -->
+            <div class="flex flex-col w-5/12 no-scrollbars mt-6">
+              <h1 class="text-[24px] font-[500] leading-[40px] text-gray-3">Messages</h1>
+              <BaseNotes />
+            </div>
           </div>
         </div>
 
@@ -214,13 +220,9 @@ getPatientTreatment(route?.params?.patientId as string)
         </div>
 
         <div class="px-8 flex gap-x-8">
-          <div class="w-2/3">
+          <div class="w-full">
             <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Patient Visits</h1>
             <BasePatientImages />
-          </div>
-          <div class="flex flex-col w-1/3">
-            <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Messages</h1>
-            <BaseNotes />
           </div>
         </div>
       </div>

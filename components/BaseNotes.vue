@@ -3,6 +3,7 @@
 import { ref } from 'vue'
 import SendButton from '@/assets/icons/send-button.svg'
 import { getNotes, createNote, getPatientName } from '@/lib/endpoints'
+import { formatLegibleDate } from '@/utils/helpers'
 import { useRoute } from 'vue-router'
 
 // STATE
@@ -70,15 +71,17 @@ fetchNotes()
     </div>
   </div>
 
-  <!-- Loading State -->
-  <div v-if="loading" class="text-xl w-full p-4 rounded-2xl bg-[#f0f5fe] animate-pulse my-2">Loading...</div>
-  <!-- No Notes State -->
-  <div v-else-if="!notes?.length" class="text-gray-1 hover:text-black transition cursor-pointer">
-    No new notes, write a message to your provider with the text box above.
-  </div>
-  <!-- Notes -->
-  <div v-else v-for="(note, idx) in notes" class="bg-[#f0f5fe] w-full p-4 rounded-2xl text-[14px] text-[#403E48] my-2">
-    <div class="text-xl">{{ note.text }}</div>
-    <div class="text-gray-1 mt-4 text-[12px]">Created by {{ patientNames[note.creatorId] }} on {{ note.createdAt }}</div>
+  <div class="h-[640px] overflow-scroll no-scrollbars">
+    <!-- Loading State -->
+    <div v-if="loading" class="text-xl w-full p-4 rounded-2xl bg-[#f0f5fe] animate-pulse my-2 shadow-sm">Loading...</div>
+    <!-- No Notes State -->
+    <div v-else-if="!notes?.length" class="text-gray-1 hover:text-black transition cursor-pointer">
+      No new notes, write a message to your provider with the text box above.
+    </div>
+    <!-- Notes -->
+    <div v-else v-for="(note, idx) in notes" class="bg-[#f0f5fe] w-full p-4 rounded-2xl text-[14px] text-[#403E48] my-2 shadow-sm">
+      <div class="text-xl">{{ note.text }}</div>
+      <div class="text-gray-1 mt-4 text-[12px]">By {{ patientNames[note.creatorId] }} on {{ formatLegibleDate(note.createdAt) }}</div>
+    </div>
   </div>
 </template>

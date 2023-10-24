@@ -91,7 +91,7 @@ watch(patientStore.currentPatientId, () => {
 </script>
 
 <template>
-  <div class="bg-white rounded-b-[8px] rounded-tr-[8px] drop-shadow-sm">
+  <div class="bg-white rounded-b-[8px] rounded-tr-[8px] drop-shadow-sm z-0">
     <!-- Padding Wrapper -->
     <div class="p-8">
       <!-- Patient Photo -->

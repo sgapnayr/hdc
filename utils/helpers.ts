@@ -55,3 +55,26 @@ export function calculateHeightInFeetAndInches(heightInInches: string): string |
 
   return heightString
 }
+
+export function formatLegibleDate(isoDateString: string): string {
+  const date = new Date(isoDateString)
+
+  // Get the month name from the date
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const month = monthNames[date.getMonth()]
+
+  // Format the time into AM/PM format
+  const hours = date.getHours()
+  const minutes = date.getMinutes()
+  const seconds = date.getSeconds()
+  const amOrPm = hours >= 12 ? 'PM' : 'AM'
+  const formattedHours = hours % 12 || 12 // Convert hour from 24-hour to 12-hour format and set it to 12 if it's 0
+  const formattedMinutes = String(minutes).padStart(2, '0')
+  const formattedSeconds = String(seconds).padStart(2, '0')
+
+  return `${month} ${date.getDate()}, ${date.getFullYear()}, ${formattedHours}:${formattedMinutes}:${formattedSeconds} ${amOrPm}`
+}
+
+// Example usage:
+const dateString = '2023-10-21T17:48:15.629Z'
+console.log(formatLegibleDate(dateString)) // Outputs: "October 21, 2023, 05:48:15 PM"
