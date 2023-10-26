@@ -78,7 +78,7 @@ appointmentsStore.getAllAppointments()
 
 function handleSubAccount(selectedSubAccount: string) {
   selectedSubAccountId.value = selectedSubAccount
-  localStorage.setItem('selectedSubAccountId', selectedSubAccount) // Save to localStorage
+  localStorage.setItem('selectedSubAccountId', selectedSubAccount)
   navigateTo('/view-history/' + selectedSubAccount)
   patientStore.currentPatientId = selectedSubAccount
   profileStore.setMyProfile(patientStore.currentPatientId as string)

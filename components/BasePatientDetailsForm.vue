@@ -187,6 +187,7 @@ const updateProfileChanges = async () => {
               @selected-option="(val) => (updatePatientSex = val)"
               custom-class="px-4 text-sm mt-2"
               title-text="Sex Assigned at Birth"
+              :no-height="true"
               :options="['Male', 'Female']"
             />
           </div>

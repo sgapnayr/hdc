@@ -84,7 +84,7 @@ function handleCloseModal() {
     <div
       v-if="modalIsOpen"
       :class="[noShadow ? '' : 'shadow']"
-      class="fixed w-screen z-30 min-h-screen flex justify-center items-start left-0 top-0 bottom-0"
+      class="fixed w-screen z-40 min-h-screen flex justify-center items-start left-0 top-0 bottom-0"
       @click="handleCloseModal"
     >
       <div class="relative flex justify-center top-8 lg:top-1/5 w-full">

@@ -91,7 +91,14 @@ watch(patientStore.currentPatientId, () => {
 </script>
 
 <template>
-  <div class="bg-white rounded-b-[8px] rounded-tr-[8px] drop-shadow-sm z-0">
+  <div
+    :class="
+      profileStore.isBloodSlipFormOpen || profileStore.isPatientDetailsFormOpen || profileStore.isPregnantModalOpen || profileStore.isVisitFormOpen
+        ? ''
+        : 'z-10'
+    "
+    class="bg-white rounded-b-[8px] rounded-tr-[8px] drop-shadow-sm"
+  >
     <!-- Padding Wrapper -->
     <div class="p-8">
       <!-- Patient Photo -->
@@ -142,7 +149,7 @@ watch(patientStore.currentPatientId, () => {
     </div>
 
     <!-- Patient Allergies -->
-    <div v-if="profileStore.doYouHaveAnyAllergies" class="bg-honeydew-orange w-full py-6 px-8 flex gap-x-2 text-gray-3 font-[400]">
+    <div v-if="profileStore.doYouHaveAnyAllergies" class="bg-honeydew-orange w-full py-6 mb-2 px-8 flex gap-x-2 text-gray-3 font-[400]">
       <img :src="AlertIcon" alt="Alert Icon" />
       <div>Patient has allergies: {{ profileStore.doYouHaveAnyAllergies || '-' }}</div>
     </div>
@@ -151,11 +158,11 @@ watch(patientStore.currentPatientId, () => {
     <div class="pb-6">
       <div
         @click="handleSelectedItem('Shipping Address')"
-        class="text-gray-3 font-[500] w-full border-b-[.5px] border-[#E1E0E6] py-5 cursor-pointer flex flex-col"
+        class="text-gray-3 font-[500] w-full border-b-[1px] border-[#E1E0E6] py-5 cursor-pointer flex flex-col"
       >
         <div class="px-8">
           <div class="flex w-full justify-between">
-            <div>Shipping address</div>
+            <div class="text-lg text-gray-1">Shipping address</div>
             <img :class="[selectedItem.includes('Shipping Address') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
           </div>
           <div v-if="selectedItem.includes('Shipping Address')" class="flex w-full justify-between text-gray-5 font-[400]">
@@ -169,7 +176,7 @@ watch(patientStore.currentPatientId, () => {
         class="text-gray-3 font-[500] w-full border-b-[.5px] border-[#E1E0E6] py-5 cursor-pointer flex flex-col"
       >
         <div class="flex w-full justify-between items-center px-8">
-          <div>Health Insurance</div>
+          <div class="text-lg text-gray-1">Health Insurance</div>
           <div class="flex gap-x-2">
             <BaseModal :no-shadow="true" @action-click="handleUpdateInsurance">
               <template #header>
@@ -221,19 +228,19 @@ watch(patientStore.currentPatientId, () => {
           <div class="w-full whitespace-nowrap mt-4">
             <div class="w-full flex justify-between">
               <div class="w-full">MemberID:</div>
-              <div>{{ patientStore.patientData.insurance.healthInsuranceMemberID }}</div>
+              <div>{{ patientStore?.patientData?.insurance.healthInsuranceMemberID }}</div>
             </div>
             <div class="w-full flex justify-between">
               <div class="w-full">Health Insurance:</div>
-              {{ patientStore.patientData?.insurance.healthInsuranceName }}
+              {{ patientStore?.patientData?.insurance.healthInsuranceName }}
             </div>
             <div class="w-full flex justify-between whitespace-nowrap">
               <div class="w-full">Policy Holder:</div>
-              {{ patientStore.patientData?.insurance.healthInsurancePolicyHolderName }}
+              {{ patientStore?.patientData?.insurance.healthInsurancePolicyHolderName }}
             </div>
             <div class="w-full flex justify-between">
               <div class="w-full">Group Number:</div>
-              {{ patientStore.patientData?.insurance.healthInsuranceGroupNumber }}
+              {{ patientStore?.patientData?.insurance.healthInsuranceGroupNumber }}
             </div>
           </div>
         </div>
@@ -244,7 +251,7 @@ watch(patientStore.currentPatientId, () => {
         class="text-gray-3 font-[500] w-full border-b-[.5px] border-[#E1E0E6] py-5 cursor-pointer flex flex-col"
       >
         <div class="flex w-full justify-between px-8">
-          <div>Patient's current tasks</div>
+          <div class="text-lg text-gray-1">Patient's current tasks</div>
           <img :class="[selectedItem.includes('Patient\'s current tasks') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
         </div>
         <div v-if="selectedItem.includes('Patient\'s current tasks')" class="flex w-full justify-between text-gray-5 font-[400] flex-col mt-4 px-8">
@@ -261,7 +268,7 @@ watch(patientStore.currentPatientId, () => {
 
       <div class="text-gray-3 font-[500] w-full border-b-[.5px] border-[#E1E0E6] py-5 cursor-pointer flex flex-col">
         <div class="flex w-full justify-between px-8">
-          <div>iPledge details</div>
+          <div class="text-lg">iPledge details</div>
           <div class="flex gap-x-2">
             <img :class="[!selectedItem.includes('iPledge details') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" class="opacity-0" />
           </div>
@@ -403,11 +410,17 @@ watch(patientStore.currentPatientId, () => {
   box-shadow: none;
 }
 
-input::placeholder,
 input {
   font-weight: 400;
   font-size: 16px;
-  text-align: end;
-  padding: 0 8px 0 8px;
+  text-align: start;
+  padding: 0 8px 0 16px;
+}
+
+input::placeholder {
+  font-weight: 400;
+  font-size: 16px;
+  text-align: start;
+  padding: 0 8px 0 0px;
 }
 </style>

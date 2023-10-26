@@ -17,6 +17,7 @@ const props = defineProps<{
   placeHolder?: string
   noTitle?: boolean
   customWidth?: string
+  noHeight?: boolean
 }>()
 
 // STATE **********************************************************************
@@ -49,7 +50,10 @@ function handleSelectedOption(option: string) {
       </div>
       <img :class="[isMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="right-4 absolute transition" />
       <div v-if="isMenuOpen">
-        <div class="absolute left-0 top-12 w-full h-64 overflow-scroll no-scrollbars border-b-gray-2 rounded-b-[28px] shadow-md bg-white">
+        <div
+          :class="noHeight ? '' : 'h-64'"
+          class="absolute left-0 top-12 w-full overflow-scroll no-scrollbars border-b-gray-2 rounded-b-[28px] shadow-md bg-white"
+        >
           <div
             class="w-full hover:bg-gray-2 bg-white h-[48px] outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer"
             v-for="(option, idx) in options"

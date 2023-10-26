@@ -36,6 +36,8 @@ const appointments = ref()
 
 // FUNCTIONS *********************************************************************
 const fetchPatientTreatment = async (patientId: string, appointmentId: string) => {
+  profileStore.isVisitFormOpen = true
+
   try {
     const imagesResponse = await getMyAppointmentImages(appointmentId, patientId)
     patientImages.value = imagesResponse.images
@@ -88,26 +90,6 @@ getMyAppointments().then((res) => {
                   <div v-else class="w-[172px] h-[172px] rounded-2xl shadow-sm border"></div>
                 </div>
               </div>
-            </div>
-            <div class="flex gap-x-4">
-              <BaseImageUpload
-                @photo-uploaded="isPhotoUploaded = true"
-                buttonText="Left profile"
-                describedImage="The left side of your face"
-                :image-URL="FaceLeftOutline"
-              />
-              <BaseImageUpload
-                @photo-uploaded="isPhotoUploaded = true"
-                buttonText="Front profile"
-                describedImage="The front of your face"
-                :image-URL="FaceFrontOutline"
-              />
-              <BaseImageUpload
-                @photo-uploaded="isPhotoUploaded = true"
-                buttonText="Right profile"
-                describedImage="The right side of your face"
-                :image-URL="FaceRightOutline"
-              />
             </div>
           </template>
         </BaseVisitForm>

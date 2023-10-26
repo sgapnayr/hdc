@@ -37,6 +37,11 @@ const updatePatientDOB = ref(patientStore.patientData?.patientDOB)
 const updatePatientSex = ref(patientStore?.patientData?.patientSex)
 
 // METHODS ********************************************************************
+function handleCloseVisitForm() {
+  modalIsOpen.value = false
+  profileStore.isVisitFormOpen = false
+}
+
 const computeHeightInInches = computed(() => {
   return Number(feet.value * 12) + Number(inches.value)
 })
@@ -91,13 +96,13 @@ const handleStartVisit = async () => {
   <TheTransitionWrapper>
     <div
       v-if="modalIsOpen"
-      @click="modalIsOpen = false"
-      class="fixed w-full flex flex-col z-50 lg:flex bg-opacity-50 bg-[#403E4880] items-end grow min-h-screen top-0 right-0"
+      @click="() => handleCloseVisitForm()"
+      class="fixed w-full flex flex-col z-20 lg:flex bg-opacity-50 bg-[#403E4880] items-end grow min-h-screen top-0 right-0"
     >
       <div @click.stop class="flex flex-col w-full lg:max-w-[800px] bg-honeydew-bg2 grow min-h-screen shadow-2xl">
         <div @click.stop class="text-sm font-medium leading-[24px] flex gap-x-2 cursor-pointer bg-white items-center shadow-sm justify-between">
           <div class="flex items-center">
-            <div @click="modalIsOpen = false" class="border-r-[1px] border-[#eeeef0] p-6 mr-8">
+            <div @click="() => handleCloseVisitForm()" class="border-r-[1px] border-[#eeeef0] p-6 mr-8">
               <img class="rotate-90" :src="ChevronIcon2" alt="Chevron Icon" />
             </div>
             <div class="flex text-[#403E48] text-lg">Visit details</div>

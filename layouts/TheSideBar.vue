@@ -38,7 +38,7 @@ await profileStore?.setMyProfile()
 </script>
 
 <template>
-  <div class="w-[80px] bg-white flex flex-col items-center h-screen justify-start shadow-md z-10">
+  <div class="w-[80px] bg-white flex flex-col items-center h-screen justify-start shadow-md">
     <div>
       <img :src="HoneyDewIcon" alt="Honey Dew Icon" class="mb-[36px] mt-[28px]" />
     </div>
