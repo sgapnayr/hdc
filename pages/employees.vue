@@ -283,17 +283,22 @@ async function handleGeneratePDFReport(providerId: string, date: string) {
         // List appointments
         let yOffset = 115
         for (const appt of appointments) {
-          if (yOffset + 55 > 297) {
+          // Check if the next rectangle will be out of the page bounds
+          if (yOffset + 30 > 297) {
+            // adjust this to take the new rectangle height into account
             pdf.addPage()
             yOffset = 30
           }
 
-          pdf.rect(10, yOffset - 10, 120, 50)
+          // Rectangle taking full width of page
+          pdf.rect(10, yOffset - 12.5, 190, 25) // changed the height to 25, yOffset adjusted to center on y-axis
 
           pdf.setFontSize(10)
-          pdf.text(`Appointment ID: ${appt.appointmentId}`, 15, yOffset)
-          pdf.text(`Service: ${appt.service}`, 15, yOffset + 10)
-          yOffset += 55
+          // Adjust text positions to be centered in the rectangle
+          pdf.text(`Appointment ID: ${appt.appointmentId}`, 15, yOffset - 5) // adjust y-offset for centering in the rectangle
+          pdf.text(`Service: ${appt.service}`, 15, yOffset + 5) // adjust y-offset for centering in the rectangle
+
+          yOffset += 30 // adjusted the yOffset
         }
 
         const pdfBlob = pdf.output('blob')
