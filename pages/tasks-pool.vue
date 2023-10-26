@@ -19,14 +19,6 @@ definePageMeta({
 // ROUTER **********************************************************************
 const user = useAuthenticator()
 
-onMounted(() => {
-  watchEffect(() => {
-    if (user.authStatus !== 'authenticated' || profileStore.profileData.userRole == 'patient') {
-      navigateTo('/')
-    }
-  })
-})
-
 // STORES **********************************************************************
 const tasksStore = useTasksStore()
 const profileStore = useProfileStore()
@@ -113,7 +105,6 @@ const tableHeaderCategories = [
 ]
 
 // COMPUTED METHODS ****************************************************************
-
 const totalPagesForGeneralTable = computed(() => {
   return Math.ceil(filterGeneralTaskByChips?.value?.length / generalPageSize.value)
 })

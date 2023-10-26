@@ -23,13 +23,7 @@ const user = useAuthenticator()
 let userImages = []
 
 onMounted(async () => {
-  watchEffect(() => {
-    if (user.authStatus !== 'authenticated') {
-      navigateTo('/')
-    }
-  })
   userImages = await getMyProfileImages()
-  console.log('user images: ', userImages)
 })
 
 // STORES ********************************************************************

@@ -146,7 +146,13 @@ fetchAppointments()
           </div>
         </div>
       </div>
-      <!-- Load More Button -->
+
+      <div v-if="shouldFetchMore && !isLoading" class="flex justify-center mt-4">
+        <button class="bg-honeydew-purple hover:opacity-50 transition-all cursor-pointer text-white px-4 py-2 rounded" @click="fetchAppointments">
+          Load More
+        </button>
+      </div>
+
       <div v-if="isLoading" class="text-center">
         <BaseLoader />
       </div>

@@ -82,7 +82,7 @@ const filteredList = computed(() => {
           v-for="(item, index) in items"
           :key="index"
           @click="removeItem(index)"
-          class="bg-gray-2 flex items-center px-2 rounded cursor-pointer hover:opacity-50 transition flex-wrap"
+          class="shadow-md flex items-center p-2 rounded cursor-pointer hover:opacity-50 transition flex-wrap"
         >
           {{ item.medicationName }}
           <button @click="removeItem(index)" class="ml-2 bg-red-500 text-black rounded text-sm">X</button>
@@ -101,11 +101,10 @@ const filteredList = computed(() => {
     <div
       v-if="isDropDownOpen || inputText"
       v-for="(medication, idx) in filteredList"
-      class="w-full hover:bg-gray-2 bg-white h-[48px] border-[.5px] border-gray-2 outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer"
-      :class="[filteredList.length - 1 === idx ? 'rounded-b-[28px]' : '']"
+      class="w-full hover:bg-gray-2 bg-white h-[48px] outline-none focus:ring-0 flex justify-between items-center px-2 cursor-pointer"
       @click="handleAddItem(medication, idx)"
     >
-      <div>
+      <div class="shadow-md p-2">
         {{ medication.medicationName }}
         <span class="opacity-30 ml-1 text-xs">{{ medication.medicationStrength ? `(${medication.medicationStrength}mg)` : '' }}</span>
       </div>
