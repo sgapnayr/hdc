@@ -18,7 +18,7 @@ const medicationsStore = useMedicationStore()
 const isDropDownOpen = ref(false)
 
 // STORE **********************************************************************
-medicationsStore.getMedicationsFromGraphQL()
+medicationsStore.fetchMedications()
 
 // EMITS **********************************************************************
 const emit = defineEmits<{

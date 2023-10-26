@@ -12,14 +12,6 @@ import { useRouter, useRoute } from 'vue-router'
 import DeleteIcon from '../assets/icons/delete-icon.svg'
 import { getPatientTreatmentPlanId } from '@/lib/endpoints'
 
-
-
-
-
-
-
-
-
 // STORES *********************************************************************
 const medicationStore = useMedicationStore()
 
@@ -76,8 +68,8 @@ const addedTreatments = ref([])
 
 // INITIALIZATION *************************************************************
 onMounted(() => {
-  medicationStore.getMedicationsFromGraphQL()
-  medicationStore.getTreatmentPlansFromGraphQL()
+  medicationStore.fetchMedications()
+  medicationStore.fetchTreatmentPlans()
   getPatientTreatmentPlanId(route.params.patientId as string)
     .then((res) => (patientCurrentTreatmentPlan.value = res.data))
     .catch((err) => console.error(err))

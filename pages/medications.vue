@@ -57,6 +57,8 @@ const newMedicationRefillExpirationInDays = ref()
 const newTreatmentPlanName = ref()
 const treatmentGroups = ref([''])
 
+const isLoading = ref(false)
+
 // MEMBER DATA ****************************************************************
 const tableHeaderCategories: TableHeaderCategory[] = [
   {
@@ -104,7 +106,7 @@ async function handleCreateMedicine() {
   newMedicationRefills.value = ''
   newMedicationRefillExpirationInDays.value = ''
 
-  medicationsStore.getMedicationsFromGraphQL()
+  medicationsStore.fetchMedications()
 }
 
 async function updateMedicine(medicationId: string) {
@@ -128,7 +130,7 @@ async function updateMedicine(medicationId: string) {
   newMedicationRefills.value = ''
   newMedicationRefillExpirationInDays.value = ''
 
-  medicationsStore.getMedicationsFromGraphQL()
+  medicationsStore.fetchMedications()
 }
 
 async function handleCreateTreatmentPlan() {
@@ -164,8 +166,8 @@ async function handleDeleteMedicine(medicationId: string) {
   // await deleteMedication(medicationId)
 }
 
-medicationsStore.getMedicationsFromGraphQL()
-medicationsStore.getTreatmentPlansFromGraphQL()
+medicationsStore.fetchMedications()
+medicationsStore.fetchTreatmentPlans()
 
 // PAYLOAD FOR CHESTER
 const medArr = ref([])
@@ -184,6 +186,28 @@ function getMedicationsArr(medicationObject: { id: number; medicationId: string;
 
 function clearMedicationArr() {
   medArr.value = []
+}
+
+async function fetchMoreMedications() {
+  isLoading.value = true
+  await medicationsStore.fetchMedications()
+  isLoading.value = false
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll)
+  })
+})
+
+function handleScroll() {
+  const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 200 // 200 is a buffer
+
+  if (nearBottom && medicationsStore.nextToken) {
+    fetchMoreMedications()
+  }
 }
 </script>
 
@@ -464,6 +488,16 @@ function clearMedicationArr() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div v-if="!isLoading && medicationsStore.nextToken" class="flex justify-center mt-4">
+        <button class="bg-honeydew-purple hover:opacity-50 transition-all cursor-pointer text-white px-4 py-2 rounded" @click="fetchMoreMedications">
+          Load More
+        </button>
+      </div>
+
+      <div v-if="isLoading" class="text-center">
+        <BaseLoader />
       </div>
     </BaseWrapper>
   </div>
