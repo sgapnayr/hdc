@@ -7,10 +7,11 @@ const previewURL = ref('')
 const dragging = ref(false)
 const photo = ref<File | null>(null)
 
-const { imageURL, describedImage, buttonText } = defineProps<{
+const { imageURL, describedImage, buttonText, appointmentId } = defineProps<{
   imageURL?: string
   describedImage?: string
   buttonText?: string
+  appointmentId?: string
 }>()
 
 const emit = defineEmits<{
@@ -38,7 +39,6 @@ const handleDragLeave = () => {
 }
 
 const handleDrop = (e: DragEvent) => {
-  console.log('Handle dragdrop')
   emit('photo-uploaded')
   e.preventDefault()
   dragging.value = false
@@ -58,14 +58,33 @@ const generatePreview = (file: File) => {
   reader.readAsDataURL(file)
 }
 
+const resizeImage = async (file: File): Promise<Blob> => {
+  const image = new Image()
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+
+  return new Promise((resolve, reject) => {
+    image.onload = () => {
+      canvas.width = 256
+      canvas.height = 256
+      ctx!.drawImage(image, 0, 0, 256, 256)
+      canvas.toBlob(resolve, file.type)
+    }
+
+    image.onerror = reject
+    image.src = URL.createObjectURL(file)
+  })
+}
+
 const uploadPhoto = async (file: File) => {
   try {
-    const url = await getPresignedUrl(buttonText, file.type)
+    const resizedBlob = await resizeImage(file)
 
-    // Use the pre-signed URL to upload the file.
+    const url = await getPresignedUrl(buttonText, file.type, appointmentId)
+
     const uploadResult = await fetch(url, {
       method: 'PUT',
-      body: file,
+      body: resizedBlob, // note: we upload the resized blob
       headers: {
         'Content-Type': file.type,
       },
@@ -95,7 +114,7 @@ const uploadPhoto = async (file: File) => {
         <p class="text-[#6C6A7C]">{{ dragging ? 'You can drop it' : 'or drag it here' }}</p>
       </div>
       <img v-if="previewURL" class="rounded-xl h-[300px]" :src="previewURL" alt="Photo Preview" />
-      <img v-if="!previewURL" :src="imageURL" alt="Image URL" class="absolute" />
+      <img v-if="!previewURL" :src="imageURL" class="absolute" />
       <div v-if="!previewURL" class="z-10 w-full flex justify-end px-4 mb-4">
         <div class="bg-[#403E48] text-white px-3 h-[28px] z-10 rounded-[6px] flex justify-center items-center">{{ buttonText }}</div>
       </div>

@@ -13,7 +13,7 @@ const text = ref()
 const type = ref()
 const name = ref()
 const patientNames = ref({})
-const isSubmitting = ref(false) // New state for tracking note submission
+const isSubmitting = ref(false)
 
 // ROUTER
 const route = useRoute()
@@ -53,12 +53,7 @@ fetchNotes()
 <template>
   <div class="flex items-center w-full my-4">
     <div class="bg-white flex px-2 pr-3 py-2 rounded-md w-full justify-between shadow-sm items-center">
-      <input
-        v-model="text"
-        class="bg-white w-full text-start outline-none focus:outline-none focus:ring-0"
-        placeholder="Message your provider here"
-        type="text"
-      />
+      <input v-model="text" class="bg-white w-full text-start outline-none focus:outline-none focus:ring-0" placeholder="Notes about patient" type="text" />
       <!-- Either show the loader or the image based on the isSubmitting state -->
       <div
         v-if="isSubmitting"

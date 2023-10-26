@@ -202,7 +202,7 @@ const toDoItems = [
                 <p v-if="isAppointmentMissedState" class="text-gray-5 mt-[8px] w-3/4">Let your care team know how you're doing!</p>
               </div>
             </div>
-            <div class="my-4 flex flex-col gap-y-4">
+            <div class="flex flex-col gap-y-4">
               <NuxtLink
                 v-if="getPatientAppointments.length === 0"
                 :to="`/schedule-my-free-visit/${route.params.patientId}`"

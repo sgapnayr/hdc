@@ -159,11 +159,7 @@ watch(patientStore.currentPatientId, () => {
             <img :class="[selectedItem.includes('Shipping Address') ? '' : 'rotate-[270deg]']" :src="ChevronDownIcon" alt="Chevron Icon" />
           </div>
           <div v-if="selectedItem.includes('Shipping Address')" class="flex w-full justify-between text-gray-5 font-[400]">
-            <div class="mt-4">
-              {{ patientStore.patientData?.patientAddress }} {{ patientStore.patientData?.patientCity }}
-              <!-- {{ patientData?.patientState }} -->
-              <!-- {{ patientData?.patientZipCode }} -->
-            </div>
+            <div class="mt-4">{{ patientStore.patientData?.patientAddress }} {{ patientStore.patientData?.patientCity }}</div>
           </div>
         </div>
       </div>

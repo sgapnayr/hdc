@@ -120,7 +120,7 @@ const handleStartVisit = async () => {
     </div>
   </TheTransitionWrapper>
 
-  <div @click.stop="modalIsOpen = true">
+  <div @click="modalIsOpen = true">
     <slot name="trigger">
       <BaseButton color-scheme="gray" @click.stop="modalIsOpen = true"> Press For Form </BaseButton>
     </slot>

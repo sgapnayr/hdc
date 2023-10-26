@@ -7,6 +7,7 @@ export const usePatientStore = defineStore('patient', () => {
   const patientData = ref()
   const currentPatientId = ref()
   const currentPrimaryAccountData = ref()
+  const primarySubAccounts = ref([])
 
   const route = useRoute()
 
@@ -69,6 +70,10 @@ export const usePatientStore = defineStore('patient', () => {
           patientAge: backendPatient?.patientAge,
           patientAddress: backendPatient.patientAddress,
           patientREMsNumber: backendPatient?.patientREMsNumber || '123',
+          actionItems: actionItems || 'actionItems',
+          insurance: insurance || 'insurance',
+          patientProvider: backendPatient.proivder || 'provider',
+          patientCoordinator: backendPatient.coordinator || 'coordinator',
           subAccounts:
             subAccounts != null
               ? subAccounts.map((subAccount: any) => ({
@@ -76,14 +81,17 @@ export const usePatientStore = defineStore('patient', () => {
                   subAccountName: subAccount.subAccountName || 'subAccountName',
                 }))
               : [],
-          actionItems: actionItems || 'actionItems',
-          insurance: insurance || 'insurance',
-          patientProvider: backendPatient.proivder || 'provider',
-          patientCoordinator: backendPatient.coordinator || 'coordinator',
         }
 
+        // If we're loading the primary account (i.e., `currentPrimaryAccountData` hasn't been set yet)
         if (!currentPrimaryAccountData.value) {
           currentPrimaryAccountData.value = frontendPatient
+          // Store the primary's sub-accounts separately
+          primarySubAccounts.value = frontendPatient.subAccounts.length > 0 ? frontendPatient.subAccounts : primarySubAccounts.value
+        } else {
+          primarySubAccounts.value = frontendPatient.subAccounts.length > 0 ? frontendPatient.subAccounts : primarySubAccounts.value
+          // If we're loading a sub-account, set its subAccounts from the primarySubAccounts value
+          frontendPatient.subAccounts = primarySubAccounts.value
         }
 
         patientData.value = frontendPatient
@@ -117,5 +125,6 @@ export const usePatientStore = defineStore('patient', () => {
     updateInsuranceGraphQL,
     currentPatientId,
     currentPrimaryAccountData,
+    primarySubAccounts,
   }
 })

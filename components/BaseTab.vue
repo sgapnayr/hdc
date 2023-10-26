@@ -3,6 +3,7 @@
 import { ref, computed } from 'vue'
 import { getPatient, getTaskByAssignee } from '~/lib/endpoints'
 import { usePatientStore } from '../stores/patient'
+import { useRouter } from 'vue-router'
 
 // PROPS **********************************************************************
 const props = defineProps<{
@@ -16,6 +17,9 @@ const props = defineProps<{
 const emit = defineEmits<{
   (name: 'selected-patient-id', value: string): void
 }>()
+
+// STATE **********************************************************************
+const { push, currentRoute } = useRouter()
 
 // STATE **********************************************************************
 const selectedTab = ref(0)

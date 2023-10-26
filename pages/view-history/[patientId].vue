@@ -96,7 +96,7 @@ getPatientTreatment(route?.params?.patientId as string)
 
 <template>
   <BaseWrapper>
-    {{ appts?.length }}
+    {{ patientStore?.patientData?.primarySubAccounts }}
     <div class="flex justify-end w-full gap-x-4 flex-row -mb-8 mt-4">
       <div>
         <BaseAddTaskButton />
@@ -177,7 +177,7 @@ getPatientTreatment(route?.params?.patientId as string)
               </div>
             </div>
             <div class="flex flex-col w-5/12 no-scrollbars mt-6">
-              <h1 class="text-[24px] font-[500] leading-[40px] text-gray-3">Messages</h1>
+              <h1 class="text-[24px] font-[500] leading-[40px] text-gray-3">Notes</h1>
               <BaseNotes />
             </div>
           </div>

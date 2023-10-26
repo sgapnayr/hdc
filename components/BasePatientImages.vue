@@ -5,8 +5,11 @@ import { getMyProfileImages } from '../lib/endpoints'
 import { useProfileStore } from '../stores/profile'
 import { usePatientStore } from '../stores/patient'
 import ChevronIcon from '../assets/icons/chevron-icon.svg'
-import { getMyAppointments, getMyAppointmentImages, getPatientName, getEmployeeName, getPatientTreatment } from '@/lib/endpoints'
+import { getMyAppointments, getMyAppointmentImages, getPatientName, getEmployeeName, getPatientTreatment, viewImage } from '@/lib/endpoints'
 import { formatLegibleDate } from '@/utils/helpers'
+import FaceFrontOutline from '@/assets/images/face-front-outline.svg'
+import FaceLeftOutline from '@/assets/images/face-left-outline.svg'
+import FaceRightOutline from '@/assets/images/face-right-outline.svg'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -24,14 +27,23 @@ const router = useRouter()
 
 // STATE *********************************************************************
 const patientImages = ref()
+const patientImageUrls = ref<{ [key: string]: string | null }>({
+  'Left profile': null,
+  'Front profile': null,
+  'Right profile': null,
+})
 const appointments = ref()
-const treatmentPlan = ref({})
 
 // FUNCTIONS *********************************************************************
-const fetchPatientTreatment = async (patientId: string) => {
+const fetchPatientTreatment = async (patientId: string, appointmentId: string) => {
   try {
-    const result = await getPatientTreatment(patientId)
-    treatmentPlan.value = result
+    const imagesResponse = await getMyAppointmentImages(appointmentId, patientId)
+    patientImages.value = imagesResponse.images
+
+    for (let profile of ['Left profile', 'Front profile', 'Right profile']) {
+      const image = patientImages.value.find((img) => img.filename.includes(profile))
+      patientImageUrls.value[profile] = image ? await viewImage(image.imageId, appointmentId, patientId) : null
+    }
   } catch (error) {
     console.error('Failed to fetch treatment plan:', error)
   }
@@ -45,20 +57,16 @@ getMyProfileImages(patientStore.currentPatientId || (route.params.patientId as s
 getMyAppointments().then((res) => {
   appointments.value = res.appointments
 })
-
-getMyAppointmentImages('01HCXD1XZPYJR8EGBNQ2T09TRJ', '014750b8-fc6b-4238-9be5-26a2026bfcc1').then((res) => {
-  appointments.value = { ...appointments.value, images: res.images }
-})
 </script>
 
 <template>
   <div class="flex gap-x-2 my-4 flex-wrap gap-4">
     <div class="flex w-full flex-col">
-      <div v-for="(appointment, idx) in appointments">
+      <div class="flex items-center gap-x-4" v-for="(appointment, idx) in appointments">
         <BaseVisitForm>
           <template #trigger>
             <div
-              @click="fetchPatientTreatment(appointment.patientId)"
+              @click="fetchPatientTreatment(appointment.patientId, appointment.appointmentId)"
               class="flex flex-col mb-4 cursor-pointer my-2 p-4 rounded-2xl shadow-sm hover:bg-gray-2 bg-white"
             >
               <p>{{ formatLegibleDate(appointment.createdAt) }}</p>
@@ -72,22 +80,41 @@ getMyAppointmentImages('01HCXD1XZPYJR8EGBNQ2T09TRJ', '014750b8-fc6b-4238-9be5-26
           </template>
           <template #content>
             <div class="flex flex-col mb-4 cursor-pointer my-2 p-4 rounded-2xl shadow-sm hover:bg-gray-2 bg-white w-full">
-              {{ appointment.patientId }}
               <p>{{ formatLegibleDate(appointment.startTime) }}</p>
-              {{ appointment.images }}
               <p class="text-sm opacity-50 my-1 w-full">{{ appointment.service }}</p>
+              <div class="flex gap-x-4 my-2">
+                <div class="flex" v-for="profile in ['Left profile', 'Front profile', 'Right profile']">
+                  <img v-if="patientImageUrls[profile]" class="w-[172px] rounded-2xl shadow-sm" :src="patientImageUrls[profile]" />
+                  <div v-else class="w-[172px] h-[172px] rounded-2xl shadow-sm border"></div>
+                </div>
+              </div>
             </div>
-            <div v-if="treatmentPlan" class="flex flex-col mb-4 cursor-pointer my-2 p-4 rounded-2xl shadow-sm hover:bg-gray-2 bg-white w-full">
-              Treatment Plan: {{ treatmentPlan }}
+            <div class="flex gap-x-4">
+              <BaseImageUpload
+                @photo-uploaded="isPhotoUploaded = true"
+                buttonText="Left profile"
+                describedImage="The left side of your face"
+                :image-URL="FaceLeftOutline"
+              />
+              <BaseImageUpload
+                @photo-uploaded="isPhotoUploaded = true"
+                buttonText="Front profile"
+                describedImage="The front of your face"
+                :image-URL="FaceFrontOutline"
+              />
+              <BaseImageUpload
+                @photo-uploaded="isPhotoUploaded = true"
+                buttonText="Right profile"
+                describedImage="The right side of your face"
+                :image-URL="FaceRightOutline"
+              />
             </div>
           </template>
         </BaseVisitForm>
-      </div>
-      <div class="flex flex-wrap w-full">
-        <div v-for="(image, idx) in patientImages" :key="idx" class="flex justify-center items-center">
-          <div class="flex flex-col text-center bg-white p-4 rounded-2xl shadow-sm mx-1">
-            <img class="m-2 object-cover flex justify-center items-center h-32 w-32 rounded-xl" :src="image.path" :alt="image.fileName" />
-            <p class="text-[#6C6A7C] text-[12px]">{{ image.fileName.length > 16 ? image.fileName.slice(0, 16) + '...' : image.fileName }}</p>
+        <div class="flex gap-x-4 my-2">
+          <div class="flex items-center" v-for="profile in ['Left profile', 'Front profile', 'Right profile']">
+            <img v-if="patientImageUrls[profile]" class="w-[104px] rounded-2xl shadow-sm" :src="patientImageUrls[profile]" />
+            <div v-else class="w-[104px] h-[104px] rounded-2xl shadow-sm border border-gray-2"></div>
           </div>
         </div>
       </div>

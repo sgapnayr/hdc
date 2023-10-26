@@ -288,13 +288,11 @@ async function handleGeneratePDFReport(providerId: string, date: string) {
             yOffset = 30
           }
 
-          pdf.rect(10, yOffset - 10, 190, 50)
+          pdf.rect(10, yOffset - 10, 120, 50)
 
           pdf.setFontSize(10)
           pdf.text(`Appointment ID: ${appt.appointmentId}`, 15, yOffset)
           pdf.text(`Service: ${appt.service}`, 15, yOffset + 10)
-          pdf.text(`Start Time: ${new Date(appt.startTime).toLocaleString()}`, 15, yOffset + 20)
-          pdf.text(`End Time: ${new Date(appt.endTime).toLocaleString()}`, 15, yOffset + 30)
           yOffset += 55
         }
 
