@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useProfileStore } from '~/stores/profile'
 import { usePatientStore } from '~/stores/patient'
 import { useTasksStore } from '~/stores/task'
@@ -78,6 +78,7 @@ appointmentsStore.getAllAppointments()
 
 function handleSubAccount(selectedSubAccount: string) {
   selectedSubAccountId.value = selectedSubAccount
+  localStorage.setItem('selectedSubAccountId', selectedSubAccount) // Save to localStorage
   navigateTo('/view-history/' + selectedSubAccount)
   patientStore.currentPatientId = selectedSubAccount
   profileStore.setMyProfile(patientStore.currentPatientId as string)
@@ -92,6 +93,13 @@ profileStore.setMyProfile((patientStore.currentPatientId as string) || (route.pa
 patientStore.getPatientFromGraphQL((patientStore.currentPatientId as string) || (route.params.patientId as string))
 
 getPatientTreatment(route?.params?.patientId as string)
+
+onMounted(() => {
+  const savedSubAccountId = localStorage.getItem('selectedSubAccountId')
+  if (savedSubAccountId) {
+    handleSubAccount(savedSubAccountId)
+  }
+})
 </script>
 
 <template>
