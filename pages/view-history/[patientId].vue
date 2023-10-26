@@ -96,9 +96,6 @@ getPatientTreatment(route?.params?.patientId as string)
 
 onMounted(() => {
   const savedSubAccountId = localStorage.getItem('selectedSubAccountId')
-  if (savedSubAccountId) {
-    handleSubAccount(savedSubAccountId)
-  }
 })
 </script>
 

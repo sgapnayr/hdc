@@ -13,8 +13,8 @@ const route = useRoute()
 <template>
   <BaseAlert />
   <div class="h-[80px] flex justify-center items-center w-full">
-    <BaseWrapper>
-      <div class="flex justify-between w-full items-center">
+    <div class="w-full max-w-[1440px] px-4">
+      <div class="flex justify-between w-full items-center no-scrollbars">
         <NuxtLink to="/" class="flex w-full h-[28px] items-center">
           <img class="w-[40px] md:w-auto mr-[16px]" :src="HoneydewIcon" alt="Honeydew Icon" />
           <img class="w-[148px] md:w-auto" :src="HoneydewLogo" alt="Honeydew Logo" />
@@ -41,6 +41,6 @@ const route = useRoute()
           <img class="absolute w-[18px]" :src="HamburgerIcon" alt="Hamburger Menu" />
         </div>
       </div>
-    </BaseWrapper>
+    </div>
   </div>
 </template>
