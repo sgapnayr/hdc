@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
 import { ref, computed } from 'vue'
-import { getPatient, getTaskByAssignee } from '~/lib/endpoints'
+import { getPatient, getTaskByAssignee, getPatientName } from '~/lib/endpoints'
 import { usePatientStore } from '../stores/patient'
 import { useRouter } from 'vue-router'
 
@@ -23,7 +23,6 @@ const { push, currentRoute } = useRouter()
 
 // STATE **********************************************************************
 const selectedTab = ref(0)
-const patientName = ref()
 
 const patientStore = usePatientStore()
 

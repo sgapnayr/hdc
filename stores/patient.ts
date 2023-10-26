@@ -83,14 +83,11 @@ export const usePatientStore = defineStore('patient', () => {
               : [],
         }
 
-        // If we're loading the primary account (i.e., `currentPrimaryAccountData` hasn't been set yet)
         if (!currentPrimaryAccountData.value) {
           currentPrimaryAccountData.value = frontendPatient
-          // Store the primary's sub-accounts separately
           primarySubAccounts.value = frontendPatient.subAccounts.length > 0 ? frontendPatient.subAccounts : primarySubAccounts.value
         } else {
           primarySubAccounts.value = frontendPatient.subAccounts.length > 0 ? frontendPatient.subAccounts : primarySubAccounts.value
-          // If we're loading a sub-account, set its subAccounts from the primarySubAccounts value
           frontendPatient.subAccounts = primarySubAccounts.value
         }
 
