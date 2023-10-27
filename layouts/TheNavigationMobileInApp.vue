@@ -61,7 +61,7 @@ async function signOut() {
 
 <template>
   <div class="h-[80px] flex justify-center items-center w-full bg-white">
-    <BaseWrapper>
+    <div class="w-full max-w-[1440px] px-4">
       <div class="flex justify-between w-full items-center relative">
         <NuxtLink class="flex w-full h-[28px] items-center">
           <img class="w-[40px] md:w-auto mr-[16px]" :src="HoneydewIcon" alt="Honeydew Icon" />
@@ -76,7 +76,7 @@ async function signOut() {
           <img v-if="isMenuOpen" class="absolute w-[18px] scale-90" :src="XIcon" alt="X Icon" />
         </div>
       </div>
-    </BaseWrapper>
+    </div>
   </div>
   <div v-if="isMenuOpen" class="bg-white flex justify-start flex-col w-full gap-y-12 px-5 transition uppercase" :class="[isMenuOpen ? 'h-screen' : 'h-0']">
     <NuxtLink v-for="(link, idx) in linkData" :key="idx" :to="link.route" :class="[currentRoute === link.route ? 'text-honeydew-purple' : '']">
