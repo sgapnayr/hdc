@@ -71,7 +71,7 @@ await profileStore?.setMyProfile()
         >
           <div
             :class="[route.path === '/admin' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 ' : 'opacity-0']"
-            class="absolute text-lg left-16 -z-10 transition-all"
+            class="absolute text-lg font-light left-16 -z-10 transition-all"
           >
             Admin
           </div>
@@ -97,7 +97,7 @@ await profileStore?.setMyProfile()
         >
           <div
             :class="[route.path === '/view-history' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 ' : 'opacity-0']"
-            class="absolute text-lg left-16 -z-10 transition-all"
+            class="absolute text-lg font-light left-16 -z-10 transition-all"
           >
             Dashboard
           </div>
@@ -123,7 +123,7 @@ await profileStore?.setMyProfile()
         >
           <div
             :class="[route.path === '/tasks-pool' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 ' : 'opacity-0']"
-            class="absolute text-lg left-16 -z-10 transition-all"
+            class="absolute text-lg font-light left-16 -z-10 transition-all"
           >
             Tasks
           </div>
@@ -150,7 +150,7 @@ await profileStore?.setMyProfile()
         >
           <div
             :class="[route.path === '/profiles' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 ' : 'opacity-0']"
-            class="absolute text-lg left-16 -z-10 transition-all"
+            class="absolute text-lg font-light left-16 -z-10 transition-all"
           >
             Profile
           </div>
@@ -173,7 +173,7 @@ await profileStore?.setMyProfile()
         >
           <div
             :class="[route.path === '/medications' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 ' : 'opacity-0']"
-            class="absolute text-lg left-16 -z-10 transition-all"
+            class="absolute text-lg font-light left-16 -z-10 transition-all"
           >
             Medication
           </div>
@@ -189,7 +189,7 @@ await profileStore?.setMyProfile()
         >
           <div
             :class="[route.path === '/appointments' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 ' : 'opacity-0']"
-            class="absolute text-lg left-16 -z-10 transition-all"
+            class="absolute text-lg font-light left-16 -z-10 transition-all"
           >
             Appointments
           </div>
@@ -205,7 +205,7 @@ await profileStore?.setMyProfile()
             >
               <div
                 :class="[route.path === '/help' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 ' : 'opacity-0']"
-                class="absolute text-lg left-16 -z-10 transition-all"
+                class="absolute text-lg font-light left-16 -z-10 transition-all"
               >
                 Help
               </div>
@@ -246,7 +246,7 @@ await profileStore?.setMyProfile()
         >
           <div
             :class="[route.path === '/employees' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 ' : 'opacity-0']"
-            class="absolute text-lg left-16 -z-10 transition-all"
+            class="absolute text-lg font-light left-16 -z-10 transition-all"
           >
             Employees
           </div>
@@ -271,7 +271,7 @@ await profileStore?.setMyProfile()
           class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition flex justify-center items-center text-[#A09DB1] text-xs relative"
           :class="[route.path === '/login' ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
         >
-          <div :class="mouseHover ? 'opacity-100 ' : 'opacity-0'" class="absolute text-lg left-16 text-gray-1 -z-10 transition-all">Logout</div>
+          <div :class="mouseHover ? 'opacity-100 ' : 'opacity-0'" class="absolute text-lg font-light left-16 text-gray-1 -z-10 transition-all">Logout</div>
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               class="cursor-pointer"
