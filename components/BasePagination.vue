@@ -15,7 +15,7 @@ const props = defineProps({
 })
 
 // EMIT ****************************************************************
-const emit = defineEmits(['page-back', 'page-forward', 'skip-to'])
+const emit = defineEmits(['page-back', 'page-forward', 'skip-to', 'reached-last-page'])
 
 // COMPUTED ****************************************************************
 const displayedPages = computed(() => {
@@ -30,6 +30,14 @@ const displayedPages = computed(() => {
 
   return pages
 })
+
+// FUNCTIONS ****************************************************************
+const handleNextButtonClick = () => {
+  emit('page-forward')
+  if (props.currentPageProps === props.totalPages - 2) {
+    emit('reached-last-page')
+  }
+}
 </script>
 
 <template>
@@ -58,7 +66,7 @@ const displayedPages = computed(() => {
     <div
       class="cursor-pointer flex justify-center items-center transition active:scale-90 p-2 border border-[#E1E0E6] rounded-md"
       :class="{ 'opacity-50': props.currentPageProps === props.totalPages - 1 }"
-      @click="emit('page-forward')"
+      @click="handleNextButtonClick"
     >
       <img class="rotate-[270deg]" :src="ChevronIcon" alt="Chevron Icon" />
     </div>

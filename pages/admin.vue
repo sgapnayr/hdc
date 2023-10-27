@@ -1,45 +1,41 @@
 <script setup lang="ts">
-// IMPORTS ********************************************************************
-import { ref, computed } from 'vue'
+// ############################################################################
+// IMPORTS
+// ############################################################################
+import { ref, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthenticator } from '@aws-amplify/ui-vue'
+import { usePatientStore } from '@/stores/patient'
+import { useProfileStore } from '~/stores/profile'
+import { searchPatientByName } from '~/lib/endpoints'
+import debounce from 'lodash.debounce'
+
+// Assets
 import GroupDoctors from '@/assets/images/group-doctors.svg'
 import SearchIcon from '@/assets/icons/search-icon.svg'
 import DeleteIcon from '@/assets/icons/delete-icon.svg'
 import ArchiveIcon from '@/assets/icons/archive-icon.svg'
 import EyeIcon from '@/assets/icons/eye-icon.svg'
 import ChatIcon from '@/assets/icons/chat-icon.svg'
-import { useAuthenticator } from '@aws-amplify/ui-vue'
-import { usePatientStore } from '@/stores/patient'
-import { useProfileStore } from '~/stores/profile'
-import { getMyProfile } from '~/lib/endpoints'
-import { searchPatientByName } from '@/lib/endpoints'
-import debounce from 'lodash.debounce'
-import { useRouter } from 'vue-router'
 
-// LAYOUT **********************************************************************
+// ############################################################################
+// LAYOUT
+// ############################################################################
 definePageMeta({
   layout: 'in-app',
 })
 
-// STORES **********************************************************************
+// ############################################################################
+// INITIALIZATION
+// ############################################################################
+const router = useRouter()
+const user = useAuthenticator()
 const patientStore = usePatientStore()
 const profileStore = useProfileStore()
 
-// ROUTER **********************************************************************
-const router = useRouter()
-const user = useAuthenticator()
-
-onMounted(() => {
-  const unmountWatcher = watchEffect(() => {
-    if (user.authStatus !== 'authenticated') {
-      navigateTo('/')
-    }
-  })
-  onBeforeUnmount(() => {
-    unmountWatcher()
-  })
-})
-
-// TYPES **********************************************************************
+// ############################################################################
+// TYPES
+// ############################################################################
 interface Chip {
   text: string
   amount: number
@@ -55,11 +51,13 @@ interface TableHeaderCategory {
   categories: { text: string }[]
 }
 
-// STATE **********************************************************************
+// ############################################################################
+// STATE
+// ############################################################################
 const tabSelected = ref<'Active Patients' | 'Inactive Patients'>('Active Patients')
 const selectedChip = ref<Chip>({ text: 'All', amount: 10 })
 const selectedPatient = ref()
-const pageSize = ref(7)
+const pageSize = ref(15)
 const currentPage = ref(0)
 const showNoMedicalMessage = ref(false)
 const showAccutaneMessage = ref(false)
@@ -70,10 +68,13 @@ const patientData = ref()
 const patientsToShow = ref([])
 const searchPatientName = ref()
 const patientList = ref([])
+const fetchedPages = ref({})
+const nextToken = ref(null)
+const hasMorePatients = ref(true)
 
 const tableHeaderCategories: TableHeaderCategory[] = [
   {
-    role: 'admin', // Change for admin, care coord. etc
+    role: 'admin',
     categories: [
       { text: 'Full name' },
       { text: 'Date of birth' },
@@ -86,11 +87,9 @@ const tableHeaderCategories: TableHeaderCategory[] = [
   },
 ]
 
-setTimeout(() => {
-  patients.value = patientStore?.allPatients?.patients
-}, 1000)
-
-// COMPUTED METHODS ****************************************************************
+// ############################################################################
+// COMPUTED
+// ############################################################################
 const handleChipData = computed(() => {
   return categoryChips?.filter((chip) => chip.group === tabSelected.value)
 })
@@ -128,7 +127,7 @@ const filterBySelectedChip = computed(() => {
     return filterByActiveOrInactive.value?.filter((patient: any) => patient?.currentPatientStatus?.includes('Unscheduled'))
   }
 
-  return [] // Return an empty array if no matching chip is found
+  return []
 })
 
 const totalPages = computed(() => {
@@ -147,7 +146,9 @@ const totalNewMessages = computed(() => {
   return patientStore?.allPatients?.filter((patient: any) => patient?.currentPatientStatus?.includes('New Message'))?.length
 })
 
-// METHODS ****************************************************************
+// ############################################################################
+// METHODS
+// ############################################################################
 function handleSelectingChip(chip: Chip) {
   selectedChip.value = chip
 }
@@ -221,11 +222,13 @@ const categoryChips: CategoryChips[] = [
   },
 ]
 
-// WATCH ****************************************************************
+// ############################################################################
+// WATCHERS
+// ############################################################################
 watch(
   () => selectedChip.value,
-  (newValue) => {
-    currentPage.value = 0
+  () => {
+    patientsToShow.value = filterBySelectedChip.value
   }
 )
 
@@ -268,20 +271,36 @@ watch(searchPatientName, (newValue) => {
   debouncedFetch()
 })
 
-// INIT ****************************************************************
+// ############################################################################
+// INITIALIZATION METHODS
+// ############################################################################
 async function fetchPatients() {
-  await patientStore.getPatientsFromGraphQL()
+  const response = await patientStore.getPatientsFromGraphQL(patientStore.nextToken)
+  patientsToShow.value = [...patientsToShow.value, ...response.patients]
+
+  if (!response.nextToken) {
+    hasMorePatients.value = false
+  }
+
+  nextToken.value = response.nextToken
 }
-getMyProfile()
-fetchPatients()
+
+function loadMorePatients() {
+  if (hasMorePatients.value) {
+    fetchPatients()
+  }
+}
 
 patientsToShow.value = patientStore?.allPatients
 
 const pagesData = computed(() => {
   let start = currentPage.value * pageSize.value
   let end = (currentPage.value + 1) * pageSize.value
+  return patientsToShow.value?.slice(start, end)
+})
 
-  return patientsToShow?.value?.slice(start, end) || patientStore?.allPatients?.slice(start, end)
+onMounted(() => {
+  fetchPatients()
 })
 </script>
 
@@ -485,9 +504,10 @@ const pagesData = computed(() => {
               <BasePagination
                 v-if="totalPages > 1"
                 class="mx-4"
-                @page-forward="currentPage < totalPages - 1 ? (currentPage += 1) : ''"
-                @page-back="currentPage > 0 ? (currentPage -= 1) : ''"
-                @skip-to="(val) => (currentPage = val)"
+                @page-forward="currentPage = Math.min(currentPage + 1, totalPages - 1)"
+                @page-back="currentPage = Math.max(currentPage - 1, 0)"
+                @skip-to="currentPage = Math.min(Math.max(0, val), totalPages - 1)"
+                @reached-last-page="loadMorePatients"
                 :currentPageProps="currentPage"
                 :totalPages="totalPages"
               />

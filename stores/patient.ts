@@ -1,9 +1,11 @@
+import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { getPatients, getPatient, updateInsurance } from '@/lib/endpoints'
 import { useRoute } from 'vue-router'
 
 export const usePatientStore = defineStore('patient', () => {
-  const allPatients = ref()
+  const allPatients = ref([])
+  const nextToken = ref(null)
   const patientData = ref()
   const currentPatientId = ref()
   const currentPrimaryAccountData = ref()
@@ -11,44 +13,53 @@ export const usePatientStore = defineStore('patient', () => {
 
   const route = useRoute()
 
-  if (!currentPatientId) {
+  if (!currentPatientId.value) {
     currentPatientId.value = route.params.patientId
   }
 
-  watch(currentPatientId, () => {
-    getPatientFromGraphQL(currentPatientId.value)
-  })
+  function mapBackendToFrontendPatient(backendPatient) {
+    return {
+      patientId: backendPatient.patientId,
+      patientName: backendPatient.patientProfile.patientFirstName + ' ' + backendPatient.patientProfile.patientLastName,
+      patientDOB: backendPatient.patientProfile.patientDOB || 'missing',
+      patientPhoneNumber: backendPatient.patientProfile.patientPhoneNumber || '',
+      patientEmail: backendPatient.email || '',
+      currentPatientStatus: ['New Patient'],
+      patientProvider: backendPatient.provider || 'provider',
+      patientCoordinator: backendPatient.coordinator || 'coordinator',
+      patientREMsNumber: backendPatient.patientREMsNumber || '123',
+    }
+  }
 
-  // GETTERS ****************************************************************
-  async function getPatientsFromGraphQL() {
+  async function getPatientsFromGraphQL(token = null) {
     try {
-      const response = await getPatients()
-      const mappedData: any = {
-        patients: response?.patients?.map((backendPatient: any) => {
-          const frontendPatient = {
-            patientId: backendPatient.patientId,
-            patientName: backendPatient.patientProfile.patientFirstName + ' ' + backendPatient.patientProfile.patientLastName,
-            patientDOB: backendPatient.patientProfile.patientDOB || 'missing',
-            patientPhoneNumber: backendPatient.patientProfile.patientPhoneNumber || '',
-            patientEmail: backendPatient.email || '',
-            currentPatientStatus: ['New Patient'],
-            patientProvider: backendPatient.proivder || 'provider',
-            patientCoordinator: backendPatient.coordinator || 'coordinator',
-            patientREMsNumber: backendPatient?.patientREMsNumber || '123',
+      const response = await getPatients(token)
+      if (response?.patients) {
+        const newPatients = response.patients.map(mapBackendToFrontendPatient)
+
+        // Create a temporary map for quick look-up
+        const patientIdMap = new Map(allPatients.value.map((patient) => [patient.patientId, patient]))
+
+        // Merge new patients
+        for (const newPatient of newPatients) {
+          if (!patientIdMap.has(newPatient.patientId)) {
+            allPatients.value.push(newPatient)
+            patientIdMap.set(newPatient.patientId, newPatient)
           }
-          return frontendPatient
-        }),
+        }
+
+        nextToken.value = response.nextToken
+      } else {
+        console.error('No patients found')
       }
-      allPatients.value = mappedData.patients
     } catch (error) {
       console.error('Error retrieving patients:', error)
     }
   }
 
-  async function getPatientFromGraphQL(patientId: string) {
+  async function getPatientFromGraphQL(patientId) {
     try {
       const response = await getPatient(patientId)
-
       if (response?.patientProfile) {
         const backendPatient = response.patientProfile
         const subAccounts = response.subAccounts
@@ -85,9 +96,9 @@ export const usePatientStore = defineStore('patient', () => {
 
         if (!currentPrimaryAccountData.value) {
           currentPrimaryAccountData.value = frontendPatient
-          primarySubAccounts.value = frontendPatient.subAccounts.length > 0 ? frontendPatient.subAccounts : primarySubAccounts.value
+          primarySubAccounts.value = frontendPatient.subAccounts
         } else {
-          primarySubAccounts.value = frontendPatient.subAccounts.length > 0 ? frontendPatient.subAccounts : primarySubAccounts.value
+          primarySubAccounts.value = frontendPatient.subAccounts
           frontendPatient.subAccounts = primarySubAccounts.value
         }
 
@@ -100,11 +111,7 @@ export const usePatientStore = defineStore('patient', () => {
     }
   }
 
-  watch(currentPatientId, () => {
-    getPatientFromGraphQL(currentPatientId.toString())
-  })
-
-  async function updateInsuranceGraphQL(patientId: string, groupNumber: string, memberId: string, insuranceName: string, policyHolderName: string) {
+  async function updateInsuranceGraphQL(patientId, groupNumber, memberId, insuranceName, policyHolderName) {
     try {
       const response = await updateInsurance(patientId, groupNumber, memberId, insuranceName, policyHolderName)
       console.log(response)
@@ -113,12 +120,18 @@ export const usePatientStore = defineStore('patient', () => {
     }
   }
 
+  watch(currentPatientId, (newValue) => {
+    if (newValue) {
+      getPatientFromGraphQL(newValue.toString())
+    }
+  })
+
   return {
     allPatients,
+    nextToken,
     patientData,
     getPatientFromGraphQL,
     getPatientsFromGraphQL,
-    getPatient,
     updateInsuranceGraphQL,
     currentPatientId,
     currentPrimaryAccountData,
