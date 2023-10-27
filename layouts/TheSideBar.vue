@@ -144,7 +144,7 @@ await profileStore?.setMyProfile()
         <!-- Patient Icon -->
         <div
           @click="handleNavigation('/profiles/' + profileStore?.profileData?.patientId)"
-          class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition"
+          class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition flex justify-center items-center text-[#A09DB1] text-[8px] relative"
           :class="[route.path.includes('/profiles') || route.path === '/view-history' ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
           v-if="profileStore?.profileData?.userRole == 'patient'"
         >
