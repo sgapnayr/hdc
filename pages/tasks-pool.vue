@@ -157,15 +157,21 @@ const assigneePages = computed(() => {
 
 // METHODS ****************************************************************
 async function handleGetAllTasks() {
-  fetchTasksByAssignee()
+  await fetchTasksByAssignee()
   tasksStore.getAllTasksFromGraphQL()
+}
+
+async function loadMoreTasks() {
+  if (tasksStore.nextToken) {
+    await tasksStore.getAllTasksFromGraphQL()
+  }
 }
 
 async function handleAssignTask(taskId: string) {
   claimTaskButtonState.value = 'loading'
 
-  setTimeout(() => {
-    assignTask(taskId)
+  setTimeout(async () => {
+    await assignTask(taskId)
     claimTaskButtonState.value = 'success'
   }, 750)
 
@@ -175,7 +181,7 @@ async function handleAssignTask(taskId: string) {
     taskPriority.value = 'Low'
     taskComments.value = ''
     claimTaskButtonState.value = 'idle'
-    handleGetAllTasks()
+    resetAndFetchTasks() // Here we reset and fetch tasks after assigning one.
   }, 1500)
 }
 
@@ -190,7 +196,6 @@ async function fetchTasksByAssignee() {
   }
 }
 
-await profileStore.setMyProfile()
 patientStore.getPatientsFromGraphQL()
 handleGetAllTasks()
 </script>
@@ -451,6 +456,7 @@ handleGetAllTasks()
               @page-forward="currentPage < totalPagesForGeneralTable - 1 ? (currentPage += 1) : ''"
               @page-back="currentPage > 0 ? (currentPage -= 1) : ''"
               @skip-to="(val) => (currentPage = val)"
+              @reached-last-page="loadMoreTasks"
               :currentPageProps="currentPage"
               :totalPages="totalPagesForGeneralTable"
             />
