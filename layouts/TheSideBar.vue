@@ -70,7 +70,7 @@ await profileStore?.setMyProfile()
           v-if="profileStore?.profileData?.userRole != 'patient'"
         >
           <div
-            :class="[route.path === '/admin' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-75' : 'opacity-0']"
+            :class="[route.path === '/admin' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 text-semibold' : 'opacity-0']"
             class="absolute text-xl left-16 -z-10 transition-all"
           >
             Admin
@@ -96,7 +96,7 @@ await profileStore?.setMyProfile()
           v-if="profileStore?.profileData?.userRole == 'patient'"
         >
           <div
-            :class="[route.path === '/view-history' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-75' : 'opacity-0']"
+            :class="[route.path === '/view-history' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 text-semibold' : 'opacity-0']"
             class="absolute text-xl left-16 -z-10 transition-all"
           >
             Dashboard
@@ -122,7 +122,7 @@ await profileStore?.setMyProfile()
           v-if="profileStore?.profileData?.userRole != 'patient'"
         >
           <div
-            :class="[route.path === '/tasks-pool' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-75' : 'opacity-0']"
+            :class="[route.path === '/tasks-pool' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 text-semibold' : 'opacity-0']"
             class="absolute text-xl left-16 -z-10 transition-all"
           >
             Tasks
@@ -149,7 +149,7 @@ await profileStore?.setMyProfile()
           v-if="profileStore?.profileData?.userRole == 'patient'"
         >
           <div
-            :class="[route.path === '/profiles' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-75' : 'opacity-0']"
+            :class="[route.path === '/profiles' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 text-semibold' : 'opacity-0']"
             class="absolute text-xl left-16 -z-10 transition-all"
           >
             Profile
@@ -172,7 +172,7 @@ await profileStore?.setMyProfile()
           v-if="profileStore?.profileData?.userRole != 'patient'"
         >
           <div
-            :class="[route.path === '/medications' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-75' : 'opacity-0']"
+            :class="[route.path === '/medications' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 text-semibold' : 'opacity-0']"
             class="absolute text-xl left-16 -z-10 transition-all"
           >
             Medication
@@ -188,7 +188,7 @@ await profileStore?.setMyProfile()
           v-if="profileStore?.profileData?.userRole != 'patient'"
         >
           <div
-            :class="[route.path === '/appointments' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-75' : 'opacity-0']"
+            :class="[route.path === '/appointments' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 text-semibold' : 'opacity-0']"
             class="absolute text-xl left-16 -z-10 transition-all"
           >
             Appointments
@@ -204,7 +204,7 @@ await profileStore?.setMyProfile()
               :class="[route.path === '/help' ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
             >
               <div
-                :class="[route.path === '/help' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-75' : 'opacity-0']"
+                :class="[route.path === '/help' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 text-semibold' : 'opacity-0']"
                 class="absolute text-xl left-16 -z-10 transition-all"
               >
                 Help
@@ -245,7 +245,7 @@ await profileStore?.setMyProfile()
           v-if="profileStore?.profileData?.userRole != 'patient'"
         >
           <div
-            :class="[route.path === '/employees' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-75' : 'opacity-0']"
+            :class="[route.path === '/employees' ? 'text-black' : 'text-gray-1', mouseHover ? 'opacity-100 text-semibold' : 'opacity-0']"
             class="absolute text-xl left-16 -z-10 transition-all"
           >
             Employees
@@ -271,7 +271,7 @@ await profileStore?.setMyProfile()
           class="w-[48px] h-[48px] hover:bg-[#EEEBFC] rounded-full cursor-pointer active:scale-90 transition flex justify-center items-center text-[#A09DB1] text-xs relative"
           :class="[route.path === '/login' ? 'bg-[#EEEBFC]' : 'hover:bg-[#EEEBFC]']"
         >
-          <div :class="mouseHover ? 'opacity-75' : 'opacity-0'" class="absolute text-xl left-16 text-gray-1 -z-10 transition-all">Logout</div>
+          <div :class="mouseHover ? 'opacity-100 text-semibold' : 'opacity-0'" class="absolute text-xl left-16 text-gray-1 -z-10 transition-all">Logout</div>
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               class="cursor-pointer"
