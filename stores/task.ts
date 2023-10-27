@@ -14,7 +14,16 @@ export const useTasksStore = defineStore('tasks', () => {
     try {
       const response = await getAllTasks(nextToken.value)
       const mappedData = response.tasks.map(mapTaskToFrontend)
-      allTasks.value = [...allTasks.value, ...mappedData]
+
+      const taskIdMap = new Map(allTasks.value.map((task) => [task.taskId, task]))
+
+      for (const newTask of mappedData) {
+        if (!taskIdMap.has(newTask.taskId)) {
+          allTasks.value.push(newTask)
+          taskIdMap.set(newTask.taskId, newTask)
+        }
+      }
+
       nextToken.value = response.nextToken
     } catch (error) {
       console.error('Error retrieving tasks:', error)
