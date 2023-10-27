@@ -12,7 +12,7 @@
   <div class="flex flex-col justify-center items-center w-full">
     <TheSideBar
       v-if="!isMobile"
-      class="fixed w-[80px] left-0 top-0 hidden md:flex"
+      class="fixed left-0 top-0 hidden md:flex"
       :class="
         profileStore.isBloodSlipFormOpen || profileStore.isPatientDetailsFormOpen || profileStore.isPregnantModalOpen || profileStore.isVisitFormOpen
           ? ''
