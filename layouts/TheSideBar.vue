@@ -2,6 +2,7 @@
 // IMPORTS ********************************************************************
 import { ref } from 'vue'
 import HoneyDewIcon from '@/assets/icons/honeydew-icon.svg'
+import HoneydewLogo from '@/assets/images/honeydew-logo.svg'
 import { useRouter } from 'vue-router'
 import { useRoute } from 'vue-router'
 import { Auth } from 'aws-amplify'
@@ -51,7 +52,13 @@ await profileStore?.setMyProfile()
     class="bg-white flex flex-col items-start h-screen justify-start shadow-md transition-all cursor-pointer"
   >
     <div class="w-[80px] bg-white flex flex-col items-center h-screen justify-start">
-      <div>
+      <div class="relative flex items-center justify-center">
+        <img
+          :src="HoneydewLogo"
+          alt="Honey Dew Logo"
+          :class="mouseHover ? 'opacity-100' : 'opacity-0'"
+          class="mb-[36px] mt-[28px] absolute left-24 scale-[300%] transition-all"
+        />
         <img :src="HoneyDewIcon" alt="Honey Dew Icon" class="mb-[36px] mt-[28px]" />
       </div>
       <div class="gap-y-[14px] flex flex-col z-0">
