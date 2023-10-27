@@ -17,6 +17,7 @@ import BaseAccutane from '~/components/BaseAccutane.vue'
 import ChevronIcon2 from '@/assets/icons/chevron-down-icon.svg'
 import type { Appointment } from '@/types/appointment-types'
 import AlertIcon from '@/assets/icons/alert-icon.svg'
+import { getPatientTreatmentPlanId, getAppointmentByPatientId } from '@/lib/endpoints'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -45,6 +46,7 @@ const patientStore = usePatientStore()
 // STATE **********************************************************************
 const profileData = ref<string>('')
 const isAppointmentMissedState = ref<boolean>(false)
+const treatmentPlan = ref()
 
 // Computed function to get patient appointments filtered by email
 const getPatientAppointments = computed(() => {
@@ -111,6 +113,9 @@ const toDoItems = [
   { text: 'Submit pregnancy test', isComplete: false },
   { text: 'View Accutane info here', isComplete: false },
 ]
+
+getPatientTreatmentPlanId(route.params.patientId as string).then((res) => (treatmentPlan.value = res))
+getAppointmentByPatientId(route.params.patientId as string).then((res) => console.log(res, 'HERE ARE APPOINTMENTS ********'))
 </script>
 
 <template>
@@ -251,15 +256,16 @@ const toDoItems = [
               <template #header>My Treatment Plan</template>
               <template #content>
                 <div class="md:w-[640px]">
+                  {{ treatmentPlan.treatmentPlan[0] }}
                   <p class="text-[14px] font-[400] text-[#667085] mb-[16px]">
                     Your treatment plan was updated on {date} by your care coordinator {care coordinator}
                   </p>
                   <BaseTreatment
-                    :treatmentName="treatment.treatmentName"
+                    :treatmentName="treatment.name"
                     :is-prescription="treatment.isPrescription"
                     :treatment-instructions="treatment.treatmentInstructions"
                     :morning-night-or-both="treatment.morningNightOrBoth"
-                    v-for="(treatment, idx) in treatments"
+                    v-for="(treatment, idx) in treatmentPlan.treatmentPlan[0].treatmentGroups[0].treatmentMedicines"
                     :key="idx"
                     class="rounded-8"
                   />

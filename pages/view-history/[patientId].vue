@@ -100,6 +100,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <BaseNylas />
   <BaseWrapper>
     <div class="flex justify-end w-full gap-x-4 flex-row -mb-8 mt-4">
       <div>

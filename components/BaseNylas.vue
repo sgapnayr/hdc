@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import Logo from '@/assets/icons/honeydew-icon.svg'
+
 export default {
   mounted() {
     // Load the Nylas Schedule Editor script when the component is mounted
@@ -17,17 +19,35 @@ export default {
   methods: {
     openScheduleEditor() {
       const patientIdFromRoute = this.$route.params.patientId
-      // Prompt the Schedule Editor when a user clicks on the button
       nylas.scheduler.show({
         auth: {
-          // Account <ACCESS_TOKEN> with active calendar scope
-          // accessToken: process.env.VUE_APP_NYLAS_ACCESS_TOKEN,
           accessToken: '6cP8Q2C1QS8NZPGzKGUoZNlBRvUpq7',
         },
         style: {
-          // Style the Schedule Editor
           tintColor: '#32325d',
           backgroundColor: 'white',
+        },
+        behavior: {
+          displayOnly: ['event-info', 'opening-hours', 'calendars'],
+        },
+        defaults: {
+          event: {
+            title: 'Meeting with Honeydew',
+            duration: 30,
+          },
+          appearance: {
+            company_name: 'Honeydew Care',
+          },
+          booking: {
+            additional_fields: [
+              {
+                label: 'Patient ID: ' + patientIdFromRoute,
+                name: '',
+                required: false,
+                type: 'text',
+              },
+            ],
+          },
         },
       })
     },
