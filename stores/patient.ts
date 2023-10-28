@@ -98,7 +98,6 @@ export const usePatientStore = defineStore('patient', () => {
           currentPrimaryAccountData.value = frontendPatient
           primarySubAccounts.value = frontendPatient.subAccounts
         } else {
-          primarySubAccounts.value = frontendPatient.subAccounts
           frontendPatient.subAccounts = primarySubAccounts.value
         }
 
