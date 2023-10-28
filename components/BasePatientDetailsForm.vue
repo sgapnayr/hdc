@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import ChevronIcon2 from '@/assets/icons/chevron-down-icon.svg'
 import { useProfileStore } from '~/stores/profile'
 import { usePatientStore } from '~/stores/patient'
+import { useToastStore } from '@/stores/toast'
 import { updatePatient } from '../lib/endpoints'
 import { useRoute } from 'vue-router'
 import { vMaska } from 'maska'
@@ -14,6 +15,7 @@ const emit = defineEmits(['close-modal'])
 // STORES ********************************************************************
 const profileStore = useProfileStore()
 const patientStore = usePatientStore()
+const toastStore = useToastStore()
 
 // MEMBER DATA ****************************************************************
 const route = useRoute()
@@ -85,6 +87,8 @@ const updateProfileChanges = async () => {
     updatePatientAddress.value
   )
 
+  showSuccess()
+
   patientStore.getPatientFromGraphQL(patientStore?.currentPatientId || (route.params.patientId as string))
 
   watch(patientStore?.currentPatientId, () => {
@@ -94,6 +98,14 @@ const updateProfileChanges = async () => {
   setTimeout(() => {
     emit('close-modal')
   }, 100)
+}
+
+// TOAST ****************************************************************
+function showSuccess() {
+  toastStore.isSuccessfulToastVisible = true
+  setTimeout(() => {
+    toastStore.isSuccessfulToastVisible = false
+  }, 2000)
 }
 </script>
 

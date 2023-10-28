@@ -11,7 +11,7 @@ const toastStore = useToastStore()
     <div
       v-if="toastStore.isSuccessfulToastVisible"
       @click="toastStore.isSuccessfulToastVisible = false"
-      class="absolute top-0 right-0 left-0 w-full flex justify-center items-start transition cursor-pointer z-10"
+      class="absolute top-0 right-0 left-0 w-full flex justify-center items-start transition cursor-pointer z-20"
     >
       <div class="w-[560px] bg-white h-[56px] shadow-2xl rounded-[8px] flex justify-between items-center px-4 absolute top-8">
         <div class="flex items-center gap-x-2">
@@ -43,7 +43,7 @@ const toastStore = useToastStore()
     <div
       v-if="toastStore.isFailedToastVisible"
       @click="toastStore.isFailedToastVisible = false"
-      class="absolute top-0 right-0 left-0 w-full flex justify-center items-start transition cursor-pointer z-10"
+      class="absolute top-0 right-0 left-0 w-full flex justify-center items-start transition cursor-pointer z-20"
     >
       <div class="w-[560px] bg-white h-[56px] shadow-2xl rounded-[8px] flex justify-between items-center px-4 absolute top-8">
         <div class="flex items-center gap-x-2">
