@@ -115,7 +115,7 @@ const toDoItems = [
 ]
 
 getPatientTreatmentPlanId(route.params.patientId as string).then((res) => (treatmentPlan.value = res))
-getAppointmentByPatientId(route.params.patientId as string).then((res) => console.log(res, 'HERE ARE APPOINTMENTS ********'))
+getAppointmentByPatientId(route.params.patientId as string).then((res) => res)
 </script>
 
 <template>
@@ -245,7 +245,7 @@ getAppointmentByPatientId(route.params.patientId as string).then((res) => consol
             <h1 class="text-[16px] font-[500] leading-[40px] text-gray-3 mt-[20px]">My treatment plan</h1>
             <p class="text-gray-5 mt-[8px] text-[14px]">View the latest plan your provider recommended for you.</p>
             <!-- Modal -->
-            <BaseModal @action-click="router.push('/view-history/1')">
+            <BaseModal @action-click="router.push(('/view-history/' + route.params.patientId) as string)">
               <template #button>
                 <button
                   class="bg-honeydew-purple h-[40px] px-6 justify-center text-white items-center flex rounded-[60px] font-[500] text-[12px] leading-[24px] cursor-pointer uppercase whitespace-nowrap mt-[16px]"
@@ -256,27 +256,30 @@ getAppointmentByPatientId(route.params.patientId as string).then((res) => consol
               <template #header>My Treatment Plan</template>
               <template #content>
                 <div class="md:w-[640px]">
-                  {{ treatmentPlan.treatmentPlan[0] }}
                   <p class="text-[14px] font-[400] text-[#667085] mb-[16px]">
                     Your treatment plan was updated on {date} by your care coordinator {care coordinator}
                   </p>
                   <BaseTreatment
                     :treatmentName="treatment.name"
                     :is-prescription="treatment.isPrescription"
-                    :treatment-instructions="treatment.treatmentInstructions"
-                    :morning-night-or-both="treatment.morningNightOrBoth"
+                    :treatment-instructions="treatment.instructions"
+                    :morning-night-or-both="treatment.specialInstructions"
                     v-for="(treatment, idx) in treatmentPlan.treatmentPlan[0].treatmentGroups[0].treatmentMedicines"
                     :key="idx"
                     class="rounded-8"
                   />
                   <div class="bg-white w-full mt-[16px] p-4 flex">
-                    <div class="flex justify-center items-start mr-[16px]">{icon}</div>
                     <div>
                       <div class="flex gap-x-3">
-                        <div>{providerName}</div>
-                        <div>Provider</div>
+                        <div>
+                          {{
+                            (patientStore.patientData.patientProvider.firstName &&
+                              patientStore.patientData.patientProvider.firstName + ' ' + patientStore.patientData.patientProvider.lastName) ||
+                            'UNASSIGNED'
+                          }}
+                        </div>
+                        <div class="opacity-50">- Provider</div>
                       </div>
-                      <div>{providerBio}</div>
                     </div>
                   </div>
                 </div>

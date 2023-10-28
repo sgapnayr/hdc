@@ -140,8 +140,7 @@ onMounted(() => {
         </div>
 
         <!-- Treatment History -->
-        <div v-if="treatmentHistoryOrDocumentsSelected === 'Treatment History'" class="p-8">
-          <h1 class="text-[32px] font-[500] leading-[40px] text-gray-3">Medical background</h1>
+        <div v-if="treatmentHistoryOrDocumentsSelected === 'Treatment History'" class="px-8">
           <div class="flex gap-x-12">
             <div class="w-7/12">
               <div v-if="profileStore?.scheduleVisitDataArr?.length === 0">
@@ -149,38 +148,9 @@ onMounted(() => {
                   >Fill Out Medical Background?</a
                 >
               </div>
-              <div class="w-full" v-for="(medicalItem, jdx) in profileStore.scheduleVisitDataArr">
-                <div
-                  :class="[medicalItem.medicalTitle === 'Cycle & Menstruation' && patientStore?.patientData?.patientSex === 'Male' ? 'hidden' : '']"
-                  class="my-[32px] w-full"
-                  :key="jdx"
-                >
-                  <div @click="handleOpen(medicalItem.medicalTitle)" class="flex justify-start cursor-pointer text-[18px] font-[500] mb-[16px]">
-                    <div
-                      class="transition flex justify-center items-center mr-[12px] z-0"
-                      :class="[!isOpen.includes(medicalItem.medicalTitle) ? '' : '-rotate-90']"
-                    >
-                      <img :src="CaretIcon" alt="Caret Icon" />
-                    </div>
-                    {{ medicalItem.medicalTitle }}
-                  </div>
-                  <div
-                    v-for="(itemDesc, kdx) in medicalItem.content"
-                    :key="kdx"
-                    :class="[!isOpen.includes(medicalItem.medicalTitle) ? '' : 'hidden']"
-                    class="flex w-full justify-between mb-[16px] pl-8"
-                  >
-                    <div class="w-1/2 text-gray-5 font-[400]">
-                      {{ itemDesc.name }}
-                    </div>
-                    <div class="w-1/2 flex justify-end text-gray-5 font-[400]">
-                      {{ itemDesc.value }}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <BaseMedicalBackground />
             </div>
-            <div class="flex flex-col w-5/12 no-scrollbars mt-6">
+            <div class="flex flex-col w-5/12 no-scrollbars mt-8">
               <h1 class="text-[24px] font-[500] leading-[40px] text-gray-3">Notes</h1>
               <BaseNotes />
             </div>

@@ -5,7 +5,15 @@ import { getMyProfileImages } from '../lib/endpoints'
 import { useProfileStore } from '../stores/profile'
 import { usePatientStore } from '../stores/patient'
 import ChevronIcon from '../assets/icons/chevron-icon.svg'
-import { getMyAppointments, getMyAppointmentImages, getPatientName, getEmployeeName, getPatientTreatment, viewImage } from '@/lib/endpoints'
+import {
+  getAppointmentByPatientId,
+  getMyAppointments,
+  getMyAppointmentImages,
+  getPatientName,
+  getEmployeeName,
+  getPatientTreatment,
+  viewImage,
+} from '@/lib/endpoints'
 import { formatLegibleDate } from '@/utils/helpers'
 import FaceFrontOutline from '@/assets/images/face-front-outline.svg'
 import FaceLeftOutline from '@/assets/images/face-left-outline.svg'
@@ -36,11 +44,19 @@ const appointments = ref()
 
 // FUNCTIONS *********************************************************************
 const fetchPatientTreatment = async (patientId: string, appointmentId: string) => {
+  console.log('RUNNING')
   profileStore.isVisitFormOpen = true
+  console.log('RUNNING')
 
   try {
+    console.log('RUNNING')
     const imagesResponse = await getMyAppointmentImages(appointmentId, patientId)
+    console.log(imagesResponse)
+    console.log('RUNNING')
     patientImages.value = imagesResponse.images
+    console.log(imagesResponse)
+
+    console.log(imagesResponse.images, 'HEREGFJDSDJFKJKSDF')
 
     for (let profile of ['Left profile', 'Front profile', 'Right profile']) {
       const image = patientImages.value.find((img) => img.filename.includes(profile))
@@ -56,14 +72,13 @@ getMyProfileImages(patientStore.currentPatientId || (route.params.patientId as s
   .then((res) => (patientImages.value = res))
   .catch((error) => console.error(error))
 
-getMyAppointments().then((res) => {
-  appointments.value = res.appointments
-})
+getAppointmentByPatientId(route.params.patientId as string).then((res) => (appointments.value = res.appointments))
 </script>
 
 <template>
   <div class="flex gap-x-2 my-4 flex-wrap gap-4">
     <div class="flex w-full flex-col">
+      {{ patientImageUrls }}
       <div class="flex items-center gap-x-4" v-for="(appointment, idx) in appointments">
         <BaseVisitForm>
           <template #trigger>

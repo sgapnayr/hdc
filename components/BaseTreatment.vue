@@ -32,8 +32,20 @@ defineProps<{
       </div>
     </div>
     <div class="flex justify-center items-center gap-x-2">
-      <img v-if="morningNightOrBoth === 'morning' || morningNightOrBoth === 'both'" :src="MorningIcon" alt="Morning Icon" />
-      <img v-if="morningNightOrBoth === 'night' || morningNightOrBoth === 'both'" :src="NightIcon" alt="Night Icon" />
+      <img
+        v-if="morningNightOrBoth.toLowerCase().includes('morning') || morningNightOrBoth.toLowerCase().includes('both')"
+        :src="MorningIcon"
+        alt="Morning Icon"
+      />
+      <img
+        v-if="
+          morningNightOrBoth.toLowerCase().includes('night') ||
+          morningNightOrBoth.toLowerCase().includes('evening') ||
+          morningNightOrBoth.toLowerCase().includes('both')
+        "
+        :src="NightIcon"
+        alt="Night Icon"
+      />
     </div>
   </div>
 </template>

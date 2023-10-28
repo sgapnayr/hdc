@@ -38,8 +38,8 @@ async function handleSelectedProvider(provider: any) {
 <template>
   <div class="flex flex-col">
     <div
-      class="p-4 border border-[#F2F4F7] flex justify-between cursor-pointer boxShadow flex-col hover:bg-[#F2F4F7] active:opacity-0 transition"
-      :class="[isMenuOpen ? 'rounded-t-md z-40' : 'rounded-md']"
+      class="p-4 flex justify-between cursor-pointer boxShadow flex-col hover:bg-[#F2F4F7] active:opacity-0 transition"
+      :class="[isMenuOpen ? 'rounded-t-md z-40' : 'rounded-md shadow-sm']"
       placeholder="Search by patient's name"
       type="text"
       @click.stop="isMenuOpen = !isMenuOpen"
@@ -47,14 +47,18 @@ async function handleSelectedProvider(provider: any) {
       <div class="rounded-[24px] whitespace-nowrap flex justify-between w-full">
         <div class="flex gap-x-2 items-center">
           <div class="w-7 h-7 bg-[#f8f7fe] rounded-full"></div>
-          {{ selectedProvider || patientData.patientProvider || 'Select Provider' }}
+          {{
+            (patientStore?.patientData.patientProvider.firstName &&
+              patientStore?.patientData.patientProvider.firstName + ' ' + patientStore?.patientData.patientProvider.lastName) ||
+            'ASSIGN PROVIDER'
+          }}
         </div>
         <img :class="[isMenuOpen ? 'rotate-180' : '']" :src="CaretIcon" alt="Caret Icon" class="transition" />
       </div>
     </div>
     <div v-if="isMenuOpen">
       <div
-        class="p-4 bg-[#f8f7fe] border border-[#F2F4F7] flex justify-between cursor-pointer boxShadow flex-col hover:bg-[#F2F4F7] active:opacity-0 transition"
+        class="p-4 bg-[#f8f7fe] border border-[#F2F4F7] shadow-sm flex justify-between cursor-pointer boxShadow flex-col hover:bg-[#F2F4F7] active:opacity-0 transition"
         v-for="(provider, idx) in providers"
         :key="idx"
         :class="[providers.length - 1 === idx ? 'rounded-b-md' : '']"

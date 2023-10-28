@@ -239,10 +239,10 @@ const debouncedFetch = debounce(() => {
     .then((res) => {
       patientList.value = res.patients.map((backendPatient) => ({
         patientId: backendPatient.patientId || 'patientId',
-        patientName: backendPatient.patientFirstName + ' ' + backendPatient.patientLastName,
-        patientFirstName: backendPatient.patientFirstName,
-        patientLastName: backendPatient.patientLastName,
-        patientDOB: backendPatient?.patientDOB?.split('\\').join(''),
+        patientName: backendPatient.patientProfile.patientFirstName + ' ' + backendPatient.patientProfile.patientLastName,
+        patientFirstName: backendPatient.patientProfile.patientFirstName,
+        patientLastName: backendPatient.patientProfile.patientLastName,
+        patientDOB: backendPatient?.patientProfile.patientDOB?.split('\\').join(''),
         patientEmail: backendPatient.patientEmail,
         patientPhoneNumber: backendPatient.patientPhoneNumber,
         patientHeight: backendPatient.patientHeight,
@@ -459,7 +459,9 @@ onMounted(() => {
                 <div>
                   {{ patient?.patientNextFollowUp ? patient?.patientNextFollowUp : '-' }}
                 </div>
-                <div>{{ patient?.patientProvider }}</div>
+                <div>
+                  {{ (patient?.patientProvider.firstName && patient?.patientProvider.firstName + ' ' + patient?.patientProvider.lastName) || 'Unassigned' }}
+                </div>
                 <div>
                   {{ patient?.patientCoordinator }}
                 </div>

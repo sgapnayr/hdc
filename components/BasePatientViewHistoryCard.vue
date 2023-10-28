@@ -151,7 +151,7 @@ watch(patientStore.currentPatientId, () => {
     <!-- Patient Allergies -->
     <div v-if="profileStore.doYouHaveAnyAllergies" class="bg-honeydew-orange w-full py-6 mb-2 px-8 flex gap-x-2 text-gray-3 font-[400]">
       <img :src="AlertIcon" alt="Alert Icon" />
-      <div>Patient has allergies: {{ profileStore.doYouHaveAnyAllergies || '-' }}</div>
+      <div>Patient allergies: {{ profileStore.doYouHaveAnyAllergies || '-' }}</div>
     </div>
 
     <!-- Padding Wrapper -->
@@ -394,7 +394,7 @@ watch(patientStore.currentPatientId, () => {
     <!-- Details list -->
     <div v-if="toDoListOrDetailsSelected === 'Care Team'" class="py-6 px-8 flex flex-col gap-y-4">
       <BaseAssignProvider :patientData="patientStore.patientData" :patientId="route?.params?.patientId" />
-      <BaseAssignCoordinator :patientData="patientStore.patientData" :patientId="route?.params?.patientId" />
+      <!-- <BaseAssignCoordinator :patientData="patientStore.patientData" :patientId="route?.params?.patientId" /> -->
     </div>
   </div>
 </template>

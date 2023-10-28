@@ -1,8 +1,9 @@
 <script setup lang="ts">
 // IMPORTS ********************************************************************
 import { ref } from 'vue'
-import { getMyAppointments, getPatientName, getEmployeeName } from '@/lib/endpoints'
+import { getMyAppointments, getPatientName, getEmployeeName, getAppointmentsByProvider } from '@/lib/endpoints'
 import { formatLegibleDate } from '@/utils/helpers'
+import { useProfileStore } from '../stores/profile'
 
 // LAYOUT **********************************************************************
 definePageMeta({
@@ -15,6 +16,9 @@ const appointments = ref([])
 const nextToken = ref(null)
 const shouldFetchMore = ref(true)
 const isLoading = ref(false)
+
+// STORES ****************************************************************
+const profileStore = useProfileStore()
 
 // MEMBER DATA ****************************************************************
 const tableHeaderCategories = [
@@ -35,9 +39,15 @@ const checkScrollEnd = () => {
 
 const fetchAppointments = async () => {
   isLoading.value = true
+  // CHANGE IF YOU WANT BY ALL
   const res = await getMyAppointments(nextToken.value)
 
+  // CHANGE IF YOU WANT BY PROVIDER
+  const re2 = await getAppointmentsByProvider(profileStore.profileData.patientId, nextToken.value)
+
   const enrichedAppointments = await Promise.all(
+    // MAKE IT re2 if you want by provider, make it res if you want all appointments
+    // re2.appointments.map(async (appointment) => {
     res.appointments.map(async (appointment) => {
       const patient = await getPatientName(appointment.patientId)
 
