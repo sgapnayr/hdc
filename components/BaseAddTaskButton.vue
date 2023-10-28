@@ -6,6 +6,7 @@ import { useTasksStore } from '@/stores/task'
 import { useProfileStore } from '@/stores/profile'
 import { usePatientStore } from '@/stores/patient'
 import { useEmployeeStore } from '~/stores/employees'
+import { useToastStore } from '@/stores/toast'
 import CaretIcon from '@/assets/icons/caret-icon.svg'
 import debounce from 'lodash.debounce'
 
@@ -14,6 +15,7 @@ const tasksStore = useTasksStore()
 const profileStore = useProfileStore()
 const patientStore = usePatientStore()
 const employeeStore = useEmployeeStore()
+const toastStore = useToastStore()
 
 // STATE **********************************************************************
 const selectedPatient = ref<{ patientName: string; patientID: string }>()
@@ -77,6 +79,8 @@ async function handleSubmitNewTask() {
         handleGetAllTasks()
       })
       .catch((err) => console.log(err))
+
+    showSuccess()
   }, 750)
 
   setTimeout(() => {
@@ -95,6 +99,14 @@ function setTaskType(text: string) {
 function handleUseTask() {
   patientMenuOpen.value = false
   taskType.value = customTaskType.value
+}
+
+// TOAST ****************************************************************
+function showSuccess() {
+  toastStore.isSuccessfulToastVisible = true
+  setTimeout(() => {
+    toastStore.isSuccessfulToastVisible = false
+  }, 2000)
 }
 
 // DEBOUNCE *************************************************************

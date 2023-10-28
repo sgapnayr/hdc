@@ -8,6 +8,7 @@ import PlusIcon from '@/assets/icons/plus-circle.svg'
 import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { Patient, Patients } from '@/types/patient-types'
 import { useMedicationStore } from '@/stores/medications'
+import { useToastStore } from '@/stores/toast'
 import { createMedication, createTreatmentPlan, updateMedication } from '~/lib/endpoints'
 
 // LAYOUT **********************************************************************
@@ -18,6 +19,7 @@ definePageMeta({
 
 // STORE **********************************************************************
 const medicationsStore = useMedicationStore()
+const toastStore = useToastStore()
 
 // ROUTER **********************************************************************
 const user = useAuthenticator()
@@ -74,6 +76,21 @@ const tableHeaderCategories: TableHeaderCategory[] = [
   },
 ]
 
+// TOAST ****************************************************************
+function showSuccess() {
+  toastStore.isSuccessfulToastVisible = true
+  setTimeout(() => {
+    toastStore.isSuccessfulToastVisible = false
+  }, 2000)
+}
+
+function showFailed() {
+  toastStore.isFailedToastVisible = true
+  setTimeout(() => {
+    toastStore.isFailedToastVisible = false
+  }, 2000)
+}
+
 // METHODS ****************************************************************
 const inputsValid = computed(() => {
   return (
@@ -91,7 +108,7 @@ async function handleCreateMedicine() {
 
   const instructionsString = newMedicationInstructions.value.join(', ')
 
-  await createMedication(
+  const response = await createMedication(
     newMedicationName.value,
     newMedicationStrength.value,
     newMedicationSpecialInstructions.value,
@@ -99,6 +116,8 @@ async function handleCreateMedicine() {
     newMedicationRefillExpirationInDays.value,
     instructionsString
   )
+
+  showSuccess()
 
   newMedicationName.value = ''
   newMedicationStrength.value = ''
@@ -143,9 +162,11 @@ async function handleCreateTreatmentPlan() {
   }
   let finalObject = { groups: topArray }
   finalObject.treatmentName = planName
-  console.log('called to create new treatment plan', finalObject)
   chesterTreatmentGroupPayload.value = { treatmentGroup: newTreatmentPlanName, medArr }
   await createTreatmentPlan(finalObject)
+
+  showSuccess()
+  newTreatmentPlanName.value = ''
 }
 
 const toggleTime = (time: TimeSelection, isSelected: boolean): void => {

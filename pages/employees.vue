@@ -13,6 +13,7 @@ import { getEmployees, createEmployee, getPatients, getEmployee, updateEmployee,
 import type { Employees, Employee } from '@/types/employee-types'
 import type { Patient, Patients } from '@/types/patient-types'
 import { useEmployeeStore } from '~/stores/employees'
+import { useToastStore } from '@/stores/toast'
 import { usePatientStore } from '~/stores/patient'
 import { vMaska } from 'maska'
 import { getLastSixMonthsDates } from '~/utils/helpers'
@@ -30,6 +31,7 @@ const user = useAuthenticator()
 // STORES **********************************************************************
 const employeeStore = useEmployeeStore()
 const patientStore = usePatientStore()
+const toastStore = useToastStore()
 
 // TYPES **********************************************************************
 interface Chip {
@@ -137,6 +139,14 @@ const totalPagesForEmployeeType = computed(() => {
   return Math.ceil(filterByEmployeeType?.value?.length / pageSize.value)
 })
 
+// TOAST ****************************************************************
+function showSuccess() {
+  toastStore.isSuccessfulToastVisible = true
+  setTimeout(() => {
+    toastStore.isSuccessfulToastVisible = false
+  }, 2000)
+}
+
 // METHODS ****************************************************************
 function handleSelectingChip(chip: Chip) {
   selectedChip.value = chip
@@ -199,13 +209,11 @@ async function handleCreateEmployee() {
     EmployeeRole[selectedEmployeeType.value],
     selectedPatientIdToBecomeNewEmployee.value
   )
+  showSuccess()
   employeeStore.getAllEmployeesGraphQL()
 }
 
 async function handleUpdateEmployee(employeeId: string) {
-  console.log(employeeId)
-  console.log(updateEmployeeFirstName.value)
-  console.log('ROLE FOR THE EMPLOYEE: ', EmployeeRole[selectedEmployeeType.value])
   await updateEmployee(
     updateEmployeeFirstName.value,
     updateEmployeeLastName.value,
