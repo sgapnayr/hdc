@@ -74,6 +74,8 @@ const generatePreview = (file: any) => {
 
 const handleStartVisit = async () => {
   navigateTo('/submit-the-visit/' + route.params.patientId)
+  modalIsOpen.value = false
+  profileStore.isVisitFormOpen = false
   setTimeout(() => {
     emit('close-modal')
   }, 100)
@@ -108,7 +110,7 @@ const handleStartVisit = async () => {
             <div class="flex text-[#403E48] text-lg">Visit details</div>
           </div>
           <button
-            @click="handleStartVisit"
+            @click="() => handleStartVisit()"
             class="w-[150px] rounded-full text-white p-3 text-center cursor-pointer transition active:scale-90 text-xs mx-6 bg-honeydew-purple"
           >
             START VISIT
