@@ -319,6 +319,8 @@ async function handleGeneratePDFReport(providerId: string, date: string) {
       })
       .catch((err) => console.log(err, 'HERE *******'))
   }
+
+  showSuccess()
 }
 
 getPatientsInit()
