@@ -60,6 +60,7 @@ const fetchPatientTreatment = async (patientId: string, appointmentId: string) =
 
     for (let profile of ['Left profile', 'Front profile', 'Right profile']) {
       const image = patientImages.value.find((img) => img.filename.includes(profile))
+      console.log(image)
       patientImageUrls.value[profile] = image ? await viewImage(image.imageId, appointmentId, patientId) : null
     }
   } catch (error) {
@@ -73,9 +74,17 @@ getMyProfileImages(patientStore.currentPatientId || (route.params.patientId as s
   .catch((error) => console.error(error))
 
 getAppointmentByPatientId(route.params.patientId as string).then((res) => (appointments.value = res.appointments))
+fetchPatientTreatment('014750b8-fc6b-4238-9be5-26a2026bfcc1', '01HDVDJQB71K3DGGWD38DVH030')
+
+function testImageFunction() {
+  fetchPatientTreatment('014750b8-fc6b-4238-9be5-26a2026bfcc1', '01HDVDJQB71K3DGGWD38DVH030').then((res) => console.log(res))
+}
 </script>
 
 <template>
+  <div @click="testImageFunction" class="active:scale-75">Click for Image</div>
+  {{ patientImages }}
+  {{ appointments }}
   <div class="flex gap-x-2 my-4 flex-wrap gap-4">
     <div class="flex w-full flex-col">
       {{ patientImageUrls }}
@@ -92,6 +101,26 @@ getAppointmentByPatientId(route.params.patientId as string).then((res) => (appoi
               <div class="flex items-center justify-between">
                 <p class="text-sm opacity-50 w-full">Show Details</p>
                 <img class="rotate-180 scale-90" :src="ChevronIcon" alt="Chevron" />
+              </div>
+              <div class="flex gap-x-6 items-center justify-center">
+                <BaseImageUpload
+                  @photo-uploaded="isPhotoUploaded = true"
+                  buttonText="Left profile"
+                  describedImage="The left side of your face"
+                  :image-URL="FaceLeftOutline"
+                />
+                <BaseImageUpload
+                  @photo-uploaded="isPhotoUploaded = true"
+                  buttonText="Front profile"
+                  describedImage="The front of your face"
+                  :image-URL="FaceFrontOutline"
+                />
+                <BaseImageUpload
+                  @photo-uploaded="isPhotoUploaded = true"
+                  buttonText="Right profile"
+                  describedImage="The right side of your face"
+                  :image-URL="FaceRightOutline"
+                />
               </div>
             </div>
           </template>

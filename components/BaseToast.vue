@@ -4,6 +4,21 @@ import { useToastStore } from '@/stores/toast'
 
 // STORE **********************************************************************
 const toastStore = useToastStore()
+
+const slideTransition = ref(false)
+
+watch(
+  () => toastStore.isSuccessfulToastVisible,
+  () => {
+    setTimeout(() => {
+      slideTransition.value = true
+    }, 100)
+
+    setTimeout(() => {
+      slideTransition.value = false
+    }, 1500)
+  }
+)
 </script>
 
 <template>
@@ -11,7 +26,8 @@ const toastStore = useToastStore()
     <div
       v-if="toastStore.isSuccessfulToastVisible"
       @click="toastStore.isSuccessfulToastVisible = false"
-      class="absolute top-0 right-0 left-0 w-full flex justify-center items-start transition cursor-pointer z-20"
+      class="fixed top-0 right-0 left-0 w-full flex justify-center items-start transition-all cursor-pointer z-20"
+      :class="slideTransition ? 'mt-8 transition opacity-100' : '-mt-8 transition opacity-0'"
     >
       <div class="w-[560px] bg-white h-[56px] shadow-2xl rounded-[8px] flex justify-between items-center px-4 absolute top-8">
         <div class="flex items-center gap-x-2">
@@ -76,14 +92,12 @@ const toastStore = useToastStore()
 </template>
 
 <style scoped>
-/* enter and leave animations can use different */
-/* durations and timing functions.              */
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: opacity 1s, transform 1s;
+/* slide-down transition */
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: transform 0.5s;
 }
-.slide-fade-enter, .slide-fade-leave-to /* .slide-fade-leave-active in <2.1.8 */ {
-  opacity: 0;
-  transform: translateY(100%);
+.slide-down-enter, .slide-down-leave-to /* .slide-down-leave-active in <2.1.8 */ {
+  transform: translateY(-100%);
 }
 </style>

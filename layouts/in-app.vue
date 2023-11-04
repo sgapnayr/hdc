@@ -10,7 +10,9 @@
   </TheTransitionWrapper>
 
   <div class="flex flex-col justify-center items-center w-full">
-    <BaseToast />
+    <TheTransitionWrapper>
+      <BaseToast />
+    </TheTransitionWrapper>
     <TheSideBar
       v-if="!isMobile"
       class="fixed left-0 top-0 hidden md:flex"
