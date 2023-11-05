@@ -143,7 +143,7 @@ watch(patientStore.currentPatientId, () => {
         </div>
         <div class="flex items-center gap-x-[14px]">
           <img :src="EmailIcon" alt="Email Icon" />
-          <div>{{ patientStore.patientData?.patientEmail || auth?.user?.signInUserSession?.idToken?.payload?.email }}</div>
+          <div>{{ patientStore.patientData?.patientEmail }}</div>
         </div>
       </div>
     </div>

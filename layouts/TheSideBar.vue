@@ -49,7 +49,7 @@ await profileStore?.setMyProfile()
     @mouseover="mouseHover = true"
     @mouseleave="mouseHover = false"
     :class="mouseHover ? 'w-[250px]' : 'w-[80px]'"
-    class="bg-white flex flex-col items-start h-screen justify-start shadow-md transition-all cursor-pointer"
+    class="bg-white flex flex-col items-start h-screen justify-start shadow-md transition-all cursor-pzointer"
   >
     <div class="w-[80px] bg-white flex flex-col items-center h-screen justify-start">
       <div class="relative flex items-center justify-center">

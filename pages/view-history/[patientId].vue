@@ -102,7 +102,7 @@ onMounted(() => {
 <template>
   <BaseWrapper>
     <div class="flex justify-end w-full gap-x-4 flex-row -mb-8 mt-4">
-      <div>
+      <div v-if="profileStore?.profileData?.userRole != 'patient'">
         <BaseAddTaskButton />
       </div>
     </div>

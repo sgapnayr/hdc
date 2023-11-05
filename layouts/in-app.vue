@@ -18,7 +18,7 @@
       class="fixed left-0 top-0 hidden md:flex"
       :class="
         profileStore.isBloodSlipFormOpen || profileStore.isPatientDetailsFormOpen || profileStore.isPregnantModalOpen || profileStore.isVisitFormOpen
-          ? ''
+          ? 'z-10'
           : 'z-20'
       "
     />

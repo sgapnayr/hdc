@@ -243,7 +243,7 @@ const debouncedFetch = debounce(() => {
         patientFirstName: backendPatient.patientProfile.patientFirstName,
         patientLastName: backendPatient.patientProfile.patientLastName,
         patientDOB: backendPatient?.patientProfile.patientDOB?.split('\\').join(''),
-        patientEmail: backendPatient.patientEmail,
+        patientEmail: backendPatient.email,
         patientPhoneNumber: backendPatient.patientPhoneNumber,
         patientHeight: backendPatient.patientHeight,
         userRole: backendPatient.userRole,
