@@ -82,14 +82,14 @@ landingPageStore.handleFirstVisitCouponVisible()
                 <img class="absolute right-0 w-[216px] mt-1" :src="GreenLineIcon" alt="Green Line Icon" />
               </span>
             </h1>
-            <p class="font-[400] text-[20px] leading-[30px] mx-[24px] mt-[24px]">
+            <p class="font-[400] text-[20px] leading-[30px] mx-[24px] mt-[24px] text-gray-1 text-md">
               Licensed experts, prescription medication, and ongoing support. At home, on your schedule.
             </p>
-            <div class="w-full md:w-auto flex justify-center items-center flex-col md:ml-[24px]">
+            <div class="w-full md:w-auto flex justify-start items-center flex-col md:ml-[24px]">
               <NuxtLink to="/sign-up">
                 <BaseButton class="mt-[24px] w-[328px]">Start Free Online Visit</BaseButton>
               </NuxtLink>
-              <BaseCurrentlyAvailableIn />
+              <!-- <BaseCurrentlyAvailableIn /> -->
             </div>
           </div>
         </div>
