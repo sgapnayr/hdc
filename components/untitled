@@ -4,6 +4,7 @@ X To Do items, tasks updated type isPatientTask?
 X Assign Provider Check For Enrollment Provider -- Configure for patient dashboard and non-patient dashboard
 X Show No Provider Schedule Inital Visit
 X Appointments Appointment Start Time
+X Appointments fetched by Provider
 X Remove Delete Methods
 X Get Patient Appts
 X Add Next Token For Notes
@@ -17,12 +18,15 @@ Question this week:
 ? Ash chester Add Link Wrapper on Task to Nylas Appointment
 ? Documents
 
-Remaining tasks this week:
-Frontend Routing for patient to dos
-Medical Background Updates Things and Post
-On Appoitments change Created at to Appoinment Date and add No Show Button /changeAppointmentStatus to 'no show' and button and only shows on initial consult
+Remaining tasks:
 Update Treatment Plan Endpoint -- Post New Treatment Plan and Assign to Patient
+Frontend Routing for patient to do
+On Appoitments change Created at to Appoinment Date and add No Show Button /changeAppointmentStatus to 'no show' and button and only shows on initial consult
 On Treatment plan page add note to patient as note in treatment plan
+
+Medical Background Updates Things and Post
 Build Initial Memebership Page
 Tidio Messages, figure out
 Klaviyo and Referral Factory integrations
+Make sure assign task works
+Skin Survey

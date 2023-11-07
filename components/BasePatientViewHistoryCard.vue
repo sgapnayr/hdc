@@ -154,10 +154,14 @@ watch(patientStore.currentPatientId, () => {
     </div>
 
     <!-- Patient Allergies -->
-    <div v-if="profileStore.doYouHaveAnyAllergies" class="bg-honeydew-orange w-full py-6 mb-2 px-8 flex gap-x-2 text-gray-3 font-[400]">
+    <a
+      :href="'/schedule-my-free-visit/' + patientStore.currentPatientId"
+      v-if="profileStore.doYouHaveAnyAllergies"
+      class="bg-honeydew-orange w-full py-6 mb-2 px-8 flex gap-x-2 text-gray-3 font-[400]"
+    >
       <img :src="AlertIcon" alt="Alert Icon" />
       <div>Patient allergies: {{ profileStore.doYouHaveAnyAllergies || '-' }}</div>
-    </div>
+    </a>
 
     <!-- Padding Wrapper -->
     <div class="pb-6">
@@ -339,7 +343,7 @@ watch(patientStore.currentPatientId, () => {
           </div>
         </div>
       </div>
-      <div v-if="!patientStore?.patientData.patientProvider" class="flex justify-center items-center">
+      <div v-if="!patientStore?.patientData?.patientProvider" class="flex justify-center items-center">
         <a href="https://schedule.nylas.com/pags-30min-4" target="_Blank">
           <BaseButton
             :state="!isPhotoUploaded ? 'idle' : 'disabled'"
@@ -349,7 +353,7 @@ watch(patientStore.currentPatientId, () => {
           >
         </a>
       </div>
-      <div v-if="!patientStore?.patientData.patientProvider" class="flex justify-center items-center">
+      <div v-if="!patientStore?.patientData?.patientProvider" class="flex justify-center items-center">
         <a href="https://schedule.nylas.com/pags-30min-4" target="_Blank">
           <BaseButton
             :state="!isPhotoUploaded ? 'idle' : 'disabled'"
@@ -411,11 +415,11 @@ watch(patientStore.currentPatientId, () => {
 
     <!-- Details list -->
     <div v-if="toDoListOrDetailsSelected === 'Care Team'" class="py-6 px-8 flex flex-col gap-y-4">
-      <div v-if="patientStore?.patientData.patientProvider">
+      <div v-if="!patientStore?.patientData?.patientProvider">
         <span class="opacity-50 text-sm">Your provider:</span>
         <div class="p-4 flex justify-between cursor-pointer boxShadow flex-col hover:bg-[#F2F4F7] active:opacity-0 transition shadow-md rounded-md">
-          {{ patientStore?.patientData.patientProvider.providerFirstName + ' ' + patientStore?.patientData.patientProvider.providerLastName }}
-          <span class="opacity-50 text-sm">{{ patientStore?.patientData.patientProvider.providerEmail }}</span>
+          {{ patientStore?.patientData?.patientProvider.providerFirstName + ' ' + patientStore?.patientData?.patientProvider.providerLastName }}
+          <span class="opacity-50 text-sm">{{ patientStore?.patientData?.patientProvider.providerEmail }}</span>
         </div>
       </div>
       <a href="https://schedule.nylas.com/pags-30min-4" target="_Blank" v-else>

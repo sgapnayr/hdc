@@ -86,9 +86,9 @@ export const usePatientStore = defineStore('patient', () => {
           actionItems: actionItems || 'actionItems',
           insurance: insurance || 'insurance',
           patientProvider: {
-            providerFirstName: provider?.firstName || 'providerFirstName',
-            providerLastName: provider?.lastName || 'providerLastName',
-            providerEmail: provider?.email || 'providerEmail',
+            providerFirstName: provider?.firstName,
+            providerLastName: provider?.lastName,
+            providerEmail: provider?.email,
           }, // Map the provider details here
           patientCoordinator: backendPatient.coordinator || 'coordinator',
           subAccounts:

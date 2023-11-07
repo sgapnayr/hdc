@@ -24,7 +24,7 @@ const profileStore = useProfileStore()
 const tableHeaderCategories = [
   {
     role: '',
-    categories: [{ text: 'Service' }, { text: 'Patient Name' }, { text: 'Provider Name' }, { text: 'Meeting Link' }, { text: 'Note' }, { text: 'Created At' }],
+    categories: [{ text: 'Service' }, { text: 'Patient Name' }, { text: 'Provider Name' }, { text: 'Meeting Link' }, { text: 'Note' }, { text: 'Start Time' }],
   },
 ]
 
@@ -39,15 +39,10 @@ const checkScrollEnd = () => {
 
 const fetchAppointments = async () => {
   isLoading.value = true
-  // CHANGE IF YOU WANT BY ALL
-  const res = await getMyAppointments(nextToken.value)
 
-  // CHANGE IF YOU WANT BY PROVIDER
-  const re2 = await getAppointmentsByProvider(profileStore.profileData.patientId, nextToken.value)
+  const res = await getAppointmentsByProvider(profileStore.profileData.patientId, nextToken.value)
 
   const enrichedAppointments = await Promise.all(
-    // MAKE IT re2 if you want by provider, make it res if you want all appointments
-    // re2.appointments.map(async (appointment) => {
     res.appointments.map(async (appointment) => {
       const patient = await getPatientName(appointment.patientId)
 
@@ -127,6 +122,9 @@ fetchAppointments()
               {{ patientList?.patients }}
             </div>
 
+            <div class="text-[14px] py-[20px] px-[24px] whitespace-nowrap hover:bg-honeydew-bg2 cursor-pointer border-b border-x border-honeydew-bg2 w-full">
+              <span v-if="appointments.length === 0" class="w-full text-center text-sm opacity-50 py-8">This provider has no appointments.</span>
+            </div>
             <!-- Table Appointments -->
             <div
               v-for="(appointment, idx) in appointments"
