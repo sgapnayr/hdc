@@ -556,7 +556,7 @@ patientStore.getPatientsFromGraphQL()
                     </div>
                   </template>
                 </BaseModal>
-
+                <!-- 
                 <BaseModal @action-click="handleArchiveEmployee(employee.employeeId)">
                   <template #header> Confirm Archive Employee </template>
                   <template #button>
@@ -576,7 +576,7 @@ patientStore.getPatientsFromGraphQL()
                     </div>
                   </template>
                   <template #button-text> Confirm</template>
-                </BaseModal>
+                </BaseModal> -->
 
                 <!-- Update Team Member -->
                 <BaseModal @action-click="handleUpdateEmployee(employee?.employeeId)">
@@ -585,7 +585,7 @@ patientStore.getPatientsFromGraphQL()
                   </template>
 
                   <template #button>
-                    <img @click="handleGetEmployee(employee.employeeId)" :src="OptionsIcon" alt="Options" class="cursor-pointer transition active:scale-90" />
+                    <img :src="OptionsIcon" alt="Options" class="cursor-pointer transition active:scale-90" />
                   </template>
 
                   <template #content>

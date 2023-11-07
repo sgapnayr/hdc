@@ -452,12 +452,12 @@ function handleScroll() {
                     </div>
                   </template>
                 </BaseModal>
-                <BaseModal @action-click="handleDeleteMedicine(medication.medicationId)">
+                <!-- <BaseModal @action-click="handleDeleteMedicine(medication.medicationId)">
                   <template #button>
                     <img class="cursor-pointer" :src="DeleteIcon" alt="Delete Icon" />
                   </template>
                   <template #content> Are you sure? </template>
-                </BaseModal>
+                </BaseModal> -->
               </div>
             </div>
           </div>
@@ -499,12 +499,12 @@ function handleScroll() {
                     <img class="cursor-pointer" :src="PencilIcon" alt="Pencil Icon" />
                   </template>
                 </BaseModal>
-                <BaseModal>
+                <!-- <BaseModal>
                   <template #button>
                     <img class="cursor-pointer" :src="DeleteIcon" alt="Delete Icon" />
                   </template>
                   <template #content> Are you sure? </template>
-                </BaseModal>
+                </BaseModal> -->
               </div>
             </div>
           </div>

@@ -1,18 +1,28 @@
-Assign Provider Check For Enrollment Provider -- Configure for patient dashboard and non-patient dashboard
-Update Treatment Plan Endpoint
-To Do items, tasks updated type isPatientTask?
+Completed this week:
+X Toasts
+X To Do items, tasks updated type isPatientTask?
+X Assign Provider Check For Enrollment Provider -- Configure for patient dashboard and non-patient dashboard
+X Show No Provider Schedule Inital Visit
+X Appointments Appointment Start Time
+X Remove Delete Methods
+X Get Patient Appts
+X Add Next Token For Notes
+X Add Schedule Initial Visit For Patient If It Is First Time
+X If Patient Has No Visits - Should Have Link on Proiflies Patient Vists Components to Schedule First Vist
+X Hide Notes from patient
+X Change Height For Med Background - Chester Said So
+
+Question this week:
+? Ask follow up question for ~line 342 in BasePatientViewHistoryCard -- where do I route users if they are scheduling online follow ups?
+? Ash chester Add Link Wrapper on Task to Nylas Appointment
+? Documents
+
+Remaining tasks this week:
+Frontend Routing for patient to dos
 Medical Background Updates Things and Post
-
-Add Schedule Initial Visit For Patient If It Is First Time, Add Link Wrapper on Task to Nylas Appointment
-If Patient Has No Visits - Should Have Link on Proiflies Patient Vists Components to Schedule First Vist
-Change Height - Chester Said So
-
-On Appoitments change Created at to Appoinment Date and add No Show Button
-
-Remove Delete Methods
-
-Add Next Token For Notes
-
-Documents?
-
-Patient Can Get Pregnant / Change Status?
+On Appoitments change Created at to Appoinment Date and add No Show Button /changeAppointmentStatus to 'no show' and button and only shows on initial consult
+Update Treatment Plan Endpoint -- Post New Treatment Plan and Assign to Patient
+On Treatment plan page add note to patient as note in treatment plan
+Build Initial Memebership Page
+Tidio Messages, figure out
+Klaviyo and Referral Factory integrations

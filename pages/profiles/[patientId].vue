@@ -13,6 +13,7 @@ import { useAuthenticator } from '@aws-amplify/ui-vue'
 import { useProfileStore } from '@/stores/profile'
 import { usePatientStore } from '~/stores/patient'
 import { useAppointmentsStore } from '~/stores/appointments'
+import { useTasksStore } from '~/stores/task'
 import BaseAccutane from '~/components/BaseAccutane.vue'
 import ChevronIcon2 from '@/assets/icons/chevron-down-icon.svg'
 import type { Appointment } from '@/types/appointment-types'
@@ -42,11 +43,18 @@ interface Treatment {
 const profileStore = useProfileStore()
 const appointmentsStore = useAppointmentsStore()
 const patientStore = usePatientStore()
+const taskStore = useTasksStore()
 
 // STATE **********************************************************************
 const profileData = ref<string>('')
 const isAppointmentMissedState = ref<boolean>(false)
 const treatmentPlan = ref()
+const hoveringTasks = ref('')
+
+// COMPUTED **********************************************************************
+const patientToDoTasks = computed(() => {
+  return taskStore?.taskForPatient?.filter((patientTask) => patientTask.isPatientTask === true)
+})
 
 // Computed function to get patient appointments filtered by email
 const getPatientAppointments = computed(() => {
@@ -103,6 +111,7 @@ function isAppointmentMissed(appointmentDate: string) {
 profileStore.setMyProfile()
 patientStore.getPatientFromGraphQL(route.params.patientId as string)
 appointmentsStore.getAllAppointments()
+taskStore.getAllTasksFromGraphQLByPatient(route.params.patientId as string)
 
 function formatDate(unixTimestamp: any) {
   const date = new Date(unixTimestamp * 1000)
@@ -135,22 +144,25 @@ getAppointmentByPatientId(route.params.patientId as string).then((res) => res)
             <div class="grow"></div>
             <!-- To do list items -->
             <div class="my-4 md:my-auto w-full">
-              <div v-for="(todo, idx) in toDoItems" :key="idx" class="flex justify-start items-start flex-col gap-y-4 w-full">
+              <div v-for="(task, idx) in patientToDoTasks" :key="idx" class="flex justify-start items-start flex-col gap-y-4 w-full">
+                {{ task }}
                 <div
-                  :class="todo.text === 'Submit pregnancy test' && patientStore?.patientData?.patientSex === 'Male' ? 'hidden' : ''"
-                  class="flex items-center justify-between w-full my-1"
+                  @mouseover="hoveringTasks = task.taskId"
+                  @mouseleave="hoveringTasks = ''"
+                  class="w-full flex items-center transition cursor-pointer active:scale-90 my-1"
+                  v-if="!task.isPatientTask"
                 >
-                  <div class="flex items-center w-full">
-                    <div class="w-5 h-5 bg-honeydew-bg2 border border-[#F2F4F7] rounded-full mr-2"></div>
-                    <div
-                      v-if="todo.text === 'Submit pregnancy test' && !todo.isComplete"
-                      class="w-full opacity-50 cursor-pointer"
-                      @click="profileStore.handlePregnancyModal"
-                    >
-                      {{ todo.text }}
+                  <div class="flex w-full justify-between items-center gap-x-2">
+                    <div class="h-5 w-5 bg-gray-2 rounded-full shadow-md flex justify-center items-center transition">
+                      <div
+                        :class="hoveringTasks === task.taskId ? 'opacity-100' : 'opacity-0'"
+                        class="h-3 w-3 bg-honeydew-green rounded-full shadow-md transition"
+                      ></div>
                     </div>
-                    <BaseAccutane v-else @accutane-flow-viewed="todo.text === 'View Accutane info' ? (todo.isComplete = true) : ''" />
-                    <img v-if="!todo.isComplete" class="rotate-[270deg]" :src="ChevronIcon2" alt="Chevron Icon 2" />
+                    <div :class="hoveringTasks === task.taskId ? 'text-black' : 'text-gray-1'" class="w-10/12">
+                      {{ task.taskComments }}
+                    </div>
+                    <img class="rotate-[270deg]" :src="ChevronIcon2" alt="Chevron Icon 2" />
                   </div>
                 </div>
               </div>

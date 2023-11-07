@@ -43,6 +43,7 @@ export const useTasksStore = defineStore('tasks', () => {
   async function getAllTasksFromGraphQLByPatient(patientId: string) {
     try {
       const response = await getAllTasksByPatient(patientId)
+      console.log(response.tasks.map((task) => task.isPatientTask))
       const mappedData = response.tasks.map(mapTaskToMinimalFrontend)
       taskForPatient.value = mappedData
     } catch (error) {
@@ -63,6 +64,7 @@ export const useTasksStore = defineStore('tasks', () => {
       taskComments: task.description || '',
       taskAssignedAt: task.taskAssignedAt,
       taskDueAt: task.dueDate,
+      isPatientTask: task.isPatientTask === null ? false : task.isPatientTask,
     }
   }
 
@@ -75,6 +77,7 @@ export const useTasksStore = defineStore('tasks', () => {
       taskStatus: task.status || '',
       taskPriority: task.priority || 'low',
       taskType: task.type || 'New patient',
+      isPatientTask: task.isPatientTask === null ? false : task.isPatientTask,
     }
   }
 

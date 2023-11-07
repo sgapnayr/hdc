@@ -15,7 +15,7 @@
     </TheTransitionWrapper>
     <TheSideBar
       v-if="!isMobile"
-      class="fixed left-0 top-0 hidden md:flex"
+      class="fixed left-0 top-0 hidden md:flex z-20"
       :class="
         profileStore.isBloodSlipFormOpen || profileStore.isPatientDetailsFormOpen || profileStore.isPregnantModalOpen || profileStore.isVisitFormOpen
           ? 'z-10'

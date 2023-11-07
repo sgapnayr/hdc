@@ -45,6 +45,11 @@ const patientNextConfirmationDate = ref('')
 const remsNumber = ref(patientStore?.patientData?.patientREMsNumber || '123')
 const isEditing = ref<boolean>(false)
 
+// COMPUTED **********************************************************************
+const patientToDoTasks = computed(() => {
+  return tasksStore?.taskForPatient?.filter((patientTask) => patientTask.isPatientTask === true)
+})
+
 // METHODS *********************************************************************
 function handleSelectedItem(selectedItemVal: string) {
   if (selectedItem.value.includes(selectedItemVal)) {
@@ -334,10 +339,23 @@ watch(patientStore.currentPatientId, () => {
           </div>
         </div>
       </div>
-      <div class="flex justify-center items-center">
+      <div v-if="!patientStore?.patientData.patientProvider" class="flex justify-center items-center">
         <a href="https://schedule.nylas.com/pags-30min-4" target="_Blank">
-          <BaseButton :state="!isPhotoUploaded ? 'idle' : 'disabled'" @click="router.push('/profile')" class="w-full mt-[32px] px-8"
-            >Schedule Appointment</BaseButton
+          <BaseButton
+            :state="!isPhotoUploaded ? 'idle' : 'disabled'"
+            @click="router.push('/profile')"
+            class="w-full mt-[32px] px-8 hover:opacity-50 transition-all"
+            >Schedule Initial Visit</BaseButton
+          >
+        </a>
+      </div>
+      <div v-if="!patientStore?.patientData.patientProvider" class="flex justify-center items-center">
+        <a href="https://schedule.nylas.com/pags-30min-4" target="_Blank">
+          <BaseButton
+            :state="!isPhotoUploaded ? 'idle' : 'disabled'"
+            @click="router.push('/profile')"
+            class="w-full mt-[32px] px-8 hover:opacity-50 transition-all"
+            >Schedule Initial Visit</BaseButton
           >
         </a>
       </div>
@@ -352,7 +370,7 @@ watch(patientStore.currentPatientId, () => {
       >
         To do
         <div class="bg-[#EFEBFE] w-[24px] h-[24px] rounded-full flex justify-center items-center text-honeydew-purple ml-[8px]">
-          {{ tasksStore?.taskForPatient?.length }}
+          {{ patientToDoTasks?.length }}
         </div>
       </div>
       <div
@@ -366,7 +384,7 @@ watch(patientStore.currentPatientId, () => {
 
     <!-- To do -->
     <div v-if="toDoListOrDetailsSelected === 'To do'" class="py-6 px-8 flex flex-col gap-y-4 justify-center items-center text-center">
-      <div v-if="tasksStore?.taskForPatient?.length === 0" class="w-full flex flex-col">
+      <div v-if="patientToDoTasks" class="w-full flex flex-col">
         <div class="flex w-full justify-center mb-4">
           <div class="p-4 bg-[#f8f7fe] rounded-full flex justify-center items-center">
             <div class="p-4 bg-[#efeafd] rounded-full flex justify-center items-center">
@@ -376,11 +394,11 @@ watch(patientStore.currentPatientId, () => {
         </div>
 
         <div class="text-[#403d47]">No tasks</div>
-        <p class="text-[#6C6A7C] text-[14px]">Great job! You have completed all tasks for this patient.</p>
+        <p class="text-[#6C6A7C] text-[14px]">Great job! You have completed all tasks.</p>
       </div>
 
       <div v-else class="w-full flex flex-col">
-        <div v-for="(task, idx) in tasksStore.taskForPatient" class="flex w-full justify-between p-4 bg-[#f8f7fe] my-2 rounded-md items-center shadow-sm">
+        <div v-for="(task, idx) in patientToDoTasks" class="flex w-full justify-between p-4 bg-[#f8f7fe] my-2 rounded-md items-center shadow-sm">
           <div class="w-full text-start">
             {{ task.taskComments }}
           </div>
@@ -393,8 +411,18 @@ watch(patientStore.currentPatientId, () => {
 
     <!-- Details list -->
     <div v-if="toDoListOrDetailsSelected === 'Care Team'" class="py-6 px-8 flex flex-col gap-y-4">
-      <BaseAssignProvider :patientData="patientStore.patientData" :patientId="route?.params?.patientId" />
-      <!-- <BaseAssignCoordinator :patientData="patientStore.patientData" :patientId="route?.params?.patientId" /> -->
+      <div v-if="patientStore?.patientData.patientProvider">
+        <span class="opacity-50 text-sm">Your provider:</span>
+        <div class="p-4 flex justify-between cursor-pointer boxShadow flex-col hover:bg-[#F2F4F7] active:opacity-0 transition shadow-md rounded-md">
+          {{ patientStore?.patientData.patientProvider.providerFirstName + ' ' + patientStore?.patientData.patientProvider.providerLastName }}
+          <span class="opacity-50 text-sm">{{ patientStore?.patientData.patientProvider.providerEmail }}</span>
+        </div>
+      </div>
+      <a href="https://schedule.nylas.com/pags-30min-4" target="_Blank" v-else>
+        <span class="hover:opacity-100 cursor-pointer opacity-50 text-sm transition"
+          >You need to schedule your initial visit to be assigned a provider. <span class="underline">Click here.</span></span
+        >
+      </a>
     </div>
   </div>
 </template>

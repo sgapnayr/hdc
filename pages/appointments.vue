@@ -150,7 +150,7 @@ fetchAppointments()
                 {{ appointment.note || '-' }}
               </div>
               <div class="whitespace-pre-wrap w-1/2 flex items-center">
-                {{ formatLegibleDate(appointment.createdAt) || '-' }}
+                {{ formatLegibleDate(appointment.startTime) || '-' }}
               </div>
             </div>
           </div>

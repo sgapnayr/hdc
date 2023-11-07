@@ -105,6 +105,7 @@ onMounted(() => {
       <div v-if="profileStore?.profileData?.userRole != 'patient'">
         <BaseAddTaskButton />
       </div>
+      <div v-else class="mt-8"></div>
     </div>
     <div class="flex py-8 pb-24 gap-x-6 flex-col lg:flex-row">
       <!-- Left Side -->
@@ -150,7 +151,7 @@ onMounted(() => {
               </div>
               <BaseMedicalBackground />
             </div>
-            <div class="flex flex-col w-5/12 no-scrollbars mt-8">
+            <div v-if="profileStore?.profileData?.userRole != 'patient'" class="flex flex-col w-5/12 no-scrollbars mt-8">
               <h1 class="text-[24px] font-[500] leading-[40px] text-gray-3">Notes</h1>
               <BaseNotes />
             </div>

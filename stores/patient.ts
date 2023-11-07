@@ -18,7 +18,6 @@ export const usePatientStore = defineStore('patient', () => {
   }
 
   function mapBackendToFrontendPatient(backendPatient) {
-    console.log('BACKENDD PATIENTS', backendPatient)
     return {
       patientId: backendPatient.patientId,
       patientName: backendPatient.patientProfile.patientFirstName + ' ' + backendPatient.patientProfile.patientLastName,
@@ -33,19 +32,11 @@ export const usePatientStore = defineStore('patient', () => {
   }
 
   async function getPatientsFromGraphQL(token = null) {
-    console.log('HERE')
     try {
-      console.log('HERE')
       const response = await getPatients(token)
 
-      console.log(response)
       if (response?.patients) {
         const newPatients = response.patients.map(mapBackendToFrontendPatient)
-
-        console.log(
-          'HERE',
-          newPatients.map((patientData) => patientData.email)
-        )
 
         // Create a temporary map for quick look-up
         const patientIdMap = new Map(allPatients.value.map((patient) => [patient.patientId, patient]))
@@ -75,6 +66,7 @@ export const usePatientStore = defineStore('patient', () => {
         const subAccounts = response.subAccounts
         const actionItems = response.actionItems
         const insurance = response.patientProfile.healthInsurance
+        const provider = response.provider // Extract the provider details from the response
 
         const frontendPatient = {
           patientId: patientId || 'patientId',
@@ -93,7 +85,11 @@ export const usePatientStore = defineStore('patient', () => {
           patientREMsNumber: backendPatient?.patientREMsNumber || '123',
           actionItems: actionItems || 'actionItems',
           insurance: insurance || 'insurance',
-          patientProvider: backendPatient.proivder || 'provider',
+          patientProvider: {
+            providerFirstName: provider?.firstName || 'providerFirstName',
+            providerLastName: provider?.lastName || 'providerLastName',
+            providerEmail: provider?.email || 'providerEmail',
+          }, // Map the provider details here
           patientCoordinator: backendPatient.coordinator || 'coordinator',
           subAccounts:
             subAccounts != null

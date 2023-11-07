@@ -82,7 +82,7 @@ const tableHeaderCategories: TableHeaderCategory[] = [
       { text: 'Next follow-up' },
       { text: 'Provider' },
       { text: 'Care coord.' },
-      { text: 'Actions' },
+      { text: '' },
     ],
   },
 ]
@@ -467,8 +467,8 @@ onMounted(() => {
                 </div>
 
                 <div class="w-full flex justify-end gap-x-3">
-                  <img v-if="tabSelected === 'Active Patients'" class="cursor-pointer" :src="EyeIcon" alt="Eye Icon" />
-                  <img v-if="tabSelected === 'Active Patients'" class="cursor-pointer" :src="ArchiveIcon" alt="Archive Icon" />
+                  <!-- <img v-if="tabSelected === 'Active Patients'" class="cursor-pointer" :src="EyeIcon" alt="Eye Icon" />
+                  <img v-if="tabSelected === 'Active Patients'" class="cursor-pointer" :src="ArchiveIcon" alt="Archive Icon" /> -->
 
                   <BaseModal v-if="tabSelected === 'Inactive Patients'">
                     <template #button>
