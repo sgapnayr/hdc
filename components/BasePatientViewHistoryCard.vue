@@ -155,7 +155,7 @@ watch(patientStore.currentPatientId, () => {
 
     <!-- Patient Allergies -->
     <a
-      :href="'/schedule-my-free-visit/' + patientStore.currentPatientId"
+      :href="profileStore?.doYouHaveAnyAllergies?.includes('Need to') ? '/schedule-my-free-visit/' + patientStore.currentPatientId : ''"
       v-if="profileStore.doYouHaveAnyAllergies"
       class="bg-honeydew-orange w-full py-6 mb-2 px-8 flex gap-x-2 text-gray-3 font-[400]"
     >
