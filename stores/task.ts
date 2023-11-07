@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getAllTasks, getTaskByAssignee, getAllTasksByAssignee, getAllTasksByPatient } from '@/lib/endpoints'
+import { getAllTasks, getAllTasksByAssignee, getAllTasksByPatient } from '@/lib/endpoints'
 
 export const useTasksStore = defineStore('tasks', () => {
   // STATE ****************************************************************
@@ -8,6 +8,7 @@ export const useTasksStore = defineStore('tasks', () => {
   const assigneeTasks = ref([])
   const taskForPatient = ref([])
   const nextToken = ref(null)
+  const nextTokenForAssigneeTasks = ref(null)
 
   // GETTERS ****************************************************************
   async function getAllTasksFromGraphQL() {
@@ -30,13 +31,26 @@ export const useTasksStore = defineStore('tasks', () => {
     }
   }
 
-  async function getAllTasksFromGraphQLByAssignee(assigneeId: string) {
+  async function getAllTasksFromGraphQLByAssignee(assigneeId: string, limit = 10) {
     try {
-      const response = await getAllTasksByAssignee(assigneeId)
+      const response = await getAllTasksByAssignee(assigneeId, limit, nextTokenForAssigneeTasks.value)
       const mappedData = response.tasks.map(mapTaskToFrontend)
-      assigneeTasks.value = mappedData
+      // Append new tasks or replace existing ones based on the presence of a nextToken
+      if (nextTokenForAssigneeTasks.value) {
+        assigneeTasks.value.push(...mappedData)
+      } else {
+        assigneeTasks.value = mappedData
+      }
+      nextTokenForAssigneeTasks.value = response.nextToken
     } catch (error) {
-      console.error('Error retrieving employees:', error)
+      console.error('Error retrieving tasks:', error)
+    }
+  }
+
+  // Fetch more tasks for assignee
+  async function loadMoreTasksByAssignee(assigneeId: string, limit = 10) {
+    if (nextTokenForAssigneeTasks.value) {
+      await getAllTasksFromGraphQLByAssignee(assigneeId, limit)
     }
   }
 
@@ -89,5 +103,6 @@ export const useTasksStore = defineStore('tasks', () => {
     getAllTasksFromGraphQL,
     getAllTasksFromGraphQLByAssignee,
     getAllTasksFromGraphQLByPatient,
+    loadMoreTasksByAssignee,
   }
 })

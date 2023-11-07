@@ -157,7 +157,8 @@ watch(patientStore.currentPatientId, () => {
     <a
       :href="profileStore?.doYouHaveAnyAllergies?.includes('Need to') ? '/schedule-my-free-visit/' + patientStore.currentPatientId : ''"
       v-if="profileStore.doYouHaveAnyAllergies"
-      class="bg-honeydew-orange w-full py-6 mb-2 px-8 flex gap-x-2 text-gray-3 font-[400]"
+      :class="profileStore?.doYouHaveAnyAllergies?.includes('Need to') ? 'hover:opacity-50 active:opacity-0 cursor-pointer' : ''"
+      class="bg-honeydew-orange w-full py-6 mb-2 px-8 flex gap-x-2 text-gray-3 font-[400] transiton-all"
     >
       <img :src="AlertIcon" alt="Alert Icon" />
       <div>Patient allergies: {{ profileStore.doYouHaveAnyAllergies || '-' }}</div>
