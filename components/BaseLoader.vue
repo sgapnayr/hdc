@@ -1,5 +1,6 @@
 <template>
-  <transition>
+  <div></div>
+  <!-- <transition>
     <div class="flex justify-center items-center relative h-48">
       <div
         class="inner-inner-spin inline-block w-3 h-3 border-[1px] border-current border-t-transparent border-x-transparent text-blue-600 rounded-full absolute"
@@ -30,7 +31,7 @@
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-  </transition>
+  </transition> -->
 </template>
 
 <style scoped>
