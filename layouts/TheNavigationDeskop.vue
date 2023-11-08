@@ -33,7 +33,7 @@ const route = useRoute()
           <NuxtLink
             to="/sign-up"
             class="bg-honeydew-purple h-[48px] justify-center text-white items-center flex w-[153px] rounded-[60px] ml-6 lg:ml-[40px] font-[500] text-[14px] leading-[24px] cursor-pointer"
-          >
+        >
             GET STARTED
           </NuxtLink>
         </div>

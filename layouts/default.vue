@@ -1,4 +1,5 @@
 <template>
+  <div></div>
   <!-- <Loading v-if="isLoading" />
   <BaseChatBot v-if="showChatBot" />
   <div v-if="!isLoading || isLoading" :class="isLoading ? 'invisible overflow-hidden' : ''" class="flex flex-col justify-center items-center">

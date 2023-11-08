@@ -57,6 +57,7 @@ landingPageStore.handleFirstVisitCouponVisible()
 </script>
 
 <template>
+  <div></div>
   <!-- <div class="flex flex-col w-full">
     <BaseModalCoupon :trigger-open="landingPageStore.firstVisitCouponVisible" v-if="landingPageStore.firstVisitCouponVisible">
       <template #button>
