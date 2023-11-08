@@ -1,6 +1,5 @@
 <template>
-  <Loading v-if="isLoading" />
-  <!-- Only show BaseChatBot if the current route matches one of the specified routes -->
+  <!-- <Loading v-if="isLoading" />
   <BaseChatBot v-if="showChatBot" />
   <div v-if="!isLoading || isLoading" :class="isLoading ? 'invisible overflow-hidden' : ''" class="flex flex-col justify-center items-center">
     <div class="hidden md:flex flex-col w-full">
@@ -13,7 +12,7 @@
       <NuxtPage />
     </div>
     <TheFooterPublic />
-  </div>
+  </div> -->
 </template>
 
 <script setup lang="ts">

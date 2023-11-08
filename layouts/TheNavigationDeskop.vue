@@ -11,7 +11,7 @@ const route = useRoute()
 </script>
 
 <template>
-  <BaseAlert />
+  <!-- <BaseAlert />
   <div class="h-[80px] flex justify-center items-center w-full">
     <div class="w-full max-w-[1440px] px-4">
       <div class="flex justify-between w-full items-center no-scrollbars">
@@ -42,5 +42,5 @@ const route = useRoute()
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>

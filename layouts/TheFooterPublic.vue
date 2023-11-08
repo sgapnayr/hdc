@@ -13,8 +13,7 @@ const date = new Date()
 </script>
 
 <template>
-  <div class="flex flex-col bg-honeydew-bg4 w-full justify-start">
-    <!-- Desktop Version -->
+  <!-- <div class="flex flex-col bg-honeydew-bg4 w-full justify-start">
     <BaseWrapper>
       <div class="hidden lg:flex flex-col">
         <div class="w-full justify-between mt-[72px] flex">
@@ -49,7 +48,6 @@ const date = new Date()
       </div>
     </BaseWrapper>
 
-    <!-- Mobile Version -->
     <BaseWrapper>
       <div class="lg:hidden flex flex-col">
         <div class="w-full mt-[72px] flex items-center">
@@ -83,5 +81,5 @@ const date = new Date()
         </div>
       </div>
     </BaseWrapper>
-  </div>
+  </div> -->
 </template>

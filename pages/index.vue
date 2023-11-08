@@ -57,14 +57,13 @@ landingPageStore.handleFirstVisitCouponVisible()
 </script>
 
 <template>
-  <div class="flex flex-col w-full">
+  <!-- <div class="flex flex-col w-full">
     <BaseModalCoupon :trigger-open="landingPageStore.firstVisitCouponVisible" v-if="landingPageStore.firstVisitCouponVisible">
       <template #button>
         <div class="invisible absolute">.</div>
       </template>
       <template #content> </template>
     </BaseModalCoupon>
-    <!-- Acne Care That Works For You -->
     <div class="flex flex-col w-full items-center bg-honeydew-bg3">
       <BaseWrapper>
         <div class="w-full flex justify-center items-center flex-col md:flex-row-reverse">
@@ -89,14 +88,12 @@ landingPageStore.handleFirstVisitCouponVisible()
               <NuxtLink to="/sign-up">
                 <BaseButton class="mt-[24px] w-[328px]">Start Free Online Visit</BaseButton>
               </NuxtLink>
-              <!-- <BaseCurrentlyAvailableIn /> -->
             </div>
           </div>
         </div>
       </BaseWrapper>
     </div>
 
-    <!-- The Process -->
     <div class="hidden md:flex flex-col w-full items-center bg-white pb-[196px]">
       <BaseWrapper>
         <div class="mx-[24px] mb-[124px] w-full">
@@ -124,7 +121,6 @@ landingPageStore.handleFirstVisitCouponVisible()
       </BaseWrapper>
     </div>
 
-    <!-- We Focus On Getting You Better -->
     <div class="flex flex-col bg-honeydew-bg5">
       <BaseWrapper>
         <div class="my-[48px] md:my-[120px] w-full flex justify-center items-center font-[700] text-[32px] leading-[40px]">We focus on getting you better</div>
@@ -168,11 +164,9 @@ landingPageStore.handleFirstVisitCouponVisible()
       </BaseWrapper>
     </div>
 
-    <!-- Real People. Real Results -->
     <div class="flex flex-col bg-white">
       <BaseWrapper>
         <div class="relative">
-          <!-- Slide 1 -->
           <div class="h-full" v-if="slideSelected === '1'">
             <p class="font-[700] text-[32px] leading-[42px] mt-[48px] lg:mt-[120px] w-full flex justify-center">Real People. Real Results.</p>
             <div class="flex flex-col-reverse lg:flex-row justify-center items-center text-center lg:text-start">
@@ -202,7 +196,6 @@ landingPageStore.handleFirstVisitCouponVisible()
             </div>
           </div>
 
-          <!-- Slide 2 -->
           <div class="h-full" v-if="slideSelected === '2'">
             <p class="font-[700] text-[32px] leading-[42px] mt-[48px] lg:mt-[120px] w-full flex justify-center">The patient feedback.</p>
             <div class="flex flex-col-reverse lg:flex-row justify-center items-center text-center lg:text-start">
@@ -232,7 +225,6 @@ landingPageStore.handleFirstVisitCouponVisible()
             </div>
           </div>
 
-          <!-- Slide 3 -->
           <div class="h-full" v-if="slideSelected === '3'">
             <p class="font-[700] text-[32px] leading-[42px] mt-[48px] lg:mt-[120px] w-full flex justify-center">The patient feedback.</p>
             <div class="flex flex-col-reverse lg:flex-row justify-center items-center text-center lg:text-start">
@@ -262,7 +254,6 @@ landingPageStore.handleFirstVisitCouponVisible()
             </div>
           </div>
 
-          <!-- Dot Compoennt -->
           <div class="flex gap-x-3 -mt-[72px] md:-mt-[64px] pb-[64px] justify-center lg:justify-start lg:ml-[32px]">
             <div
               @click="slideSelected = '1'"
@@ -289,7 +280,6 @@ landingPageStore.handleFirstVisitCouponVisible()
         </div>
       </BaseWrapper>
 
-      <!-- Pricing that lets you focus on getting better -->
       <div class="bg-honeydew-bg6 w-full">
         <BaseWrapper>
           <div class="justify-center items-center flex-col flex">
@@ -302,7 +292,6 @@ landingPageStore.handleFirstVisitCouponVisible()
           </div>
         </BaseWrapper>
       </div>
-      <!-- End -->
     </div>
-  </div>
+  </div> -->
 </template>
